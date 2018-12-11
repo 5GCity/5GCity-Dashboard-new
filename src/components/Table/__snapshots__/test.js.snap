@@ -1,0 +1,1508 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  height: 48px;
+  padding: 25px 26px;
+  color: #89979F;
+  font-size: 12px;
+  -webkit-letter-spacing: 1px;
+  -moz-letter-spacing: 1px;
+  -ms-letter-spacing: 1px;
+  letter-spacing: 1px;
+  background-color: #37474F;
+  box-shadow: inset 0 -1px 0 0 #47565F;
+}
+
+.c1 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-preferred-size: 20%;
+  flex-basis: 20%;
+}
+
+.c1:last-child {
+  height: 14px;
+  width: 14px;
+}
+
+.c2 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c2:last-child {
+  height: 14px;
+  width: 14px;
+}
+
+.c3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 25px 26px;
+  height: 64px;
+  background-color: #37474F;
+  color: #FFFFFF;
+  font-family: "Open Sans";
+  font-size: 14px;
+  box-shadow: inset 0 1px 0 0 #47565F,inset 0 -1px 0 0 #47565F;
+}
+
+.c4 {
+  margin: 16px 0px 12px 0px;
+}
+
+.c5 {
+  padding-right: 160px;
+  margin-bottom: 16px;
+}
+
+.c6 {
+  witdh: 100%;
+}
+
+.c6 .el-progress-bar__inner {
+  background-color: #8CC14E;
+  border-radius: 0px;
+}
+
+.c6 .el-progress-bar__outer {
+  border-radius: 0px;
+  background-color: rgba(137,151,159,0.15);
+  height: 8px !important;
+}
+
+.c7 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  height: 64px;
+  padding: 25px 26px;
+  background-color: #324148;
+  color: #FFFFFF;
+  font-family: "Open Sans";
+  font-size: 14px;
+  box-shadow: inset 0 1px 0 0 #47565F,inset 0 -1px 0 0 #47565F;
+  display: none;
+  height: 0px;
+}
+
+<div
+  className=""
+>
+  <div
+    className="c0"
+  >
+    <div
+      className="c1"
+      size={20}
+    >
+      Slice name
+    </div>
+    <div
+      className="c1"
+      size={20}
+    >
+      Processor
+    </div>
+    <div
+      className="c1"
+      size={20}
+    >
+      RAM
+    </div>
+    <div
+      className="c1"
+      size={20}
+    >
+      Bandwidth
+    </div>
+    <div
+      className="c1"
+      size={20}
+    >
+      Storage
+    </div>
+    <div
+      className="c2"
+    />
+  </div>
+  <div
+    className=""
+  >
+    <div
+      className="c3"
+      onClick={[Function]}
+    >
+      <div
+        className="c1"
+        size={20}
+      >
+        Slice name
+      </div>
+      <div
+        className="c1"
+        size={20}
+      >
+         
+        <p
+          className="c4"
+        >
+          1/2 CPU's
+        </p>
+         
+        <div
+          className="el-progress el-progress--line el-progress--without-text c5 c6"
+          style={Object {}}
+        >
+          <div
+            className="el-progress-bar"
+          >
+            <div
+              className="el-progress-bar__outer"
+              style={
+                Object {
+                  "height": "6px",
+                }
+              }
+            >
+              <div
+                className="el-progress-bar__inner"
+                style={
+                  Object {
+                    "width": "0%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c1"
+        size={20}
+      >
+         
+        <p
+          className="c4"
+        >
+          12/64 GB
+        </p>
+         
+        <div
+          className="el-progress el-progress--line el-progress--without-text c5 c6"
+          style={Object {}}
+        >
+          <div
+            className="el-progress-bar"
+          >
+            <div
+              className="el-progress-bar__outer"
+              style={
+                Object {
+                  "height": "6px",
+                }
+              }
+            >
+              <div
+                className="el-progress-bar__inner"
+                style={
+                  Object {
+                    "width": "0%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c1"
+        size={20}
+      >
+         
+        <p
+          className="c4"
+        >
+          300/500 mbps
+        </p>
+         
+        <div
+          className="el-progress el-progress--line el-progress--without-text c5 c6"
+          style={Object {}}
+        >
+          <div
+            className="el-progress-bar"
+          >
+            <div
+              className="el-progress-bar__outer"
+              style={
+                Object {
+                  "height": "6px",
+                }
+              }
+            >
+              <div
+                className="el-progress-bar__inner"
+                style={
+                  Object {
+                    "width": "0%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c1"
+        size={20}
+      >
+         
+        <p
+          className="c4"
+        >
+          330/512 GB
+        </p>
+         
+        <div
+          className="el-progress el-progress--line el-progress--without-text c5 c6"
+          style={Object {}}
+        >
+          <div
+            className="el-progress-bar"
+          >
+            <div
+              className="el-progress-bar__outer"
+              style={
+                Object {
+                  "height": "6px",
+                }
+              }
+            >
+              <div
+                className="el-progress-bar__inner"
+                style={
+                  Object {
+                    "width": "0%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c2"
+      >
+        <i
+          className="el-icon-arrow-right"
+          style={Object {}}
+        />
+      </div>
+    </div>
+    <div
+      className="c7"
+    >
+      <div
+        className="c1"
+        size={20}
+      >
+        Network service name
+      </div>
+      <div
+        className="c1"
+        size={20}
+      >
+         
+        <p
+          className="c4"
+        >
+          1/2 CPU's
+        </p>
+         
+        <div
+          className="el-progress el-progress--line el-progress--without-text c5 c6"
+          style={Object {}}
+        >
+          <div
+            className="el-progress-bar"
+          >
+            <div
+              className="el-progress-bar__outer"
+              style={
+                Object {
+                  "height": "6px",
+                }
+              }
+            >
+              <div
+                className="el-progress-bar__inner"
+                style={
+                  Object {
+                    "width": "0%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c1"
+        size={20}
+      >
+         
+        <p
+          className="c4"
+        >
+          12/64 GB
+        </p>
+         
+        <div
+          className="el-progress el-progress--line el-progress--without-text c5 c6"
+          style={Object {}}
+        >
+          <div
+            className="el-progress-bar"
+          >
+            <div
+              className="el-progress-bar__outer"
+              style={
+                Object {
+                  "height": "6px",
+                }
+              }
+            >
+              <div
+                className="el-progress-bar__inner"
+                style={
+                  Object {
+                    "width": "0%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c1"
+        size={20}
+      >
+         
+        <p
+          className="c4"
+        >
+          300/500 mbps
+        </p>
+         
+        <div
+          className="el-progress el-progress--line el-progress--without-text c5 c6"
+          style={Object {}}
+        >
+          <div
+            className="el-progress-bar"
+          >
+            <div
+              className="el-progress-bar__outer"
+              style={
+                Object {
+                  "height": "6px",
+                }
+              }
+            >
+              <div
+                className="el-progress-bar__inner"
+                style={
+                  Object {
+                    "width": "0%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c1"
+        size={20}
+      >
+         
+        <p
+          className="c4"
+        >
+          330/512 GB
+        </p>
+         
+        <div
+          className="el-progress el-progress--line el-progress--without-text c5 c6"
+          style={Object {}}
+        >
+          <div
+            className="el-progress-bar"
+          >
+            <div
+              className="el-progress-bar__outer"
+              style={
+                Object {
+                  "height": "6px",
+                }
+              }
+            >
+              <div
+                className="el-progress-bar__inner"
+                style={
+                  Object {
+                    "width": "0%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c2"
+      />
+    </div>
+    <div
+      className="c3"
+      onClick={[Function]}
+    >
+      <div
+        className="c1"
+        size={20}
+      >
+        Slice name
+      </div>
+      <div
+        className="c1"
+        size={20}
+      >
+         
+        <p
+          className="c4"
+        >
+          1/2 CPU's
+        </p>
+         
+        <div
+          className="el-progress el-progress--line el-progress--without-text c5 c6"
+          style={Object {}}
+        >
+          <div
+            className="el-progress-bar"
+          >
+            <div
+              className="el-progress-bar__outer"
+              style={
+                Object {
+                  "height": "6px",
+                }
+              }
+            >
+              <div
+                className="el-progress-bar__inner"
+                style={
+                  Object {
+                    "width": "0%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c1"
+        size={20}
+      >
+         
+        <p
+          className="c4"
+        >
+          12/64 GB
+        </p>
+         
+        <div
+          className="el-progress el-progress--line el-progress--without-text c5 c6"
+          style={Object {}}
+        >
+          <div
+            className="el-progress-bar"
+          >
+            <div
+              className="el-progress-bar__outer"
+              style={
+                Object {
+                  "height": "6px",
+                }
+              }
+            >
+              <div
+                className="el-progress-bar__inner"
+                style={
+                  Object {
+                    "width": "0%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c1"
+        size={20}
+      >
+         
+        <p
+          className="c4"
+        >
+          300/500 mbps
+        </p>
+         
+        <div
+          className="el-progress el-progress--line el-progress--without-text c5 c6"
+          style={Object {}}
+        >
+          <div
+            className="el-progress-bar"
+          >
+            <div
+              className="el-progress-bar__outer"
+              style={
+                Object {
+                  "height": "6px",
+                }
+              }
+            >
+              <div
+                className="el-progress-bar__inner"
+                style={
+                  Object {
+                    "width": "0%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c1"
+        size={20}
+      >
+         
+        <p
+          className="c4"
+        >
+          330/512 GB
+        </p>
+         
+        <div
+          className="el-progress el-progress--line el-progress--without-text c5 c6"
+          style={Object {}}
+        >
+          <div
+            className="el-progress-bar"
+          >
+            <div
+              className="el-progress-bar__outer"
+              style={
+                Object {
+                  "height": "6px",
+                }
+              }
+            >
+              <div
+                className="el-progress-bar__inner"
+                style={
+                  Object {
+                    "width": "0%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c2"
+      >
+        <i
+          className="el-icon-arrow-right"
+          style={Object {}}
+        />
+      </div>
+    </div>
+    <div
+      className="c3"
+      onClick={[Function]}
+    >
+      <div
+        className="c1"
+        size={20}
+      >
+        Slice name
+      </div>
+      <div
+        className="c1"
+        size={20}
+      >
+         
+        <p
+          className="c4"
+        >
+          3/4 CPU's
+        </p>
+         
+        <div
+          className="el-progress el-progress--line el-progress--without-text c5 c6"
+          style={Object {}}
+        >
+          <div
+            className="el-progress-bar"
+          >
+            <div
+              className="el-progress-bar__outer"
+              style={
+                Object {
+                  "height": "6px",
+                }
+              }
+            >
+              <div
+                className="el-progress-bar__inner"
+                style={
+                  Object {
+                    "width": "0%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c1"
+        size={20}
+      >
+         
+        <p
+          className="c4"
+        >
+          12/16 GB
+        </p>
+         
+        <div
+          className="el-progress el-progress--line el-progress--without-text c5 c6"
+          style={Object {}}
+        >
+          <div
+            className="el-progress-bar"
+          >
+            <div
+              className="el-progress-bar__outer"
+              style={
+                Object {
+                  "height": "6px",
+                }
+              }
+            >
+              <div
+                className="el-progress-bar__inner"
+                style={
+                  Object {
+                    "width": "0%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c1"
+        size={20}
+      >
+         
+        <p
+          className="c4"
+        >
+          1000/700 mbps
+        </p>
+         
+        <div
+          className="el-progress el-progress--line el-progress--without-text c5 c6"
+          style={Object {}}
+        >
+          <div
+            className="el-progress-bar"
+          >
+            <div
+              className="el-progress-bar__outer"
+              style={
+                Object {
+                  "height": "6px",
+                }
+              }
+            >
+              <div
+                className="el-progress-bar__inner"
+                style={
+                  Object {
+                    "width": "0%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c1"
+        size={20}
+      >
+         
+        <p
+          className="c4"
+        >
+          512/1024 GB
+        </p>
+         
+        <div
+          className="el-progress el-progress--line el-progress--without-text c5 c6"
+          style={Object {}}
+        >
+          <div
+            className="el-progress-bar"
+          >
+            <div
+              className="el-progress-bar__outer"
+              style={
+                Object {
+                  "height": "6px",
+                }
+              }
+            >
+              <div
+                className="el-progress-bar__inner"
+                style={
+                  Object {
+                    "width": "0%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c2"
+      >
+        <i
+          className="el-icon-arrow-right"
+          style={Object {}}
+        />
+      </div>
+    </div>
+    <div
+      className="c7"
+    >
+      <div
+        className="c1"
+        size={20}
+      >
+        Network service name
+      </div>
+      <div
+        className="c1"
+        size={20}
+      >
+         
+        <p
+          className="c4"
+        >
+          1/2 CPU's
+        </p>
+         
+        <div
+          className="el-progress el-progress--line el-progress--without-text c5 c6"
+          style={Object {}}
+        >
+          <div
+            className="el-progress-bar"
+          >
+            <div
+              className="el-progress-bar__outer"
+              style={
+                Object {
+                  "height": "6px",
+                }
+              }
+            >
+              <div
+                className="el-progress-bar__inner"
+                style={
+                  Object {
+                    "width": "0%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c1"
+        size={20}
+      >
+         
+        <p
+          className="c4"
+        >
+          4/8 GB
+        </p>
+         
+        <div
+          className="el-progress el-progress--line el-progress--without-text c5 c6"
+          style={Object {}}
+        >
+          <div
+            className="el-progress-bar"
+          >
+            <div
+              className="el-progress-bar__outer"
+              style={
+                Object {
+                  "height": "6px",
+                }
+              }
+            >
+              <div
+                className="el-progress-bar__inner"
+                style={
+                  Object {
+                    "width": "0%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c1"
+        size={20}
+      >
+         
+        <p
+          className="c4"
+        >
+          300/200 mbps
+        </p>
+         
+        <div
+          className="el-progress el-progress--line el-progress--without-text c5 c6"
+          style={Object {}}
+        >
+          <div
+            className="el-progress-bar"
+          >
+            <div
+              className="el-progress-bar__outer"
+              style={
+                Object {
+                  "height": "6px",
+                }
+              }
+            >
+              <div
+                className="el-progress-bar__inner"
+                style={
+                  Object {
+                    "width": "0%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c1"
+        size={20}
+      >
+         
+        <p
+          className="c4"
+        >
+          480/512 GB
+        </p>
+         
+        <div
+          className="el-progress el-progress--line el-progress--without-text c5 c6"
+          style={Object {}}
+        >
+          <div
+            className="el-progress-bar"
+          >
+            <div
+              className="el-progress-bar__outer"
+              style={
+                Object {
+                  "height": "6px",
+                }
+              }
+            >
+              <div
+                className="el-progress-bar__inner"
+                style={
+                  Object {
+                    "width": "0%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c2"
+      />
+    </div>
+    <div
+      className="c7"
+    >
+      <div
+        className="c1"
+        size={20}
+      >
+        Network service name
+      </div>
+      <div
+        className="c1"
+        size={20}
+      >
+         
+        <p
+          className="c4"
+        >
+          2/2 CPU's
+        </p>
+         
+        <div
+          className="el-progress el-progress--line el-progress--without-text c5 c6"
+          style={Object {}}
+        >
+          <div
+            className="el-progress-bar"
+          >
+            <div
+              className="el-progress-bar__outer"
+              style={
+                Object {
+                  "height": "6px",
+                }
+              }
+            >
+              <div
+                className="el-progress-bar__inner"
+                style={
+                  Object {
+                    "width": "0%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c1"
+        size={20}
+      >
+         
+        <p
+          className="c4"
+        >
+          8/8 GB
+        </p>
+         
+        <div
+          className="el-progress el-progress--line el-progress--without-text c5 c6"
+          style={Object {}}
+        >
+          <div
+            className="el-progress-bar"
+          >
+            <div
+              className="el-progress-bar__outer"
+              style={
+                Object {
+                  "height": "6px",
+                }
+              }
+            >
+              <div
+                className="el-progress-bar__inner"
+                style={
+                  Object {
+                    "width": "0%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c1"
+        size={20}
+      >
+         
+        <p
+          className="c4"
+        >
+          500/500 mbps
+        </p>
+         
+        <div
+          className="el-progress el-progress--line el-progress--without-text c5 c6"
+          style={Object {}}
+        >
+          <div
+            className="el-progress-bar"
+          >
+            <div
+              className="el-progress-bar__outer"
+              style={
+                Object {
+                  "height": "6px",
+                }
+              }
+            >
+              <div
+                className="el-progress-bar__inner"
+                style={
+                  Object {
+                    "width": "0%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c1"
+        size={20}
+      >
+         
+        <p
+          className="c4"
+        >
+          256/512 GB
+        </p>
+         
+        <div
+          className="el-progress el-progress--line el-progress--without-text c5 c6"
+          style={Object {}}
+        >
+          <div
+            className="el-progress-bar"
+          >
+            <div
+              className="el-progress-bar__outer"
+              style={
+                Object {
+                  "height": "6px",
+                }
+              }
+            >
+              <div
+                className="el-progress-bar__inner"
+                style={
+                  Object {
+                    "width": "0%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c2"
+      />
+    </div>
+    <div
+      className="c3"
+      onClick={[Function]}
+    >
+      <div
+        className="c1"
+        size={20}
+      >
+        Slice name
+      </div>
+      <div
+        className="c1"
+        size={20}
+      >
+         
+        <p
+          className="c4"
+        >
+          1/2 CPU's
+        </p>
+         
+        <div
+          className="el-progress el-progress--line el-progress--without-text c5 c6"
+          style={Object {}}
+        >
+          <div
+            className="el-progress-bar"
+          >
+            <div
+              className="el-progress-bar__outer"
+              style={
+                Object {
+                  "height": "6px",
+                }
+              }
+            >
+              <div
+                className="el-progress-bar__inner"
+                style={
+                  Object {
+                    "width": "0%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c1"
+        size={20}
+      >
+         
+        <p
+          className="c4"
+        >
+          12/64 GB
+        </p>
+         
+        <div
+          className="el-progress el-progress--line el-progress--without-text c5 c6"
+          style={Object {}}
+        >
+          <div
+            className="el-progress-bar"
+          >
+            <div
+              className="el-progress-bar__outer"
+              style={
+                Object {
+                  "height": "6px",
+                }
+              }
+            >
+              <div
+                className="el-progress-bar__inner"
+                style={
+                  Object {
+                    "width": "0%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c1"
+        size={20}
+      >
+         
+        <p
+          className="c4"
+        >
+          300/500 mbps
+        </p>
+         
+        <div
+          className="el-progress el-progress--line el-progress--without-text c5 c6"
+          style={Object {}}
+        >
+          <div
+            className="el-progress-bar"
+          >
+            <div
+              className="el-progress-bar__outer"
+              style={
+                Object {
+                  "height": "6px",
+                }
+              }
+            >
+              <div
+                className="el-progress-bar__inner"
+                style={
+                  Object {
+                    "width": "0%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c1"
+        size={20}
+      >
+         
+        <p
+          className="c4"
+        >
+          330/512 GB
+        </p>
+         
+        <div
+          className="el-progress el-progress--line el-progress--without-text c5 c6"
+          style={Object {}}
+        >
+          <div
+            className="el-progress-bar"
+          >
+            <div
+              className="el-progress-bar__outer"
+              style={
+                Object {
+                  "height": "6px",
+                }
+              }
+            >
+              <div
+                className="el-progress-bar__inner"
+                style={
+                  Object {
+                    "width": "0%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c2"
+      >
+        <i
+          className="el-icon-arrow-right"
+          style={Object {}}
+        />
+      </div>
+    </div>
+    <div
+      className="c3"
+      onClick={[Function]}
+    >
+      <div
+        className="c1"
+        size={20}
+      >
+        Slice name
+      </div>
+      <div
+        className="c1"
+        size={20}
+      >
+         
+        <p
+          className="c4"
+        >
+          1/2 CPU's
+        </p>
+         
+        <div
+          className="el-progress el-progress--line el-progress--without-text c5 c6"
+          style={Object {}}
+        >
+          <div
+            className="el-progress-bar"
+          >
+            <div
+              className="el-progress-bar__outer"
+              style={
+                Object {
+                  "height": "6px",
+                }
+              }
+            >
+              <div
+                className="el-progress-bar__inner"
+                style={
+                  Object {
+                    "width": "0%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c1"
+        size={20}
+      >
+         
+        <p
+          className="c4"
+        >
+          12/64 GB
+        </p>
+         
+        <div
+          className="el-progress el-progress--line el-progress--without-text c5 c6"
+          style={Object {}}
+        >
+          <div
+            className="el-progress-bar"
+          >
+            <div
+              className="el-progress-bar__outer"
+              style={
+                Object {
+                  "height": "6px",
+                }
+              }
+            >
+              <div
+                className="el-progress-bar__inner"
+                style={
+                  Object {
+                    "width": "0%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c1"
+        size={20}
+      >
+         
+        <p
+          className="c4"
+        >
+          300/500 mbps
+        </p>
+         
+        <div
+          className="el-progress el-progress--line el-progress--without-text c5 c6"
+          style={Object {}}
+        >
+          <div
+            className="el-progress-bar"
+          >
+            <div
+              className="el-progress-bar__outer"
+              style={
+                Object {
+                  "height": "6px",
+                }
+              }
+            >
+              <div
+                className="el-progress-bar__inner"
+                style={
+                  Object {
+                    "width": "0%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c1"
+        size={20}
+      >
+         
+        <p
+          className="c4"
+        >
+          330/512 GB
+        </p>
+         
+        <div
+          className="el-progress el-progress--line el-progress--without-text c5 c6"
+          style={Object {}}
+        >
+          <div
+            className="el-progress-bar"
+          >
+            <div
+              className="el-progress-bar__outer"
+              style={
+                Object {
+                  "height": "6px",
+                }
+              }
+            >
+              <div
+                className="el-progress-bar__inner"
+                style={
+                  Object {
+                    "width": "0%",
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c2"
+      >
+        <i
+          className="el-icon-arrow-right"
+          style={Object {}}
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;

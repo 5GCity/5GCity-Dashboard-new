@@ -1,0 +1,106 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+.c0 {
+  color: white;
+  margin-right: 8px;
+  font-size: 12px;
+  line-height: 12px;
+}
+
+.c1 .el-switch__core {
+  position: unset;
+  background: transparent;
+  boder-radius: 7px;
+  border: none;
+  height: 12px;
+}
+
+.c1 .el-switch__core .el-switch__label .el-switch__label--right {
+  opacity: 0.2;
+}
+
+.c1 .el-switch__core .el-switch__label .el-switch__label--right {
+  opacity: 0.2;
+}
+
+.c1 .el-switch__label .el-switch__label--right {
+  opacity: 0.2;
+}
+
+<div
+  className=""
+>
+  <span
+    className="c0"
+  />
+  <label
+    className="el-switch el-switch--wide is-checked c1"
+    style={Object {}}
+  >
+    <div
+      className="el-switch__mask"
+      style={
+        Object {
+          "display": "none",
+        }
+      }
+    />
+    <input
+      checked={true}
+      className="el-switch__input c1"
+      disabled={false}
+      name=""
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      type="checkbox"
+    />
+    <span
+      className="el-switch__core"
+      style={
+        Object {
+          "width": "58px",
+        }
+      }
+    >
+      <span
+        className="el-switch__button"
+        onClick={[Function]}
+        style={
+          Object {
+            "transform": "translate(38px, 2px)",
+          }
+        }
+      />
+    </span>
+    <div
+      className="el-switch__label el-switch__label--left"
+      style={
+        Object {
+          "width": "58px",
+        }
+      }
+    >
+      
+      <span>
+        ON
+      </span>
+    </div>
+    <div
+      className="el-switch__label el-switch__label--right"
+      style={
+        Object {
+          "display": "none",
+          "width": "58px",
+        }
+      }
+    >
+      
+      <span>
+        OFF
+      </span>
+    </div>
+  </label>
+</div>
+`;

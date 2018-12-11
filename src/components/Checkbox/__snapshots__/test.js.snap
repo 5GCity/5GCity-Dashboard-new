@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<label
+  className="el-checkbox"
+  style={Object {}}
+>
+  <span
+    className="el-checkbox__input"
+  >
+    <span
+      className="el-checkbox__inner"
+    />
+    <input
+      checked={false}
+      className="el-checkbox__original"
+      disabled={undefined}
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      type="checkbox"
+    />
+  </span>
+  <span
+    className="el-checkbox__label"
+  >
+    Checkbox
+  </span>
+</label>
+`;

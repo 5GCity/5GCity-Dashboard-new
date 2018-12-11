@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="60px" viewBox="0 0 48 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>markers/medium</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M15,28 L33,28 L33,33 L15,33 L15,28 Z M15,21.5 L33,21.5 L33,26.5 L15,26.5 L15,21.5 Z M15,15 L33,15 L33,20 L15,20 L15,15 Z M18,18.5 C18.5522847,18.5 19,18.0522847 19,17.5 C19,16.9477153 18.5522847,16.5 18,16.5 C17.4477153,16.5 17,16.9477153 17,17.5 C17,18.0522847 17.4477153,18.5 18,18.5 Z M18,25 C18.5522847,25 19,24.5522847 19,24 C19,23.4477153 18.5522847,23 18,23 C17.4477153,23 17,23.4477153 17,24 C17,24.5522847 17.4477153,25 18,25 Z M18,31.5 C18.5522847,31.5 19,31.0522847 19,30.5 C19,29.9477153 18.5522847,29.5 18,29.5 C17.4477153,29.5 17,29.9477153 17,30.5 C17,31.0522847 17.4477153,31.5 18,31.5 Z" id="path-1"></path>
+    </defs>
+    <g id="markers/medium" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M15.5419854,46.4671767 C6.46047086,43.0466597 0,34.2777918 0,24 C0,10.745166 10.745166,0 24,0 C37.254834,0 48,10.745166 48,24 C48,34.2777918 41.5395291,43.0466597 32.4580146,46.4671767 L24,60 L15.5419854,46.4671767 Z" id="base" fill="#FFFFFF"></path>
+        <circle id="color" fill="#89979F" cx="24" cy="24" r="20"></circle>
+        <mask id="mask-2" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <use id="icon" fill="#FFFFFF" fill-rule="nonzero" xlink:href="#path-1"></use>
+    </g>
+</svg>

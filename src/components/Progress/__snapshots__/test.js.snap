@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+.c0 {
+  witdh: 100%;
+}
+
+.c0 .el-progress-bar__inner {
+  background-color: #8CC14E;
+  border-radius: 0px;
+}
+
+.c0 .el-progress-bar__outer {
+  border-radius: 0px;
+  background-color: rgba(137,151,159,0.15);
+  height: 8px !important;
+}
+
+<div
+  className="el-progress el-progress--line c0"
+  style={Object {}}
+>
+  <div
+    className="el-progress-bar"
+  >
+    <div
+      className="el-progress-bar__outer"
+      style={
+        Object {
+          "height": "6px",
+        }
+      }
+    >
+      <div
+        className="el-progress-bar__inner"
+        style={
+          Object {
+            "width": "0%",
+          }
+        }
+      />
+    </div>
+  </div>
+  <div
+    className="el-progress__text"
+    style={
+      Object {
+        "fontSize": "14.4px",
+      }
+    }
+  >
+    0%
+  </div>
+</div>
+`;

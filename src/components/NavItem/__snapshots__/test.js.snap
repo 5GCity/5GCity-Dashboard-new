@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+.c0 {
+  color: #fff;
+  text-align: center;
+  cursor: pointer;
+  height: 92px;
+  padding: 14px 16px;
+  box-shadow: inset 0 -1px 0 0 rgba(137,151,159,0.15);
+}
+
+.c1 {
+  font-size: 32px;
+}
+
+.c2 {
+  line-height: 15px;
+  margin-top: 8px;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+<div
+  className="c0"
+  disabled={undefined}
+  onClick={undefined}
+  to={undefined}
+  width={undefined}
+>
+  <i
+    className="el-icon-undefined c1"
+    style={Object {}}
+  />
+  <div
+    className="c2"
+  />
+</div>
+`;

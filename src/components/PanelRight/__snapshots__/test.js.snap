@@ -1,0 +1,106 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  height: 820px;
+  width: 268px;
+  opacity: 0.98;
+  background-color: #37474F;
+  box-shadow: 0 0 50px 0 rgba(0,0,0,0.2);
+}
+
+.c1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  height: 78px;
+  margin: 0px 16px;
+  border-bottom: 1px solid rgba(239,242,247,0.1);
+}
+
+.c2 {
+  width: 20%;
+}
+
+.c3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  cursor: pointer;
+  height: 32px;
+  width: 32px;
+  border-radius: 24px;
+  background-color: #89979F;
+}
+
+.c3:hover {
+  background-color: #57646b;
+}
+
+.c4 {
+  width: 80%;
+  font-family: "D-DIN Exp";
+  font-size: 10px;
+  -webkit-letter-spacing: 0.5px;
+  -moz-letter-spacing: 0.5px;
+  -ms-letter-spacing: 0.5px;
+  letter-spacing: 0.5px;
+  color: #89979F;
+  margin: 0 8px;
+}
+
+.c5 {
+  width: 80%;
+  margin: 0 8px;
+  font-family: D-DIN;
+  font-size: 20px;
+  color: #fff;
+}
+
+<div
+  className="c0"
+>
+  <div
+    className="c1"
+  >
+    <div
+      className="c2"
+    >
+      <div
+        className="c3"
+      >
+         t 
+      </div>
+    </div>
+    <p
+      className="c4"
+    >
+      Cabinet
+    </p>
+    <p
+      className="c5"
+    >
+      0020110b0c30c
+    </p>
+    <div
+      className="c2"
+    >
+      asdad
+    </div>
+  </div>
+</div>
+`;

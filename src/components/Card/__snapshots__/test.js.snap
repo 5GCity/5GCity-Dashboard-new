@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+.c0 {
+  border-radius: 6px;
+  background-color: #48565E;
+  box-shadow: 0 0 20px 0 rgba(0,0,0,0.1);
+  border: 0;
+}
+
+.c0 .el-card__header {
+  border-bottom: 1px solid rgba(137,151,159,0.2);
+}
+
+<div
+  className="el-card c0"
+  style={Object {}}
+>
+  <div
+    className="el-card__body"
+    style={
+      Object {
+        "padding": "20px",
+      }
+    }
+  />
+</div>
+`;

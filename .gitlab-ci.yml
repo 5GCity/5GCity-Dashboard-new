@@ -1,0 +1,21 @@
+image: ubuntu
+
+variables:
+    STAGING_ENVIROMENT: 206.189.7.202
+
+before_script: 
+    - apt-get update -y && apt-get install openssh-client -y
+    - mkdir ~/.ssh
+    - touch ~/.ssh/id_rsa
+    - echo "$CI_PRIVATE_KEY" >> ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - eval "$(ssh-agent -s)"
+    - ssh-add ~/.ssh/id_rsa
+    - ssh-keyscan $STAGING_ENVIROMENT >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+
+deploy:staging:
+    only:
+        - develop
+    script:
+        - ssh -o StrictHostKeyChecking=no ci@"$STAGING_ENVIROMENT" 'cd /opt/5gcity/web-platform && git pull && yarn install && yarn build'

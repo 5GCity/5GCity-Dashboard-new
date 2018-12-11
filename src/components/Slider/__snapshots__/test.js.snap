@@ -1,0 +1,111 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+.c0 .el-slider__button-wrapper {
+  height: 16px;
+  width: 16px;
+  top: -12px;
+}
+
+.c0 .el-slider__runway {
+  background-color: #89979F;
+  height: 2px;
+}
+
+.c0 .el-slider__bar {
+  background-color: transparent;
+  height: 2px;
+}
+
+.c0 .el-slider__button {
+  height: 16px;
+  width: 16px;
+  border: 2px solid #37474F;
+  background-color: rgba(140,193,78,0.6);
+}
+
+.c0 .el-slider__stop {
+  height: 6px;
+  width: 6px;
+  top: -2px;
+  background-color: #89979F;
+}
+
+.c0 .el-tooltip__popper.is-dark {
+  background: #a5b0b6;
+  color: #fff;
+}
+
+.c0 .el-tooltip__popper[x-placement^=bottom] .popper__arrow {
+  border-bottom-color: #a5b0b6;
+}
+
+.c0 .el-tooltip__popper[x-placement^=bottom] .popper__arrow::after {
+  border-bottom-color: #a5b0b6;
+}
+
+<div
+  className="el-slider c0"
+>
+  <div
+    className="el-slider__runway"
+    onClick={[Function]}
+    style={Object {}}
+  >
+    <div
+      className="el-slider__bar"
+      style={
+        Object {
+          "left": "0%",
+          "width": "0%",
+        }
+      }
+    />
+    <div
+      className="el-slider__button-wrapper"
+      onMouseDown={[Function]}
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+      style={
+        Object {
+          "left": "0%",
+        }
+      }
+    >
+      <div
+        className="el-tooltip"
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={Object {}}
+      >
+        <div
+          className="el-tooltip__rel"
+        >
+          <div>
+            <div
+              className="el-slider__button"
+            />
+          </div>
+        </div>
+        <div
+          className="el-tooltip__popper is-dark"
+          style={
+            Object {
+              "display": "none",
+            }
+          }
+        >
+          <div>
+            <span>
+              0
+            </span>
+          </div>
+          <div
+            className="popper__arrow"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

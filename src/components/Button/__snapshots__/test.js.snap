@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+.c0 {
+  border-radius: 24px;
+  border: transparent;
+  color: #fff;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+<button
+  className="el-button el-button--default c0"
+  disabled={false}
+  onClick={[Function]}
+  style={Object {}}
+  type="button"
+>
+  <span>
+    <i
+      className=""
+    />
+    <span
+      className=""
+    />
+  </span>
+</button>
+`;

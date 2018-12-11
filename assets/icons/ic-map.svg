@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>icons/ic-map</title>
+    <desc>Created with Sketch.</desc>
+    <g id="icons/ic-map" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M27.3333333,4 L27.12,4.04 L20,6.8 L12,4 L4.48,6.53333333 C4.2,6.62666667 4,6.86666667 4,7.17333333 L4,27.3333333 C4,27.7066667 4.29333333,28 4.66666667,28 L4.88,27.96 L12,25.2 L20,28 L27.52,25.4666667 C27.8,25.3733333 28,25.1333333 28,24.8266667 L28,4.66666667 C28,4.29333333 27.7066667,4 27.3333333,4 Z M20,25.3333333 L12,22.52 L12,6.66666667 L20,9.48 L20,25.3333333 Z" id="icon" fill="#FFFFFF" fill-rule="nonzero"></path>
+    </g>
+</svg>
