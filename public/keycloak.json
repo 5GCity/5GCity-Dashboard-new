@@ -1,6 +1,6 @@
 {
   "realm": "5gcity",
-  "auth-server-url": "http://206.189.7.202:7070/auth",
+  "auth-server-url": "<AUTH_SERVER_URL>",
   "ssl-required": "none",
   "resource": "my_client",
   "credentials": {

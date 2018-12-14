@@ -106,7 +106,9 @@ export default kea({
     *openPanel (action){
       const { setSelectPin } = this.actions
       const pinsResources = yield this.get('pinsResources')
-      const pinIndex =pinsResources.findIndex(marker => JSON.stringify(marker) === JSON.stringify(action.payload.marker))
+      const pinIndex = pinsResources.findIndex(marker => 
+        JSON.stringify(marker) === JSON.stringify(action.payload.marker)
+      )
       yield put(setSelectPin(pinIndex))
     },
 
@@ -115,17 +117,20 @@ export default kea({
       const pinIndex = yield this.get('selectPin')
       const { closePanel } = this.actions
       let found = false
-      pinsResources[pinIndex].location.resources.computes && pinsResources[pinIndex].location.resources.computes.map((compute) =>{
+      pinsResources[pinIndex].location.resources.computes && 
+      pinsResources[pinIndex].location.resources.computes.foreach((compute) =>{
         if(compute.ischecked === true){
           return found = true
         }
       })
-      pinsResources[pinIndex].location.resources.networks && pinsResources[pinIndex].location.resources.networks.map((network) =>{
+      pinsResources[pinIndex].location.resources.networks && 
+      pinsResources[pinIndex].location.resources.networks.foreach((network) =>{
         if(network.ischecked === true){
           return found = true
         }
       })
-      pinsResources[pinIndex].location.resources.hotspots && pinsResources[pinIndex].location.resources.hotspots.map((hotspot) =>{
+      pinsResources[pinIndex].location.resources.hotspots && 
+      pinsResources[pinIndex].location.resources.hotspots.foreach((hotspot) =>{
         if(hotspot.ischecked === true){
           return found = true
         }
@@ -144,7 +149,7 @@ export default kea({
       const { setListResources } = this.actions
 
       try{      
-        const responseComputes = yield call(axios.get , `${API_BASE_URL}/slicemanagerapi/compute`)
+        const responseComputes = yield call(axios.get ,`${API_BASE_URL}/slicemanagerapi/compute`)
         const responseNetworks = yield call(axios.get , `${API_BASE_URL}/slicemanagerapi/physical_network`)
         const listResources = {computes:[], networks:[]} 
         if(responseComputes){
@@ -161,8 +166,15 @@ export default kea({
     },
 
     *createSlice(){
-        const pinsResources = yield this.get('pinsResources'), chunk_ids=[]
-        const { closeModal, isLoading, isnLoading, errorfetch, resetSliceName } = this.actions
+        const pinsResources = yield this.get('pinsResources'), 
+        chunk_ids=[]
+        const { 
+          closeModal, 
+          isLoading, 
+          isnLoading, 
+          errorfetch, 
+          resetSliceName 
+        } = this.actions
         /*
          * 1º Create OpenStack
          * 2º Create Vlan

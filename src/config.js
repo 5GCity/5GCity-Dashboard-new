@@ -8,7 +8,7 @@ import 'interceptors'
 
 // ! Do not remove the env comments they are used for building the correct environemnt
 // env
-export * from 'environments/development'
+export * from 'environments/production'
 // env
 
 // Core Constants
@@ -20,7 +20,7 @@ export const DEFAULT_DATE_FORMAT = `DD-MM-YYYY`
 export const API_DATE_FORMAT = `YYYY-MM-DD`
 export const MAPBOX_TOKEN = `pk.eyJ1IjoiaHVnb2ZvbnNlY2E0MyIsImEiOiJjam9nMHRhNDEwOWRnM2txenI0Mng5aHVvIn0.WIeLY3YLpDHAO9X76J5usA`
 export const MAPBOX_STYLE = `mapbox://styles/mapbox/dark-v9`
-export const API_BASE_URL = `http://206.189.7.202:8000`
+export const SENTRY_URL = `https://1512cd26cf0d48cbb47374af14fb951b@sentry2.ubiwhere.com/87`
 
 // Field Constants
 

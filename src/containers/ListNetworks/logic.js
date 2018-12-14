@@ -27,20 +27,7 @@ export default kea({
   }),
 
   reducers: ({ actions }) => ({
-    networksServices:[[
-      {
-          "user_id": "5be191a1d306de69cec16f94",
-          "id": "5be191a1d306de69cec16f95",
-          "network_service_data": {
-              "osm_descriptor_id": "a7abe2b5-2c4d-4296-8ba9-15080e30a91f"
-          },
-          "name": "Network service example",
-          "location": {
-              "longitude": 3.4,
-              "latitude": 34.0
-          }
-      }
-  ], PropTypes.array,{
+    networksServices:[[], PropTypes.array,{
       [actions.fetchNetworksServices]: (state, payload) => null,
       [actions.setNetworksServices]: (state, payload) => payload.networks
     }]

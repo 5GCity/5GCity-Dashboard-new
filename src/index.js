@@ -4,7 +4,7 @@
  */
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { SENTRY_URL, VERSION, BUILD_DATE } from 'config'
+import { SENTRY_URL ,VERSION, BUILD_DATE } from 'config'
 import { Provider } from 'react-redux'
 import { Store } from './store'
 import { AppContainer } from 'react-hot-loader'
