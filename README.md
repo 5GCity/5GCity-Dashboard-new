@@ -31,9 +31,9 @@
 
 # Installation/Instantiation
 
-The presented solution uses Docker and Docker Compose.
+The presented solution use Docker.
 
-Please install [Docker](https://docs.docker.com/install/) and [Docker Compose](https://docs.docker.com/compose/install/) according to the desired operating system.
+Please install [Docker](https://docs.docker.com/install/) according to the desired operating system.
 
 Build Docker command:
 ```
@@ -42,7 +42,7 @@ docker build --rm -t 5gcity:latest . --build-arg API_BASE_URL=http://206.189.7.2
 When on your console show `Successfully built xxxxxxxxxx` run command:
 
 ```
-docker run -p 5000:5000 5gcity:latest
+docker run -d -p 5000:5000 5gcity:latest
 ```
 Go to http://localhost:5000
 
