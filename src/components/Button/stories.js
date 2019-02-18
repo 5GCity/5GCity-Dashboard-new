@@ -6,32 +6,41 @@
  */
 import React from 'react'
 import { storiesOf } from '@storybook/react'
-import { Theme } from 'globalStyles'
-import { DeleteIcon } from 'components/Icons';
+import { DeleteIcon } from 'components/Icons'
 
 import Button from './index'
 
-const bStyle = {
-  backgroundColor: Theme.bodyBackground,
-  height: '100%',
-  padding: '30px'
-};
 
 const BtnPrimary = () => (
-  <div style={bStyle}>
-  <Button type={'primary'} icon={'edit'} description={'Edit'}/>
-  <Button type={'primary'} svg={ <DeleteIcon /> } description={'Delete'}/>
+  <div>
+  <Button
+    type={'primary'}
+    icon={'edit'}
+    text={'Edit'}
+  />
+  <Button
+    type={'primary'}
+    svg={ <DeleteIcon /> }
+    text={'Delete'}
+  />
   </div>
 )
 
 
 const BtnSecondary = () => (
-  <div style={bStyle}>
   <Button type={'secondary'}>View</Button>
-  </div>
+)
+
+const BtnIcon = () => (
+  <Button
+    type={'secondary'}
+    text={'Add from public repository'}
+    icon={'plus'}
+  />
 )
 
 
 storiesOf('Button', module)
-  .add('primary', BtnPrimary)
-  .add('secondary', BtnSecondary)
+  .add('Primary', BtnPrimary)
+  .add('Secondary', BtnSecondary)
+  .add('Btn + Icon', BtnIcon)

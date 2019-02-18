@@ -10,37 +10,54 @@ import { Icon } from 'element-react';
 import Progress from 'components/Progress';
 
 
-export default ({ children, columns, data, toogleAction, ...props }) => (
+export default ({ children, toogleAction, ...props }) => (
   <Wrapper {...props}>
     <Header>
-      {columns.map( (el) => 
+      {props.columns.map( (el) =>
         <Column size={el.size} key={el.title}>{el.title}</Column>
       )}
       <Column></Column>
     </Header>
     <Container>
-      {data && data.map((item) => { 
+      {props.data && props.data.map((item) => {
         return[
         <Row key={item.id} onClick={() => toogleAction(item)}>
-          {columns && columns.map(({ prop, render, size }) => {
+          {props.columns && props.columns.map(({ prop, render, size }) => {
             const colProps = { size }
             return [
               render && item[prop] && <Column key={item.id} {...colProps}> <ColumnTitle>{render(item[prop])}</ColumnTitle> <ProgressContainer percentage={item[prop].percentage} type={'line'} textInside={false} showText={false} status={item[prop].status} /></Column>,
               !render && item[prop] && <Column key={item.id} {...colProps}>{item[prop]}</Column>
-            ] 
+            ]
           })}
           <Column key={item.id}>
-            {item.open  ? <Icon name={'arrow-up'} /> : <Icon name={'arrow-right'} />   }
+            { item.open &&
+              <Icon name={'arrow-up'} />
+            }
+            { !item.open &&
+              <Icon name={'arrow-right'} />
+            }
           </Column>
         </Row>,
-        item.details && item.details.map((detail) => 
+        item.details && item.details.map((detail) =>
         <DetailRow key={detail.id} show={item.open}>
-         {columns && columns.map(({ prop, render, size }) => {
+         {props.columns && props.columns.map(({ prop, render, size }) => {
             const colProps = { size }
             return [
-              render && detail[prop] && <Column key={detail.id} {...colProps}> <ColumnTitle>{render(detail[prop])}</ColumnTitle> <ProgressContainer percentage={item[prop].percentage} type={'line'} textInside={false} showText={false} status={item[prop].status} /></Column>,
-              !render && detail[prop] && <Column key={detail.id} {...colProps}>{detail[prop]}</Column>
-            ] 
+              render && detail[prop] &&
+              <Column key={detail.id} {...colProps}>
+                <ColumnTitle>{render(detail[prop])}</ColumnTitle>
+                <ProgressContainer
+                  percentage={item[prop].percentage}
+                  type={'line'}
+                  textInside={false}
+                  showText={false}
+                  status={item[prop].status}
+                />
+              </Column>,
+              !render && detail[prop] &&
+              <Column key={detail.id} {...colProps}>
+              {detail[prop]}</Column>
+            ]
           })}
             <Column key={detail.id}></Column>
         </DetailRow>
@@ -60,7 +77,7 @@ const Header = styled.div`
 	height: 48px;
   padding 25px 26px;
   color: #89979F;
-  font-family: ${({ theme }) => theme.thirdFont };
+  font-family: ${({ theme }) => theme.fontDinCondensed };
   font-size: 12px;
   letter-spacing: 1px;
 	background-color: #37474F;
@@ -70,7 +87,7 @@ const Header = styled.div`
 const Container = styled.div``
 
 const Row = styled.div`
-  display: flex;  
+  display: flex;
   align-items: center;
   padding 25px 26px;
 	height: 64px;
@@ -84,7 +101,7 @@ const Row = styled.div`
 const DetailRow = styled.div`
   display: flex;
   align-items: center;
-  height: 64px; 
+  height: 64px;
   padding 25px 26px;
   background-color: #324148;
   color: #FFFFFF;
@@ -105,7 +122,7 @@ const Column = styled.div`
     height: 14px;
     width: 14px;
   }
-  
+
   ${({ size }) => size && `
     flex-basis: ${size}%;
 

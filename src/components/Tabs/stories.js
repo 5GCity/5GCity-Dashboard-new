@@ -2,16 +2,17 @@
  * Tabs Component Stories
  * Please write a description or remove this line
  *
- * @author Your Name <youremail@ubiwhere.com>
+ * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
 import React from 'react'
 import { storiesOf } from '@storybook/react'
-import { Theme } from 'globalStyles';
+import { action } from '@storybook/addon-actions'
+import { Theme } from 'globalStyles'
+import styled from 'styled-components'
 
-import Tabs, { Pane } from './index'
+import Tab from './index'
 
 const bStyle = {
-  padding:'30px',
   backgroundColor: Theme.bodyBackground,
   height:'100%'
 };
@@ -19,12 +20,15 @@ const bStyle = {
 
 const example1 = () => (
   <div style={bStyle}>
-    <Tabs activeName='2' onTabClick={(tab) => console.log(tab.props.name)}>
-      <Pane label='Current usage' name='1'>Current usage</Pane>
-      <Pane label='Allocation' name='2'>Allocation</Pane>
-    </Tabs>
+    <Tab activeName="1" onTabClick={action('Click Tab')}>
+      <Wrapper name="1" label="Tab 1">Page 1</Wrapper>
+      <Wrapper name="2" label="Tab 2">Page 2</Wrapper>
+    </Tab>
+
 </div>
 )
+const Wrapper = styled.p`
+`
 
 storiesOf('Tabs', module)
   .add('primary', example1)

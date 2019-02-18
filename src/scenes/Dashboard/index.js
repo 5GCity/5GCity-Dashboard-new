@@ -12,14 +12,14 @@ import styled from 'styled-components'
 import SlicesStatus from 'containers/SlicesStatus';
 import Navbar from 'containers/Navbar'
 
-// Components 
+// Components
 import PageTitle from 'components/PageTitle';
-import Tabs ,{ Pane } from 'components/Tabs';
+import Tabs from 'components/Tabs';
 
 class Dashboard extends Component {
 
   componentDidMount () {
-      const { history } = this.props 
+      const { history } = this.props
       history.push('/slices')
   }
 
@@ -29,8 +29,8 @@ class Dashboard extends Component {
       <Navbar />
       <PageTitle title={'dashboard'}/>
         <Tabs activeName='2' onTabClick={(tab) => console.log(tab.props.name)}>
-          <Pane label='Current usage' name='1'><SlicesStatus /></Pane>
-          <Pane label='Allocation' name='2'>Allocation</Pane>
+          <Container label='Current usage' name='1'><SlicesStatus /></Container>
+          <Container label='Allocation' name='2'>Allocation</Container>
         </Tabs>
 
       </Wrapper>
@@ -44,6 +44,7 @@ export default Logic(Dashboard)
 const Wrapper = styled.div`
   margin-left:120px;
   padding: 0 24px;
-  `
-
+`
+const Container = styled.div`
+`
 

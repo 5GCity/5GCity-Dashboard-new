@@ -20,10 +20,10 @@ export const NodeMarkerIcon = props => (
 )
 
 export const DeleteIcon = props => (
-  <svg width={20} height={20} {...props}>
+  <svg width="1em" height="1em" viewBox="0 0 20 20" {...props}>
     <path
       d="M4.833 16.333c0 .917.75 1.667 1.667 1.667h6.667c.916 0 1.666-.75 1.666-1.667v-10h-10v10zm10.834-12.5H12.75L11.917 3H7.75l-.833.833H4V5.5h11.667V3.833z"
-      fill="#FFF"
+      fill={props.fill || "#fff"}
       fillRule="nonzero"
     />
   </svg>

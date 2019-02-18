@@ -58,7 +58,7 @@ const ItemLabel = styled.div`
   margin-top: 8px;
   font-size: 14px;
   text-transform: uppercase;
-  font-family: ${({ theme }) => theme.secondaryFont};
+  font-family: ${({ theme }) => theme.fontDin};
 `
 
 const IconItem = styled(Icon)`

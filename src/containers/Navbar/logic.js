@@ -8,8 +8,10 @@
 import { kea } from 'kea'
 import { put } from 'redux-saga/effects'
 import PropTypes from 'prop-types'
-import AppLogic from 'containers/App/logic'
 import { giveUserRole } from './utils'
+
+/* Logic */
+import AppLogic from 'containers/App/logic'
 
 export default kea({
   path: () => ['scenes', 'containers', 'Navbar'],
@@ -34,7 +36,7 @@ export default kea({
       [actions.closeModal]: (state, payload) => false
     }]
   }),
-  
+
   selectors: ({ selectors }) => ({
     userName: [
       () => [selectors.keycloak],
@@ -62,7 +64,7 @@ export default kea({
       yield put(closeModal())
       const keycloak = yield this.get('keycloak')
       console.log(keycloak)
-      keycloak.logout()        
+      keycloak.logout()
     }
   }
 })

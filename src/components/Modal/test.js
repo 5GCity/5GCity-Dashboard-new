@@ -10,7 +10,7 @@ import 'jest-styled-components'
 
 it('renders correctly', () => {
   const tree = renderer
-    .create(<Modal />)
+    .create(<Modal onCancel={false} />)
     .toJSON()
 
   expect(tree).toMatchSnapshot()

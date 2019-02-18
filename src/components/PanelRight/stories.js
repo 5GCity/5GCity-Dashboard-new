@@ -26,15 +26,15 @@ const fakeData = {
 
 const marker = [{
   type: "Compute",
-  id: '5b6308c258f568073093f70e', 
+  id: '5b6308c258f568073093f70e',
   name: 'Compute 1'},
   {
   type: "Compute",
-  id: '5b6308c258f568073093f74e', 
+  id: '5b6308c258f568073093f74e',
   name: 'Compute 2'
   },{
   type: "Network",
-  id: '5b6308c258f568073093f70e', 
+  id: '5b6308c258f568073093f70e',
   name: 'Network 1'
 }]
 
@@ -43,8 +43,8 @@ class PanelRightComponent extends Component {
   state = {
     show: true,
   }
-  
-  render () {    
+
+  render () {
 
   const bStyle = {
   padding: '30px',
@@ -52,12 +52,12 @@ class PanelRightComponent extends Component {
   height:'100%'
 }
 
- // 
+ //
   const info = (marker) => {
     console.log(marker);
     return[
    <PanelInfo>
-     {marker && marker.map(( el, i ) => 
+     {marker && marker.map(( el, i ) =>
     <React.Fragment>
     <Title key={el.id}>{el.type === 'Compute' ? 'Computing': 'Network'}</Title>
         <TypeMarke className={ i ===  el.length -1 && 'noBorder'} key={el.id}>
@@ -73,12 +73,12 @@ class PanelRightComponent extends Component {
   const { show } = this.state
     return (
       <React.Fragment>
-        <PanelRight 
-        show={show} 
-        closeNav={() => this.setState({show: false})} 
-        headerIcon={<NodeMarkerIcon height={30} width={30} />} 
-        action={(item) => console.log(item)} 
-        container={info(marker)} 
+        <PanelRight
+        show={show}
+        closeNav={() => this.setState({show: false})}
+        headerIcon={<NodeMarkerIcon height={30} width={30} />}
+        action={(item) => console.log(item)}
+        container={info(marker)}
         buttonNav={<Button onClick={() => this.setState({show: true})} description={'show'} type={'primary'} />}/>
         <Button onClick={() => this.setState({show: true})} description={'show'} type={'primary'} />
       </React.Fragment>

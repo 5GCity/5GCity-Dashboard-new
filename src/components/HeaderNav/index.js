@@ -18,22 +18,22 @@ export default ({ children, type, buttonBack, name, leftContent, navigateBack, .
       {buttonBack &&
         <ButtonIcon onClick={() => navigateBack()}>{buttonBack}</ButtonIcon>
       }
-      {name && 
+      {name &&
         <Title>{name}</Title>
       }
     </RightContainer>
     <LeftContainer>
-      {leftContent && leftContent.map((el) => 
+      {leftContent && leftContent.map((el) =>
         <React.Fragment key={el.id}>
           {el.type === 'switch' && <Switch title={el.name} name={el.name} onText="" offText="" onColor="#8CC14E" offColor="#89979F"/>}
         </React.Fragment>
       )}
-      {leftContent && leftContent.map((el) => 
+      {leftContent && leftContent.map((el) =>
         <React.Fragment key={el.id}>
           {el.type === 'select' && <Select placeholder={el.placeholder} title={el.name} type={el.style} options={el.options} headerNav /> }
         </React.Fragment>
       )}
-      {leftContent && leftContent.map((el) => 
+      {leftContent && leftContent.map((el) =>
         <React.Fragment key={el.id}>
           {el.type === 'shopCart' && <ButtonShop onClick={props.clickFunction} icon={'check'} /> }
         </React.Fragment>
@@ -68,7 +68,7 @@ const LeftContainer = styled.div`
 
 const ButtonIcon = styled.i`
   margin-left: 24px;
-  cursor: pointer;  
+  cursor: pointer;
 `
 
 const ButtonShop = styled(Button)`
@@ -79,7 +79,7 @@ const ButtonShop = styled(Button)`
 
 const Title = styled.p`
   margin-left: 32px;
-  font-family: ${({ theme }) => theme.secondaryFont};
+  font-family: ${({ theme }) => theme.fontDin};
   color: white;
   font-size: 20px;
   line-height: 22px;

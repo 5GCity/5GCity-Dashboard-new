@@ -40,7 +40,7 @@ export default ({ children, headerData, headerIcon, closeNav, action, bottomPane
     {bottomPanel &&
     <Bottom>
       <BottomContainer>
-      {bottomPanel}
+        {bottomPanel}
       </BottomContainer>
     </Bottom>
     }
@@ -72,7 +72,7 @@ const RightNav = styled.div`
 
 `
 const Line = styled.div`
-box-shadow: 0 0 50px 0 rgba(0,0,0,0.2);
+  box-shadow: 0 0 50px 0 rgba(0,0,0,0.2);
 `
 
 const CloseContainer = styled.div`
@@ -101,7 +101,7 @@ const Header = styled.div`
 `
 const Subtitle = styled.span`
   ${({ theme }) =>  theme && `
-  font-family: ${theme.thirdFont};
+  font-family: ${theme.fontDinCondensed};
   `}
   display: block;
   font-size: 10px;
@@ -112,7 +112,7 @@ const Subtitle = styled.span`
 const Title = styled.span`
   paddging: 27px 10px 0 24px;
  ${({ theme }) =>  theme && `
-  font-family: ${theme.secondaryFont};
+  font-family: ${theme.fontDin};
   `}
   font-size: 20px;
   color: #fff;
@@ -122,12 +122,12 @@ const HeaderContainer = styled.div``
 
 const Container = styled.div`
   overflow-y: auto;
-  margin: 27px 20px 0 20px;
+  margin: 0 0 0 20px;
   max-height: calc(100vh - 200px);
   `
 
 const Bottom = styled.div`
-  background-color: rgba(255,255,255,0.05);  
+  background-color: rgba(255,255,255,0.05);
   height: 80px;
   width: 100%;
   position: absolute;

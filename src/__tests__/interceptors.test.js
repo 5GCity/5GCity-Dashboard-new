@@ -15,6 +15,7 @@ it('should convert a response to camelcase', () => {
       'testConvertStuff': 'jest testing axios'
     }
   }
+  console.log(client.interceptors)
   const test = JSON.parse(JSON.stringify(client.interceptors.response.handlers[0].fulfilled(pascal)))
   expect(test).toEqual(camel)
 })

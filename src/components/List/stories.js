@@ -10,13 +10,6 @@ import { Theme } from 'globalStyles';
 import * as moment from 'moment';
 
 import List from './index'
-import { Button } from 'components/Button';
-
-const bStyle = {
-  padding:30,
-  backgroundColor: Theme.bodyBackground,
-  height:'100%'
-};
 
 const fakeTitle = [{
   id: 1,
@@ -93,18 +86,16 @@ const toogleFilter = item => {
 }
 
 const exmapleOne = () => (
-  <div style={bStyle}>
-    <List 
-      titles={fakeTitles} 
-      data={fakeData} 
+    <List
+      titles={fakeTitles}
+      data={fakeData}
       iconFilter={(title)=>toogleFilter(title)}
       removeSlice={(item)=>console.log(item)}
       editSlice={(item)=>console.log(item)}
       viewSlice={(item)=>console.log(item)}
-      
+      slices
     />
-  </div>
 )
 
 storiesOf('List', module)
-  .add('primary', exmapleOne)
+  .add('Default', exmapleOne)

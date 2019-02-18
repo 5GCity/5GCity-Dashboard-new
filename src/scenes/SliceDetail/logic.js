@@ -13,13 +13,15 @@ import { createSlice } from './utils'
 
 import PropTypes from 'prop-types'
 
+
 export default kea({
   path: () => ['scenes', 'SliceDetail'],
 
   actions: () => ({
-    fetchSlice: () => ({}),
+    fetchSlice: () => ({ }),
     setSlice: (resources) => ({resources}),
     infoMarker: (marker) => ({marker}),
+    panelAction: () => ({ })
   }),
 
   reducers: ({ actions }) => ({
@@ -30,6 +32,9 @@ export default kea({
     rightPanelInfo: [ null, PropTypes.object, {
       [actions.infoMarker]: (state, payload) => payload.marker
     }],
+    panel: [false, PropTypes.bool,{
+      [actions.panelAction]:(state, payload) => !state
+    }]
   }),
 
   start: function * () {

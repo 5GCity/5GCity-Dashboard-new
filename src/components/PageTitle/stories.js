@@ -19,7 +19,7 @@ const bStyle = {
 
 const State1 = () => (
   <div style={bStyle}>
-  <PageTitle  title={'Add new network service'} buttonTitle={'Add Slice'} type={'primary'} icon={'plus'} />
+  <PageTitle title={'Add new network service'} buttonTitle={'Add Slice'} type={'primary'} icon={'plus'} />
   </div>
 )
 

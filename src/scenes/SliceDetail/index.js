@@ -20,40 +20,46 @@ import SliceMap from 'containers/SliceMap'
 
 const infoMarkerContainer = (rightPanelInfo) => {
   const info = rightPanelInfo.location.resources
-  return[
+  return(
  <PanelInfo>
   {info.computes &&
   <Title>Computing</Title>
   }
-  {info.computes && info.computes.map((el, i) => 
-    <TypeMarker className={ i ===  info.computes.length -1 && 'noBorder'} key={el.id}>
-      <Name>{el.name}</Name>
-      <Id>{el.id}</Id>
+  {info.computes && info.computes.map((el, i) =>
+    <TypeMarker
+      className={ i ===  info.computes.length -1 && 'noBorder'}
+      key={el.id}>
+        <Name>{el.name}</Name>
+        <Id>{el.id}</Id>
     </TypeMarker>
   )}
   {info.networks &&
   <Title>Network</Title>
   }
-  {info.networks && info.networks.map((el, i) => 
-      <TypeMarker className={ i === info.networks.length -1 && 'noBorder'} key={el.id}>
+  {info.networks && info.networks.map((el, i) =>
+      <TypeMarker
+        className={ i === info.networks.length -1 && 'noBorder'}
+        key={el.id}>
         <Name>{el.name}</Name>
         <Id>{el.id}</Id>
       </TypeMarker>
    )}
-    {info.hotspots &&
+    {info.sdnWifi &&
   <Title>Wifi</Title>
   }
-  {info.hotspots && info.hotspots.map((el, i) => 
-    <TypeMarker className={ i ===  info.hotspots.length -1 && 'noBorder'} key={el.id}>
+  {info.sdnWifi && info.sdnWifi.map((el, i) =>
+    <TypeMarker
+      className={ i ===  info.sdnWifi.length -1 && 'noBorder'}
+      key={el.id}>
       <Name>{el.name}</Name>
       <Id>{el.id}</Id>
-      <Id>DHCPD: {el.dhcpd_ip}</Id>
-      <Id>DNS: {el.dns_ip}</Id>
+      <Id>DHCPD: {el.dhcpd}</Id>
+      <Id>DNS: {el.dns}</Id>
       <Id>Channel: {el.channel}</Id>
     </TypeMarker>
   )}
 </PanelInfo>
-]
+  )
 }
 
 class SliceDetail extends Component {
@@ -62,38 +68,38 @@ class SliceDetail extends Component {
     const { history } = this.props
     history.goBack()
   }
-  
-  state = {
-    show: false
+
+  clickMarker = (marker) => {
+    const { infoMarker, panelAction } = this.actions
+    panelAction()
+    infoMarker(marker)
   }
 
   render () {
 
-    const { slice, rightPanelInfo  } = this.props
-    const { infoMarker } = this.actions
-    const { show } = this.state
-    
+    const { slice, rightPanelInfo, panel  } = this.props
+    const { panelAction } = this.actions
     return (
       <Wrapper>
-      {slice && 
+      {slice &&
       <React.Fragment>
-        <HeaderNav 
+        <HeaderNav
           buttonBack={<BackIcon />}
-          navigateBack={() => this.navigateToBack()} 
-          name={slice.name} 
+          navigateBack={() => this.navigateToBack()}
+          name={slice.name}
         /> {/* leftContent={headerItems} */}
-        <PanelRight 
-          show={show} 
-          closeNav={() => this.setState({show: false})}
-          headerIcon={<NodeMarkerIcon height={30} width={30} />} 
+        <PanelRight
+          show={panel}
+          closeNav={() => panelAction()}
+          headerIcon={<NodeMarkerIcon height={30} width={30} />}
           container={rightPanelInfo && infoMarkerContainer(rightPanelInfo)}
-          action={(item) => console.log(item)} 
+          action={(item) => console.log(item)}
         />
-        <SliceMap 
-          markers={slice.markers} 
-          onClick={(marker) =>{ this.setState({show: true}); infoMarker(marker)}} 
+        <SliceMap
+          markers={slice.markers}
+          onClick={(marker) =>{ this.clickMarker(marker)}}
         />
-       
+
       </React.Fragment>
       }
       </Wrapper>

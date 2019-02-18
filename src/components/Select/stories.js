@@ -6,6 +6,7 @@
  */
 import React from 'react'
 import { storiesOf } from '@storybook/react'
+import { action } from '@storybook/addon-actions'
 import { Theme } from 'globalStyles'
 import  Select from './index'
 
@@ -23,13 +24,13 @@ const bStyle = {
 const fakeOptions = [{
  id: 1,
  name: "One",
- value: "wazaaaaaaa" 
+ value: "wazaaaaaaa"
 },{
  id: 2,
  name: "Two",
- value: "aaaaaaaaaaa" 
+ value: "aaaaaaaaaaa"
 },{
- id: 3, 
+ id: 3,
  name: "Three",
  value: "up",
  disabled: true
@@ -37,12 +38,12 @@ const fakeOptions = [{
 
 const selectTestOne = () => (
   <div style={bStyle}>
-      <Select placeholder={'wazaaaa'} options={fakeOptions} />
+      <Select placeholder={'wazaaaa'} options={fakeOptions}  onChange={action('Change Value')}/>
   </div>
 )
 const selectTestTwo = () => (
   <div style={bStyle}>
-  <Select placeholder={'change type'} title={'Nº of Instantiated services'} type={'default'} options={fakeOptions} />
+  <Select placeholder={'change type'} title={'Nº of Instantiated services'} type={'default'} options={fakeOptions} onChange={(e) => action(e)} />
   <Select placeholder={'change type'} uppercase title={'Uppercase'} type={'default'} options={fakeOptions} />
   <Select placeholder={'change type'} uppercase title={'Uppercase'} type={'default'} options={fakeOptions} headerNav/>
 </div>

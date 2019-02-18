@@ -2,7 +2,7 @@
  * SliceNew Container Logic
  * Please write a description
  *
- * @author Your Name <youremail@ubiwhere.com>
+ * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
 
 import { kea } from 'kea'
@@ -11,7 +11,7 @@ import { put, call } from 'redux-saga/effects'
 import axios from 'axios'
 import PropTypes from 'prop-types'
 import { API_BASE_URL } from 'config'
-import { createAllPins } from './utils';
+import { createAllPins } from './utils'
 
 export default kea({
   path: () => ['scenes', 'SliceNew'],
@@ -19,22 +19,21 @@ export default kea({
   actions: () => ({
     getListResources: () => ({ }),
     setListResources: (resources) => ({ resources }),
-    closeModal: () => ({ }),
-    openModal: () => ({ }),
+    modalNewSliceStatus: () => ({ }),
+    modalStatus: () => ({ }),
     closePanel: () => ({ }),
     openPanel: (marker) => ({ marker }),
     resetResource: () => ({ }),
     resetCard: () => ({ }),
     removeResources: () => ({ }),
     isLoading: () => ({ }),
-    isnLoading: () => ({ }),
     errorfetch: () => ({ }),
     //Obter resources do pin
     createSlice: () => ({ }),
     setSelectPin: (pin) => ({ pin }),
     changeNetwork: (selectPin, networkSelectIndex, field, value ) => ({ selectPin, networkSelectIndex, field, value }),
     changeComputes: (selectPin, computeSelectIndex, field, value ) => ({ selectPin, computeSelectIndex, field, value }),
-    changeHotspot: (selectPin, hotspotSelectIndex, field, value ) => ({ selectPin, hotspotSelectIndex, field, value }),
+    changeSDN: (selectPin, sdnSelectIndex, field, value ) => ({ selectPin, sdnSelectIndex, field, value }),
     updateMarker: () => ({  }),
     change: (value) => ({ value }),
     resetSliceName: () => ({ })
@@ -42,12 +41,10 @@ export default kea({
 
   reducers: ({ actions }) => ({
     loading:[false, PropTypes.boolean,{
-      [actions.isLoading]: (state, payload) => true,
-      [actions.isnLoading]: (state, payload) => false,
+      [actions.isLoading]: (state, payload) => !state,
     }],
-    dialogVisible: [false, PropTypes.boolean,{
-      [actions.openModal]: (state, payload) => true,
-      [actions.closeModal]: (state, payload) => false,
+    modalNewSlice: [false, PropTypes.boolean,{
+      [actions.modalNewSliceStatus]: (state, payload) => !state,
     }],
     visiblePanel: [false, PropTypes.boolean,{
       [actions.openPanel]: (state, payload) => true,
@@ -67,30 +64,31 @@ export default kea({
         clone[selectPin].location.resources.computes[computeSelectIndex][field] = value
         return clone
       },
-      [actions.changeHotspot]: (state, payload) => {
-        const { selectPin, hotspotSelectIndex, field, value } = payload
+      [actions.changeSDN]: (state, payload) => {
+        const { selectPin, sdnSelectIndex, field, value } = payload
         const clone = [...state]
-        clone[selectPin].location.resources.hotspots[hotspotSelectIndex][field] = value
+        clone[selectPin].location.resources.sdnWifi[sdnSelectIndex][field] = value
         return clone
       }
     }],
     sliceName: [null, PropTypes.string,{
       [actions.change]: (state, payload) => payload.value,
-      [actions.resetSliceName]: (state, payload) => null
+      [actions.resetSliceName]: (state, payload) => null,
+      [actions.modalNewSliceStatus]: (state, payload) => null,
     }],
     selectPin: [0, PropTypes.number,{
       [actions.setSelectPin]: (state, payload) => payload.pin
     }],
-    error: [false ,PropTypes.boolean,{
+    modalError: [false ,PropTypes.boolean,{
       [actions.errorfetch]: (state, payload) => true,
-      [actions.closeModal]: (state, payload) => false
+      [actions.modalStatus]: (state, payload) => !state,
     }]
   }),
 
 
   start: function * () {
     const { getListResources } = this.actions
-   
+
     yield put(getListResources())
   },
 
@@ -106,79 +104,91 @@ export default kea({
     *openPanel (action){
       const { setSelectPin } = this.actions
       const pinsResources = yield this.get('pinsResources')
-      const pinIndex = pinsResources.findIndex(marker => 
-        JSON.stringify(marker) === JSON.stringify(action.payload.marker)
-      )
+      const pinIndex =
+        pinsResources.findIndex(
+          marker => JSON.stringify(marker) === JSON.stringify(action.payload.marker)
+        )
       yield put(setSelectPin(pinIndex))
     },
 
     *updateMarker (){
       const pinsResources = yield this.get('pinsResources')
       const pinIndex = yield this.get('selectPin')
-      const { closePanel } = this.actions
+      const { closePanel, errorfetch } = this.actions
+      const resources = pinsResources[pinIndex].location.resources
       let found = false
-      pinsResources[pinIndex].location.resources.computes && 
-      pinsResources[pinIndex].location.resources.computes.foreach((compute) =>{
-        if(compute.ischecked === true){
-          return found = true
-        }
-      })
-      pinsResources[pinIndex].location.resources.networks && 
-      pinsResources[pinIndex].location.resources.networks.foreach((network) =>{
-        if(network.ischecked === true){
-          return found = true
-        }
-      })
-      pinsResources[pinIndex].location.resources.hotspots && 
-      pinsResources[pinIndex].location.resources.hotspots.foreach((hotspot) =>{
-        if(hotspot.ischecked === true){
-          return found = true
-        }
-      })
-      if(found === true) { 
-        pinsResources[pinIndex].color = '#1e90ff' 
-      }
-      else{ 
-        pinsResources[pinIndex].color = null 
+
+      if (resources.computes) {
+        found = resources.computes.find((compute) => compute.ischecked)
+        resources.computesCount++
       }
 
-      yield put(closePanel())
+      if (!found && resources.networks) {
+        found = resources.networks.find((network) => network.ischecked)
+         resources.networksCount++
+      }
+
+      if(!found && resources.sdnWifi){
+        found = resources.sdnWifi.find((sdn) => sdn.ischecked)
+        resources.sdnWifiCount++
+      }
+
+      if(found) {
+        pinsResources[pinIndex].color = '#1e90ff'
+      }
+      const existSdn = resources.sdnWifi.find((sdn) => sdn.ischecked)
+      const existNetwork = resources.networks.find((sdn) => sdn.ischecked)
+      const existCompute = resources.computes.find((sdn) => sdn.ischecked)
+
+      if (existSdn && existNetwork && existCompute) {
+        yield put(closePanel())
+      } else if (existNetwork && existCompute) {
+        yield put(closePanel())
+      } else if (existCompute && !existNetwork && !existSdn) {
+        yield put(closePanel())
+      } else if(!existSdn && !existNetwork && !existCompute){
+        yield put(closePanel())
+      } else {
+        yield put(errorfetch())
+      }
     },
 
     *getListResources(){
       const { setListResources } = this.actions
 
-      try{      
-        const responseComputes = yield call(axios.get ,`${API_BASE_URL}/slicemanagerapi/compute`)
+      try{
+        const responseComputes = yield call(axios.get , `${API_BASE_URL}/slicemanagerapi/compute`)
         const responseNetworks = yield call(axios.get , `${API_BASE_URL}/slicemanagerapi/physical_network`)
-        const listResources = {computes:[], networks:[]} 
-        if(responseComputes){
+        const responseSdnWifi = yield call(axios.get , `${API_BASE_URL}/slicemanagerapi/sdn_wifi_access_point`)
+
+        const listResources = {computes:[], networks:[], sdnWifi:[]}
+
+        if(responseComputes) {
           responseComputes.data.map(el => listResources.computes.push(el))
         }
-        if(responseNetworks){
-          responseNetworks.data.map(el => listResources.networks.push(el))          
+        if(responseNetworks) {
+          responseNetworks.data.map(el => listResources.networks.push(el))
         }
+        if(responseSdnWifi) {
+          responseSdnWifi.data.map(el => listResources.sdnWifi.push(el))
+        }
+
         yield(put(setListResources(listResources)))
       }
       catch (error) {
         console.log(error)
-      } 
+      }
     },
 
     *createSlice(){
-        const pinsResources = yield this.get('pinsResources'), 
-        chunk_ids=[]
-        const { 
-          closeModal, 
-          isLoading, 
-          isnLoading, 
-          errorfetch, 
-          resetSliceName 
-        } = this.actions
+        const pinsResources = yield this.get('pinsResources'),
+          chunk_ids = [], vlans_ids = [],
+        { modalStatus, isLoading, errorfetch, resetSliceName } = this.actions
         /*
          * 1º Create OpenStack
          * 2º Create Vlan
-         * 3º Create Chunks 
+         * 3º Virtual Create Wifi Access Point
+         * 4º Create Chunks
          */
         const sliceName = yield this.get('sliceName')
         try{
@@ -186,65 +196,81 @@ export default kea({
           let createSlice = false
           for (let pin of pinsResources) {
             if(pin.location.resources.computes){
-            for (let compute of pin.location.resources.computes) {
-            if(compute.ischecked){
-            // 1º Open stack
-            let currentDate = new Date()
-            const dataCompute = {
-                "compute_id": compute.id,
-                "description": `Test_${currentDate.valueOf()}`,
-                "name": `Test_${currentDate.valueOf()}`,
-                "username": `Test_${currentDate.valueOf()}`
-              }
-              const response = yield call(axios.post, `${API_BASE_URL}/slicemanagerapi/openstack_project`, dataCompute)
-              chunk_ids.push(response.data.id)
-              createSlice =true
-            }
-          }
-          }
-          if(pin.location.resources.networks){
-          for (let network of pin.location.resources.networks) {
-            if(network.ischecked){
-              // 2º vlans 
-              let currentDate = new Date()
-              const dataNetwork = {
-                    "cidr": network.cidr,
+              for (let compute of pin.location.resources.computes) {
+                if(compute.ischecked){
+                  // 1º Open stack
+                  let currentDate = new Date()
+                  const dataCompute = {
+                    "compute_id": compute.id,
+                    "description": `Test_${currentDate.valueOf()}`,
                     "name": `Test_${currentDate.valueOf()}`,
+                    "username": `Test_${currentDate.valueOf()}`
+                  }
+                  const response = yield call(axios.post, `${API_BASE_URL}/slicemanagerapi/openstack_project`, dataCompute)
+                  chunk_ids.push(response.data.id)
+                  createSlice =true
+                }
+              }
+            }
+            if(pin.location.resources.networks){
+              for (let network of pin.location.resources.networks) {
+                if(network.ischecked){
+                  // 2º vlans
+                  const dataNetwork = {
+                    "cidr": network.cidr,
                     "openstack_project_id": chunk_ids[0],
                     "physical_network_id": network.id,
-                    "tag": network.tag
+                  }
+                  const response = yield call(axios.post, `${API_BASE_URL}/slicemanagerapi/openstack_vlan`, dataNetwork)
+                  chunk_ids.push(response.data.id)
+                  vlans_ids.push(response.data.id)
+                  createSlice =true
                 }
-                const response = yield call(axios.post, `${API_BASE_URL}/slicemanagerapi/openstack_vlan`, dataNetwork)
-                chunk_ids.push(response.data.id)
-                createSlice =true
               }
+            }
+            if(pin.location.resources.sdnWifi){
+              for (let sdnWifi of pin.location.resources.sdnWifi) {
+                if(sdnWifi.ischecked){
+                  // 3º Virtual Wifi Access Point
+                  const dataSdnWifi = {
+                    channel: sdnWifi.channel,
+                    dhcpd_ip: sdnWifi.dhcpd,
+                    dns_ip: sdnWifi.dns,
+                    name: sdnWifi.sdnWifiName,
+                    openstack_vlan_id: vlans_ids[0],
+                    sdn_wifi_access_point_id: sdnWifi.id,
+                  }
+                  const response = yield call(axios.post, `${API_BASE_URL}/slicemanagerapi/virtual_wifi_access_point`, dataSdnWifi)
+                  chunk_ids.push(response.data.id)
+                  createSlice =true
+                }
+              }
+            }
           }
-        }
-      }
-      if(createSlice){      
+        if(createSlice){
         const dataChunk = {
         chunk_ids:chunk_ids,
         name: sliceName
         }
-        // 3º Chunks
+        // 4º Chunks
         const responseCreateSlice = yield call(axios.post, `${API_BASE_URL}/slicemanagerapi/slic3`, dataChunk)
 
         if(responseCreateSlice.status===200){
-          yield put(isnLoading())
-          yield put(closeModal())
+          yield put(isLoading())
+          yield put(modalStatus())
           yield put(resetSliceName())
           yield call(this.props.history.push, `/slices`)
-        } 
+        }
       }
       }
       catch (error) {
-        yield put(isnLoading())
-        yield put(closeModal())
-        yield put(closeModal())
+        yield put(isLoading())
+        yield put(modalNewSliceStatus())
+        yield put(modalStatus())
         yield put(errorfetch())
-        console.log(error)        
+        console.log(error)
       }
-      
+
     }
   }
 })

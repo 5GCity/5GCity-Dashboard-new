@@ -259,10 +259,10 @@ const fakeDataNew = fakeData.map((obj) => {
     obj.processor.status = obj.processor.percentage >= 65  ? 'warning' : obj.processor.percentage >= 80 ? 'danger' : null;
     obj.ram.status = obj.ram.percentage >= 65  ? 'warning' : obj.ram.percentage >= 80 ? 'danger' : null ;
     obj.storage.status = obj.storage.percentage >= 65  ? 'warning' : obj.storage.percentage >= 80 ? 'danger' : null ;
-    obj.bandwidth.status = obj.bandwidth.percentage <= 80  ? 'warning' : obj.bandwidth.percentage >= 80 ? 'danger' : null;    
-    
+    obj.bandwidth.status = obj.bandwidth.percentage <= 80  ? 'warning' : obj.bandwidth.percentage >= 80 ? 'danger' : null;
+
     if(obj.details){
-      obj.details = obj.details.map((item) => { 
+      obj.details = obj.details.map((item) => {
       obj.processor.percentage = (Math.floor((obj.processor.used / obj.processor.total) * 100));
       obj.ram.percentage = (Math.floor((obj.ram.used / obj.ram.total) * 100));
       obj.storage.percentage = (Math.floor((obj.storage.used / obj.storage.total) * 100));
@@ -271,14 +271,14 @@ const fakeDataNew = fakeData.map((obj) => {
       obj.ram.status = obj.ram.percentage >= 65  ? 'warning' : obj.ram.percentage >= 80 ? 'danger' : null ;
       obj.storage.status = obj.storage.percentage >= 65  ? 'warning' : obj.storage.percentage >= 80 ? 'danger' : null ;
       obj.bandwidth.status = obj.bandwidth.percentage <= 80  ? 'warning' : obj.bandwidth.percentage >= 80 ? 'danger' : null;
-      
+
       return item;
       })
     }
 
     return obj;
 })
-   
+
   /* obj.processor.percentage = (Math.floor((obj.processor.used / obj.processor.total) * 100));
   obj.ram.percentage = (Math.floor((obj.ram.used / obj.ram.total) * 100));
   obj.storage.percentage = (Math.floor((obj.storage.used / obj.storage.total) * 100));
@@ -296,14 +296,9 @@ class Story extends Component {
     show: true,
     data : fakeDataNew,
   }
-  
-  render () {    
 
-  const bStyle = {
-  padding: '30px',
-  backgroundColor: Theme.bodyBackground,
-  height:'100%'
-}
+  render () {
+
   const toogleAction = (item) => {
   const dataCopy = this.state.data
   dataCopy.map((obj) => {
@@ -315,10 +310,10 @@ class Story extends Component {
   }
 
     return (
-    <div style={bStyle}> 
+    <div>
       <Table
-      columns={fakeColumns} 
-      data={this.state.data} 
+      columns={fakeColumns}
+      data={this.state.data}
       toogleAction={(item) => toogleAction(item) }
       />
     </div>

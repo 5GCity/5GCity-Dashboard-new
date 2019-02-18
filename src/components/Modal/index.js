@@ -6,7 +6,7 @@
  */
 import React from 'react'
 import styled from 'styled-components'
-import { Dialog } from 'element-react';
+import { Dialog } from 'element-react'
 
 
 export default ({ children, headerTitle, footerContent, bodyContent, ...props }) => (
@@ -28,25 +28,28 @@ const Wrapper = styled(Dialog)`
     border-radius: 6px 6px 0 0;
     padding: 20px 24px;
   }
+
   .el-dialog__title{
     color: #8CC14E;
-    font-family: ${({theme}) => theme.secondaryFont};
+    font-family: ${({theme}) => theme.fontDin};
     font-weight: bold;
     font-size: 20px;
     line-height: 24px;
     letter-spacing: 0.5px;
   }
+
   .el-dialog__body{
-    background-color: #37474F;
+    background-color: ${({theme}) => theme.bodyBackground};
     box-shadow: 0 0 50px 0 rgba(0,0,0,0.2);
   }
+
   .el-dialog__footer{
     border-radius: 0 0 6px 6px;
     background-color: #404F57;
   }
 
   .el-dialog__headerbtn .el-dialog__close {
-    color: #89979F;
+    color: ${({theme}) => theme.secondaryColor};
   }
 
 `

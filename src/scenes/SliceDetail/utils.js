@@ -2,60 +2,173 @@
  * SliceDetail Container Utils
  * Please write a description
  *
- * @author Your Name <gpatriarca@ubiwhere.com>
+ * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
 export const createSlice = (resources) => {
-const markers = []
-let computeLocation = resources && resources.chunks.openstackProjects.map((compute) => compute.compute )
-let networkLocation = resources && resources.chunks.openstackVlans.map((network) => network.physicalNetwork )
-const compareComputes = (computeLocation) => {
-  computeLocation && computeLocation.forEach((compute) => {
-    let found = false
-    markers.find((el) => {
-       if(el.location.latitude === compute.location.latitude && el.location.longitude === compute.location.longitude){
-        found = true
-       return el.location.resources.computes.push({id: compute.id , name: compute.name})
-       }
-     })
-    if(!found){
-      markers.push({location:{latitude:compute.location.latitude,longitude: compute.location.longitude,resources:{computes:[{id: compute.id , name: compute.name}]}}})
-    }
-  });
-  return markers
-}
-const compareNetworks = (networkLocation) => {
-  networkLocation && networkLocation.forEach((network) => {
-    let found = false
-    markers.find((el) => { 
-       if(el.location.latitude === network.location.latitude && el.location.longitude === network.location.longitude){
-        if(el.location.resources.networks == null){
-          found = true
-          return  el.location.resources.networks = [{id: network.id , name: network.name}]
-        }else{
-          found = true
-          return  el.location.resources.networks.push({id: network.id , name: network.name})
-        }
-       }
-     })
-    if(!found){
-      markers.push({location:{latitude:network.location.latitude,longitude: network.location.longitude,resources:{networks:[{id: network.id , name: network.name}]}}})
-    }
-  });
-  return markers
-}
+const markers = [], networkLocation = [], sdnWifiLocation = []
 
-compareComputes(computeLocation)
-compareNetworks(networkLocation) 
-  const findCompute = resources.name.toLowerCase().includes("compute");
-  if(!findCompute){
-    markers.push({location:{'latitude': 48.235146, 'longitude': 16.412469, 'resources':{hotspots:[{ "channel": 44,
-    "dhcpd_ip": "192.168.101.1",
-    "dns_ip": "192.168.101.2",
-    "id": "5b6308c258f568073093f703",
-    "name": "VAP461",}]}}})
+  if(!resources) {
+    return markers
   }
-return resources && ({ 
-"name": resources.name,
-"markers": markers
-})
+
+  const computeLocation = resources.chunks.openstackProjects.map((compute) =>
+    compute.compute)
+
+  resources.chunks.openstackVlans.forEach((network) => {
+    if(network.physicalNetwork) {
+      console.log(network)
+      networkLocation.push({
+        cidr: network.cidr,
+        tag: network.tag,
+        ...network.physicalNetwork
+      })
+    } else if (network.sdnWifiAccessPoint) {
+      sdnWifiLocation.push({
+        dhcpd: network.dhcpdIp,
+        dns: network.dnsIp,
+        channel: network.channel,
+        ...network.sdnWifiAccessPoint
+      })
+    }
+  })
+
+  const compareComputes = () => {
+    computeLocation.forEach((compute) => {
+      const { latitude, longitude } = compute.location
+
+      const locationExistsOnMarkers = markers.find((marker) =>
+        marker.location.latitude === latitude &&
+        marker.location.longitude === longitude
+      )
+
+      if (locationExistsOnMarkers) {
+        locationExistsOnMarkers.location.resources.computes.push({
+          id: compute.id ,
+          name: compute.name,
+          ischecked:false
+        })
+      } else {
+        markers.push({
+          location:{
+            latitude:compute.location.latitude,
+            longitude: compute.location.longitude,
+              resources:{
+                computes:[{
+                  id: compute.id ,
+                  name: compute.name,
+                  ischecked:false
+                }]
+              }
+          }
+        })
+      }
+    })
+  }
+
+  const compareNetworks = () => {
+    networkLocation.forEach((network) => {
+      const { latitude, longitude } = network.location
+
+      const locationExistsOnMarkers = markers.find((marker) =>
+        marker.location.latitude === latitude &&
+        marker.location.longitude === longitude
+      )
+
+      if(locationExistsOnMarkers) {
+        if(locationExistsOnMarkers.location.resources.networks) {
+          locationExistsOnMarkers.location.resources.networks.push({
+            id: network.id ,
+            name: network.name,
+            ischecked: false,
+            cidr: network.cidr,
+            tag: network.tag
+          })
+        } else {
+          locationExistsOnMarkers.location.resources.networks = [{
+              id: network.id ,
+              name: network.name,
+              ischecked: false,
+              cidr: network.cidr,
+              tag: network.tag
+          }]
+
+      }
+      } else {
+        markers.push({
+          location:{
+            latitude:network.location.latitude,
+            longitude: network.location.longitude,
+              resources:{
+                networks:[{
+                  id: network.id ,
+                  name: network.name,
+                  ischecked: false,
+                  cidr: network.cidr,
+                  tag: network.tag
+                }]
+              }
+          }
+        })
+      }
+    })
+  }
+
+  const compareSDN = () => {
+    sdnWifiLocation.forEach((sdnWifi) => {
+      const { latitude, longitude } = sdnWifi.location
+
+      const locationExistsOnMarkers = markers.find((marker) =>
+        marker.location.latitude === latitude &&
+        marker.location.longitude === longitude
+      )
+
+      if(locationExistsOnMarkers) {
+        if(locationExistsOnMarkers.location.resources.sdnWifi) {
+          locationExistsOnMarkers.location.resources.sdnWifi.push({
+            id: sdnWifi.id ,
+            name: sdnWifi.name,
+            ischecked: false,
+            channel: sdnWifi.channel,
+            dhcpd: sdnWifi.dhcpd,
+            dns: sdnWifi.dns,
+          })
+        } else {
+          locationExistsOnMarkers.location.resources.sdnWifi = [{
+              id: sdnWifi.id ,
+              name: sdnWifi.name,
+              ischecked: false,
+              channel: sdnWifi.channel,
+              dhcpd: sdnWifi.dhcpd,
+              dns: sdnWifi.dns,
+          }]
+      }
+      } else {
+        markers.push({
+          location:{
+            latitude:sdnWifi.location.latitude,
+            longitude: sdnWifi.location.longitude,
+              resources:{
+                sdnWifi:[{
+                  id: sdnWifi.id ,
+                  name: sdnWifi.name,
+                  ischecked: false,
+                  channel: sdnWifi.channel,
+                  dhcpd: sdnWifi.dhcpd,
+                  dns: sdnWifi.dns,
+                }]
+              }
+          }
+        })
+      }
+    })
+  }
+
+  compareComputes()
+  compareNetworks()
+  compareSDN()
+
+  return ({
+  "name": resources.name,
+  "markers": markers
+  })
 }

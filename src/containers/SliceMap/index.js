@@ -5,8 +5,6 @@
  * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
 import React, { Component } from 'react'
-import { connect } from 'kea'
-import Logic from './logic'
 import styled from 'styled-components'
 import ReactMapGL,{ Marker } from 'react-map-gl'
 import { MAPBOX_TOKEN , MAPBOX_STYLE } from 'config'
@@ -34,29 +32,29 @@ class SliceMap extends Component {
           mapboxApiAccessToken={MAPBOX_TOKEN}
           {...this.state.viewport}
           onViewportChange={(viewport) => this.setState({viewport})} >
-            { markers && markers.map((marker, i) => 
-               <Marker 
-                key={i} 
-                draggable={marker.draggable} 
-                latitude={marker.location.latitude} 
-                longitude={marker.location.longitude} 
-                offsetLeft={-10} 
+            { markers && markers.map((marker, i) =>
+               <Marker
+                key={i}
+                draggable={marker.draggable}
+                latitude={marker.location.latitude}
+                longitude={marker.location.longitude}
+                offsetLeft={-10}
                 offsetTop={-20} >
-                {!marker.location.resources.hotspots  &&
-                <NodeMarkerIcon 
-                  key={i} 
+                { !marker.location.resources.sdnWifi  &&
+                <NodeMarkerIcon
+                  key={i}
                   color={marker.color}
-                  onClick={() => onClick(marker)}  
+                  onClick={() => onClick(marker)}
                 />
                 }
-                {marker.location.resources.hotspots &&
-                <NodeWifiIcon 
-                  key={i} 
+                { marker.location.resources.sdnWifi &&
+                <NodeWifiIcon
+                  key={i}
                   color={marker.color}
-                  onClick={() => onClick(marker)}  
+                  onClick={() => onClick(marker)}
                 />
                 }
-              </Marker> 
+              </Marker>
             )}
         </ReactMapGL>
       </Wrapper>
@@ -65,23 +63,11 @@ class SliceMap extends Component {
 }
 
 
-export default connect({
-  props: [
-    Logic, [
-
-    ]
-  ],
-
-  actions: [
-    Logic, [
-
-    ]
-  ]
-})(Dimensions()(SliceMap))
+export default (Dimensions()(SliceMap))
 
 
 const Wrapper = styled.div`
 .mapboxgl-ctrl-bottom-right{
-  display:none;  
+  display:none;
 }
 `

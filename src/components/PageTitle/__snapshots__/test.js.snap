@@ -11,10 +11,10 @@ exports[`renders correctly 1`] = `
   -ms-flex-pack: justify;
   justify-content: space-between;
   border-bottom: 1px solid rgba(137,151,159,0.2);
+  padding: 48px 0px 16px 0px;
 }
 
 .c1 {
-  padding: 48px 0px 16px 0px;
   text-transform: uppercase;
   font-size: 32px;
   color: #8CC14E;

@@ -19,21 +19,21 @@ import Button from 'components/Button';
 const LINKS = [
   { id: 1, path: '/', name: 'Monitoring Dashboard', icon: null, disabled: true , show: false, active: true },
   { id: 2, path: '/slices', name: 'Slices', icon:<MapIcon />, disabled: false , show: true ,active: false},
-  { id: 3, path: '/network', name: 'Network Services', icon: null, disabled:false , show: false ,active: false},
+  { id: 3, path: '/network', name: 'Network Services', icon: null, disabled:false , show: true ,active: false},
   { id: 4, path: '/settings', name: 'Settings', icon: null, disabled: true , show: false ,active: false}
 ]
 
 class Navbar extends Component {
-  
+
 
   activeNavItem = (path) => {
-    const link = LINKS.find((x) =>x.path === path)  
+    const link = LINKS.find((x) =>x.path === path)
     if(link !== -1)
       link.active = true
   }
 
   navigate = (path) => {
-    const { history } = this.props 
+    const { history } = this.props
     this.activeNavItem(path)
     history.push(path)
   }
@@ -54,27 +54,33 @@ class Navbar extends Component {
     return (
       <Wrapper>
       <Modal
-       visible={showModal} 
+       visible={showModal}
        title={'Are you sure you want to leave?'}
-       size={'tiny'} 
+       size={'tiny'}
        showClose={true}
        onCancel={closeModal}
        footerContent={this.footerModal()}/>
       <Brand />
       {LINKS.map(el =>
         el.show ?
-        <ContainerMenu active={el.active} key={el.id} disabled={el.disabled} onClick={() => !el.disabled ? this.navigate(el.path) : null}>
+        <ContainerMenu
+          active={el.active}
+          key={el.id}
+          disabled={el.disabled}
+          onClick={() => !el.disabled ? this.navigate(el.path) : null}>
           {el.icon &&
           <IconItem>{el.icon}</IconItem>
           }
           <ItemLabel>{el.name}</ItemLabel>
         </ContainerMenu>
-        : null 
+        : null
       )}
         <UserInfo>
           <UserName>{userName}</UserName>
           <UserRole>{userRole}</UserRole>
-          <IconUser className="el-icon-more" onClick={setMsgLogout}></IconUser>
+          <IconUser
+            className="el-icon-more"
+            onClick={setMsgLogout}></IconUser>
         </UserInfo>
       </Wrapper>
     )
@@ -113,7 +119,7 @@ const ItemLabel = styled.div`
   padding-top: 8px;
   font-size: 14px;
   text-transform: uppercase;
-  font-family: ${({ theme }) => theme.secondaryFont};
+  font-family: ${({ theme }) => theme.fontDin};
 `
 
 const IconItem = styled.i`
@@ -150,5 +156,5 @@ const IconUser = styled.i`
   margin-right: 8px;
   cursor: pointer;
   transform: rotate(90deg);
-  color: #fff;  
+  color: #fff;
 `

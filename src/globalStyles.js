@@ -8,8 +8,8 @@ export const Theme = {
   primaryColor: '#8CC14E',
   secondaryColor: '#89979F',
   fontFamily: 'Open Sans, sans-serif',
-  secondaryFont: 'd-din, sans-serif',
-  thirdFont: 'd-din_exp, sans-serif',
+  fontDin: 'd-din, sans-serif',
+  fontDinCondensed: 'd-din-condensed ,sans-serif'
 }
 
 // Global styles
@@ -54,7 +54,7 @@ injectGlobal`
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #555; 
+  background: #555;
 }
 
 `

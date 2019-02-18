@@ -15,7 +15,7 @@ import PageTitle from 'components/PageTitle';
 import Select from 'components/Select'; */
 
 /* Containers */
-import ListSlices from 'containers/ListSlices';
+import ListSlices from 'containers/Lists/ListSlices'
 
 import { withRouter } from 'react-router-dom';
 

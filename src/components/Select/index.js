@@ -12,23 +12,20 @@ import { darken, lighten } from 'polished'
 
 
 
-export default ({ children, options, ...props }) => (
+export default ({ children, ...props }) => (
   <Wrapper {...props}>
   <NameInput uppercase={props.uppercase}>{props.title}</NameInput>
   <StyledSelect {...props} headerNav={props.headerNav}>
-    {options && options.map((el) =>
-      <Select.Option value={el.value} key={el.value} label={el.name} disabled={el.disabled}></Select.Option>    
+    {props.options && props.options.map((el) =>
+      <Select.Option value={el.value} key={el.value} label={el.name} disabled={el.disabled}></Select.Option>
     )}
   </StyledSelect>
   </Wrapper>
 )
 
 const Wrapper = styled.div`
+  width: 100%;
   display: flex;
-  margin: 0 32px;
-    :last-child{
-      margin-right: 0;
-    }
 ${({ headerNav }) => headerNav && `
   margin: 0;
 `}
@@ -40,7 +37,7 @@ const NameInput = styled.p`
   font-size: 12px;
   padding-right: 8px;
   ${({ uppercase }) => uppercase && `text-transform: uppercase;`}
-  font-family: ${({ theme }) => theme.secondaryFont };
+  font-family: ${({ theme }) => theme.fontDin };
 `
 
 const StyledSelect = styled(Select)`

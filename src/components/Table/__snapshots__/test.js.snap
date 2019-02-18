@@ -27,6 +27,7 @@ exports[`renders correctly 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+  -webkit-flex-basis: 20%;
   -ms-flex-preferred-size: 20%;
   flex-basis: 20%;
 }
@@ -112,6 +113,206 @@ exports[`renders correctly 1`] = `
 
 <div
   className=""
+  data={
+    Array [
+      Object {
+        "bandwidth": Object {
+          "total": 500,
+          "type": "mbps",
+          "used": 300,
+        },
+        "details": Array [
+          Object {
+            "bandwidth": Object {
+              "total": 500,
+              "type": "mbps",
+              "used": 300,
+            },
+            "id": 1,
+            "name": "Network service name",
+            "processor": Object {
+              "total": 2,
+              "type": "CPU's",
+              "used": 1,
+            },
+            "ram": Object {
+              "total": 64,
+              "type": "GB",
+              "used": 12,
+            },
+            "storage": Object {
+              "total": 512,
+              "type": "GB",
+              "used": 330,
+            },
+          },
+        ],
+        "id": 1,
+        "name": "Slice name",
+        "processor": Object {
+          "total": 2,
+          "type": "CPU's",
+          "used": 1,
+        },
+        "ram": Object {
+          "total": 64,
+          "type": "GB",
+          "used": 12,
+        },
+        "storage": Object {
+          "total": 512,
+          "type": "GB",
+          "used": 330,
+        },
+      },
+      Object {
+        "bandwidth": Object {
+          "total": 500,
+          "type": "mbps",
+          "used": 300,
+        },
+        "id": 2,
+        "name": "Slice name",
+        "processor": Object {
+          "total": 2,
+          "type": "CPU's",
+          "used": 1,
+        },
+        "ram": Object {
+          "total": 64,
+          "type": "GB",
+          "used": 12,
+        },
+        "storage": Object {
+          "total": 512,
+          "type": "GB",
+          "used": 330,
+        },
+      },
+      Object {
+        "bandwidth": Object {
+          "total": 700,
+          "type": "mbps",
+          "used": 1000,
+        },
+        "details": Array [
+          Object {
+            "bandwidth": Object {
+              "total": 200,
+              "type": "mbps",
+              "used": 300,
+            },
+            "id": 1,
+            "name": "Network service name",
+            "processor": Object {
+              "total": 2,
+              "type": "CPU's",
+              "used": 1,
+            },
+            "ram": Object {
+              "total": 8,
+              "type": "GB",
+              "used": 4,
+            },
+            "storage": Object {
+              "total": 512,
+              "type": "GB",
+              "used": 480,
+            },
+          },
+          Object {
+            "bandwidth": Object {
+              "total": 500,
+              "type": "mbps",
+              "used": 500,
+            },
+            "id": 2,
+            "name": "Network service name",
+            "processor": Object {
+              "total": 2,
+              "type": "CPU's",
+              "used": 2,
+            },
+            "ram": Object {
+              "total": 8,
+              "type": "GB",
+              "used": 8,
+            },
+            "storage": Object {
+              "total": 512,
+              "type": "GB",
+              "used": 256,
+            },
+          },
+        ],
+        "id": 3,
+        "name": "Slice name",
+        "processor": Object {
+          "total": 4,
+          "type": "CPU's",
+          "used": 3,
+        },
+        "ram": Object {
+          "total": 16,
+          "type": "GB",
+          "used": 12,
+        },
+        "storage": Object {
+          "total": 1024,
+          "type": "GB",
+          "used": 512,
+        },
+      },
+      Object {
+        "bandwidth": Object {
+          "total": 500,
+          "type": "mbps",
+          "used": 300,
+        },
+        "id": 4,
+        "name": "Slice name",
+        "processor": Object {
+          "total": 2,
+          "type": "CPU's",
+          "used": 1,
+        },
+        "ram": Object {
+          "total": 64,
+          "type": "GB",
+          "used": 12,
+        },
+        "storage": Object {
+          "total": 512,
+          "type": "GB",
+          "used": 330,
+        },
+      },
+      Object {
+        "bandwidth": Object {
+          "total": 500,
+          "type": "mbps",
+          "used": 300,
+        },
+        "id": 5,
+        "name": "Slice name",
+        "processor": Object {
+          "total": 2,
+          "type": "CPU's",
+          "used": 1,
+        },
+        "ram": Object {
+          "total": 64,
+          "type": "GB",
+          "used": 12,
+        },
+        "storage": Object {
+          "total": 512,
+          "type": "GB",
+          "used": 330,
+        },
+      },
+    ]
+  }
 >
   <div
     className="c0"
@@ -337,13 +538,11 @@ exports[`renders correctly 1`] = `
         className="c1"
         size={20}
       >
-         
         <p
           className="c4"
         >
           1/2 CPU's
         </p>
-         
         <div
           className="el-progress el-progress--line el-progress--without-text c5 c6"
           style={Object {}}
@@ -375,13 +574,11 @@ exports[`renders correctly 1`] = `
         className="c1"
         size={20}
       >
-         
         <p
           className="c4"
         >
           12/64 GB
         </p>
-         
         <div
           className="el-progress el-progress--line el-progress--without-text c5 c6"
           style={Object {}}
@@ -413,13 +610,11 @@ exports[`renders correctly 1`] = `
         className="c1"
         size={20}
       >
-         
         <p
           className="c4"
         >
           300/500 mbps
         </p>
-         
         <div
           className="el-progress el-progress--line el-progress--without-text c5 c6"
           style={Object {}}
@@ -451,13 +646,11 @@ exports[`renders correctly 1`] = `
         className="c1"
         size={20}
       >
-         
         <p
           className="c4"
         >
           330/512 GB
         </p>
-         
         <div
           className="el-progress el-progress--line el-progress--without-text c5 c6"
           style={Object {}}
@@ -844,13 +1037,11 @@ exports[`renders correctly 1`] = `
         className="c1"
         size={20}
       >
-         
         <p
           className="c4"
         >
           1/2 CPU's
         </p>
-         
         <div
           className="el-progress el-progress--line el-progress--without-text c5 c6"
           style={Object {}}
@@ -882,13 +1073,11 @@ exports[`renders correctly 1`] = `
         className="c1"
         size={20}
       >
-         
         <p
           className="c4"
         >
           4/8 GB
         </p>
-         
         <div
           className="el-progress el-progress--line el-progress--without-text c5 c6"
           style={Object {}}
@@ -920,13 +1109,11 @@ exports[`renders correctly 1`] = `
         className="c1"
         size={20}
       >
-         
         <p
           className="c4"
         >
           300/200 mbps
         </p>
-         
         <div
           className="el-progress el-progress--line el-progress--without-text c5 c6"
           style={Object {}}
@@ -958,13 +1145,11 @@ exports[`renders correctly 1`] = `
         className="c1"
         size={20}
       >
-         
         <p
           className="c4"
         >
           480/512 GB
         </p>
-         
         <div
           className="el-progress el-progress--line el-progress--without-text c5 c6"
           style={Object {}}
@@ -1009,13 +1194,11 @@ exports[`renders correctly 1`] = `
         className="c1"
         size={20}
       >
-         
         <p
           className="c4"
         >
           2/2 CPU's
         </p>
-         
         <div
           className="el-progress el-progress--line el-progress--without-text c5 c6"
           style={Object {}}
@@ -1047,13 +1230,11 @@ exports[`renders correctly 1`] = `
         className="c1"
         size={20}
       >
-         
         <p
           className="c4"
         >
           8/8 GB
         </p>
-         
         <div
           className="el-progress el-progress--line el-progress--without-text c5 c6"
           style={Object {}}
@@ -1085,13 +1266,11 @@ exports[`renders correctly 1`] = `
         className="c1"
         size={20}
       >
-         
         <p
           className="c4"
         >
           500/500 mbps
         </p>
-         
         <div
           className="el-progress el-progress--line el-progress--without-text c5 c6"
           style={Object {}}
@@ -1123,13 +1302,11 @@ exports[`renders correctly 1`] = `
         className="c1"
         size={20}
       >
-         
         <p
           className="c4"
         >
           256/512 GB
         </p>
-         
         <div
           className="el-progress el-progress--line el-progress--without-text c5 c6"
           style={Object {}}

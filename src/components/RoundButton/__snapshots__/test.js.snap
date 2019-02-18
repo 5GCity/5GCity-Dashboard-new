@@ -27,7 +27,10 @@ exports[`renders correctly 1`] = `
 
 <div
   className="c0"
+  size={undefined}
 >
-   t 
+  <i
+    className=""
+  />
 </div>
 `;

@@ -9,26 +9,27 @@ import styled from 'styled-components'
 import { Button } from 'element-react'
 import { darken } from 'polished'
 
-export default ({ children, svg, description, ...props }) => (
+export default ({ children, ...props }) => (
   <ButtonStyled {...props}>
-    {svg &&
-    <SvgContent>{svg}</SvgContent>
+    {props.svg &&
+      <SvgContent>{props.svg}</SvgContent>
     }
-    <Description>{description}</Description>
+    <Text>{children || props.text}</Text>
   </ButtonStyled>
 )
 
 const ButtonStyled = styled(Button)`
   border-radius: 24px;
   border: transparent;
-  color: #fff;
-  font-family: ${({ theme }) => theme.secondaryFont };
+  line-height: 15px;
+  font-family: ${({ theme }) => theme.fontDin };
   font-weight: bold;
   font-size: 14px;
-  
+
+
   ${({ type, theme }) => type === 'primary' &&`
     background-color: ${theme.primaryColor};
-    
+
     &:hover {
       background-color: #628A34;
     }
@@ -103,11 +104,8 @@ const ButtonStyled = styled(Button)`
 
 const SvgContent = styled.i`
   display: inline-block;
-  vertical-align: middle;
-  padding-right: 7px;
+  margin-right: 4px;
   `
 
-const Description = styled.span`
-  display: inline-block;
-  vertical-align: middle;
+const Text = styled.span`
 `
