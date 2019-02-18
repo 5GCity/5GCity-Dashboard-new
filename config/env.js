@@ -76,6 +76,10 @@ function getClientEnvironment(publicUrl) {
         PUBLIC_URL: publicUrl,
 
         APP_ENV: process.env.APP_ENV || 'development',
+
+        API_BASE_URL: process.env.API_BASE_URL,
+        AUTH_SERVER_URL: process.env.AUTH_SERVER_URL,
+
         VERSION: JSON.stringify(require("../package.json").version),
         BUILD_DATE: new Date()
       }

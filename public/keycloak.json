@@ -1,6 +1,6 @@
 {
   "realm": "5gcity",
-  "auth-server-url": "https://5gcity-dashboard.i2cat.net/auth",
+  "auth-server-url": "<AUTH_SERVER_URL>",
   "ssl-required": "none",
   "resource": "my_client",
   "credentials": {

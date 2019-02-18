@@ -13,7 +13,6 @@ import { createSlice } from './utils'
 
 import PropTypes from 'prop-types'
 
-
 export default kea({
   path: () => ['scenes', 'SliceDetail'],
 

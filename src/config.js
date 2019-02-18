@@ -8,7 +8,7 @@ import 'interceptors'
 
 // ! Do not remove the env comments they are used for building the correct environemnt
 // env
-export * from 'environments/development'
+export * from 'environments/production'
 // env
 
 // Core Constants

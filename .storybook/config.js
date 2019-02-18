@@ -4,24 +4,20 @@ import { injectGlobal, ThemeProvider } from 'styled-components'
 import { Provider } from 'react-redux'
 import { Theme } from '../src/globalStyles'
 import { Store } from '../src/store'
-//import { setOptions } from '@storybook/addon-options'
 import 'element-theme-default'
 import '../src/globalStyles'
+import { configureActions } from '@storybook/addon-actions'
 
 
 injectGlobal`
 
   body {
-    background: #fff;
+    background: ${Theme.bodyBackground};
   }
 
   html, body, #root {
+    padding: 10px;
     height: 100%;
-  }
-
-  #root {
-    /* padding: 50px;*/
-
   }
 `
 
@@ -52,3 +48,9 @@ addDecorator((story) => (
 
 
 configure(loadStories, module);
+
+configureActions({
+  depth: 100,
+  // Limit the number of items logged into the actions panel
+  limit: 20,
+})

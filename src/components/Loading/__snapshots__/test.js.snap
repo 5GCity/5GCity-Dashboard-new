@@ -1,0 +1,64 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+.c0 {
+  height: 100vh;
+}
+
+.c0 > div:first-child {
+  background-color: transparent !important;
+}
+
+.c0 .el-loading-spinner .path {
+  stroke-width: 4;
+}
+
+<div
+  className="c0"
+  style={
+    Object {
+      "position": "relative",
+    }
+  }
+>
+  <div
+    style={
+      Object {
+        "backgroundColor": "rgba(255, 255, 255, 0.901961)",
+        "bottom": 0,
+        "display": "block",
+        "left": 0,
+        "margin": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+        "zIndex": 657,
+      }
+    }
+  >
+    <div
+      className="el-loading-spinner"
+      style={
+        Object {
+          "display": "inline-block",
+          "left": 0,
+          "position": "absolute",
+        }
+      }
+    >
+      <svg
+        className="circular"
+        viewBox="25 25 50 50"
+      >
+        <circle
+          className="path"
+          cx="50"
+          cy="50"
+          fill="none"
+          r="20"
+        />
+      </svg>
+    </div>
+  </div>
+</div>
+`;

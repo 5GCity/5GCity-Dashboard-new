@@ -113,7 +113,6 @@ export default kea({
       yield call(axios.delete,`${API_BASE_URL}/slicemanagerapi/openstack_project/${openstack.id}`)
       } */
   
-
       yield put(fetchSlices())
 
       
