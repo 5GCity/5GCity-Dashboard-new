@@ -16,9 +16,12 @@ import SliceDetail from 'scenes/SliceDetail'
 import SliceNew from 'scenes/SliceNew'
 import Network from 'scenes/Network'
 import NetworkNew from 'scenes/NetworkNew'
+import Catalogue from 'scenes/Catalogue'
+import InfoManagement from 'scenes/InfoManagement'
+import Monitoring from 'scenes/Monitoring'
 
 // Define routes here
-export const Routes: any = {
+export const Routes = {
     Dashboard: {
         key: 'Dashboard',
         name: 'Dashboard',
@@ -28,8 +31,8 @@ export const Routes: any = {
         crumb: ['Slices'],
         exact:true
     },
-  
-  
+
+
     Slices: {
         key: 'Slices',
         name: 'Slices',
@@ -72,6 +75,33 @@ export const Routes: any = {
       path: '/network/new',
       component: NetworkNew,
       crumb: ['Slices']
+  },
+
+
+  Catalogue: {
+      key: 'Catalogue',
+      name: 'Catalogue',
+      path: '/catalogue',
+      component: Catalogue,
+      crumb: ['Slices']
+  },
+
+
+  InfoManagement: {
+      key: 'InfoManagement',
+      name: 'InfoManagement',
+      path: '/infoManagement',
+      component: InfoManagement,
+      crumb: ['inicio']
+  },
+
+
+  Monitoring: {
+      key: 'Monitoring',
+      name: 'Monitoring',
+      path: '/monitor/:type/:id',
+      component: Monitoring,
+      crumb: ['inicio']
   },
 
   notfound: {

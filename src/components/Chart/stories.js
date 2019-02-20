@@ -9,6 +9,8 @@ import { storiesOf } from '@storybook/react'
 
 import Chart from './index'
 
+import { Area, XAxis, YAxis, Tooltip, Line } from 'recharts'
+
 const data = [
   {
     name: 'Page A', uv: 4000, pv: 2400, amt: 2400,
@@ -34,7 +36,13 @@ const data = [
 ];
 
 const Chart1 = () => (
-  <Chart width={600} height={400} data={data} />
+  <Chart width={600} height={400} data={data}>
+    <XAxis dataKey="name"/>
+    <YAxis/>
+    <Tooltip/>
+    <Line type='monotone' dataKey='pv' stroke='#fff' />
+    <Area type='monotone' dataKey='uv' stroke='#8884d8' fill='#8884d8' />
+  </Chart>
 )
 
 storiesOf('Chart', module)

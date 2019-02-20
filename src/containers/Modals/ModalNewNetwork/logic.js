@@ -152,7 +152,6 @@ export default kea({
 
       try {
         yield call(axios.post,`${API_BASE_URL}/slicemanagerapi/network_service_instance`, dataRunInstance)
-        console.log(this.props)
         yield call(this.props.history.push, `/network`)
       } catch(error){
         console.error(`Error ${error}`)

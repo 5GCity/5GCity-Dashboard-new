@@ -7,7 +7,6 @@
 import React, { Component } from 'react'
 import Logic from './logic'
 import { withRouter } from 'react-router-dom'
-import styled from 'styled-components'
 
 
 /* Containers */
@@ -40,28 +39,25 @@ const Titles = [{
 
 class ListNetworks extends Component {
 
-  openModal = (network) => {
-    const { actionModal, setNetworkSelect } = this.actions
-    setNetworkSelect(network)
-    actionModal()
+  navigate = (path) => {
+    const { history } = this.props
+    history.push(path)
   }
 
-  allInfoNetwork = (network) => {
-    const { actionModal, setNetworkSelect } = this.actions
-    setNetworkSelect(network)
-    actionModal()
-  }
 
   render () {
-    const  { networkServicesInstance, loadingList } = this.props
+    const  { networkServicesInstance, loadingList, modalVisibled, networkSelect } = this.props
+    const { actionModal } = this.actions
+    const { deleteNetwork } = this.actions
     return (
         <Loading loading={loadingList}>
-          <ModalNetwork />
+          <ModalNetwork networkSelect={networkSelect} OpenModal={modalVisibled} />
           <List
             titles={Titles}
             data={networkServicesInstance}
-            removeNetwork={(network) => this.openModal(network)}
-            viewNetwork={(network) => this.allInfoNetwork(network)}
+            removeNetwork={({ id }) => deleteNetwork(id)}
+            viewNetwork={(network) => actionModal(network)}
+            viewNetworkMonitor={({ id }) => this.navigate(`/monitor/ns_id/${id}`)}
             network
           />
         </Loading>

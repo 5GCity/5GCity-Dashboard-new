@@ -47,13 +47,20 @@ export default kea({
   },
 
   takeEvery: ({ actions, workers }) => ({
-    [actions.checkLoggedUser]: workers.checkLoggedUser
+    [actions.checkLoggedUser]: workers.checkLoggedUser,
+    [actions.setUserRole]: workers.checkUserRole,
   }),
 
   takeLatest: ({ actions, workers }) => ({
   }),
 
   workers: {
+
+    * checkUserRole () {
+      const { setUserRole } = this.actions
+      console.log(setUserRole)
+      yield put()
+    },
 
     /**
      * Checking if user is logged in on the app
@@ -66,7 +73,7 @@ export default kea({
           const keycloak = Keycloak('/keycloak.json')
           keycloak.init({onLoad: 'login-required'})
             .success(function(authenticated) {
-                localStorage.setItem('keycloak', JSON.stringify(keycloak))  
+                localStorage.setItem('keycloak', JSON.stringify(keycloak))
               resolve(keycloak)
             })
             .error(function(error) {
@@ -81,5 +88,5 @@ export default kea({
       yield call(setAuthorizationInterceptor, keycloak.token)
       yield put(decreaseLoading())
     }
-  } 
+  }
 })

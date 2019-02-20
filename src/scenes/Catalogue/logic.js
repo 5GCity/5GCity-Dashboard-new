@@ -1,11 +1,12 @@
 /**
- * ModalNetwork Container Logic
+ * Catalogue Container Logic
  * Please write a description
  *
  * @author Your Name <youremail@ubiwhere.com>
  */
 
 import { kea } from 'kea'
+
 //import { put } from 'redux-saga/effects'
 //import { delay } from 'redux-saga'
 //import { } from 'config'
@@ -15,36 +16,45 @@ import { kea } from 'kea'
 //import PropTypes from 'prop-types'
 //import * as Check from 'validations'
 
-/* Logic */
-import ListNetworks from 'containers/Lists/ListNetworks/logic'
 
 export default kea({
-  path: () => ['scenes', 'containers', 'ModalNetwork'],
+  path: () => ['scenes', 'Catalogue'],
 
+  /*
   connect: {
     props: [
+      Logic, [
+        'prop1'
+      ]
     ],
     actions: [
-      ListNetworks, [
-        'actionModal'
+      Logic, [
+        'action as newActionName'
       ],
     ]
   },
+  */
 
   actions: () => ({
-
+    
   }),
 
   reducers: ({ actions }) => ({
+    
 
   }),
+
+  start: function * () {
+
+  },
 
   takeLatest: ({ actions, workers }) => ({
-
+    
   }),
 
-  workers: {
 
+  workers: {
+    
   }
 
 })

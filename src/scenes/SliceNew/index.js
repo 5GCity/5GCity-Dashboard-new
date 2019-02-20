@@ -20,7 +20,6 @@ import Button from 'components/Button'
 import Input from 'components/Input'
 import PanelRight from 'components/PanelRight'
 import { NodeMarkerIcon, BackIcon } from 'components/Icons'
-import InputMask from 'components/InputMask'
 
 
 
@@ -71,141 +70,125 @@ class SliceNew extends Component {
     )
   }
 
-infoMarkerContainer = () => {
-  const { pinsResources, selectPin } = this.props
-  const { changeNetwork, changeComputes, changeSDN } = this.actions
-  const marker = pinsResources[selectPin]
-  const computes = marker.location.resources.computes
-  const networks = marker.location.resources.networks
-  const sdnWifi = marker.location.resources.sdnWifi
+  infoMarkerContainer = () => {
+    const { pinsResources, selectPin } = this.props
+    const { changeNetwork, changeComputes, changeSDN } = this.actions
+    const marker = pinsResources[selectPin]
+    const computes = marker.location.resources.computes
+    const networks = marker.location.resources.networks
+    const sdnWifi = marker.location.resources.sdnWifi
 
-  return (
-    <Form
-      model={marker}
-      labelWidth="120"
-      labelPosition={'top'}
-      key={marker.id}>
-      <Form.Item>
-        {computes &&
-          <TitlePanel>Computing</TitlePanel>
-        }
-        {computes && computes.map((computeinfo,i) => {
-          return (
+    return (
+      <Form
+        model={marker}
+        labelWidth="120"
+        labelPosition={'top'}
+        key={marker.id}>
+        <Form.Item>
+          {computes &&
+            <TitlePanel>Computing</TitlePanel>
+          }
+          {computes && computes.map((computeinfo,i) => {
+            return (
+              <Checkbox.Group
+                value={computeinfo.ischecked === false ? []: [computeinfo.name]}
+                onChange={(value) => changeComputes(selectPin,i,'ischecked',value.length > 0 ? true : false)}>
+                <Checkbox key={computeinfo.id} label={computeinfo.name}>
+                  <Name>{computeinfo.name}</Name>
+                  <Id>{computeinfo.id}</Id>
+                </Checkbox>
+              </Checkbox.Group>
+            )
+          })}
+      </Form.Item>
+
+      <React.Fragment>
+      {networks &&
+        <TitlePanel>Network</TitlePanel>
+      }
+      {networks && networks.map((networkinfo,i) =>
+        <React.Fragment>
+          <Form.Item>
             <Checkbox.Group
-              value={computeinfo.ischecked === false ? []: [computeinfo.name]}
-              onChange={(value) => changeComputes(selectPin,i,'ischecked',value.length > 0 ? true : false)}>
-              <Checkbox key={computeinfo.id} label={computeinfo.name}>
-                <Name>{computeinfo.name}</Name>
-                <Id>{computeinfo.id}</Id>
+              value={networkinfo.ischecked === false ? []: [networkinfo.name]}
+              onChange={(value) => changeNetwork(selectPin,i,'ischecked',value.length > 0 ? true : false)}>
+              <Checkbox
+                key={networkinfo.id}
+                label={networkinfo.name}
+              >
+                <Name>{networkinfo.name}</Name>
+                <Id>{networkinfo.id}</Id>
               </Checkbox>
             </Checkbox.Group>
-          )
-        })}
-    </Form.Item>
-
-    <React.Fragment>
-    {networks &&
-      <TitlePanel>Network</TitlePanel>
-    }
-    {networks && networks.map((networkinfo,i) =>
-      <React.Fragment>
-        <Form.Item>
-          <Checkbox.Group
-            value={networkinfo.ischecked === false ? []: [networkinfo.name]}
-            onChange={(value) => changeNetwork(selectPin,i,'ischecked',value.length > 0 ? true : false)}>
-            <Checkbox
-              key={networkinfo.id}
-              label={networkinfo.name}
-            >
-              <Name>{networkinfo.name}</Name>
-              <Id>{networkinfo.id}</Id>
-            </Checkbox>
-          </Checkbox.Group>
-        </Form.Item>
-        {networkinfo.ischecked &&
-        <FormContainer key={i}>
-        <Form.Item label="CIDR" >
-          <Input
+          </Form.Item>
+          {networkinfo.ischecked &&
+          <FormContainer key={i}>
+          <Form.Item label="CIDR" >
+            <Input
+              type="text"
+              value={networkinfo.cidr}
+              onChange={(value) => changeNetwork(selectPin,i,'cidr',value)}
+            />
+            {/*<InputMask
+            mask={[/[1-9]/, /\d/, /\d/, '.', /\d/, /\d/, /\d/,'.', /\d/, /\d/, /\d/,'.',/\d/,'/',/\d/, /\d/]}
             type="text"
             value={networkinfo.cidr}
             onChange={(value) => changeNetwork(selectPin,i,'cidr',value)}
-          />
-          {/*<InputMask
-          mask={[/[1-9]/, /\d/, /\d/, '.', /\d/, /\d/, /\d/,'.', /\d/, /\d/, /\d/,'.',/\d/,'/',/\d/, /\d/]}
-          type="text"
-          value={networkinfo.cidr}
-          onChange={(value) => changeNetwork(selectPin,i,'cidr',value)}
-          /> */}
-        </Form.Item>
-        </FormContainer>
-        }
-      </React.Fragment>
-    )}
-      {sdnWifi &&
-      <TitlePanel>Wifi</TitlePanel>
-    }
-    {sdnWifi && sdnWifi.map((sdnWifi,i) =>
-      <React.Fragment>
-        <Form.Item>
-          <Checkbox.Group
-            value={sdnWifi.ischecked === false ? []: [sdnWifi.name]}
-            onChange={(value) => changeSDN(selectPin,i,'ischecked',value.length > 0 ? true : false)}>
-            <Checkbox label={sdnWifi.name}>
-              <Name>{sdnWifi.name}</Name>
-              <Id>{sdnWifi.id}</Id>
-            </Checkbox>
-          </Checkbox.Group>
-        </Form.Item>
-        {sdnWifi.ischecked &&
-        <FormContainer key={i}>
-        <Form.Item label="Name" >
-          <Input
-            type="text"
-            value={sdnWifi.sdnWifiName}
-            onChange={(value) => changeSDN(selectPin,i,'sdnWifiName',value)}/>
-        </Form.Item>
-        <Form.Item label="DNS IP" >
-          <Input
-            type="text"
-            value={sdnWifi.dns}
-            onChange={(value) => changeSDN(selectPin,i,'dns',value)}/>
-        </Form.Item>
-        <Form.Item label="DHCPD IP" >
-          <Input
-            type="text"
-            value={sdnWifi.dhcpd}
-            onChange={(value) => changeSDN(selectPin,i,'dhcpd',value)}/>
-        </Form.Item>
-        <Form.Item label="Channel">
-          <Input
-            type="text"
-            value={sdnWifi.channel}
-            onChange={(value) => changeSDN(selectPin,i,'channel',value)}/>
-        </Form.Item>
-        </FormContainer>
-        }
-      </React.Fragment>
-    )}
-  </React.Fragment>
-  </Form>
-  )
-}
-
-
-
-
-  state = {
-    viewport: {
-      width: this.props.containerWidth,
-      height: this.props.containerHeight,
-      latitude: 41.39695180342038,
-      longitude: 2.1569907609795886,
-      zoom: 12,
-    }
-  };
-
-
-
+            /> */}
+          </Form.Item>
+          </FormContainer>
+          }
+        </React.Fragment>
+      )}
+        {sdnWifi &&
+        <TitlePanel>Wifi</TitlePanel>
+      }
+      {sdnWifi && sdnWifi.map((sdnWifi,i) =>
+        <React.Fragment>
+          <Form.Item>
+            <Checkbox.Group
+              value={sdnWifi.ischecked === false ? []: [sdnWifi.name]}
+              onChange={(value) => changeSDN(selectPin,i,'ischecked',value.length > 0 ? true : false)}>
+              <Checkbox label={sdnWifi.name}>
+                <Name>{sdnWifi.name}</Name>
+                <Id>{sdnWifi.id}</Id>
+              </Checkbox>
+            </Checkbox.Group>
+          </Form.Item>
+          {sdnWifi.ischecked &&
+          <FormContainer key={i}>
+          <Form.Item label="Name" >
+            <Input
+              type="text"
+              value={sdnWifi.sdnWifiName}
+              onChange={(value) => changeSDN(selectPin,i,'sdnWifiName',value)}/>
+          </Form.Item>
+          <Form.Item label="DNS IP" >
+            <Input
+              type="text"
+              value={sdnWifi.dns}
+              onChange={(value) => changeSDN(selectPin,i,'dns',value)}/>
+          </Form.Item>
+          <Form.Item label="DHCPD IP" >
+            <Input
+              type="text"
+              value={sdnWifi.dhcpd}
+              onChange={(value) => changeSDN(selectPin,i,'dhcpd',value)}/>
+          </Form.Item>
+          <Form.Item label="Channel">
+            <Input
+              type="text"
+              value={sdnWifi.channel}
+              onChange={(value) => changeSDN(selectPin,i,'channel',value)}/>
+          </Form.Item>
+          </FormContainer>
+          }
+        </React.Fragment>
+      )}
+    </React.Fragment>
+    </Form>
+    )
+  }
 
   render () {
 
@@ -220,7 +203,7 @@ infoMarkerContainer = () => {
       modalStatus,
       closePanel,
       openPanel } = this.actions
-
+      console.log(pinsResources)
     return (
       <Wrapper>
         <HeaderNav
@@ -229,7 +212,7 @@ infoMarkerContainer = () => {
          name={'Add new slice'}
          leftContent={headerItems}
          clickFunction={modalNewSliceStatus}
-         />
+        />
         <PanelRight
           show={visiblePanel}
           closeNav={closePanel}
@@ -242,7 +225,6 @@ infoMarkerContainer = () => {
           action={(item) => console.log(item)}
         />
         <SliceMap
-          viewport={this.state.viewport}
           markers={pinsResources}
           onClick={(marker) =>openPanel(marker) }
         />
@@ -251,7 +233,7 @@ infoMarkerContainer = () => {
           size={'tiny'}
           showClose={true}
           onCancel={modalNewSliceStatus}
-          title="Confirm acquisition"
+          title="Confirm"
           visible={modalNewSlice}
           bodyContent={ this.modalBody() }
           footerContent={ this.footerButton() }

@@ -7,7 +7,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import Button from 'components/Button'
-import { Icon } from 'element-react'
+// import { Icon } from 'element-react'
 import { DeleteIcon } from 'components/Icons'
 
 export default ({ children, ...props }) => (
@@ -17,10 +17,11 @@ export default ({ children, ...props }) => (
         <Column
         size={title.size}
         key={title.id}
-        onClick={() => iconFilter(title)}>
+        // onClick={() => iconFilter(title)}
+        >
           {title.name}
-          {title.filter && <IconFilter name={'caret-bottom'}/>}
-          {!title.filter && <IconFilter name={'caret-up'}/>}
+{/*           {title.filter && <IconFilter name={'caret-bottom'}/>}
+          {!title.filter && <IconFilter name={'caret-up'}/>} */}
         </Column>
       )}
       <Column marginLeft></Column>
@@ -63,8 +64,14 @@ export default ({ children, ...props }) => (
                       type={'secondary'}
                       svg={ <EditIcon /> }
                       onClick={() => props.editSlice(data)}
-                      description={'edit'}
+                      text={'edit'}
                     /> */}
+                  <ButtonList
+                    type={'primary'}
+                    icon={'setting'}
+                    onClick={() => props.viewSliceMonitor(data)}
+                    text={'Monitoring'}
+                  />
                 </ContainerButtons>
               )
           })}
@@ -93,6 +100,12 @@ export default ({ children, ...props }) => (
               icon={'view'}
               onClick={() => props.viewNetwork(data)}
               text={'View'}
+            />
+              <ButtonList
+              type={'primary'}
+              icon={'setting'}
+              onClick={() => props.viewNetworkMonitor(data)}
+              text={'Monitoring'}
             />
           </ContainerButtons>
           }
@@ -173,8 +186,8 @@ const ButtonList = styled(Button)`
   float: right;
 `
 
-const IconFilter = styled(Icon)`
+/* const IconFilter = styled(Icon)`
   height: 24px;
   width: 24px;
   padding-left: 6px;
-`
+` */

@@ -7,8 +7,6 @@
 import React, { Component } from 'react'
 import Logic from './logic'
 import styled from 'styled-components'
-
-// import moment from 'moment'
 import { withRouter } from 'react-router-dom'
 
 /* Container */
@@ -41,7 +39,7 @@ const Titles = [{
   id: 5,
   size: 15,
   name: 'Tenant',
-  propItem: 'tenant',
+  propItem: 'tenantName',
 }]
 
 const TitlesUser = [{
@@ -135,6 +133,7 @@ class ListSlices extends Component {
           data={slices}
           viewSlice={({id}) => this.navigate(`/slice/${id}`)}
           removeSlice={(data) => {this.openModal(data)}}
+          viewSliceMonitor={({ id }) => this.navigate(`/monitor/slice/${id}`)}
           slices
         />
       </Wrapper>

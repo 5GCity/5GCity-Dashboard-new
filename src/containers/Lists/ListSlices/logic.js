@@ -41,7 +41,7 @@ export default kea({
     isnLoading: () => ({ }),
     openModal: () => ({ }),
     closeModal: () => ({ })
-    
+
   }),
 
   reducers: ({ actions }) => ({
@@ -62,7 +62,7 @@ export default kea({
     }]
   }),
 
-    start: function * () { 
+    start: function * () {
     const { fetchSlices } = this.actions
 
 
@@ -74,24 +74,24 @@ export default kea({
     [actions.deleteSlice]: workers.deleteSlice,
   }),
 
- 
+
 
 
   workers: {
 
-       * fetchSlices () {
-        const { setSlices } = this.actions
+  * fetchSlices () {
+    const { setSlices } = this.actions
 
-        try {
-          let responseResult = yield call(axios.get,`${API_BASE_URL}/slicemanagerapi/slic3`)
-          const { data } = responseResult
-          data.map(el => el.status = "Approved")
+    try {
+      let responseResult = yield call(axios.get,`${API_BASE_URL}/slicemanagerapi/slic3`)
+      const { data } = responseResult
+      data.map(el => el.status = "Approved")
 
-          yield put(setSlices(data))
+      yield put(setSlices(data))
 
-        } catch(error){
-          console.error(`Error ${error}`)
-        }
+    } catch(error){
+      console.error(`Error ${error}`)
+    }
   },
 
   * deleteSlice () {
@@ -101,21 +101,21 @@ export default kea({
     try {
       yield put(isLoading())
       yield call(axios.delete,`${API_BASE_URL}/slicemanagerapi/slic3/${sliceSelect.id}`)
-      
+
     /*if(sliceSelect.chunks.openstackVlans.length > 0){
-        for (const openstack of sliceSelect.chunks.openstackVlans) { 
+        for (const openstack of sliceSelect.chunks.openstackVlans) {
           console.log('apagou openstack_vlan')
           yield call(axios.delete,`${API_BASE_URL}/slicemanagerapi/openstack_vlan/${openstack.id}`)
         }
       }
-      for (const openstack of sliceSelect.chunks.openstackProjects) { 
+      for (const openstack of sliceSelect.chunks.openstackProjects) {
         console.log('apagou openstack_project')
       yield call(axios.delete,`${API_BASE_URL}/slicemanagerapi/openstack_project/${openstack.id}`)
       } */
-  
+
       yield put(fetchSlices())
 
-      
+
     } catch(error){
       console.error(`Error ${error}`)
     }

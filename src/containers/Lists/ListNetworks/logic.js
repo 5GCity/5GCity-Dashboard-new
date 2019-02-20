@@ -18,11 +18,10 @@ export default kea({
   actions: () => ({
     fetchNetworksServicesInstance: () => ({ }),
     setNetworksServices: (networks) => ({ networks }),
-    actionModal: () => ({ }),
+    actionModal: (networkSelect) => ({ networkSelect }),
     loadingList: () => ({ }),
     loading: () => ({ }),
-    setNetworkSelect: (network) => ({ network }),
-    deleteNetwork: () => ({ })
+    deleteNetwork: (id) => ({ id }),
   }),
 
   reducers: ({ actions }) => ({
@@ -33,14 +32,17 @@ export default kea({
     modalVisibled: [false, PropTypes.bool,{
       [actions.actionModal]: (state, payload) => !state,
     }],
+    networkSelect: [null , PropTypes.object,{
+      [actions.actionModal]: (state, payload) => payload.networkSelect,
+    }],
     loading: [false, PropTypes.bool, {
       [actions.loading]: (state, payload) => !state
     }],
     loadingList: [false, PropTypes.bool, {
       [actions.loadingList]: (state, payload) => !state
     }],
-    networkSelect : [null, PropTypes.object,{
-      [actions.setNetworkSelect]: (state, payload) => payload.network
+    networkId : [null, PropTypes.object,{
+      [actions.deleteNetwork]: (state, payload) => payload.id
     }]
   }),
 
@@ -52,7 +54,7 @@ export default kea({
 
   takeLatest: ({ actions, workers }) => ({
     [actions.fetchNetworksServicesInstance]: workers.fetchNetworks,
-    [actions.deleteNetwork]: workers.deleteNetworkService
+    [actions.deleteNetwork]: workers.deleteNetworkService,
   }),
 
   workers: {
@@ -73,22 +75,20 @@ export default kea({
       }
     },
     * deleteNetworkService () {
-      const { closeModal, loading } = this.actions
-      const networkSelect = yield this.get('networkSelect')
-
+      const networkId = yield this.get('networkId')
+      console.log(networkId)
       try {
-        yield put(loading())
-         //let responseResult = yield call(axios.delete,`${API_BASE_URL}/slicemanagerapi/network_service/${networkSelect.id}`)
-        //const { data } = responseResult
+        //yield put(loading())
+        yield call(axios.delete,`${API_BASE_URL}/slicemanagerapi/network_service_instance/${networkId}`)
 
-        yield put(loading())
-        yield put(closeModal())
+        // put(loading())
+        //yield put(closeModal())
       } catch(error){
         console.error(`Error ${error}`)
-        yield put(closeModal())
-        yield put(loading())
+        //yield put(closeModal())
+        //yield put(loading())
       }
-    }
+    },
   }
 
 })

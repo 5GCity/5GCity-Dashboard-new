@@ -6,8 +6,8 @@
  */
 
 import { kea } from 'kea'
-
 import { put, call } from 'redux-saga/effects'
+import { delay } from 'redux-saga'
 import axios from 'axios'
 import PropTypes from 'prop-types'
 import { API_BASE_URL } from 'config'
@@ -88,7 +88,6 @@ export default kea({
 
   start: function * () {
     const { getListResources } = this.actions
-
     yield put(getListResources())
   },
 
@@ -136,9 +135,10 @@ export default kea({
       if(found) {
         pinsResources[pinIndex].color = '#1e90ff'
       }
-      const existSdn = resources.sdnWifi.find((sdn) => sdn.ischecked)
-      const existNetwork = resources.networks.find((sdn) => sdn.ischecked)
-      const existCompute = resources.computes.find((sdn) => sdn.ischecked)
+
+      const existCompute = resources.computes && resources.computes.find((sdn) => sdn.ischecked)
+      const existNetwork = resources.networks && resources.networks.find((sdn) => sdn.ischecked)
+      const existSdn = resources.sdnWifi && resources.sdnWifi.find((sdn) => sdn.ischecked)
 
       if (existSdn && existNetwork && existCompute) {
         yield put(closePanel())
@@ -155,7 +155,6 @@ export default kea({
 
     *getListResources(){
       const { setListResources } = this.actions
-
       try{
         const responseComputes = yield call(axios.get , `${API_BASE_URL}/slicemanagerapi/compute`)
         const responseNetworks = yield call(axios.get , `${API_BASE_URL}/slicemanagerapi/physical_network`)
@@ -172,7 +171,7 @@ export default kea({
         if(responseSdnWifi) {
           responseSdnWifi.data.map(el => listResources.sdnWifi.push(el))
         }
-
+        console.log("Resposta")
         yield(put(setListResources(listResources)))
       }
       catch (error) {
@@ -183,7 +182,7 @@ export default kea({
     *createSlice(){
         const pinsResources = yield this.get('pinsResources'),
           chunk_ids = [], vlans_ids = [],
-        { modalStatus, isLoading, errorfetch, resetSliceName } = this.actions
+        { modalStatus, isLoading, errorfetch, resetSliceName, modalNewSliceStatus } = this.actions
         /*
          * 1º Create OpenStack
          * 2º Create Vlan

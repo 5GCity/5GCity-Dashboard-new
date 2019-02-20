@@ -11,16 +11,17 @@ import { withRouter } from 'react-router-dom'
 
 /* Components */
 import Brand from 'components/Brand'
-import { MapIcon } from 'components/Icons'
+// import { MapIcon } from 'components/Icons'
 import Modal from 'components/Modal'
 import Button from 'components/Button';
 
 
 const LINKS = [
-  { id: 1, path: '/', name: 'Monitoring Dashboard', icon: null, disabled: true , show: false, active: true },
-  { id: 2, path: '/slices', name: 'Slices', icon:<MapIcon />, disabled: false , show: true ,active: false},
-  { id: 3, path: '/network', name: 'Network Services', icon: null, disabled:false , show: true ,active: false},
-  { id: 4, path: '/settings', name: 'Settings', icon: null, disabled: true , show: false ,active: false}
+ // { id: 1, path: '/', name: 'Info Management', icon: null, disabled: false , show: false, active: true },
+  { id: 1, path: '/infoManagement', name: 'Info Management', icon: null, disabled: false , show: ['Inf. Owner'] ,active: false},
+  { id: 2, path: '/slices', name: 'Slices', icon:/*<MapIcon />*/ null, disabled: false , show: ['Inf. Owner','Slice Requester'] ,active: false},
+  { id: 3, path: '/network', name: 'Network Services', icon: null, disabled:false , show: ['Inf. Owner','Slice Requester'] ,active: false},
+  { id: 4, path: '/catalogue', name: 'Catalogue', icon: null, disabled:false , show: ['Inf. Owner','Slice Requester'] ,active: false},
 ]
 
 class Navbar extends Component {
@@ -32,6 +33,10 @@ class Navbar extends Component {
       link.active = true
   }
 
+  linksRole = () => {
+    const { userRole }= this.props
+    return LINKS.filter(link => link.show.find(user => user === userRole))
+  }
   navigate = (path) => {
     const { history } = this.props
     this.activeNavItem(path)
@@ -42,8 +47,8 @@ class Navbar extends Component {
     const { closeModal, logout } = this.actions
     return(
       <React.Fragment>
-      <Button description={'Yes'} type={'primary'} onClick={logout}/>
-      <Button description={'No'} type={'danger'} onClick={closeModal}/>
+      <Button text={'Yes'} type={'primary'} onClick={logout}/>
+      <Button text={'No'} type={'danger'} onClick={closeModal}/>
       </React.Fragment>
     )
   }
@@ -61,7 +66,7 @@ class Navbar extends Component {
        onCancel={closeModal}
        footerContent={this.footerModal()}/>
       <Brand />
-      {LINKS.map(el =>
+      {this.linksRole().map(el =>
         el.show ?
         <ContainerMenu
           active={el.active}

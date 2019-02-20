@@ -1,5 +1,4 @@
 import { injectGlobal } from 'styled-components'
-//import { lighten } from 'polished'
 
 // Theme variables
 export const Theme = {
@@ -30,6 +29,16 @@ injectGlobal`
     -moz-osx-font-smoothing: grayscale;
     -ms-overflow-x: hidden;
     background: ${Theme.bodyBackground};
+
+    .el-picker-panel {
+      background: #404F57!important;
+      border: none;
+      color: white;
+    }
+    .el-date-table td.disabled {
+      background-color: transparent;
+      color: #6a6a6a;
+    }
   }
 
   * {

@@ -1,8 +1,8 @@
 /**
- * SliceDetail Scene
+ * Infomanagementview Container
  * Please write a description
  *
- * @author Your Name <gpatriarca@ubiwhere.com>
+ * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
 import React, { Component } from 'react'
 import Logic from './logic'
@@ -10,111 +10,97 @@ import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
 import { Theme } from 'globalStyles'
 
-/* Components */
-import HeaderNav from 'components/HeaderNav'
+/* Containers */
+import SliceMap from 'containers/SliceMap'
 import PanelRight from 'components/PanelRight'
 import { NodeMarkerIcon, BackIcon } from 'components/Icons'
 
-/* Containers */
-import SliceMap from 'containers/SliceMap'
+/* Components */
+import HeaderNav from 'components/HeaderNav'
 
 const infoMarkerContainer = (rightPanelInfo) => {
-  const info = rightPanelInfo.location.resources
+  const { computes, networks, sdnWifi } = rightPanelInfo
   return(
- <PanelInfo>
-  {info.computes &&
+  <PanelInfo>
+  {computes &&
   <Title>Computing</Title>
   }
-  {info.computes && info.computes.map((el, i) =>
+  {computes && computes.map((el, i) =>
     <TypeMarker
-      className={ i ===  info.computes.length -1 && 'noBorder'}
+      className={ i ===  rightPanelInfo.computes.length -1 && 'noBorder'}
       key={el.id}>
         <Name>{el.name}</Name>
         <Id>{el.id}</Id>
     </TypeMarker>
   )}
-  {info.networks &&
+  {networks &&
   <Title>Network</Title>
   }
-  {info.networks && info.networks.map((el, i) =>
+  {networks && networks.map((el, i) =>
       <TypeMarker
-        className={ i === info.networks.length -1 && 'noBorder'}
+        className={ i === networks.length -1 && 'noBorder'}
         key={el.id}>
         <Name>{el.name}</Name>
         <Id>{el.id}</Id>
       </TypeMarker>
    )}
-    {info.sdnWifi &&
+    {sdnWifi &&
   <Title>Wifi</Title>
   }
-  {info.sdnWifi && info.sdnWifi.map((el, i) =>
+  {sdnWifi && sdnWifi.map((el, i) =>
     <TypeMarker
-      className={ i ===  info.sdnWifi.length -1 && 'noBorder'}
+      className={ i ===  sdnWifi.length -1 && 'noBorder'}
       key={el.id}>
       <Name>{el.name}</Name>
       <Id>{el.id}</Id>
-      <Id>DHCPD: {el.dhcpd}</Id>
-      <Id>DNS: {el.dns}</Id>
-      <Id>Channel: {el.channel}</Id>
+      <Id>Bandwidth: {el.bandwidth}</Id>
+      <Id>Number: {el.number}</Id>
+      <Id>TX Power: {el.txPower}</Id>
     </TypeMarker>
   )}
-</PanelInfo>
+  </PanelInfo>
   )
 }
 
-class SliceDetail extends Component {
+class InfoManagementView extends Component {
 
   navigateToBack = () => {
     const { history } = this.props
     history.goBack()
   }
 
-  clickMarker = (marker) => {
-    const { infoMarker, panelAction } = this.actions
-    panelAction()
-    infoMarker(marker)
-  }
-
   render () {
-
-    const { slice, rightPanelInfo, panel  } = this.props
-    const { panelAction } = this.actions
+    const { panelAction, infoMarker } = this.actions
+    const { pinsResources, panel, rightPanelInfo } = this.props
     return (
       <Wrapper>
-      {slice &&
-      <React.Fragment>
         <HeaderNav
           buttonBack={<BackIcon />}
           navigateBack={() => this.navigateToBack()}
-          name={slice.name}
-        /> {/* leftContent={headerItems} */}
+          name={'View Management'}
+        />
         <PanelRight
           show={panel}
           closeNav={() => panelAction()}
           headerIcon={<NodeMarkerIcon height={30} width={30} />}
-          container={rightPanelInfo && infoMarkerContainer(rightPanelInfo)}
+          container={ rightPanelInfo && infoMarkerContainer(rightPanelInfo) }
           action={(item) => console.log(item)}
         />
-        <SliceMap
-          markers={slice.markers}
-          onClick={(marker) =>{ this.clickMarker(marker)}}
-        />
-
-      </React.Fragment>
-      }
+        {pinsResources &&
+          <SliceMap
+            markers={pinsResources}
+            onClick={(marker) => infoMarker(marker.location.resources) }
+          />
+        }
       </Wrapper>
     )
   }
 }
 
-
-export default withRouter(Logic(SliceDetail))
+export default withRouter(Logic(InfoManagementView))
 
 const Wrapper = styled.div`
-  height: 100%;
-  > div:last-child {
-    height: calc(100% - 80px) !important;
-  }
+  height: calc(100% - 80px) !important;
 `
 const PanelInfo = styled.div`
 .noBorder {

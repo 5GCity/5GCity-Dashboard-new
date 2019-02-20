@@ -11,6 +11,9 @@ import { AppContainer } from 'react-hot-loader'
 import { ThemeProvider } from 'styled-components'
 import { Theme } from './globalStyles'
 import { BrowserRouter } from 'react-router-dom'
+import { i18n } from 'element-react'
+import locale from 'element-react/src/locale/lang/en'
+
 
 import { initInterceptors } from 'interceptors'
 
@@ -37,6 +40,8 @@ if (!localIsTheLast) {
   window.localStorage.setItem('version', VERSION)
 }
 
+// User I18N
+i18n.use(locale);
 
 // Sentry
 let Raven

@@ -28,11 +28,23 @@ class Dashboard extends Component {
       <Wrapper>
       <Navbar />
       <PageTitle title={'dashboard'}/>
-        <Tabs activeName='2' onTabClick={(tab) => console.log(tab.props.name)}>
-          <Container label='Current usage' name='1'><SlicesStatus /></Container>
-          <Container label='Allocation' name='2'>Allocation</Container>
+        <Tabs
+          activeName='2'
+          onTabClick={(tab) => console.log(tab.props.name)}
+        >
+          <Container
+            label='Current usage'
+            name='1'
+          >
+            <SlicesStatus />
+          </Container>
+          <Container
+            label='Allocation'
+            name='2'
+          >
+            Allocation
+          </Container>
         </Tabs>
-
       </Wrapper>
     )
   }

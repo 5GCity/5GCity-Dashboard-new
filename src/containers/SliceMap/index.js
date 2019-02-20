@@ -6,22 +6,84 @@
  */
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import ReactMapGL,{ Marker } from 'react-map-gl'
+import ReactMapGL,{ Marker, FlyToInterpolator } from 'react-map-gl'
+import WebMercatorViewport from 'viewport-mercator-project'
 import { MAPBOX_TOKEN , MAPBOX_STYLE } from 'config'
-import Dimensions from 'react-dimensions';
-import { NodeMarkerIcon, NodeWifiIcon } from 'components/Icons';
+import Dimensions from 'react-dimensions'
+import { NodeMarkerIcon, NodeWifiIcon } from 'components/Icons'
 
 class SliceMap extends Component {
 
-  state = {
+   state = {
     viewport: {
       width: this.props.containerWidth,
       height: this.props.containerHeight,
-      latitude: 41.39695180342038,
-      longitude: 2.1569907609795886,
-      zoom: 4
+      zoom: 4,
     }
   }
+
+  componentDidMount() {
+    const { markers } = this.props
+    if(markers) {
+      const allPosition = markers.map(marker => [marker.location.longitude, marker.location.latitude])
+      if(allPosition.length > 2) {
+      const { longitude, latitude } = new WebMercatorViewport(this.state.viewport)
+        .fitBounds(allPosition);
+        const viewport = {
+          ...this.state.viewport,
+          longitude,
+          latitude,
+          zoom: 10,
+          transitionDuration: 3000,
+          transitionInterpolator: new FlyToInterpolator()
+        }
+        this.setState({viewport})
+      } else {
+        const viewport = {
+          ...this.state.viewport,
+          longitude: parseFloat(allPosition[0][0]),
+          latitude: parseFloat(allPosition[0][1]),
+          transitionDuration: 3000,
+          transitionInterpolator: new FlyToInterpolator(),
+          zoom: 14
+        }
+        this.setState({viewport})
+      }
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.markers !== prevProps.markers) {
+    const { markers } = this.props
+    if(markers) {
+      const allPosition = markers.map(marker => [marker.location.longitude, marker.location.latitude])
+      if(allPosition.length > 2) {
+      const { longitude, latitude } = new WebMercatorViewport(this.state.viewport)
+        .fitBounds(allPosition);
+        const viewport = {
+          ...this.state.viewport,
+          longitude,
+          latitude,
+          zoom: 10,
+          transitionDuration: 3000,
+          transitionInterpolator: new FlyToInterpolator()
+        }
+        this.setState({viewport})
+      } else {
+        const viewport = {
+          ...this.state.viewport,
+          longitude: parseFloat(allPosition[0][0]),
+          latitude: parseFloat(allPosition[0][1]),
+          transitionDuration: 3000,
+          transitionInterpolator: new FlyToInterpolator(),
+          zoom: 14
+        }
+        this.setState({viewport})
+      }
+    }
+  }
+  }
+
 
   render () {
     const { markers, onClick } = this.props

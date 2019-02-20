@@ -1,5 +1,5 @@
 /**
- * ModalNetwork Container Logic
+ * Monitor Container Logic
  * Please write a description
  *
  * @author Your Name <youremail@ubiwhere.com>
@@ -15,21 +15,9 @@ import { kea } from 'kea'
 //import PropTypes from 'prop-types'
 //import * as Check from 'validations'
 
-/* Logic */
-import ListNetworks from 'containers/Lists/ListNetworks/logic'
 
 export default kea({
-  path: () => ['scenes', 'containers', 'ModalNetwork'],
-
-  connect: {
-    props: [
-    ],
-    actions: [
-      ListNetworks, [
-        'actionModal'
-      ],
-    ]
-  },
+  path: () => ['scenes', 'containers', 'Monitor'],
 
   actions: () => ({
 

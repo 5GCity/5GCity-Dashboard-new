@@ -17,9 +17,7 @@ import Button from 'components/Button'
 
 class ModalNetwork extends Component {
 
-  modalBody = () => {
-    const {networkSelect} = this.props
-
+  modalBody = (networkSelect) => {
       return(
         <ContainerModal>
         {networkSelect &&
@@ -35,7 +33,7 @@ class ModalNetwork extends Component {
             <Field><FieldTitle>Slice ID:</FieldTitle> {networkSelect.slic3Id}</Field>
             <Field><FieldTitle>Port:</FieldTitle>
             {
-            networkSelect.ports.length ? networkSelect.ports.map((itemTestArray) =>
+            networkSelect.ports && networkSelect.ports.length ? networkSelect.ports.map((itemTestArray) =>
             (<span> {itemTestArray} </span>)) : '-'
             }
             </Field>
@@ -61,17 +59,17 @@ class ModalNetwork extends Component {
   }
 
   render () {
-    const { modalVisibled } = this.props
-    const { actionModal } = this.actions
+    const { OpenModal ,networkSelect } = this.props
+    const { actionModal }= this.actions
 
     return (
       <Modal
         size={'tiny'}
         showClose={true}
-        onCancel={actionModal}
+        onCancel={() => actionModal(null)}
         title="Network Information"
-        visible={modalVisibled}
-        bodyContent={ this.modalBody() }
+        visible={OpenModal}
+        bodyContent={ this.modalBody(networkSelect) }
         footerContent={ this.footerButton() }
       />
     )
