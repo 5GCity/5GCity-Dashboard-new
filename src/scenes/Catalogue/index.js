@@ -21,7 +21,7 @@ class Catalogue extends Component {
       <Wrapper>
         <NavBar />
         <PageTitle
-          title={'Catalogue'}
+          title={'Network Service Catalogue'}
         />
         <ListNewNetworks />
       </Wrapper>

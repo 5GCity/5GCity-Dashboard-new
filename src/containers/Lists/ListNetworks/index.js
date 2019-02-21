@@ -30,8 +30,8 @@ const Titles = [{
 },{
   id: 3,
   size: 15,
-  name: 'Slice ID',
-  propItem: 'slic3Id',
+  name: 'Slice Name',
+  propItem: 'slic3Name',
   render: (vendor) =>
      !vendor ? "N.A" : vendor
 }]

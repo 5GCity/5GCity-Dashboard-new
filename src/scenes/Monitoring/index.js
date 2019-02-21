@@ -2,7 +2,7 @@
  * Monitoring Scene
  * Please write a description
  *
- * @author Your Name <youremail@ubiwhere.com>
+ * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
 import React, { Component } from 'react'
 import Logic from './logic'
@@ -19,29 +19,6 @@ import DatePicker from 'components/DatePicker'
 import Button from 'components/Button'
 import { Layout } from 'element-react'
 
-const data = [
-  {
-    name: 'Page A', uv: 4000, pv: 2400, amt: 2400,
-  },
-  {
-    name: 'Page B', uv: 3000, pv: 2400, amt: 2210,
-  },
-  {
-    name: 'Page C', uv: 2000, pv: 2400, amt: 2290,
-  },
-  {
-    name: 'Page D', uv: 2780, pv: 2400, amt: 2000,
-  },
-  {
-    name: 'Page E', uv: 1890, pv: 2400, amt: 2181,
-  },
-  {
-    name: 'Page F', uv: 2390, pv: 2400, amt: 2500,
-  },
-  {
-    name: 'Page G', uv: 3490, pv: 2400, amt: 2100,
-  },
-];
 
 
 class Monitoring extends Component {
@@ -57,8 +34,8 @@ class Monitoring extends Component {
   }
 
   render () {
-    const { date } = this.props
-
+    const { date, CPU, RAM, DISK, TX, RX } = this.props
+    const { setValue, refreshAction } = this.actions
     return (
       <Wrapper>
         <HeaderNav
@@ -66,81 +43,93 @@ class Monitoring extends Component {
           navigateBack={() => this.navigateToBack()}
           name={'Monitoring'}
         />
-{/*         <Layout.Row gutter="10" justify="center">
-          <Layout.Col span="6">
-            <DatePicker
-              format={'dd-MM-yyyy'}
-              value={new Date(date*1000)}
-              placeholder="Pick a day"
-              disabledDate={time=> time.getTime() > Date.now() - 1}
-            />
-            </Layout.Col>
-            <Layout.Col span="6">
+        <ContainerDatePicker>
+          <DatePicker
+            format={'dd-MM-yyyy'}
+            value={new Date(date * 1000)}
+            placeholder="Pick a day"
+            disabledDate={time=> time.getTime() > Date.now() - 1}
+            onChange={date =>{console.log(date); setValue(date) }}
+            isShowTrigger={false}
+          />
+          <WrapperButton>
             <Button
               type={'primary'}
               text={'Refresh'}
               //icon={'reload'}
+              onClick={() => refreshAction()}
             />
-            </Layout.Col>
-        </Layout.Row> */}
-        <Graph>
-        <Layout.Row gutter="10" justify="center">
-          <Layout.Col sm="24" md="6" lg="8">
+          </WrapperButton>
+        </ContainerDatePicker>
+        <ContainerParentMonitor>
+        <ContainerMonitor>
             <Monitor
-              data={data}
-              max={2000}
+              datakeyAxis={'date'}
+              dataKeyArea={CPU && 'value'}
+              data={CPU && CPU.data}
+              max={CPU && CPU.max}
+              unit={CPU && CPU.unit}
               width={600}
               height={350}
               title={'CPU'}
               colorArea={'#8CC14E'}
             />
-          </Layout.Col>
-          <Layout.Col sm="24" md="6" lg="8">
+          </ContainerMonitor>
+          <ContainerMonitor>
             <Monitor
-              data={data}
+              datakeyAxis={'date'}
+              dataKeyArea={RAM && 'value'}
+              data={RAM && RAM.data}
+              max={RAM && RAM.max}
+              unit={RAM && RAM.unit}
               width={600}
-              max={2000}
               height={350}
               title={'RAM'}
               colorArea={'#2b7f0c'}
             />
-          </Layout.Col>
-          <Layout.Col sm="24" md="6" lg="8">
+            </ContainerMonitor>
+          <ContainerMonitor>
             <Monitor
-              data={data}
+              datakeyAxis={'date'}
+              dataKeyArea={DISK && 'value'}
+              data={DISK && DISK.data}
+              max={DISK && DISK.max}
+              unit={DISK && DISK.unit}
               width={600}
-              max={2000}
               height={350}
               title={'DISK'}
               colorArea={'#16a399'}
             />
-          </Layout.Col>
-        </Layout.Row>
-        </Graph>
-        <Graph>
-        <Layout.Row gutter="10" justify="center">
-          <Layout.Col sm="24" md="12" lg="12">
+        </ContainerMonitor>
+        </ContainerParentMonitor>
+        <ContainerParentMonitor>
+        <ContainerMonitor>
             <Monitor
-              data={data}
-              width={800}
-              max={2000}
+              datakeyAxis={'date'}
+              dataKeyArea={RX && 'value'}
+              data={RX && RX.data}
+              max={RX && RX.max}
+              unit={RX && RX.unit}
+              width={600}
               height={350}
               title={'RX'}
               colorArea={'#edce23'}
             />
-          </Layout.Col>
-          <Layout.Col sm="24" md="12" lg="12">
+          </ContainerMonitor>
+          <ContainerMonitor>
             <Monitor
-              data={data}
-              width={800}
-              max={2000}
+              datakeyAxis={'date'}
+              dataKeyArea={TX && 'value'}
+              data={TX && TX.data}
+              max={TX && TX.max}
+              width={600}
               height={350}
               title={'TX'}
               colorArea={'#0b7691'}
+              unit={TX && TX.unit}
             />
-          </Layout.Col>
-        </Layout.Row>
-        </Graph>
+          </ContainerMonitor>
+          </ContainerParentMonitor>
       </Wrapper>
     )
   }
@@ -150,11 +139,24 @@ class Monitoring extends Component {
 export default withRouter((Logic(Monitoring)))
 
 const Wrapper = styled.div`
-  height: calc(100% - 100px) !important;
+  height: calc(100% - 80px) !important;
+  width: 100%;
 `
-const Form = styled.div`
-  margin: 10px 0;
+const ContainerDatePicker = styled.div`
+  margin: 20px auto;
+  width: 300px;
+  display: block;
 `
-const Graph = styled.div`
-  margin 20px 0;
+const ContainerParentMonitor = styled.div`
+  margin: 10px auto;
+  width: 100%;
+  text-align: center;
+`
+const ContainerMonitor = styled.div`
+  width: 600px;
+  display: inline-block;
+`
+const WrapperButton = styled.div`
+  display: inline;
+  margin-left: 10px;
 `

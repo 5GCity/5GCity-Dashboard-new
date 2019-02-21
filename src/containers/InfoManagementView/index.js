@@ -53,9 +53,9 @@ const infoMarkerContainer = (rightPanelInfo) => {
       key={el.id}>
       <Name>{el.name}</Name>
       <Id>{el.id}</Id>
-      <Id>Bandwidth: {el.bandwidth}</Id>
-      <Id>Number: {el.number}</Id>
-      <Id>TX Power: {el.txPower}</Id>
+      <Id>Bandwidth: {el.bandwidth} Mbps</Id>
+      <Id>Channel Number: {el.number}</Id>
+      <Id>TX Power: {el.txPower} dBm</Id>
     </TypeMarker>
   )}
   </PanelInfo>
@@ -77,7 +77,7 @@ class InfoManagementView extends Component {
         <HeaderNav
           buttonBack={<BackIcon />}
           navigateBack={() => this.navigateToBack()}
-          name={'View Management'}
+          name={'Infrastructure Management'}
         />
         <PanelRight
           show={panel}
@@ -89,6 +89,7 @@ class InfoManagementView extends Component {
         {pinsResources &&
           <SliceMap
             markers={pinsResources}
+            markerColor={'#1e90ff'}
             onClick={(marker) => infoMarker(marker.location.resources) }
           />
         }

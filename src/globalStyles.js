@@ -39,6 +39,9 @@ injectGlobal`
       background-color: transparent;
       color: #6a6a6a;
     }
+    .el-form-item__label {
+      color: #fff;
+    }
   }
 
   * {

@@ -11,7 +11,7 @@ import { DatePicker } from 'element-react'
 export default styled(DatePicker)`
 
 .el-date-editor.el-input {
-  width: 100%;
+  width: auto;
 }
 
 .el-input__inner {

@@ -33,7 +33,7 @@ class SliceMap extends Component {
           ...this.state.viewport,
           longitude,
           latitude,
-          zoom: 10,
+          zoom: 12,
           transitionDuration: 3000,
           transitionInterpolator: new FlyToInterpolator()
         }
@@ -86,7 +86,7 @@ class SliceMap extends Component {
 
 
   render () {
-    const { markers, onClick } = this.props
+    const { markers, onClick, markerColor } = this.props
     return (
       <Wrapper>
         <ReactMapGL
@@ -105,14 +105,14 @@ class SliceMap extends Component {
                 { !marker.location.resources.sdnWifi  &&
                 <NodeMarkerIcon
                   key={i}
-                  color={marker.color}
+                  color={marker.color || markerColor}
                   onClick={() => onClick(marker)}
                 />
                 }
                 { marker.location.resources.sdnWifi &&
                 <NodeWifiIcon
                   key={i}
-                  color={marker.color}
+                  color={marker.color || markerColor}
                   onClick={() => onClick(marker)}
                 />
                 }

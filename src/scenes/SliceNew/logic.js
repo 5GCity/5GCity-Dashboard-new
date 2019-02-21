@@ -7,7 +7,6 @@
 
 import { kea } from 'kea'
 import { put, call } from 'redux-saga/effects'
-import { delay } from 'redux-saga'
 import axios from 'axios'
 import PropTypes from 'prop-types'
 import { API_BASE_URL } from 'config'

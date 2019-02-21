@@ -38,7 +38,7 @@ const Titles = [{
 },{
   id: 5,
   size: 15,
-  name: 'Tenant',
+  name: 'Slice User',
   propItem: 'tenantName',
 }]
 

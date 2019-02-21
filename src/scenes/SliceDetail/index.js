@@ -97,6 +97,7 @@ class SliceDetail extends Component {
         />
         <SliceMap
           markers={slice.markers}
+          markerColor={Theme.primaryColor}
           onClick={(marker) =>{ this.clickMarker(marker)}}
         />
 
