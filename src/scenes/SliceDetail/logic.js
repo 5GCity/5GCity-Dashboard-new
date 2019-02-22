@@ -20,7 +20,8 @@ export default kea({
     fetchSlice: () => ({ }),
     setSlice: (resources) => ({resources}),
     infoMarker: (marker) => ({marker}),
-    panelAction: () => ({ })
+    panelAction: () => ({ }),
+    reset: () => ({ }),
   }),
 
   reducers: ({ actions }) => ({
@@ -32,13 +33,21 @@ export default kea({
       [actions.infoMarker]: (state, payload) => payload.marker
     }],
     panel: [false, PropTypes.bool,{
-      [actions.panelAction]:(state, payload) => !state
+      [actions.panelAction]:(state, payload) => !state,
+      [actions.reset]: () => false,
     }]
   }),
 
   start: function * () {
     const { fetchSlice } = this.actions
     yield put(fetchSlice())
+
+  },
+
+
+  stop: function * () {
+    const { reset } = this.actions
+    yield put(reset())
 
   },
 

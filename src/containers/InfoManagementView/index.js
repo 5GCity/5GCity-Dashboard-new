@@ -31,6 +31,9 @@ const infoMarkerContainer = (rightPanelInfo) => {
       key={el.id}>
         <Name>{el.name}</Name>
         <Id>{el.id}</Id>
+        <Id>CPU: 6 cores </Id>
+        <Id>RAM: 6 GB </Id>
+        <Id>DISK: 250GB </Id>
     </TypeMarker>
   )}
   {networks &&
