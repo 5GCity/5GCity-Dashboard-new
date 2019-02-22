@@ -22,9 +22,6 @@ export default kea({
     modalStatus: () => ({ }),
     closePanel: () => ({ }),
     openPanel: (marker) => ({ marker }),
-    resetResource: () => ({ }),
-    resetCard: () => ({ }),
-    removeResources: () => ({ }),
     isLoading: () => ({ }),
     errorfetch: () => ({ }),
     //Obter resources do pin
@@ -35,7 +32,8 @@ export default kea({
     changeSDN: (selectPin, sdnSelectIndex, field, value ) => ({ selectPin, sdnSelectIndex, field, value }),
     updateMarker: () => ({  }),
     change: (value) => ({ value }),
-    resetSliceName: () => ({ })
+    resetSliceName: () => ({ }),
+    showError: (error)  => ({ error })
    }),
 
   reducers: ({ actions }) => ({
@@ -70,17 +68,20 @@ export default kea({
         return clone
       }
     }],
-    sliceName: [null, PropTypes.string,{
+    sliceName: [null, PropTypes.string, {
       [actions.change]: (state, payload) => payload.value,
       [actions.resetSliceName]: (state, payload) => null,
       [actions.modalNewSliceStatus]: (state, payload) => null,
     }],
-    selectPin: [0, PropTypes.number,{
+    selectPin: [0, PropTypes.number, {
       [actions.setSelectPin]: (state, payload) => payload.pin
     }],
-    modalError: [false ,PropTypes.boolean,{
+    modalError: [false ,PropTypes.boolean, {
       [actions.errorfetch]: (state, payload) => true,
       [actions.modalStatus]: (state, payload) => !state,
+    }],
+    error: [null, PropTypes.string, {
+      [actions.showError]: (state, payload) => payload.error,
     }]
   }),
 
@@ -112,7 +113,7 @@ export default kea({
     *updateMarker (){
       const pinsResources = yield this.get('pinsResources')
       const pinIndex = yield this.get('selectPin')
-      const { closePanel, errorfetch } = this.actions
+      const { closePanel, errorfetch, showError } = this.actions
       const resources = pinsResources[pinIndex].location.resources
       let found = false
 
@@ -145,9 +146,17 @@ export default kea({
         yield put(closePanel())
       } else if (existCompute && !existNetwork && !existSdn) {
         yield put(closePanel())
-      } else if(!existSdn && !existNetwork && !existCompute){
+      } else if (!existSdn && !existNetwork && !existCompute){
         yield put(closePanel())
       } else {
+        if (existSdn && !existNetwork){
+        yield put(showError('Slice need a Network'))
+        } else if (existSdn && existNetwork && !existCompute) {
+          yield put(showError('Slice need a Compute'))
+        } else if (!existSdn && existNetwork && !existCompute) {
+          yield put(showError('Slice need a Compute'))
+        }
+        pinsResources[pinIndex].color = null
         yield put(errorfetch())
       }
     },
@@ -170,7 +179,6 @@ export default kea({
         if(responseSdnWifi) {
           responseSdnWifi.data.map(el => listResources.sdnWifi.push(el))
         }
-        console.log("Resposta")
         yield(put(setListResources(listResources)))
       }
       catch (error) {

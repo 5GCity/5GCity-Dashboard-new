@@ -20,8 +20,10 @@ export default kea({
     setNetworksServices: (networks) => ({ networks }),
     actionModal: (networkSelect) => ({ networkSelect }),
     loadingList: () => ({ }),
+    actionModalDelete: (networkSelect) => ({ networkSelect }),
     loading: () => ({ }),
     deleteNetwork: (id) => ({ id }),
+    reset: () => ({ }),
   }),
 
   reducers: ({ actions }) => ({
@@ -29,26 +31,36 @@ export default kea({
       [actions.fetchNetworksServicesInstance]: (state, payload) => null,
       [actions.setNetworksServices]: (state, payload) => payload.networks
     }],
-    modalVisibled: [false, PropTypes.bool,{
+    modalInfo: [false, PropTypes.bool,{
       [actions.actionModal]: (state, payload) => !state,
+      [actions.reset]: () => false
+    }],
+    modalDelete: [false, PropTypes.bool,{
+      [actions.actionModalDelete]: (state, payload) => !state,
+      [actions.reset]: () => false
     }],
     networkSelect: [null , PropTypes.object,{
       [actions.actionModal]: (state, payload) => payload.networkSelect,
+      [actions.actionModalDelete]: (state, payload) => payload.networkSelect,
+      [actions.reset]: () => null
     }],
     loading: [false, PropTypes.bool, {
-      [actions.loading]: (state, payload) => !state
+      [actions.loading]: (state, payload) => !state,
+      [actions.reset]: () => false
     }],
     loadingList: [false, PropTypes.bool, {
-      [actions.loadingList]: (state, payload) => !state
+      [actions.loadingList]: (state, payload) => !state,
+      [actions.reset]: () => false
     }],
     networkId : [null, PropTypes.object,{
-      [actions.deleteNetwork]: (state, payload) => payload.id
+      [actions.deleteNetwork]: (state, payload) => payload.id,
+      [actions.reset]: () => null
     }]
   }),
 
   start: function * () {
-    const { fetchNetworksServicesInstance } = this.actions
-
+    const { fetchNetworksServicesInstance, reset } = this.actions
+    yield put(reset())
     yield put(fetchNetworksServicesInstance())
   },
 
@@ -75,14 +87,20 @@ export default kea({
       }
     },
     * deleteNetworkService () {
-      const networkId = yield this.get('networkId')
-      console.log(networkId)
+      const networkId = yield this.get('networkId'),
+      networkServices = yield this.get('networkServicesInstance'),
+      { actionModalDelete, setNetworksServices } = this.actions
+
+      networkServices.splice(networkServices.findIndex((i) => {
+        return i.id === networkId;
+      }), 1)
+
+      yield put(setNetworksServices(networkServices))
+      yield put(actionModalDelete(null))
       try {
         //yield put(loading())
         yield call(axios.delete,`${API_BASE_URL}/slicemanagerapi/network_service_instance/${networkId}`)
 
-        // put(loading())
-        //yield put(closeModal())
       } catch(error){
         console.error(`Error ${error}`)
         //yield put(closeModal())

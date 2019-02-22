@@ -10,7 +10,8 @@ import { withRouter } from 'react-router-dom'
 
 
 /* Containers */
-import ModalNetwork from 'containers/Modals/ModalNetwork'
+import ModalInfoNetwork from 'containers/Modals/ModalInfoNetwork'
+import ModalRemoveNetwork from 'containers/Modals/ModalRemoveNetwork'
 
 /* Components */
 import List from 'components/List'
@@ -46,16 +47,26 @@ class ListNetworks extends Component {
 
 
   render () {
-    const  { networkServicesInstance, loadingList, modalVisibled, networkSelect } = this.props
-    const { actionModal } = this.actions
-    const { deleteNetwork } = this.actions
+    const  { networkServicesInstance, loadingList, modalInfo, modalDelete, networkSelect } = this.props
+    const { actionModal, actionModalDelete } = this.actions
     return (
         <Loading loading={loadingList}>
-          <ModalNetwork networkSelect={networkSelect} OpenModal={modalVisibled} />
+          <ModalInfoNetwork
+            networkSelect={networkSelect}
+            OpenModal={modalInfo}
+          />
+          <ModalRemoveNetwork
+            size={'tiny'}
+            changeStatus={actionModalDelete}
+            data={networkSelect}
+            statusModal={modalDelete}
+            title={'Remove Network Service'}
+          />
+
           <List
             titles={Titles}
             data={networkServicesInstance}
-            removeNetwork={({ id }) => deleteNetwork(id)}
+            removeNetwork={(network) => actionModalDelete(network)}
             viewNetwork={(network) => actionModal(network)}
             viewNetworkMonitor={({ id }) => this.navigate(`/monitor/ns_id/${id}`)}
             network

@@ -196,6 +196,7 @@ class SliceNew extends Component {
       modalNewSlice,
       visiblePanel,
       modalError,
+      error,
       } = this.props
     const {
       updateMarker,
@@ -203,7 +204,6 @@ class SliceNew extends Component {
       modalStatus,
       closePanel,
       openPanel } = this.actions
-      console.log(pinsResources)
     return (
       <Wrapper>
         <HeaderNav
@@ -245,7 +245,7 @@ class SliceNew extends Component {
           onCancel={modalStatus}
           title="Error"
           visible={modalError}
-          bodyContent={<h2>An error occured</h2> }
+          bodyContent={<Erro>{error}</Erro> }
         />
       </Wrapper>
     )
@@ -302,4 +302,8 @@ const Id = styled.p`
 const FormContainer = styled.div`
   margin-top: 20px;
   margin-left: 32px;
+`
+const Erro = styled.h3`
+  text-align: center;
+  color: #fff;
 `

@@ -13,6 +13,7 @@ import List from 'components/List'
 
 /* Containers */
 import ModalNewNetwork from 'containers/Modals/ModalNewNetwork'
+import ModalError from 'containers/Modals/ModalError'
 
 const Titles = [{
   id: 1,
@@ -36,10 +37,15 @@ class ListNewNetworks extends Component {
   }
 
   render () {
-    const { networkServices } = this.props
+    const { networkServices, modalError } = this.props
+    const { actionModalError } = this.actions
     return (
       <Wrapper>
         <ModalNewNetwork />
+        <ModalError
+          changeStatusModal={actionModalError}
+          statusModal={modalError}
+        />
         <List
           titles={Titles}
           data={networkServices}

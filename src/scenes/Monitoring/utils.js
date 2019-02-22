@@ -21,7 +21,7 @@ export const transformMeasurement = (measurement) => {
       unitSelect = '%'
       break;
       case 'rAM':
-      unitSelect = 'MB'
+      unitSelect = '%'
       break;
       case 'dISK':
       unitSelect = '%'

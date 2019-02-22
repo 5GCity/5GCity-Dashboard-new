@@ -17,7 +17,6 @@ import HeaderNav from 'components/HeaderNav'
 import { BackIcon } from 'components/Icons'
 import DatePicker from 'components/DatePicker'
 import Button from 'components/Button'
-import { Layout } from 'element-react'
 
 
 
@@ -33,7 +32,15 @@ class Monitoring extends Component {
     history.goBack()
   }
 
+  componentDidMount () {
+    const { refreshAction } = this.actions
+    setInterval(() => {
+      refreshAction()
+    }, 60000)
+  }
+
   render () {
+    const type = this.props.match.params.type
     const { date, CPU, RAM, DISK, TX, RX } = this.props
     const { setValue, refreshAction } = this.actions
     return (
@@ -71,7 +78,7 @@ class Monitoring extends Component {
               unit={CPU && CPU.unit}
               width={600}
               height={350}
-              title={'CPU'}
+              title={type === 'slice' ? 'Average CPU' : 'CPU'}
               colorArea={'#8CC14E'}
             />
           </ContainerMonitor>
@@ -84,7 +91,7 @@ class Monitoring extends Component {
               unit={RAM && RAM.unit}
               width={600}
               height={350}
-              title={'RAM'}
+              title={type === 'slice' ? 'Average RAM' : 'RAM'}
               colorArea={'#2b7f0c'}
             />
             </ContainerMonitor>
@@ -97,12 +104,10 @@ class Monitoring extends Component {
               unit={DISK && DISK.unit}
               width={600}
               height={350}
-              title={'DISK'}
+              title={type === 'slice' ? 'Average DISK' : 'DISK'}
               colorArea={'#16a399'}
             />
         </ContainerMonitor>
-        </ContainerParentMonitor>
-        <ContainerParentMonitor>
         <ContainerMonitor>
             <Monitor
               datakeyAxis={'date'}
@@ -112,7 +117,7 @@ class Monitoring extends Component {
               unit={RX && RX.unit}
               width={600}
               height={350}
-              title={'RX'}
+              title={type === 'slice' ? 'Average RX' : 'RX'}
               colorArea={'#edce23'}
             />
           </ContainerMonitor>
@@ -124,7 +129,7 @@ class Monitoring extends Component {
               max={TX && TX.max}
               width={600}
               height={350}
-              title={'TX'}
+              title={type === 'slice' ? 'Average TX' : 'TX'}
               colorArea={'#0b7691'}
               unit={TX && TX.unit}
             />

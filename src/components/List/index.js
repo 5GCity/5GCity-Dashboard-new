@@ -46,10 +46,10 @@ export default ({ children, ...props }) => (
           ]
         })}
         <ColumnBottons key={data.id} >
-          {props.slices && props.titles.map(({ propItem }) => {
+          {props.slices && props.titles.map(({ propItem }, i) => {
               return (
               data[propItem] === 'Approved' &&
-                <ContainerButtons>
+                <ContainerButtons key={i}>
                   <ButtonList
                     type={'secondary'}
                     svg={ <DeleteIcon /> }

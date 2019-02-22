@@ -30,7 +30,7 @@ const Wrapper = styled(Dialog)`
   }
 
   .el-dialog__title{
-    color: #8CC14E;
+    color: ${({theme}) => theme.primaryColor};
     font-family: ${({theme}) => theme.fontDin};
     font-weight: bold;
     font-size: 20px;

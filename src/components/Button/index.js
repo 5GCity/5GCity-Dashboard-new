@@ -104,6 +104,7 @@ const ButtonStyled = styled(Button)`
 
 const SvgContent = styled.i`
   display: inline-block;
+  vertical-align: sub;
   margin-right: 4px;
   `
 

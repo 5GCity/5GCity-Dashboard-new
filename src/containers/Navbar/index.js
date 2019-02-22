@@ -23,11 +23,20 @@ const LINKS = [
   { id: 3, path: '/network', name: 'Network Services', icon: null, disabled:false , show: ['Inf. Owner','Slice Requester'] ,active: false},
   { id: 4, path: '/catalogue', name: 'Catalogue', icon: null, disabled:false , show: ['Inf. Owner','Slice Requester'] ,active: false},
 ]
-
+let lastPath = null
 class Navbar extends Component {
 
 
+
   activeNavItem = (path) => {
+    if(lastPath){
+      const link = LINKS.find((x) =>x.path === lastPath)
+      if(link !== -1)
+        link.active = false
+        lastPath = path
+    }else{
+      lastPath = path
+    }
     const link = LINKS.find((x) =>x.path === path)
     if(link !== -1)
       link.active = true
@@ -44,26 +53,26 @@ class Navbar extends Component {
   }
 
   footerModal = () => {
-    const { closeModal, logout } = this.actions
+    const { modalChangeStatus, logout } = this.actions
     return(
       <React.Fragment>
       <Button text={'Yes'} type={'primary'} onClick={logout}/>
-      <Button text={'No'} type={'danger'} onClick={closeModal}/>
+      <Button text={'No'} type={'danger'} onClick={modalChangeStatus}/>
       </React.Fragment>
     )
   }
 
   render () {
-    const { setMsgLogout, closeModal } = this.actions
-    const { userName, userRole, showModal }= this.props
+    const {  modalChangeStatus } = this.actions
+    const { userName, userRole, modalStatus }= this.props
     return (
       <Wrapper>
       <Modal
-       visible={showModal}
+       visible={modalStatus}
        title={'Are you sure you want to leave?'}
        size={'tiny'}
        showClose={true}
-       onCancel={closeModal}
+       onCancel={modalChangeStatus}
        footerContent={this.footerModal()}/>
       <Brand />
       {this.linksRole().map(el =>
@@ -85,7 +94,7 @@ class Navbar extends Component {
           <UserRole>{userRole}</UserRole>
           <IconUser
             className="el-icon-more"
-            onClick={setMsgLogout}></IconUser>
+            onClick={modalChangeStatus}></IconUser>
         </UserInfo>
       </Wrapper>
     )
@@ -118,7 +127,12 @@ const ContainerMenu = styled.div`
 ${({ active }) => active &&`
   border-right: 3px solid #8CC14E;
 `}
+
+${({ active }) => !active &&`
+  border-right: none;
+`}
 `
+
 const ItemLabel = styled.div`
   line-height: 15px;
   padding-top: 8px;

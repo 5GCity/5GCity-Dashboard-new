@@ -25,15 +25,13 @@ export default kea({
   },
 
   actions: () => ({
-    setMsgLogout: () => ({ }),
-    closeModal:() => ({ }),
+    modalChangeStatus:() => ({ }),
     logout: () => ({ }),
   }),
 
   reducers: ({ actions }) => ({
-    showModal: [false, PropTypes.boolean,{
-      [actions.setMsgLogout]: (state, payload) => true,
-      [actions.closeModal]: (state, payload) => false
+    modalStatus: [false, PropTypes.boolean,{
+      [actions.modalChangeStatus]: (state, payload) => !state,
     }]
   }),
 
@@ -51,7 +49,7 @@ export default kea({
   }),
 
   takeLatest: ({ actions, workers }) => ({
-    [actions.logout]:workers.logout
+    [actions.logout]:workers.logout,
   }),
 
   start: function * () {
@@ -60,12 +58,11 @@ export default kea({
 
   workers: {
     * logout(){
-      const { closeModal } = this.actions
-      yield put(closeModal())
+      const { modalChangeStatus } = this.actions
+      yield put(modalChangeStatus())
       const keycloak = yield this.get('keycloak')
-      console.log(keycloak)
       keycloak.logout()
-    }
+    },
   }
 })
 

@@ -20,7 +20,7 @@ import ListSlicesLogic from 'containers/Lists/ListSlices/logic'
 const defaults = {
   nameInstance: null,
   description: null,
-  ports: [0],
+  ports: [],
   slice_id:null,
 }
 
@@ -30,6 +30,8 @@ const propTypes = {
   ports: PropTypes.arrayOf(PropTypes.string),
   slice_id: PropTypes.string,
 }
+
+const message = 'This field is required'
 
 export default kea({
   path: () => ['scenes', 'containers', 'ModalNewNetwork'],
@@ -47,7 +49,9 @@ export default kea({
     actions: [
       ListNewNetworksLogic, [
         'actionModal',
+        'actionModalError',
       ],
+
     ]
   },
 
@@ -108,6 +112,21 @@ export default kea({
       },
       PropTypes.array
     ],
+    errors: [
+      () => [selectors.values],
+      (values) => ({
+        nameInstance: !values.nameInstance ? message : null,
+        description: !values.description ? message : null,
+        // ports: !values.message ? message : null,
+        slice_id: !values.slice_id ? message : null
+      }),
+      PropTypes.object
+    ],
+    hasErrors: [
+      () => [selectors.errors],
+      (errors) => Object.values(errors).filter(k => k).length > 0,
+      PropTypes.bool
+    ]
   }),
 
   takeLatest: ({ actions, workers }) => ({
@@ -141,6 +160,7 @@ export default kea({
     * runInstanceWorker () {
       const values = yield this.get('values'),
       network_id = yield this.get('selectNetwork'),
+      { actionModalError } = this.actions,
 
       dataRunInstance ={
           description: values.description,
@@ -155,9 +175,9 @@ export default kea({
         yield call(this.props.history.push, `/network`)
       } catch(error){
         console.error(`Error ${error}`)
+        yield put(actionModalError())
       }
     },
   }
-
 })
 

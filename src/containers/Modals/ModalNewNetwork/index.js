@@ -18,19 +18,34 @@ import { Form, Layout } from 'element-react'
 
 
 
+const Rules = {
+  nameInstance:[
+    { required: true, message: 'This field is required'}
+  ],
+  description:[
+    { required: true, message: 'This field is required', trigger: 'blur' }
+  ],
+  slice_id:[
+    { required: true, message: 'This field is required', trigger: 'blur' }
+  ],
+}
 
+const test1 = { required: true, message: 'This field is required', trigger: 'blur'}
 
 class ModalNewNetwork extends Component {
 
   modalBody = () => {
-    const { values } = this.props
-    const { setValue, addPort, setValuePorts, removePort } = this.actions
-    const { nameInstance, description, ports, slice_id } = values
-    const { listSlices } = this.props
+    const { values, listSlices, errors } = this.props,
+    { setValue, addPort, setValuePorts, removePort } = this.actions,
+    { nameInstance, description, ports, slice_id } = values
+
+
       return(
         <Layout.Row gutter="20">
           {listSlices &&
-            <Form onSubmit={(e) => e.preventDefault()} labelPosition={'top'}>
+            <Form
+              labelPosition={'top'}
+            >
              <Layout.Col>
               <Form.Item label={'Name of Instance'}>
                 <Input
@@ -40,7 +55,7 @@ class ModalNewNetwork extends Component {
               </Form.Item>
               </Layout.Col>
               <Layout.Col>
-              <Form.Item label={'Description'}>
+              <Form.Item label={'Description'} message={errors.description}>
                 <Input
                   value={description}
                   onChange={value => setValue('description', value)}
