@@ -21,6 +21,7 @@ export const API_DATE_FORMAT = `YYYY-MM-DD`
 export const MAPBOX_TOKEN = `pk.eyJ1IjoiaHVnb2ZvbnNlY2E0MyIsImEiOiJjam9nMHRhNDEwOWRnM2txenI0Mng5aHVvIn0.WIeLY3YLpDHAO9X76J5usA`
 export const MAPBOX_STYLE = `mapbox://styles/mapbox/dark-v9`
 export const SENTRY_URL = `https://1512cd26cf0d48cbb47374af14fb951b@sentry2.ubiwhere.com/87`
+export const MEDIA_BASE_URL = `https://api.development.test`
 // Field Constants
 
 // Other Contants
