@@ -6,6 +6,7 @@ import generateMediaUrl from 'utils/generateMediaUrl'
 import formatDatePt from 'utils/formatDatePt'
 import formatNumbersPt from 'utils/formatNumbersPt'
 import getStore from 'utils/getStore'
+import catalogueUtils from 'utils/catalogueUtils'
 
 export {
   mapOnChangeToState,
@@ -15,5 +16,6 @@ export {
   generateMediaUrl,
   formatDatePt,
   formatNumbersPt,
-  getStore
+  getStore,
+  catalogueUtils
 }

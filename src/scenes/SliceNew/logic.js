@@ -33,19 +33,23 @@ export default kea({
     updateMarker: () => ({  }),
     change: (value) => ({ value }),
     resetSliceName: () => ({ }),
-    showError: (error)  => ({ error })
+    showError: (error)  => ({ error }),
+    reset: () => ({ }),
    }),
 
   reducers: ({ actions }) => ({
     loading:[false, PropTypes.boolean,{
       [actions.isLoading]: (state, payload) => !state,
+      [actions.reset]: (state, payload) => false,
     }],
     modalNewSlice: [false, PropTypes.boolean,{
       [actions.modalNewSliceStatus]: (state, payload) => !state,
+      [actions.reset]: (state, payload) => false,
     }],
     visiblePanel: [false, PropTypes.boolean,{
       [actions.openPanel]: (state, payload) => true,
       [actions.closePanel]: (state, payload) => false,
+      [actions.reset]: (state, payload) => false,
     }],
     pinsResources: [null, PropTypes.any, {
       [actions.setListResources]: (state, payload) => createAllPins(payload.resources),
@@ -79,6 +83,7 @@ export default kea({
     modalError: [false ,PropTypes.boolean, {
       [actions.errorfetch]: (state, payload) => true,
       [actions.modalStatus]: (state, payload) => !state,
+      [actions.reset]: (state, payload) => false,
     }],
     error: [null, PropTypes.string, {
       [actions.showError]: (state, payload) => payload.error,
@@ -88,7 +93,13 @@ export default kea({
 
   start: function * () {
     const { getListResources } = this.actions
+
     yield put(getListResources())
+  },
+
+  stop: function * () {
+    const { reset } = this.actions
+    yield put(reset())
   },
 
   takeLatest: ({ actions, workers }) => ({
@@ -144,17 +155,17 @@ export default kea({
         yield put(closePanel())
       } else if (existNetwork && existCompute) {
         yield put(closePanel())
-      } else if (existCompute && !existNetwork && !existSdn) {
-        yield put(closePanel())
       } else if (!existSdn && !existNetwork && !existCompute){
         yield put(closePanel())
       } else {
         if (existSdn && !existNetwork){
-        yield put(showError('Slice need a Network'))
+        yield put(showError('Slice needs a network'))
         } else if (existSdn && existNetwork && !existCompute) {
-          yield put(showError('Slice need a Compute'))
+          yield put(showError('Slice needs a compute'))
         } else if (!existSdn && existNetwork && !existCompute) {
-          yield put(showError('Slice need a Compute'))
+          yield put(showError('Slice needs a compute'))
+        } else if(!existSdn && !existNetwork && existCompute) {
+          yield put(showError('Slice needs a network'))
         }
         pinsResources[pinIndex].color = null
         yield put(errorfetch())
@@ -189,13 +200,14 @@ export default kea({
     *createSlice(){
         const pinsResources = yield this.get('pinsResources'),
           chunk_ids = [], vlans_ids = [],
-        { modalStatus, isLoading, errorfetch, resetSliceName, modalNewSliceStatus } = this.actions
+        { modalStatus, isLoading, errorfetch, resetSliceName, modalNewSliceStatus, showError } = this.actions
         /*
          * 1º Create OpenStack
          * 2º Create Vlan
          * 3º Virtual Create Wifi Access Point
          * 4º Create Chunks
          */
+        yield put(showError('Slice needs a compute'))
         const sliceName = yield this.get('sliceName')
         try{
           yield put(isLoading())

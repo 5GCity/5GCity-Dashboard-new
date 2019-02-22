@@ -19,6 +19,7 @@ import NetworkNew from 'scenes/NetworkNew'
 import Catalogue from 'scenes/Catalogue'
 import InfoManagement from 'scenes/InfoManagement'
 import Monitoring from 'scenes/Monitoring'
+import SDK from 'scenes/SDK'
 
 // Define routes here
 export const Routes = {
@@ -101,6 +102,15 @@ export const Routes = {
       name: 'Monitoring',
       path: '/monitor/:type/:id',
       component: Monitoring,
+      crumb: ['inicio']
+  },
+
+
+  SDK: {
+      key: 'SDK',
+      name: 'SDK',
+      path: '/sdk',
+      component: SDK,
       crumb: ['inicio']
   },
 

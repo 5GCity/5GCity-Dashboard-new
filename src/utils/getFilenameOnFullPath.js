@@ -3,4 +3,4 @@
  *
  * @author Hugo Fonseca <hfonseca@ubiwhere.com>
  */
-export default (fullPath: any) => fullPath.replace(/^.*(\\|\/|:)/, '')
+export default (fullPath) => fullPath.replace(/^.*(\\|\/|:)/, '')

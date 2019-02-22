@@ -5,6 +5,6 @@
  */
 import { MEDIA_BASE_URL } from 'config'
 
-export default (uri: string): string => {
+export default (uri) => {
   return `${MEDIA_BASE_URL}${uri}`
 }

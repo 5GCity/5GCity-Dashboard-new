@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "axios": "^0.17.0",
+    "d3": "^5.9.1",
     "element-react": "^1.4.24",
     "element-theme-default": "^1.4.13",
     "express": "^4.16.2",

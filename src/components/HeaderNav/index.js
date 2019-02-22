@@ -8,15 +8,16 @@ import React from 'react'
 import styled from 'styled-components'
 
 /* Components */
-import Switch from 'components/Switch';
-import Select from 'components/Select';
+import Switch from 'components/Switch'
+import Select from 'components/Select'
 import { Button } from 'element-react'
+import { BackIcon } from 'components/Icons'
 
 export default ({ children, type, buttonBack, name, leftContent, navigateBack, ...props }) => (
   <Wrapper type={type}>
     <RightContainer>
       {buttonBack &&
-        <ButtonIcon onClick={() => navigateBack()}>{buttonBack}</ButtonIcon>
+        <ButtonIcon onClick={() => navigateBack()}><BackIcon /></ButtonIcon>
       }
       {name &&
         <Title>{name}</Title>

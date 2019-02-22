@@ -27,7 +27,7 @@ class ModalInfoNetwork extends Component {
             <Field><FieldTitle>User ID:</FieldTitle> {networkSelect.userId}</Field>
             <Field><FieldTitle>Floating IP:</FieldTitle> {networkSelect.floatingIp}</Field>
             <Field><FieldTitle>Id:</FieldTitle> {networkSelect.id}</Field>
-            <Field><FieldTitle>Vlan Port:</FieldTitle> {networkSelect.vlanPort}</Field>
+            <Field><FieldTitle>Vlan:</FieldTitle> {networkSelect.vlanPort}</Field>
             <Field><FieldTitle>Network Service ID:</FieldTitle> {networkSelect.networkServiceId}</Field>
             <Field><FieldTitle>OsmInstance ID:</FieldTitle> {networkSelect.osmInstanceId}</Field>
             <Field><FieldTitle>Slice ID:</FieldTitle> {networkSelect.slic3Id}</Field>

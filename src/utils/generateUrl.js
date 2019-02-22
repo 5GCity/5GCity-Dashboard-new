@@ -1,4 +1,4 @@
-export default (url: string, obj: any) : string => {
+export default (url, obj) => {
   let newUrl = url
 
   for (var key in obj) {

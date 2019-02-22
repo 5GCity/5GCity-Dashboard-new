@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+.c0 .el-collapse {
+  border: 0px solid transparent;
+}
+
+.c0 .el-collapse-item__header {
+  height: 32px;
+  line-height: 32px;
+  padding-left: 10px;
+  background-color: #324148;
+  cursor: pointer;
+  border-bottom: none;
+  font-size: 14px;
+  border-radius: none;
+}
+
+.c0 .el-collapse-item__wrap {
+  background-color: transparent;
+  border-bottom: none;
+  color: white;
+}
+
+.c0 .el-collapse-item__content {
+  color: white;
+  padding: 5px;
+}
+
+<div
+  className="c0"
+>
+  <div
+    className="el-collapse"
+  />
+</div>
+`;

@@ -96,6 +96,9 @@ class SliceNew extends Component {
                 <Checkbox key={computeinfo.id} label={computeinfo.name}>
                   <Name>{computeinfo.name}</Name>
                   <Id>{computeinfo.id}</Id>
+                  <Id>CPU: 6 cores </Id>
+                  <Id>RAM: 6 GB </Id>
+                  <Id>DISK: 250GB </Id>
                 </Checkbox>
               </Checkbox.Group>
             )

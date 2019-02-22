@@ -22,6 +22,7 @@ const LINKS = [
   { id: 2, path: '/slices', name: 'Slices', icon:/*<MapIcon />*/ null, disabled: false , show: ['Inf. Owner','Slice Requester'] ,active: false},
   { id: 3, path: '/network', name: 'Network Services', icon: null, disabled:false , show: ['Inf. Owner','Slice Requester'] ,active: false},
   { id: 4, path: '/catalogue', name: 'Catalogue', icon: null, disabled:false , show: ['Inf. Owner','Slice Requester'] ,active: false},
+  { id: 4, path: '/sdk', name: 'SDK', icon: null, disabled:false , show: ['Slice Requester'] ,active: false},
 ]
 let lastPath = null
 class Navbar extends Component {

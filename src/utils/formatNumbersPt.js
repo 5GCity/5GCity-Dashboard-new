@@ -3,4 +3,4 @@
  *
  * @author Hugo Fonseca <hfonseca@ubiwhere.com>
  */
-export default (number: any) => String(number).replace('.', ',')
+export default (number) => String(number).replace('.', ',')
