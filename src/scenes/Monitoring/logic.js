@@ -94,8 +94,9 @@ export default kea({
 
   workers: {
     * fetchMeasurementCPU () {
-      const startDate = yield this.get('date') ,
-      endDate = moment(new Date(startDate * 1000)).endOf('day').utc().unix() * 1000,
+      const dateTime = yield this.get('date') ,
+      startDate = moment(new Date(dateTime * 1000)).utc().unix() * 1000,
+      endDate = moment(new Date(dateTime * 1000)).endOf('day').utc().unix() * 1000,
       { setCPU } = this.actions
 
        try {
@@ -110,8 +111,9 @@ export default kea({
       }
     },
     * fetchMeasurementRAM () {
-      const startDate = yield this.get('date') ,
-      endDate = moment(new Date(startDate * 1000)).endOf('day').utc().unix() * 1000,
+      const dateTime = yield this.get('date') ,
+      startDate = moment(new Date(dateTime * 1000)).utc().unix() * 1000,
+      endDate = moment(new Date(dateTime * 1000)).endOf('day').utc().unix() * 1000,
       { setRAM } = this.actions
 
        try {
@@ -126,8 +128,9 @@ export default kea({
       }
     },
     * fetchMeasurementDISK () {
-      const startDate = yield this.get('date') ,
-      endDate = moment(new Date(startDate * 1000)).endOf('day').utc().unix() * 1000,
+      const dateTime = yield this.get('date') ,
+      startDate = moment(new Date(dateTime * 1000)).utc().unix() * 1000,
+      endDate = moment(new Date(dateTime * 1000)).endOf('day').utc().unix() * 1000,
       { setDISK } = this.actions
 
        try {
@@ -142,8 +145,9 @@ export default kea({
       }
     },
     * fetchMeasurementTX () {
-      const startDate = yield this.get('date') ,
-      endDate = moment(new Date(startDate * 1000)).endOf('day').utc().unix() * 1000,
+      const dateTime = yield this.get('date') ,
+      startDate = moment(new Date(dateTime * 1000)).utc().unix() * 1000,
+      endDate = moment(new Date(dateTime * 1000)).endOf('day').utc().unix() * 1000,
       { setTX } = this.actions
 
        try {
@@ -158,8 +162,9 @@ export default kea({
       }
     },
     * fetchMeasurementRX () {
-      const startDate = yield this.get('date') ,
-      endDate = moment(new Date(startDate * 1000)).endOf('day').utc().unix() * 1000,
+      const dateTime = yield this.get('date') ,
+      startDate = moment(new Date(dateTime * 1000)).utc().unix() * 1000,
+      endDate = moment(new Date(dateTime * 1000)).endOf('day').utc().unix() * 1000,
       { setRX } = this.actions
 
        try {

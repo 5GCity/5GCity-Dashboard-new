@@ -1,4 +1,4 @@
-FROM node:9.10-alpine
+FROM node:10.15-alpine
 
 ENV NPM_CONFIG_LOGLEVEL warn
 
@@ -9,9 +9,8 @@ ENV API_BASE_URL ${API_BASE_URL}
 ENV AUTH_SERVER_URL ${AUTH_SERVER_URL}
 
 RUN apk add --update --no-cache yarn && \
-    rm /var/cache/apk/* && \
     mkdir /code && \
-    npm install replace serve -g 
+    npm install replace serve -g
 
 EXPOSE 5000
 
