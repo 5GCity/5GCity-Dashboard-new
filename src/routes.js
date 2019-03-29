@@ -20,6 +20,7 @@ import Catalogue from 'scenes/Catalogue'
 import InfoManagement from 'scenes/InfoManagement'
 import Monitoring from 'scenes/Monitoring'
 import SDK from 'scenes/SDK'
+import SDKService from 'scenes/SDKService'
 
 // Define routes here
 export const Routes = {
@@ -109,8 +110,16 @@ export const Routes = {
   SDK: {
       key: 'SDK',
       name: 'SDK',
-      path: '/sdk',
+      path: '/sdk/composer/:id',
       component: SDK,
+      crumb: ['inicio']
+  },
+
+  SDKService: {
+      key: 'SDKService',
+      name: 'SDKService',
+      path: '/sdk/services',
+      component: SDKService,
       crumb: ['inicio']
   },
 

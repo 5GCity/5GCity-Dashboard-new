@@ -19,7 +19,7 @@ import Modal from 'components/Modal'
 import Button from 'components/Button'
 import Input from 'components/Input'
 import PanelRight from 'components/PanelRight'
-import { NodeMarkerIcon, BackIcon } from 'components/Icons'
+import { BackIcon } from 'components/Icons'
 
 
 
@@ -29,6 +29,57 @@ const headerItems = [
   }
 ]
 
+const ModalCreateSlice = (props) => (
+  <Modal
+    size={'tiny'}
+    showClose={true}
+    onCancel={props.modalNewSliceStatus}
+    visible={props.modalNewSlice}
+    title="Confirmation"
+  >
+    <Form
+      model={props.form}
+    >
+    <Modal.Body>
+      <Form.Item
+        label="Slice name"
+        labelPosition={'top'}
+      >
+        <Input
+          value={props.form.nameSlice}
+          onChange={value => props.changeForm('nameSlice',value)}
+        />
+      </Form.Item>
+    </Modal.Body>
+    <Modal.Footer>
+      <ContainerButton>
+        <Button
+          text={'Submit request'}
+          icon={'check'}
+          type={'primary'}
+          onClick={props.createSlice}
+          loading={props.loading}
+        />
+      </ContainerButton>
+    </Modal.Footer>
+    </Form>
+  </Modal>
+);
+
+const ModalError = (props) => (
+  <Modal
+    size={'tiny'}
+    showClose={true}
+    onCancel={props.modalStatus}
+    title="Error"
+    visible={props.modalError}
+  >
+    <Modal.Body>
+      <Erro>{props.error}</Erro>
+    </Modal.Body>
+    <Modal.Footer />
+  </Modal>
+);
 
 class SliceNew extends Component {
 
@@ -36,38 +87,6 @@ class SliceNew extends Component {
   navigateToBack = () => {
     const { history } = this.props
     history.goBack()
-  }
-
-
-  modalBody = () => {
-    const { change } = this.actions
-    const { sliceName } = this.props
-      return(
-      <Form onSubmit={(e) => e.preventDefault()}>
-        <Form.Item label="Slice name" labelWidth="120">
-          <Input
-            value={sliceName}
-            onChange={(value) => change(value)} />
-        </Form.Item>
-      </Form>
-      )
-  }
-
-  footerButton = () => {
-    const { createSlice } = this.actions
-    const { loading } = this.props
-
-    return(
-      <ContainerButton>
-        <Button
-          text={'Submit request'}
-          icon={'check'}
-          type={'primary'}
-          onClick={createSlice}
-          loading={loading}
-        />
-      </ContainerButton>
-    )
   }
 
   infoMarkerContainer = () => {
@@ -88,14 +107,18 @@ class SliceNew extends Component {
           {computes &&
             <TitlePanel>Computing</TitlePanel>
           }
-          {computes && computes.map((computeinfo,i) => {
+          {computes && computes.map((compute,i) => {
             return (
               <Checkbox.Group
-                value={computeinfo.ischecked === false ? []: [computeinfo.name]}
+                key={i}
+                value={compute.ischecked === false ? []: [compute.name]}
                 onChange={(value) => changeComputes(selectPin,i,'ischecked',value.length > 0 ? true : false)}>
-                <Checkbox key={computeinfo.id} label={computeinfo.name}>
-                  <Name>{computeinfo.name}</Name>
-                  <Id>{computeinfo.id}</Id>
+                <Checkbox
+                  key={compute.id}
+                  label={compute.name}
+                >
+                  <Name>{compute.name}</Name>
+                  <Id>{compute.id}</Id>
                   <Id>CPU: 6 cores </Id>
                   <Id>RAM: 6 GB </Id>
                   <Id>DISK: 250GB </Id>
@@ -109,33 +132,33 @@ class SliceNew extends Component {
       {networks &&
         <TitlePanel>Network</TitlePanel>
       }
-      {networks && networks.map((networkinfo,i) =>
-        <React.Fragment>
-          <Form.Item>
+      {networks && networks.map((network,i) =>
+        <React.Fragment key={i}>
+          <Form.Item >
             <Checkbox.Group
-              value={networkinfo.ischecked === false ? []: [networkinfo.name]}
+              value={network.ischecked === false ? []: [network.name]}
               onChange={(value) => changeNetwork(selectPin,i,'ischecked',value.length > 0 ? true : false)}>
               <Checkbox
-                key={networkinfo.id}
-                label={networkinfo.name}
+                key={network.id}
+                label={network.name}
               >
-                <Name>{networkinfo.name}</Name>
-                <Id>{networkinfo.id}</Id>
+                <Name>{network.name}</Name>
+                <Id>{network.id}</Id>
               </Checkbox>
             </Checkbox.Group>
           </Form.Item>
-          {networkinfo.ischecked &&
+          {network.ischecked &&
           <FormContainer key={i}>
           <Form.Item label="CIDR" >
             <Input
               type="text"
-              value={networkinfo.cidr}
+              value={network.cidr}
               onChange={(value) => changeNetwork(selectPin,i,'cidr',value)}
             />
             {/*<InputMask
             mask={[/[1-9]/, /\d/, /\d/, '.', /\d/, /\d/, /\d/,'.', /\d/, /\d/, /\d/,'.',/\d/,'/',/\d/, /\d/]}
             type="text"
-            value={networkinfo.cidr}
+            value={network.cidr}
             onChange={(value) => changeNetwork(selectPin,i,'cidr',value)}
             /> */}
           </Form.Item>
@@ -147,7 +170,7 @@ class SliceNew extends Component {
         <TitlePanel>Wifi</TitlePanel>
       }
       {sdnWifi && sdnWifi.map((sdnWifi,i) =>
-        <React.Fragment>
+        <React.Fragment key={i}>
           <Form.Item>
             <Checkbox.Group
               value={sdnWifi.ischecked === false ? []: [sdnWifi.name]}
@@ -200,13 +223,20 @@ class SliceNew extends Component {
       visiblePanel,
       modalError,
       error,
+      loading,
+      sliceName,
+      formSlice,
       } = this.props
     const {
       updateMarker,
       modalNewSliceStatus,
       modalStatus,
-      closePanel,
-      openPanel } = this.actions
+      actionPanel,
+      createSlice,
+      change,
+      setValue,
+      selectLocation,
+    } = this.actions
     return (
       <Wrapper>
         <HeaderNav
@@ -218,37 +248,43 @@ class SliceNew extends Component {
         />
         <PanelRight
           show={visiblePanel}
-          closeNav={closePanel}
-          headerIcon={<NodeMarkerIcon height={30} width={30} />}
-          container={pinsResources && this.infoMarkerContainer()}
-          bottomPanel= {<Button size={'xxxlarge'} svg={<BackIcon />}
-          text={'Update Card'}
-          type={'primary'}
-          onClick={updateMarker}/>}
-          action={(item) => console.log(item)}
-        />
+          close={actionPanel}
+        >
+          <Container>
+          {pinsResources && this.infoMarkerContainer()}
+          </Container>
+          <Bottom>
+          <BottomContainer>
+          <Button
+            size={'xxxlarge'}
+            svg={<BackIcon />}
+            text={'Update Card'}
+            type={'primary'}
+            onClick={updateMarker}
+          />
+          </BottomContainer>
+          </Bottom>
+        </PanelRight>
         <SliceMap
           markers={pinsResources}
-          onClick={(marker) =>openPanel(marker) }
+          onClick={(marker) =>selectLocation(marker) }
         />
-        {/* Modal Create Slice */}
-        <Modal
-          size={'tiny'}
-          showClose={true}
-          onCancel={modalNewSliceStatus}
-          title="Confirm"
-          visible={modalNewSlice}
-          bodyContent={ this.modalBody() }
-          footerContent={ this.footerButton() }
+         {/* Modal Create Slice */}
+         <ModalCreateSlice
+          modalNewSlice={modalNewSlice}
+          loading={loading}
+          sliceName={sliceName}
+          modalNewSliceStatus={modalNewSliceStatus}
+          createSlice={createSlice}
+          change={change}
+          form={formSlice}
+          changeForm={setValue}
         />
         {/* Modal Error */}
-        <Modal
-          size={'tiny'}
-          showClose={true}
-          onCancel={modalStatus}
-          title="Error"
-          visible={modalError}
-          bodyContent={<Erro>{error}</Erro> }
+        <ModalError
+          modalError={modalError}
+          error={error}
+          modalStatus={modalStatus}
         />
       </Wrapper>
     )
@@ -263,15 +299,6 @@ const Wrapper = styled.div`
 
 const ContainerButton = styled.div``
 
-/* const PanelInfo = styled.div`
-.noBorder {
-  border-bottom: none;
-}
-
-.el-checkbox+.el-checkbox{
-  margin: 0;
-}
-` */
 const TitlePanel = styled.h5`
   color: ${({ theme }) => theme.primaryColor};
   font-family: ${({ theme }) => theme.fontFamily};
@@ -279,10 +306,6 @@ const TitlePanel = styled.h5`
   font-size: 20px;
   line-height: 20px;
 `
-
-/* const TypeMarker = styled.div`
-  border-bottom: 1px solid rgba(239,242,247,0.1);
-  ` */
 
 const Name = styled.p`
   margin: 12px 0;
@@ -309,4 +332,24 @@ const FormContainer = styled.div`
 const Erro = styled.h3`
   text-align: center;
   color: #fff;
+`
+
+const Container = styled.div`
+  overflow-y: auto;
+  margin: 0 0 0 20px;
+  max-height: calc(100vh - 200px);
+  `
+
+const Bottom = styled.div`
+background-color: rgba(255,255,255,0.05);
+height: 80px;
+width: 100%;
+position: absolute;
+bottom: 80px;
+`
+const BottomContainer = styled.div`
+display: flex;
+align-items: center;
+justify-content: center;
+height: 100%;
 `

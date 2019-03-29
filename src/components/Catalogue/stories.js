@@ -26,6 +26,20 @@ const ExampleOne = () => (
       name={"other mec with long name"}
       onClick={action('click')}
     />
+    <Catalogue
+      version={"3.0.1"}
+      type={'VNF'}
+      colortext="whiteSmoke"
+      circlefill="green"
+      name={"other mec name"}
+      onClick={action('click')}
+      disabled
+    />
+    <Catalogue
+      name={"Virtual Switch"}
+      type={'VS'}
+      onClick={action('click')}
+    />
   </Wrapper>
 )
 

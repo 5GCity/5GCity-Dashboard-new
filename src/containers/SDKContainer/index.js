@@ -6,16 +6,16 @@
  */
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import { withRouter } from 'react-router-dom'
+import Logic from './logic'
 
 /* Component */
 import HeaderNav  from 'components/HeaderNav'
 import Tabs  from 'components/Tabs'
 import { BackIcon } from 'components/Icons'
+import { withRouter } from 'react-router-dom'
 
 /* Container */
-import Composer from 'containers/Composer'
-import ComposerMenu from 'containers/ComposerMenu'
+import ComposerMain from 'containers/ComposerMain'
 
 class SDKContainer extends Component {
 
@@ -30,7 +30,7 @@ class SDKContainer extends Component {
         <HeaderNav
           name={'New Service'}
           buttonBack={<BackIcon />}
-          navigateBack={() => this.navigateToBack()}
+          navigateBack={ () => this.navigateToBack() }
         >
         </HeaderNav>
           <Tabs activeName="composer">
@@ -38,15 +38,14 @@ class SDKContainer extends Component {
               name="composer"
               label="Composer"
               closable={false}
-              >
-              <ComposerMenu />
-              <Composer />
+            >
+              <ComposerMain />
             </Wrapper>
             <Wrapper
               name="basicSettings"
               label="Basic settings"
-              disabled={true}
               closable={false}
+              disabled={true}
             >
               page 2
               </Wrapper>
@@ -56,7 +55,7 @@ class SDKContainer extends Component {
   }
 }
 
-export default withRouter((SDKContainer))
+export default withRouter(Logic(SDKContainer))
 
 const Wrapper = styled.div`
   height: calc(100vh - 136px) !important;

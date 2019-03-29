@@ -17,16 +17,24 @@ import Button from 'components/Button';
 
 
 const LINKS = [
- // { id: 1, path: '/', name: 'Info Management', icon: null, disabled: false , show: false, active: true },
   { id: 1, path: '/infoManagement', name: 'Info Management', icon: null, disabled: false , show: ['Inf. Owner'] ,active: false},
   { id: 2, path: '/slices', name: 'Slices', icon:/*<MapIcon />*/ null, disabled: false , show: ['Inf. Owner','Slice Requester'] ,active: false},
   { id: 3, path: '/network', name: 'Network Services', icon: null, disabled:false , show: ['Inf. Owner','Slice Requester'] ,active: false},
   { id: 4, path: '/catalogue', name: 'Catalogue', icon: null, disabled:false , show: ['Inf. Owner','Slice Requester'] ,active: false},
-  { id: 4, path: '/sdk', name: 'SDK', icon: null, disabled:false , show: ['Slice Requester'] ,active: false},
+  { id: 5, path: '/sdk/services', name: 'SDK', icon: null, disabled:false , show: ['Slice Requester'] ,children: [
+    {
+    path: '/sdk/services',
+    name: 'service'
+  },
+  {
+    path: '/sdk/functions',
+    name: 'function'
+  }
+] ,active: false
+},
 ]
 let lastPath = null
 class Navbar extends Component {
-
 
 
   activeNavItem = (path) => {
@@ -53,18 +61,8 @@ class Navbar extends Component {
     history.push(path)
   }
 
-  footerModal = () => {
-    const { modalChangeStatus, logout } = this.actions
-    return(
-      <React.Fragment>
-      <Button text={'Yes'} type={'primary'} onClick={logout}/>
-      <Button text={'No'} type={'danger'} onClick={modalChangeStatus}/>
-      </React.Fragment>
-    )
-  }
-
   render () {
-    const {  modalChangeStatus } = this.actions
+    const {  modalChangeStatus, logout } = this.actions
     const { userName, userRole, modalStatus }= this.props
     return (
       <Wrapper>
@@ -72,9 +70,17 @@ class Navbar extends Component {
        visible={modalStatus}
        title={'Are you sure you want to leave?'}
        size={'tiny'}
-       showClose={true}
+       showClose={false}
        onCancel={modalChangeStatus}
-       footerContent={this.footerModal()}/>
+      >
+        <Modal.Body>
+
+        </Modal.Body>
+        <Modal.Footer>
+          <Button text={'Yes'} type={'primary'} onClick={logout}/>
+          <Button text={'No'} type={'danger'} onClick={modalChangeStatus}/>
+        </Modal.Footer>
+      </Modal>
       <Brand />
       {this.linksRole().map(el =>
         el.show ?
@@ -121,7 +127,7 @@ const ContainerMenu = styled.div`
   color: white;
   text-align: center;
   cursor: pointer;
-  height: 92px;
+  height: 60px;
   padding: 14px 16px;
   box-shadow: inset 0 -1px 0 0 rgba(137,151,159,0.15);
 
@@ -138,7 +144,7 @@ const ItemLabel = styled.div`
   line-height: 15px;
   padding-top: 8px;
   font-size: 14px;
-  text-transform: uppercase;
+  font-weight: bold;
   font-family: ${({ theme }) => theme.fontDin};
 `
 

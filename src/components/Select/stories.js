@@ -7,19 +7,12 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
 import { action } from '@storybook/addon-actions'
-import { Theme } from 'globalStyles'
 import  Select from './index'
 
 const examples = [{
   label: 'Example 1',
   value: 1
 }];
-
-const bStyle = {
-  padding:'30px',
-  backgroundColor: Theme.bodyBackground,
-  height:'100%'
-};
 
 const fakeOptions = [{
  id: 1,
@@ -37,18 +30,15 @@ const fakeOptions = [{
 }]
 
 const selectTestOne = () => (
-  <div style={bStyle}>
       <Select placeholder={'wazaaaa'} options={fakeOptions}  onChange={action('Change Value')}/>
-  </div>
 )
 const selectTestTwo = () => (
-  <div style={bStyle}>
-  <Select placeholder={'change type'} title={'Nº of Instantiated services'} type={'default'} options={fakeOptions} onChange={(e) => action(e)} />
-  <Select placeholder={'change type'} uppercase title={'Uppercase'} type={'default'} options={fakeOptions} />
-  <Select placeholder={'change type'} uppercase title={'Uppercase'} type={'default'} options={fakeOptions} headerNav/>
-</div>
+  <React.Fragment>
+    <Select placeholder={'change type'} title={'Nº of Instantiated services'} type={'default'} options={fakeOptions} onChange={(e) => action(e)} />
+    <Select placeholder={'change type'} uppercase title={'Uppercase'} type={'default'} options={fakeOptions} />
+    <Select placeholder={'change type'} uppercase title={'Uppercase'} type={'default'} options={fakeOptions} />
+  </React.Fragment>
 )
 
 storiesOf('Select', module)
-  .add('default', selectTestTwo)
   .add('primary', selectTestOne)

@@ -12,6 +12,14 @@ import PropTypes from 'prop-types'
 import { API_BASE_URL } from 'config'
 import { createAllPins } from './utils'
 
+const FORM_SLICE = {
+  nameSlice: null,
+}
+
+const propTypes = {
+  nameSlice: PropTypes.string,
+}
+
 export default kea({
   path: () => ['scenes', 'SliceNew'],
 
@@ -20,12 +28,12 @@ export default kea({
     setListResources: (resources) => ({ resources }),
     modalNewSliceStatus: () => ({ }),
     modalStatus: () => ({ }),
-    closePanel: () => ({ }),
-    openPanel: (marker) => ({ marker }),
-    isLoading: () => ({ }),
+    actionPanel: () => ({ }),
+    loading: () => ({ }),
     errorfetch: () => ({ }),
     //Obter resources do pin
     createSlice: () => ({ }),
+    selectLocation: (resources) => ({ resources }),
     setSelectPin: (pin) => ({ pin }),
     changeNetwork: (selectPin, networkSelectIndex, field, value ) => ({ selectPin, networkSelectIndex, field, value }),
     changeComputes: (selectPin, computeSelectIndex, field, value ) => ({ selectPin, computeSelectIndex, field, value }),
@@ -35,11 +43,13 @@ export default kea({
     resetSliceName: () => ({ }),
     showError: (error)  => ({ error }),
     reset: () => ({ }),
+    setValue: (key, value) => ({ key, value }),
+    setValues: (values) => ({ values }),
    }),
 
   reducers: ({ actions }) => ({
     loading:[false, PropTypes.boolean,{
-      [actions.isLoading]: (state, payload) => !state,
+      [actions.loading]: (state, payload) => !state,
       [actions.reset]: (state, payload) => false,
     }],
     modalNewSlice: [false, PropTypes.boolean,{
@@ -47,8 +57,8 @@ export default kea({
       [actions.reset]: (state, payload) => false,
     }],
     visiblePanel: [false, PropTypes.boolean,{
-      [actions.openPanel]: (state, payload) => true,
-      [actions.closePanel]: (state, payload) => false,
+      [actions.actionPanel]: (state, payload) => !state,
+      [actions.selectLocation]: (state, payload) => !state,
       [actions.reset]: (state, payload) => false,
     }],
     pinsResources: [null, PropTypes.any, {
@@ -87,7 +97,20 @@ export default kea({
     }],
     error: [null, PropTypes.string, {
       [actions.showError]: (state, payload) => payload.error,
-    }]
+    }],
+    formSlice:[FORM_SLICE, PropTypes.shape(propTypes),{
+      [actions.setValue]: (state, payload) => {
+        return Object.assign({}, state, { [payload.key]: payload.value })
+      },
+      [actions.setValues]: (state, payload) => {
+        return Object.assign({}, state, payload.values)
+      },
+      [actions.submitSuccess]: () => FORM_SLICE,
+    }],
+    showErrors: [false, PropTypes.bool, {
+      [actions.submit]: () => true,
+      [actions.submitSuccess]: () => false
+    }],
   }),
 
 
@@ -106,17 +129,17 @@ export default kea({
     [actions.getListResources]: workers.getListResources,
     [actions.createSlice]: workers.createSlice,
     [actions.updateMarker]: workers.updateMarker,
-    [actions.openPanel]: workers.openPanel
+    [actions.selectLocation]: workers.selectLocation,
   }),
 
 
   workers: {
-    *openPanel (action){
+    *selectLocation (action){
       const { setSelectPin } = this.actions
       const pinsResources = yield this.get('pinsResources')
       const pinIndex =
         pinsResources.findIndex(
-          marker => JSON.stringify(marker) === JSON.stringify(action.payload.marker)
+          marker => JSON.stringify(marker) === JSON.stringify(action.payload.resources)
         )
       yield put(setSelectPin(pinIndex))
     },
@@ -124,7 +147,7 @@ export default kea({
     *updateMarker (){
       const pinsResources = yield this.get('pinsResources')
       const pinIndex = yield this.get('selectPin')
-      const { closePanel, errorfetch, showError } = this.actions
+      const { actionPanel, errorfetch, showError } = this.actions
       const resources = pinsResources[pinIndex].location.resources
       let found = false
 
@@ -152,11 +175,11 @@ export default kea({
       const existSdn = resources.sdnWifi && resources.sdnWifi.find((sdn) => sdn.ischecked)
 
       if (existSdn && existNetwork && existCompute) {
-        yield put(closePanel())
+        yield put(actionPanel())
       } else if (existNetwork && existCompute) {
-        yield put(closePanel())
+        yield put(actionPanel())
       } else if (!existSdn && !existNetwork && !existCompute){
-        yield put(closePanel())
+        yield put(actionPanel())
       } else {
         if (existSdn && !existNetwork){
         yield put(showError('Slice needs a network'))
@@ -200,7 +223,7 @@ export default kea({
     *createSlice(){
         const pinsResources = yield this.get('pinsResources'),
           chunk_ids = [], vlans_ids = [],
-        { modalStatus, isLoading, errorfetch, resetSliceName, modalNewSliceStatus, showError } = this.actions
+        { modalStatus, loading, errorfetch, resetSliceName, modalNewSliceStatus, showError } = this.actions
         /*
          * 1º Create OpenStack
          * 2º Create Vlan
@@ -210,7 +233,7 @@ export default kea({
         yield put(showError('Slice needs a compute'))
         const sliceName = yield this.get('sliceName')
         try{
-          yield put(isLoading())
+          yield put(loading())
           let createSlice = false
           for (let pin of pinsResources) {
             if(pin.location.resources.computes){
@@ -274,7 +297,7 @@ export default kea({
         const responseCreateSlice = yield call(axios.post, `${API_BASE_URL}/slicemanagerapi/slic3`, dataChunk)
 
         if(responseCreateSlice.status===200){
-          yield put(isLoading())
+          yield put(loading())
           yield put(modalStatus())
           yield put(resetSliceName())
           yield call(this.props.history.push, `/slices`)
@@ -282,7 +305,7 @@ export default kea({
       }
       }
       catch (error) {
-        yield put(isLoading())
+        yield put(loading())
         yield put(modalNewSliceStatus())
         yield put(modalStatus())
         yield put(errorfetch())
@@ -292,4 +315,3 @@ export default kea({
     }
   }
 })
-

@@ -24,36 +24,33 @@ export const removeAuthorizationInterceptor = () => {
   })
 }
 
-
-export const initInterceptors = () => {
-  // Converts all responses for CamelCase
-  axios.interceptors.response.use((response) => {
-    response.data = camelizeKeys(response.data)
-    return response
-  }, (error) => {
-    return Promise.reject(error)
-  })
+// Converts all responses for CamelCase
+axios.interceptors.response.use((response) => {
+  response.data = camelizeKeys(response.data)
+  return response
+}, (error) => {
+  return Promise.reject(error)
+})
 
 
-  // Converts all requests to under-cased
-  axios.interceptors.request.use((config) => {
-    const currentContentType = config.headers['Content-Type']
+// Converts all requests to under-cased
+axios.interceptors.request.use((config) => {
+  const currentContentType = config.headers['Content-Type']
 
-    // Converts URL get params to underscored
-    if (config.params) {
-      config.params = decamelizeKeys(config.params)
-    }
+  // Converts URL get params to underscored
+  if (config.params) {
+    config.params = decamelizeKeys(config.params)
+  }
 
-    if (!currentContentType) {
-      config.headers['Content-Type'] = 'application/json;charset=utf-8'
-      config.transformRequest = [decamelizeKeysTransformer]
-    }
+  if (!currentContentType) {
+    config.headers['Content-Type'] = 'application/json;charset=utf-8'
+    config.transformRequest = [decamelizeKeysTransformer]
+  }
 
-    return config
-  }, function (error) {
-    return Promise.reject(error)
-  })
-}
+  return config
+}, function (error) {
+  return Promise.reject(error)
+})
 
 
 

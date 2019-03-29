@@ -15,8 +15,8 @@ export default ({ children, ...props }) => (
     {children && children.map((child, i) =>
       <Collapse.Item
         key={i}
-        title={createTitle(child.props)}
-        name={child.props.name}
+        title={child.props && createTitle(child.props)}
+        name={child.props && child.props.name}
       >
           {child}
       </Collapse.Item>
@@ -25,9 +25,10 @@ export default ({ children, ...props }) => (
   </Wrapper>
 )
 
-const createTitle = (props) => {
-  return <React.Fragment>
-  {props.title}
+const createTitle = props => {
+  return (
+  <React.Fragment>
+  {props.title && props.title}
   {props.onClick &&
     <Icon onClick={(e) =>{
       e.stopPropagation();
@@ -39,6 +40,7 @@ const createTitle = (props) => {
     </Icon>
   }
   </React.Fragment>
+  )
 }
 
 const Wrapper = styled.div`

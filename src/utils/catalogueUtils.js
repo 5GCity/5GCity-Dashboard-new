@@ -2,7 +2,7 @@ import React from 'react'
 
 export default (words) => {
   // Calculate length of each word to be used to determine number of words per line
-  const Arraywords = words.split(/\s+/);
+  const Arraywords = words.split(/\s+/) && words.split('-');
 
    var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
    var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
@@ -43,7 +43,6 @@ export default (words) => {
    const newPhrase = wordsByLines.map(line => line.words.join(' '));
 
    // TODO: determine lineHeight and dy dynamically (using passed in props)
-
    return (
        newPhrase.map((word, index) => (
          <tspan key={index} x={50} y={75} dy={`${index * 1}em`}>

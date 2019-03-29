@@ -21,9 +21,6 @@ export default kea({
   actions: () => ({
     checkLoggedUser: () => ({}),
     decreaseLoading: () => ({ }),
-    setUserName: (userName) => ({userName}),
-    setUserRole: (userRole) => ({userRole}),
-    logout: () => ({ }),
     setKeycloak: (keycloak)=> ({ keycloak})
   }),
 
@@ -39,16 +36,13 @@ export default kea({
   start: function * () {
     console.log(`[5GCity-CORE] 🚀 Booting up `, 'cornflowerblue')
 
-    const {
-      checkLoggedUser
-    } = this.actions
+    const { checkLoggedUser } = this.actions
 
     yield(put(checkLoggedUser()))
   },
 
   takeEvery: ({ actions, workers }) => ({
     [actions.checkLoggedUser]: workers.checkLoggedUser,
-    [actions.setUserRole]: workers.checkUserRole,
   }),
 
   takeLatest: ({ actions, workers }) => ({
@@ -56,18 +50,11 @@ export default kea({
 
   workers: {
 
-    * checkUserRole () {
-      const { setUserRole } = this.actions
-      console.log(setUserRole)
-      yield put()
-    },
-
     /**
      * Checking if user is logged in on the app
      */
     * checkLoggedUser () {
       const { decreaseLoading, setKeycloak } = this.actions
-
       const keycloakInit = () => {
         return new Promise((resolve, reject) => {
           const keycloak = Keycloak('/keycloak.json')

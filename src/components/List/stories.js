@@ -6,8 +6,12 @@
  */
 import React from 'react'
 import { storiesOf } from '@storybook/react'
-import { Theme } from 'globalStyles';
-import * as moment from 'moment';
+import { Theme } from 'globalStyles'
+import * as moment from 'moment'
+import styled from 'styled-components'
+
+import { DeleteIcon } from 'components/Icons'
+import Button from 'components/Button'
 
 import List from './index'
 
@@ -86,16 +90,68 @@ const toogleFilter = item => {
 }
 
 const exmapleOne = () => (
-    <List
-      titles={fakeTitles}
-      data={fakeData}
-      iconFilter={(title)=>toogleFilter(title)}
-      removeSlice={(item)=>console.log(item)}
-      editSlice={(item)=>console.log(item)}
-      viewSlice={(item)=>console.log(item)}
-      slices
-    />
+  <List>
+    <List.Header>
+    {fakeTitle.map(title =>
+          <List.Column
+            size={title.size}
+            key={title.id}
+          >
+            {title.name}
+          </List.Column>
+        )}
+        <List.Column marginLeft></List.Column>
+    </List.Header>
+    {fakeData && fakeData.map((data, i) =>
+      <List.Row key={i}>
+        {fakeTitle && fakeTitle.map(({ size, propItem, render }) => {
+          return [
+            render && data &&
+            <List.Column
+              size={size}
+              key={data.id}>
+              {render(data[propItem])}
+            </List.Column>,
+            !render && data &&
+            <List.Column
+              size={size}
+              key={data.id}>
+              {data[propItem]}
+            </List.Column>
+          ]
+        })}
+          <ColumnBottons key={data.id}>
+          <ContainerButtons>
+            <Button
+              type={'secondary'}
+              svg={ <DeleteIcon /> }
+              onClick={() => console.log(data)}
+              text={'Remove'} />
+            <Button
+              type={'primary'}
+              icon={'view'}
+              onClick={() => viewSlice(data)}
+              text={'View'} />
+            <Button
+              type={'primary'}
+              icon={'setting'}
+              onClick={() => viewSliceMonitor(data)}
+              text={'Monitoring'}
+            />
+            </ContainerButtons>
+          </ColumnBottons>
+          </List.Row>
+          )}
+  </List>
 )
 
 storiesOf('List', module)
   .add('Default', exmapleOne)
+
+const ContainerButtons = styled.div`
+  display: flex;
+`
+const ColumnBottons = styled.div`
+  width: 100%;
+  float: right;
+`

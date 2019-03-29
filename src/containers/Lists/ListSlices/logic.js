@@ -38,27 +38,29 @@ export default kea({
     sliceInfo: (slice) => ({slice}),
     deleteSlice: () => ({ }),
     isLoading: () => ({ }),
-    isnLoading: () => ({ }),
-    openModal: () => ({ }),
-    closeModal: () => ({ })
+    actionModal: () => ({ }),
+    reset: () => ({ }),
 
   }),
 
   reducers: ({ actions }) => ({
     slices: [[], PropTypes.array, {
       [actions.fetchSlices]: (state, payload) => null,
-      [actions.setSlices]: (state, payload) => payload.slices
+      [actions.setSlices]: (state, payload) => payload.slices,
+      [actions.reset]: () => [],
     }],
     loading:[false, PropTypes.boolean,{
-      [actions.isLoading]: (state, payload) => true,
-      [actions.isnLoading]: (state, payload) => false,
+      [actions.isLoading]: (state, payload) => !state,
+      [actions.reset]: () => false,
     }],
     sliceSelect: [null, PropTypes.object, {
-      [actions.sliceInfo]: (state, payload) => payload.slice
+      [actions.sliceInfo]: (state, payload) => payload.slice,
+      [actions.reset]: () => null,
     }],
     modalVisibled: [false, PropTypes.bool,{
-      [actions.openModal]: (state, payload) => true,
-      [actions.closeModal]: (state, payload) => false
+      [actions.actionModal]: (state, payload) => !state,
+      [actions.sliceInfo]: (state, payload) => !state,
+      [actions.reset]: () => false,
     }]
   }),
 
@@ -67,6 +69,13 @@ export default kea({
 
 
     yield put(fetchSlices())
+  },
+
+  stop: function * () {
+    const { reset } = this.actions
+
+
+    yield put(reset())
   },
 
   takeLatest: ({ actions, workers }) => ({
@@ -95,7 +104,7 @@ export default kea({
   },
 
   * deleteSlice () {
-    const { fetchSlices, isLoading, isnLoading, openModal, closeModal } = this.actions
+    const { fetchSlices, isLoading, openModal, closeModal } = this.actions
     const sliceSelect = yield this.get('sliceSelect')
    yield put(openModal())
     try {
@@ -119,7 +128,7 @@ export default kea({
     } catch(error){
       console.error(`Error ${error}`)
     }
-    yield put(isnLoading())
+    yield put(isLoading())
     yield put(closeModal())
   }
   }

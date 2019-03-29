@@ -13,34 +13,16 @@ import { darken, lighten } from 'polished'
 
 
 export default ({ children, ...props }) => (
-  <Wrapper {...props}>
-  <NameInput uppercase={props.uppercase}>{props.title}</NameInput>
-  <StyledSelect {...props} headerNav={props.headerNav}>
-    {props.options && props.options.map((el) =>
-      <Select.Option value={el.value} key={el.value} label={el.name} disabled={el.disabled}></Select.Option>
+  <StyledSelect value={props.selectOption} onChange={value => props.onChange(value)}>
+    {props.options && props.options.map((el,i) =>
+      <Select.Option value={el.value} key={i} label={el.name} disabled={el.disabled}></Select.Option>
     )}
   </StyledSelect>
-  </Wrapper>
 )
 
-const Wrapper = styled.div`
-  width: 100%;
-  display: flex;
-${({ headerNav }) => headerNav && `
-  margin: 0;
-`}
-`
-const NameInput = styled.p`
-  align-self: center;
-  color: #89979F;
-  margin: 0;
-  font-size: 12px;
-  padding-right: 8px;
-  ${({ uppercase }) => uppercase && `text-transform: uppercase;`}
-  font-family: ${({ theme }) => theme.fontDin };
-`
-
 const StyledSelect = styled(Select)`
+
+display: block;
 
 input {
   background-color:transparent;
@@ -87,6 +69,10 @@ input {
 
 .el-select-dropdown__item.hover, .el-select-dropdown__item:hover {
   background: ${({ theme }) => darken(0.1,theme.bodyBackground)};
+}
+
+.el-select-dropdown__item.is-disabled {
+  color: ${() => darken(0.4,'#fff')};
 }
 
 .el-select-dropdown__list {

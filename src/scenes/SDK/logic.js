@@ -20,27 +20,12 @@ import { kea } from 'kea'
 export default kea({
   path: () => ['scenes', 'SDK'],
 
-  /*
-  connect: {
-    props: [
-      Logic, [
-        'prop1'
-      ]
-    ],
-    actions: [
-      Logic, [
-        'action as newActionName'
-      ],
-    ]
-  },
-  */
-
   actions: () => ({
-    
+
   }),
 
   reducers: ({ actions }) => ({
-    
+
 
   }),
 
@@ -49,12 +34,12 @@ export default kea({
   },
 
   takeLatest: ({ actions, workers }) => ({
-    
+
   }),
 
 
   workers: {
-    
+
   }
 
 })

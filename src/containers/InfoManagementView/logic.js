@@ -21,24 +21,33 @@ export default kea({
     panelAction: () => ({ }),
     setListResources: (resources) => ({ resources }),
     infoMarker: (marker) => ({ marker }),
+    reset: () => ({ }),
   }),
 
   reducers: ({ actions }) => ({
     pinsResources: [null, PropTypes.any, {
       [actions.setListResources]: (state, payload) => createAllPins(payload.resources),
+      [actions.reset]: () => null,
     }],
     panel: [false, PropTypes.bool,{
       [actions.panelAction]:(state, payload) => !state,
       [actions.infoMarker]: (state, payload) => !state,
+      [actions.reset]: () => false,
     }],
     rightPanelInfo: [null, PropTypes.object, {
       [actions.infoMarker]: (state, payload) => payload.marker,
+      [actions.reset]: () => null,
     }],
   }),
 
   start: function * () {
     const { fetchResources } = this.actions
     yield put(fetchResources())
+  },
+
+  stop: function * () {
+    const { reset } = this.actions
+    yield put(reset())
   },
 
   takeLatest: ({ actions, workers }) => ({

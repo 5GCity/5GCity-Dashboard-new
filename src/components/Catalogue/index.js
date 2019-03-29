@@ -8,12 +8,12 @@ import React from 'react'
 import styled from 'styled-components'
 import { rgba } from 'polished'
 import { catalogueUtils } from 'utils'
-import { Start, OtherComponent, Stop, Plus } from 'components/Icons'
+import { Start, OtherComponent, Stop, Plus, Remove, VirtualSwitch } from 'components/Icons'
 
 export default ({ ...props }) => (
   <SVGContainer
     {...props}
-    onClick={() => props.onClick(getProps(props))}>
+    onClick={() => !props.disabled && props.onClick(getProps(props))}>
     <Group>
     {props.version &&
       <Version x="6" y="16">{props.version}</Version>
@@ -24,7 +24,10 @@ export default ({ ...props }) => (
     {props.type === "stop" &&
       <Stop transform="translate(33,20)" />
     }
-    {props.type !== "stop" && props.type !== "start" &&
+    {props.type === "VS" &&
+      <VirtualSwitch transform="translate(33,20)" />
+    }
+    {props.type === "VNF" &&
       <OtherComponent transform="translate(33,20)" {...props} />
     }
     {props.name &&
@@ -33,7 +36,12 @@ export default ({ ...props }) => (
       </Name>
     }
     <Rect />
+    { !props.disabled &&
     <PlusCatalogue transform="translate(33,40)" />
+    }
+    { props.disabled &&
+    <RemoveCatalogue transform="translate(33,40)" />
+    }
     </Group>
   </SVGContainer>
 )
@@ -59,6 +67,10 @@ const Group = styled.g``
 
 const PlusCatalogue = styled(Plus)`
   visibility: hidden;
+`
+
+const RemoveCatalogue = styled(Remove)`
+  visibility: visible;
 `
 
 const Rect = styled.rect`
@@ -88,7 +100,6 @@ const SVGContainer = styled.svg`
   height: 106px;
   cursor: pointer;
   margin: 8px 4px;
-
   &:hover {
     ${Rect} {
       fill: ${({theme}) => rgba(theme.secondaryColor, 0.1)};
@@ -96,5 +107,10 @@ const SVGContainer = styled.svg`
     ${PlusCatalogue} {
       visibility: visible;
     }
+  }
+
+  ${props => props.disabled && `
+    cursor: not-allowed;
+    `
   }
 `

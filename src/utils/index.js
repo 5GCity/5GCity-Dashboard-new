@@ -7,6 +7,7 @@ import formatDatePt from 'utils/formatDatePt'
 import formatNumbersPt from 'utils/formatNumbersPt'
 import getStore from 'utils/getStore'
 import catalogueUtils from 'utils/catalogueUtils'
+import wordsUtils from 'utils/wordsUtils'
 
 export {
   mapOnChangeToState,
@@ -17,5 +18,6 @@ export {
   formatDatePt,
   formatNumbersPt,
   getStore,
-  catalogueUtils
+  catalogueUtils,
+  wordsUtils,
 }

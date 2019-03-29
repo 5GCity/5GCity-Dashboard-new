@@ -8,62 +8,14 @@ import React, { Component } from 'react'
 import Logic from './logic'
 import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
-import { Theme } from 'globalStyles'
 
 /* Containers */
 import SliceMap from 'containers/SliceMap'
-import PanelRight from 'components/PanelRight'
-import { NodeMarkerIcon, BackIcon } from 'components/Icons'
+import PanelSliceDetails from 'containers/Panel/PanelSliceDetails'
 
 /* Components */
 import HeaderNav from 'components/HeaderNav'
-
-const infoMarkerContainer = (rightPanelInfo) => {
-  const { computes, networks, sdnWifi } = rightPanelInfo
-  return(
-  <PanelInfo>
-  {computes &&
-  <Title>Computing</Title>
-  }
-  {computes && computes.map((el, i) =>
-    <TypeMarker
-      className={ i ===  rightPanelInfo.computes.length -1 && 'noBorder'}
-      key={el.id}>
-        <Name>{el.name}</Name>
-        <Id>{el.id}</Id>
-        <Id>CPU: 6 cores </Id>
-        <Id>RAM: 6 GB </Id>
-        <Id>DISK: 250GB </Id>
-    </TypeMarker>
-  )}
-  {networks &&
-  <Title>Network</Title>
-  }
-  {networks && networks.map((el, i) =>
-      <TypeMarker
-        className={ i === networks.length -1 && 'noBorder'}
-        key={el.id}>
-        <Name>{el.name}</Name>
-        <Id>{el.id}</Id>
-      </TypeMarker>
-   )}
-    {sdnWifi &&
-  <Title>Wifi</Title>
-  }
-  {sdnWifi && sdnWifi.map((el, i) =>
-    <TypeMarker
-      className={ i ===  sdnWifi.length -1 && 'noBorder'}
-      key={el.id}>
-      <Name>{el.name}</Name>
-      <Id>{el.id}</Id>
-      <Id>Bandwidth: {el.bandwidth} Mbps</Id>
-      <Id>Channel Number: {el.number}</Id>
-      <Id>TX Power: {el.txPower} dBm</Id>
-    </TypeMarker>
-  )}
-  </PanelInfo>
-  )
-}
+import { BackIcon } from 'components/Icons'
 
 class InfoManagementView extends Component {
 
@@ -82,12 +34,10 @@ class InfoManagementView extends Component {
           navigateBack={() => this.navigateToBack()}
           name={'Infrastructure Management'}
         />
-        <PanelRight
+        <PanelSliceDetails
           show={panel}
-          closeNav={() => panelAction()}
-          headerIcon={<NodeMarkerIcon height={30} width={30} />}
-          container={ rightPanelInfo && infoMarkerContainer(rightPanelInfo) }
-          action={(item) => console.log(item)}
+          data={rightPanelInfo && rightPanelInfo}
+          close={panelAction}
         />
         {pinsResources &&
           <SliceMap
@@ -105,37 +55,4 @@ export default withRouter(Logic(InfoManagementView))
 
 const Wrapper = styled.div`
   height: calc(100% - 80px) !important;
-`
-const PanelInfo = styled.div`
-.noBorder {
-  border-bottom: none;
-}
-`
-const Title = styled.h5`
-  color: ${Theme.primaryColor};
-  font-family: ${Theme.fontFamily};
-  font-size: 20px;
-  line-height: 20px;
-`
-
-const TypeMarker = styled.div`
-  border-bottom: 1px solid rgba(239,242,247,0.1);
-  `
-
-const Name = styled.p`
-  margin: 12px 0;
-  font-size: 12px;
-  line-height: 12px;
-  font-weight: bold;
-  color: #EFF2F7;
-  font-family: ${Theme.fontFamily};
-
-`
-
-const Id = styled.p`
-  margin:12px 0;
-  font-size: 14px;
-  line-height: 14px;
-  font-family: ${Theme.fontFamily};
-  color: #89979F;
 `

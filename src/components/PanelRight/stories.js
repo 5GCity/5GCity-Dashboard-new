@@ -14,16 +14,6 @@ import PanelRight from './index'
 import  { NodeMarkerIcon , DeleteIcon }  from 'components/Icons'
 import Button from 'components/Button'
 
-const bStyle = {
-  backgroundColor: Theme.backgroundColor,
-  height:'100%'
-}
-
-const fakeData = {
-  title:"0020110b0c30c",
-  subtitle: "Cabinet"
-}
-
 const marker = [{
   type: "Compute",
   id: '5b6308c258f568073093f70e',
@@ -41,20 +31,12 @@ const marker = [{
 class PanelRightComponent extends Component {
 
   state = {
-    show: true,
+    show: false,
   }
 
   render () {
 
-  const bStyle = {
-  padding: '30px',
-  backgroundColor: Theme.bodyBackground,
-  height:'100%'
-}
-
- //
   const info = (marker) => {
-    console.log(marker);
     return[
    <PanelInfo>
      {marker && marker.map(( el, i ) =>
@@ -75,12 +57,14 @@ class PanelRightComponent extends Component {
       <React.Fragment>
         <PanelRight
         show={show}
-        closeNav={() => this.setState({show: false})}
-        headerIcon={<NodeMarkerIcon height={30} width={30} />}
-        action={(item) => console.log(item)}
-        container={info(marker)}
-        buttonNav={<Button onClick={() => this.setState({show: true})} description={'show'} type={'primary'} />}/>
-        <Button onClick={() => this.setState({show: true})} description={'show'} type={'primary'} />
+      >
+      <CloseContainer onClick={() => this.setState({show: !show})}></CloseContainer>
+      <Title>teste</Title>
+      </PanelRight>
+      <Button
+        text="Show"
+        onClick={() => this.setState({show: !show})}
+      />
       </React.Fragment>
     )
   }
@@ -122,6 +106,21 @@ const Id = styled.p`
   line-height: 14px;
   font-family: ${Theme.fontFamily};
   color: #89979F;
+`
+
+const CloseContainer = styled.div`
+  position: absolute;
+  top: 0;
+  z-index: 2;
+  text-align: center;
+  left: -31px;
+  height: 32px;
+  font-size: 20px;
+  width: 32px;
+  color: #89979F;
+  background-color: #37474F;
+  box-shadow: inset -1px 0 0 0 rgba(0,0,0,0.15), 0 0 50px 0 rgba(0,0,0,0.2);
+  cursor: pointer;
 `
 
 storiesOf('Panel Right', module)

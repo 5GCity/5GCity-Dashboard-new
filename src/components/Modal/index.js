@@ -2,25 +2,15 @@
  * Modal Component
  * Please write a description
  *
- * @author Your Name <gpatriarca@ubiwhere.com>
+ * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
-import React from 'react'
 import styled from 'styled-components'
 import { Dialog } from 'element-react'
 
+const Body = Dialog.Body
+const Footer = Dialog.Footer
 
-export default ({ children, headerTitle, footerContent, bodyContent, ...props }) => (
-  <Wrapper {...props}>
-    <Dialog.Body>
-      {bodyContent}
-    </Dialog.Body>
-    <Dialog.Footer className="dialog-footer">
-      {footerContent}
-    </Dialog.Footer>
-  </Wrapper>
-)
-
-const Wrapper = styled(Dialog)`
+const Modal = styled(Dialog)`
   background-color: transparent;
 
   .el-dialog__header{
@@ -41,6 +31,7 @@ const Wrapper = styled(Dialog)`
   .el-dialog__body{
     background-color: ${({theme}) => theme.bodyBackground};
     box-shadow: 0 0 50px 0 rgba(0,0,0,0.2);
+    color: white;
   }
 
   .el-dialog__footer{
@@ -51,5 +42,8 @@ const Wrapper = styled(Dialog)`
   .el-dialog__headerbtn .el-dialog__close {
     color: ${({theme}) => theme.secondaryColor};
   }
-
 `
+Modal.Footer = Footer
+Modal.Body = Body
+
+export default Modal

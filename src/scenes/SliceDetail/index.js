@@ -12,58 +12,12 @@ import { Theme } from 'globalStyles'
 
 /* Components */
 import HeaderNav from 'components/HeaderNav'
-import PanelRight from 'components/PanelRight'
-import { NodeMarkerIcon, BackIcon } from 'components/Icons'
+
+import { BackIcon } from 'components/Icons'
 
 /* Containers */
 import SliceMap from 'containers/SliceMap'
-
-const infoMarkerContainer = (rightPanelInfo) => {
-  const info = rightPanelInfo.location.resources
-  return(
- <PanelInfo>
-  {info.computes &&
-  <Title>Computing</Title>
-  }
-  {info.computes && info.computes.map((el, i) =>
-    <TypeMarker
-      className={ i ===  info.computes.length -1 && 'noBorder'}
-      key={el.id}>
-        <Name>{el.name}</Name>
-        <Id>{el.id}</Id>
-        <Id>CPU: 6 cores </Id>
-        <Id>RAM: 6 GB </Id>
-        <Id>DISK: 250GB </Id>
-    </TypeMarker>
-  )}
-  {info.networks &&
-  <Title>Network</Title>
-  }
-  {info.networks && info.networks.map((el, i) =>
-      <TypeMarker
-        className={ i === info.networks.length -1 && 'noBorder'}
-        key={el.id}>
-        <Name>{el.name}</Name>
-        <Id>{el.id}</Id>
-      </TypeMarker>
-   )}
-    {info.sdnWifi &&
-  <Title>Wifi</Title>
-  }
-  {info.sdnWifi && info.sdnWifi.map((el, i) =>
-    <TypeMarker
-      className={ i ===  info.sdnWifi.length -1 && 'noBorder'}
-      key={el.id}>
-      <Name>{el.name}</Name>
-      <Id>{el.id}</Id>
-      <Id>DHCPD: {el.dhcpd}</Id>
-      <Id>DNS: {el.dns}</Id>
-      <Id>Channel: {el.channel}</Id>
-    </TypeMarker>
-  )}
-</PanelInfo>
-  )
-}
+import PanelSliceDetails from 'containers/Panel/PanelSliceDetails'
 
 class SliceDetail extends Component {
 
@@ -72,16 +26,9 @@ class SliceDetail extends Component {
     history.goBack()
   }
 
-  clickMarker = (marker) => {
-    const { infoMarker, panelAction } = this.actions
-    panelAction()
-    infoMarker(marker)
-  }
-
   render () {
-
     const { slice, rightPanelInfo, panel  } = this.props
-    const { panelAction } = this.actions
+    const { panelAction , infoMarker } = this.actions
     return (
       <Wrapper>
       {slice &&
@@ -90,20 +37,17 @@ class SliceDetail extends Component {
           buttonBack={<BackIcon />}
           navigateBack={() => this.navigateToBack()}
           name={slice.name}
-        /> {/* leftContent={headerItems} */}
-        <PanelRight
+        />
+        <PanelSliceDetails
           show={panel}
-          closeNav={() => panelAction()}
-          headerIcon={<NodeMarkerIcon height={30} width={30} />}
-          container={rightPanelInfo && infoMarkerContainer(rightPanelInfo)}
-          action={(item) => console.log(item)}
+          data={rightPanelInfo && rightPanelInfo}
+          close={panelAction}
         />
         <SliceMap
           markers={slice.markers}
           markerColor={Theme.primaryColor}
-          onClick={(marker) =>{ this.clickMarker(marker)}}
+          onClick={(marker) => infoMarker(marker)}
         />
-
       </React.Fragment>
       }
       </Wrapper>
@@ -119,37 +63,4 @@ const Wrapper = styled.div`
   > div:last-child {
     height: calc(100% - 80px) !important;
   }
-`
-const PanelInfo = styled.div`
-.noBorder {
-  border-bottom: none;
-}
-`
-const Title = styled.h5`
-  color: ${Theme.primaryColor};
-  font-family: ${Theme.fontFamily};
-  font-size: 20px;
-  line-height: 20px;
-`
-
-const TypeMarker = styled.div`
-  border-bottom: 1px solid rgba(239,242,247,0.1);
-  `
-
-const Name = styled.p`
-  margin: 12px 0;
-  font-size: 12px;
-  line-height: 12px;
-  font-weight: bold;
-  color: #EFF2F7;
-  font-family: ${Theme.fontFamily};
-
-`
-
-const Id = styled.p`
-  margin:12px 0;
-  font-size: 14px;
-  line-height: 14px;
-  font-family: ${Theme.fontFamily};
-  color: #89979F;
 `

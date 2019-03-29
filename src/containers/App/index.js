@@ -22,7 +22,7 @@ class App extends Component {
     if (loading) {
       return null
     }
-    
+
     return (
       <Main>
         <RouteContainer>
@@ -49,5 +49,6 @@ const Main = styled.main``
 const RouteContainer = styled.div`
   display: flex;
   height: 100%;
+  witdh: 100wh;
   flex-direction: column;
 `

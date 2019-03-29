@@ -16,7 +16,6 @@ const markers = [], networkLocation = [], sdnWifiLocation = []
 
   resources.chunks.openstackVlans.forEach((network) => {
     if(network.physicalNetwork) {
-      console.log(network)
       networkLocation.push({
         cidr: network.cidr,
         tag: network.tag,

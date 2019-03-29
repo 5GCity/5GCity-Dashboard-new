@@ -17,8 +17,7 @@ import Catalogue from 'components/Catalogue'
 class ComposerMenu extends Component {
 
   render () {
-    // Actions
-    const { createNode } = this.actions
+    const { catalogue, createNode } = this.props
 
     return (
       <Wrapper>
@@ -26,87 +25,51 @@ class ComposerMenu extends Component {
           <Input icon={'search'} placeholder={'Start typing to search...'} />
         </WrapperInput>
         <WrapperContent>
-          <Collapse value={["favorite","catalogue","default"]}>
-            <WrapperCatalogue title={"General"} name={"default"}>
+          <Collapse value={['catalogue','default']}>
+            <WrapperCatalogue title={'General'} name={'default'} key={1}>
               <Catalogue
-                name={"Start"}
+                name={'Bridge'}
+                key={'9998'}
                 type={'start'}
                 onClick={(node) => createNode(node)}
               />
               <Catalogue
-                name={"Stop"}
+                name={'External'}
+                key={'9999'}
                 type={'stop'}
                 onClick={(node) => createNode(node)}
               />
+{/*               <Catalogue
+                name={'Virtual Switch'}
+                key={'9999'}
+                type={'VS'}
+                onClick={(node) => createNode(node)}
+              /> */}
             </WrapperCatalogue>
-            <WrapperCatalogue title={"My catalogue"} name={"catalogue"}>
+            <WrapperCatalogue title={'My catalogue'} name={'catalogue'} key={2}>
+            {catalogue && catalogue.map((item, i) =>
               <Catalogue
-                version={"1.0.1"}
+                key={i}
+                version={item.version}
                 type={'VNF'}
-                colortext="#00A294"
-                circlefill="#A8D0CE"
-                name={"Traffic Filtering"}
-                onClick={(node) => createNode(node)}
+                colortext='#00A294'
+                circlefill='#A8D0CE'
+                name={item.name}
+                onClick={() => createNode(item)}
+                disabled={item.disabled}
               />
-              <Catalogue
-                version={"1.0.2"}
-                type={'MEC'}
-                colortext="#A900B8"
-                circlefill="#CDB5D3"
-                name={"Video Analysis"}
-                onClick={(node) => createNode(node)}
-              />
-              <Catalogue
-                version={"2.1.3"}
-                type={'MEC'}
-                colortext="#00A294"
-                circlefill="#A8D0CE"
-                name={"Video Processing"}
-                onClick={(node) => createNode(node)}
-              />
-              <Catalogue
-                version={"1.0.0"}
-                type={'VNF'}
-                colortext="#006BB7"
-                circlefill="#A9C2D1"
-                name={"Video Distribution"}
-                onClick={(node) => createNode(node)}
-              />
-              <Catalogue
-                version={"1.0.1"}
-                type={'VNF'}
-                colortext="#006BB7"
-                circlefill="#A9C2D1"
-                name={"Function A"}
-                onClick={(node) => createNode(node)}
-              />
-              <Catalogue
-                version={"2.0.1"}
-                type={'VNF'}
-                colortext="#006BB7"
-                circlefill="#A9C2D1"
-                name={"Function B"}
-                onClick={(node) => createNode(node)}
-              />
-              <Catalogue
-                version={"2.0.1"}
-                type={'VNF'}
-                colortext="#006BB7"
-                circlefill="#A9C2D1"
-                name={"Function C"}
-                onClick={(node) => createNode(node)}
-              />
+            )}
             </WrapperCatalogue>
-            <WrapperCatalogue title={"Favorites"} name={"favorite"} onClick={(data) => console.log(data)}>
+{/*             <WrapperCatalogue title={'Favorites'} name={'favorite'} onClick={(data) => console.log(data)}>
             <Catalogue
-              version={"3.0.1"}
+              version={'3.0.1'}
               type={'VNF'}
-              colortext="blue"
-              circlefill="yellow"
-              name={"Function D"}
+              colortext='blue'
+              circlefill='yellow'
+              name={'Function D'}
               onClick={(node) => createNode(node)}
             />
-            </WrapperCatalogue>
+            </WrapperCatalogue> */}
           </Collapse>
         </WrapperContent>
         <WrapperButton>

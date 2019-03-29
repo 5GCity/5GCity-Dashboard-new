@@ -21,7 +21,11 @@ export default kea({
     runInstance: () => ({ }),
     actionModal: () => ({ }),
     actionModalError: () => ({ }),
-    loading: () => ({ })
+    loading: () => ({ }),
+
+    submit: true,
+    submitSuccess: true,
+    submitFailure: true,
   }),
 
   reducers: ({ actions }) => ({
@@ -30,6 +34,7 @@ export default kea({
     }],
     modalVisibled: [false, PropTypes.bool,{
       [actions.actionModal]: (state, payload) => !state,
+      [actions.setSelectNetwork]: (state, payload) => true,
     }],
     modalError: [false, PropTypes.bool,{
       [actions.actionModalError]: (state, payload) => !state,
@@ -40,6 +45,11 @@ export default kea({
     networkServices: [[], PropTypes.array,{
       [actions.fetchNetworksServices]: (state, payload) => null,
       [actions.setNetworksServices]: (state, payload) => payload.networkService
+    }],
+    isSubmitting: [false, PropTypes.bool, {
+      [actions.submit]: () => true,
+      [actions.submitSuccess]: () => false,
+      [actions.submitFailure]: () => false,
     }],
   }),
 

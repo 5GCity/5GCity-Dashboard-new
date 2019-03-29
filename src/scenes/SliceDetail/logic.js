@@ -30,11 +30,12 @@ export default kea({
       [actions.setSlice]: (state, payload) => createSlice(payload.resources)
     }],
     rightPanelInfo: [ null, PropTypes.object, {
-      [actions.infoMarker]: (state, payload) => payload.marker
+      [actions.infoMarker]: (state, payload) => payload.marker.location.resources,
     }],
     panel: [false, PropTypes.bool,{
       [actions.panelAction]:(state, payload) => !state,
       [actions.reset]: () => false,
+      [actions.infoMarker]: (state, payload) => !state,
     }]
   }),
 
@@ -43,7 +44,6 @@ export default kea({
     yield put(fetchSlice())
 
   },
-
 
   stop: function * () {
     const { reset } = this.actions
@@ -55,13 +55,11 @@ export default kea({
     [actions.fetchSlice]: workers.fetchSlice
   }),
 
-
   workers: {
 
     * fetchSlice () {
 
       const { setSlice } = this.actions
-
        try {
         const selectSlice = this.props.match.params.id
         const responseResult = yield call(axios.get,`${API_BASE_URL}/slicemanagerapi/slic3/${selectSlice}/chunks`)

@@ -78,6 +78,12 @@ export const Stop = props => (
     <circle fill="white" r="10" cx="16" cy="16"></circle>
   </g>
 )
+// Virtual Switch
+export const VirtualSwitch = props => (
+  <g {...props}>
+    <rect width="32" height="32" rx="5" fill="#006bb7"></rect>
+  </g>
+)
 // Other Component Catalogue
 const styledComponent = {
   fontSize: 12,
@@ -98,6 +104,14 @@ export const Plus = props => (
   <g {...props}>
     <rect y="13" width="32" height="5" rx="0" fill="white"></rect>
     <rect y="-18" width="32" height="5" ry="0" fill="white" transform="rotate(90)"></rect>
+  </g>
+)
+
+// Plus Catalogue
+export const Remove = props => (
+  <g {...props}>
+    <circle r="20" cx="16" cy="16" fill="#d84f4f"></circle>
+    <rect y="14" width="30" x="1" height="5" rx="0" fill="white"></rect>
   </g>
 )
 

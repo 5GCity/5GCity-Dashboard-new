@@ -14,9 +14,6 @@ import { BrowserRouter } from 'react-router-dom'
 import { i18n } from 'element-react'
 import locale from 'element-react/src/locale/lang/en'
 
-
-import { initInterceptors } from 'interceptors'
-
 // Stylings
 import 'element-theme-default'
 import 'mapbox-gl/dist/mapbox-gl.css'
@@ -55,8 +52,6 @@ if (process.env.NODE_ENV !== 'development') {
   Raven = require('raven-js')
   Raven.config(SENTRY_URL, sentryConfig).install()
 }
-
-initInterceptors()
 
 const render = Component => ReactDOM.hydrate(
   <ThemeProvider theme={Theme}>

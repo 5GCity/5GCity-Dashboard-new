@@ -2,7 +2,7 @@
  * SDK Scene
  * Please write a description
  *
- * @author Your Name <youremail@ubiwhere.com>
+ * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
 import React, { Component } from 'react'
 import Logic from './logic'
@@ -19,5 +19,5 @@ class SDK extends Component {
 }
 
 
-export default  Logic(SDK)
+export default Logic(SDK)
 
