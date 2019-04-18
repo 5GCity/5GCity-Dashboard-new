@@ -7,38 +7,38 @@
 
 export const Titles = [{
   id: 1,
-  size: 20,
+  size: 200,
   name: 'Id',
   propItem: 'id',
 }, {
   id: 2,
-  size: 20,
+  size: 200,
   name: 'Short Name',
   propItem: 'name',
 }, {
   id: 3,
-  size: 15,
+  size: 120,
   name: 'Design',
   propItem: 'design',
   render: (vendor) =>
     !vendor ? "N.A" : vendor
 }, {
   id: 4,
-  size: 15,
+  size: 120,
   name: 'Version',
   propItem: 'version',
   render: (vendor) =>
     !vendor ? "N.A" : vendor
 },{
   id: 5,
-  size: 15,
+  size: 120,
   name: 'Repository',
   propItem: 'repository',
   render: (vendor) =>
     !vendor ? "N.A" : vendor
 }, {
   id: 6,
-  size: 15,
+  size: 150,
   name: 'Last Update',
   propItem: 'lastUpdate',
   render: (vendor) =>

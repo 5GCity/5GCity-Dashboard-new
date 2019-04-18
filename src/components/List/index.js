@@ -29,10 +29,11 @@ const Header = styled.div`
 
 const Column = styled.div`
   padding-right: 10px;
-  flex: 0 0 225px;
+  flex: 0 0 ${({size}) => size }px;
 `
 
 const Row = styled.div`
+  min-width: 1200px;
   display: flex;
   flex-direction: row;
   flex-flow: no-wrap;

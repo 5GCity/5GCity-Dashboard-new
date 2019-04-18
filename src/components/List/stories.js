@@ -16,20 +16,20 @@ import List from './index'
 
 const fakeTitle = [{
   id: 1,
-  size: 2,
+  size: 300,
   name: 'Id',
   propItem: 'sliceId',
   filter: true
 },{
   id: 2,
-  size: 2,
+  size: 200,
   name: 'Name',
   propItem: 'name',
   filter: true,
 },{
   id: 3,
   name: 'Acceptance Date',
-  size: 2,
+  size: 200,
   propItem: 'date',
   filter: true,
   render: (date) =>
@@ -37,12 +37,12 @@ const fakeTitle = [{
 },{
   id: 4,
   name: 'Status',
-  size: 1,
+  size: 50,
   propItem: 'status',
   filter: true
 },{
   id: 5,
-  size: 2,
+  size: 200,
   name: 'Nº of Instantaited Services',
   propItem: 'n_inst',
   filter: true

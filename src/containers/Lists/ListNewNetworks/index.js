@@ -18,12 +18,12 @@ import NewNetworkForm from 'containers/Forms/NewNetworkForm'
 
 const Titles = [{
   id: 1,
-  size: 20,
+  size: 350,
   name: 'Id',
   propItem: 'id',
 }, {
   id: 2,
-  size: 20,
+  size: 400,
   name: 'Name',
   propItem: 'name',
 }]

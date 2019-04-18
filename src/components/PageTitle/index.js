@@ -30,6 +30,7 @@ export default ({ children, ...props }) => (
 
 const Wrapper = styled.div`
   display:flex;
+  min-width: 1200px;
   justify-content: space-between;
   border-bottom : 1px solid rgba(137,151,159,0.2);
   padding:48px 0px 16px 0px;
