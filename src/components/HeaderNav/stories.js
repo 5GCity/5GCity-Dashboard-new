@@ -7,15 +7,12 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
 
-import HeaderNav from './index'
-import { Theme } from 'globalStyles';
-import Button from 'components/Button';
+import  HeaderNav from './index'
 
+/* Components */
+import Button from 'components/Button'
+import { DeleteIcon } from 'components/Icons'
 
-const bStyle = {
-  backgroundColor: Theme.bodyBackground,
-  height: '100%',
-};
 
 const headerItems = [
   { id: 1,
@@ -30,13 +27,13 @@ const headerItems = [
     options:[{
       id: 1,
       name: "One",
-      value: "wazaaaaaaa" 
+      value: "wazaaaaaaa"
       },{
       id: 2,
       name: "Two",
-      value: "aaaaaaaaaaa" 
+      value: "aaaaaaaaaaa"
       },{
-      id: 3, 
+      id: 3,
       name: "Three",
       value: "up",
       disabled: true
@@ -48,13 +45,13 @@ const headerItems = [
     options:[{
       id: 1,
       name: "One",
-      value: "wazaaaaaaa" 
+      value: "wazaaaaaaa"
       },{
       id: 2,
       name: "Two",
-      value: "aaaaaaaaaaa" 
+      value: "aaaaaaaaaaa"
       },{
-      id: 3, 
+      id: 3,
       name: "Three",
       value: "up",
       disabled: true
@@ -64,15 +61,29 @@ const headerItems = [
 
 
 const exampleOne = () => (
-  <div style={bStyle}>
-    <HeaderNav name={'Add new slice'} buttonBack={true} leftContent={headerItems}/>
-  </div>
+  <HeaderNav
+    name={'Add new slice'}
+    buttonBack={true}
+  >
+    <HeaderNav.Left>
+    <Button
+      key={1}
+      type={'primary'}
+      icon={'edit'}
+      text={'Edit'}
+    />
+    <Button
+      key={2}
+      type={'primary'}
+      svg={ <DeleteIcon /> }
+      text={'Delete'}
+    />
+    </HeaderNav.Left>
+  </HeaderNav>
 )
 
 const exampleTwo = () => (
-  <div style={bStyle}>
-    <HeaderNav type={'transparent'} />
-  </div>
+  <HeaderNav type={'transparent'} />
 )
 
 storiesOf('HeaderNav', module)

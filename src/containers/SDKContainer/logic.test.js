@@ -21,7 +21,7 @@ test('starts from a clear state', () => {
 })
 
 test('app props correct', () => {
-  expect(logic.path).toEqual(['scenes', 'containers', 'sdk'])
+  expect(logic.path).toEqual(['scenes', 'containers', 'SDKContainer'])
 })
 
 // Write more tests here

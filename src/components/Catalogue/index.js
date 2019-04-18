@@ -18,16 +18,16 @@ export default ({ ...props }) => (
     {props.version &&
       <Version x="6" y="16">{props.version}</Version>
     }
-    {props.type === "start" &&
+    {props.type === "bridge" &&
       <Start transform="translate(33,20)" />
     }
-    {props.type === "stop" &&
+    {props.type === "external" &&
       <Stop transform="translate(33,20)" />
     }
-    {props.type === "VS" &&
+    {props.type === "vs" &&
       <VirtualSwitch transform="translate(33,20)" />
     }
-    {props.type === "VNF" &&
+    {props.type === "vnf" &&
       <OtherComponent transform="translate(33,20)" {...props} />
     }
     {props.name &&

@@ -8,7 +8,6 @@ import React ,{ Component } from 'react'
 import { storiesOf } from '@storybook/react'
 
 import Table from './index'
-import { Theme } from 'globalStyles';
 
 const fakeColumns = [
   {

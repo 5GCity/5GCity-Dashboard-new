@@ -39,8 +39,12 @@ const BtnIcon = () => (
   />
 )
 
+const BtnDanger = () => (
+  <Button type={'danger'}>No</Button>
+)
 
 storiesOf('Button', module)
   .add('Primary', BtnPrimary)
   .add('Secondary', BtnSecondary)
   .add('Btn + Icon', BtnIcon)
+  .add('Danger', BtnDanger)

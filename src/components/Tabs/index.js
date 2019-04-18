@@ -4,27 +4,17 @@
  *
  * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
-import React from 'react'
+
 import styled from 'styled-components'
 import { Tabs } from 'element-react'
 
-export default ({ children, ...props }) => (
-<Wrapper>
-  <Tab {...props}>
-    {children && children.map((child, index) =>
-    <Pane {...child.props} key={`tab${index}`}>{child}</Pane>
-    )}
-  </Tab>
-</Wrapper>
-)
-const Wrapper = styled.div`
-display: flex;
-`
+
 const Tab = styled(Tabs)`
-display: flex;
-flex-direction: column;
-width: 100%;
-font-family: "Open Sans";
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  font-family: "Open Sans";
+  background-color: #404F57;
 
 .el-tabs__active-bar {
   height: 3px;
@@ -60,5 +50,8 @@ font-family: "Open Sans";
 `
 
 const Pane = styled(Tabs.Pane)`
-background: gray;
+background: transparent;
 `
+Tab.Pane = Pane
+
+export default Tab

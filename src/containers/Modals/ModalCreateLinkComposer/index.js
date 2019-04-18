@@ -9,13 +9,11 @@ import Logic from './logic'
 import styled from 'styled-components'
 import { Layout, Form } from 'element-react'
 
-/* Container */
-import Modal from 'components/Modal'
-
 /* Components */
 import Input from 'components/Input'
 import Select from 'components/Select'
 import Button from 'components/Button'
+import Modal from 'components/Modal'
 
 class ModalCreateLinkComposer extends Component {
   render () {
@@ -36,12 +34,14 @@ class ModalCreateLinkComposer extends Component {
           <Layout.Row gutter="20">
             <Layout.Col span="12">
               <Title>{newService.source.name}</Title>
-                <Form.Item label={'Name of Connection'}>
+              {newService.source.type !== 'bridge' &&
+                <Form.Item label={'Connection name'}>
                   <Input
                     value={form.name_connection_source}
                     onChange={value => setValue('name_connection_source', value)}
                   />
                 </Form.Item>
+              }
                 {newService.source.options &&
                 <Form.Item label={'Connection Point'}>
                   <Select
@@ -52,8 +52,7 @@ class ModalCreateLinkComposer extends Component {
                   />
                 </Form.Item>
                 }
-                {console.log(newService.source)}
-                {newService.source.type === 'EXTERNAL' && form.required_ports.map((port, index) =>
+                {newService.source.type === 'external' && form.required_ports.map((port, index) =>
                 <Form.Item
                   key={index}
                   label={`Port ${index + 1}`}
@@ -76,7 +75,7 @@ class ModalCreateLinkComposer extends Component {
                 </Layout.Row>
                 </Form.Item>
                 )}
-                {newService.source.type === 'EXTERNAL' &&
+                {newService.source.type === 'external' &&
                   <Button
                     text={'Add Port'}
                     icon={'plus'}
@@ -87,12 +86,14 @@ class ModalCreateLinkComposer extends Component {
             </Layout.Col>
             <Layout.Col span="12">
               <Title>{newService.target.name}</Title>
-                <Form.Item label={'Name of Connection'}>
+              {newService.target.type !== 'vs' && newService.target.type !== 'bridge'  &&
+                <Form.Item label={'Connection name'}>
                   <Input
                     value={form.name_connection_target}
                     onChange={value => setValue('name_connection_target', value)}
                   />
                 </Form.Item>
+              }
                 {newService.target.options &&
                 <Form.Item label={'Connection Point'}>
                   <Select
@@ -103,8 +104,7 @@ class ModalCreateLinkComposer extends Component {
                   />
                 </Form.Item>
                 }
-                {console.log(newService.target)}
-                {newService.target.type === 'EXTERNAL' && form.required_ports.map((port, index) =>
+                {newService.target.type === 'external' && form.required_ports.map((port, index) =>
                  <Form.Item
                   key={`${index}`}
                   label={`Port ${index + 1}`}
@@ -127,7 +127,7 @@ class ModalCreateLinkComposer extends Component {
                   </Layout.Row>
                 </Form.Item>
                 )}
-                {newService.target.type === 'EXTERNAL' &&
+                {newService.target.type === 'external' &&
                   <Button
                     text={'Add Port'}
                     icon={'plus'}

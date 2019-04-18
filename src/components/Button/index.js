@@ -25,6 +25,7 @@ const ButtonStyled = styled(Button)`
   font-family: ${({ theme }) => theme.fontDin };
   font-weight: bold;
   font-size: 14px;
+  float: ${({float}) => float};
 
 
   ${({ type, theme }) => type === 'primary' &&`
@@ -68,7 +69,7 @@ const ButtonStyled = styled(Button)`
   `}
 
   ${({ type, theme }) => type === 'danger' &&`
-  background-color: #DD6C6C;
+  background-color: ${theme.dangerColor};
   color: #fff;
 
   &:hover {
@@ -77,11 +78,11 @@ const ButtonStyled = styled(Button)`
   }
   &:active {
     color: #fff;
-    background-color: ${darken(0.1, theme.secondaryColor)};
+    background-color: ${darken(0.1, theme.dangerColor)};
     }
   &:focus {
     color: #fff;
-    background-color: ${darken(0.1, theme.secondaryColor)};
+    background-color: ${darken(0.1, theme.dangerColor)};
     }
   &:disabled {
     color: #fff;

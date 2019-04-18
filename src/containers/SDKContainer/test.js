@@ -5,12 +5,12 @@
  */
 import React from 'react'
 import renderer from 'react-test-renderer'
-import sdk from './index'
 import 'jest-styled-components'
+import SDKContainer from './index'
 
 it('renders correctly', () => {
   const tree = renderer
-    .create(<sdk />)
+    .create(<SDKContainer />)
     .toJSON()
 
   expect(tree).toMatchSnapshot()

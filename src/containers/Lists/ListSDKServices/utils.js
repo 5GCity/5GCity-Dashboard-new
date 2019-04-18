@@ -61,3 +61,15 @@ export const getResult = services => {
   })
   return array
 }
+
+export const changeName = (selectService, services) => {
+  const findService = services.find(item => item.id === selectService.id)
+  if (findService) {
+    findService.name = `Copy_${selectService.name}`
+    findService.component.forEach(item => delete(item.id))
+    findService.connectionPoint.forEach(item => delete(item.id))
+    delete(findService.id)
+  }
+  return findService
+}
+

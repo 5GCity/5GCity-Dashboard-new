@@ -10,12 +10,10 @@ export const createFormFunction = (link, key) => {
   const object = {}
   const options = []
   const nodeType = link[key].type
-
-   if (nodeType === 'VNF'){
-    object.type ="VNF"
+   if (nodeType === 'vnf'){
+    object.type = nodeType
     object.name = link[key].extra_info.name.replace('-',' ')
     object.connection_name = link[`connection_name_${key}`] || null
-
     link[key].connection_point.forEach(point => {
     let select = false
       if (link.connection_point_select === point.name || point.isUsed  ) {
@@ -32,30 +30,32 @@ export const createFormFunction = (link, key) => {
       })
     })
     object.options = options
-  } else if(nodeType === 'start') {
-    object.type ="BRIDGE"
+  } else if(nodeType === 'bridge') {
+    object.type = nodeType
     object.name = 'Bridge'
     object.connection_name = link[`connection_name_${key}`] || null
     object.options = null
 
-  } else if(nodeType === 'stop'){
-    object.type ="EXTERNAL"
+  } else if(nodeType === 'external'){
+    object.type = nodeType
     object.name = 'External'
     object.connection_name = link[`connection_name_${key}`] || null
     object.required_ports = link.required_ports
     object.options = null
+  } else if (nodeType === 'vs' && key === 'target') {
+    object.type = 'vs'
+    object.name = 'Virtual Switch'
   }
 
   return object
 }
 
-export const createLink = (selectLink, d3Data, newData) => {
+export const changeLinkProperties = (selectLink, d3Data, newData) => {
   const {nodes, links } = d3Data
   const findLink = links.find(link => link === selectLink)
-
   if(findLink) {
     const connection_point_source = findLink.connection_point_source_selected
-    const connection_point_target = findLink.connection_point_source_selected
+    const connection_point_target = findLink.connection_point_target_selected
     removeLastConnectionsPoints(connection_point_source, connection_point_target, nodes)
     findLink.confirm = true
     findLink.connection_name_source = newData.name_connection_source
@@ -63,10 +63,21 @@ export const createLink = (selectLink, d3Data, newData) => {
     findLink.connection_point_source_selected = newData.options_select_source
     findLink.connection_point_target_selected = newData.options_select_target
     findLink.link_name = newData.link_name
-    findLink.required_ports = newData.required_ports
-    addNewConnectionsPoints(newData.options_select_source, newData.options_select_target, nodes)
+    if (findLink.virtual_switch) {
+      const allLinks = filter(links, link => link.link_name === findLink.link_name)
+      const findNode = nodes.find(node => node.virtual_switch_name === findLink.link_name)
+      allLinks.forEach( link => link.link_name = newData.link_name )
+      if(findNode) {
+        findNode.virtual_switch_name = newData.link_name
+      } else {
+        findLink.target.virtual_switch_name = newData.link_name
+        const node = nodes.find(node => node.id  === findLink.target.id)
+        node.virtual_switch_name = newData.link_name
+      }
     }
-
+    findLink.required_ports = newData.required_ports
+    addNewConnectionsPoints(newData.options_select_source, newData.options_select_target, nodes, findLink.id)
+    }
   return {nodes: nodes, links: links}
 }
 
@@ -76,15 +87,17 @@ const removeLastConnectionsPoints = (source, target, nodes) => {
     const connectionPoints = filter(node.connection_point, connect => connect.requiredPort === source || connect.requiredPort === target)
     connectionPoints.forEach(connection => {
       connection.isUsed = false
+      connection.link_id = null
     })
   })
 }
 
-const addNewConnectionsPoints = (source, target, nodes) => {
+const addNewConnectionsPoints = (source, target, nodes, linkId) => {
   nodes.forEach(node => {
     const connectionPoints = filter(node.connection_point, connect => connect.requiredPort === source || connect.requiredPort === target)
     connectionPoints.forEach(connection => {
       connection.isUsed = true
+      connection.link_id = linkId
     })
   })
 }

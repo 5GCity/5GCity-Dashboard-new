@@ -41,13 +41,13 @@ test('app props correct', () => {
 })
 
 // Actions
-test('setUserName action', () => {
+/* test('setUserName action', () => {
   const { setUserName } = logic.actions
   expect(typeof setUserName).toBe('function')
   expect(setUserName.toString()).toBe('set user name (app)')
   expect(setUserName({ name: 'UbiwhereUser' }))
     .toEqual({ payload: { userName: { name: 'UbiwhereUser' } }, type: setUserName.toString() })
-})
+}) */
 
 /* // Reducers
 test('user reducer', () => {

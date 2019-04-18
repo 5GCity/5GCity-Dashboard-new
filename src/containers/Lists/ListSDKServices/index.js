@@ -14,9 +14,109 @@ import { withRouter } from 'react-router-dom'
 import List from 'components/List'
 import Button from 'components/Button'
 import { DeleteIcon } from 'components/Icons'
+import Modal from 'components/Modal'
 
+const ListSDKService = props => (
+  <List>
+    <List.Header>
+      {Titles && Titles.map(title => <List.Column size={title.size} key={title.id}>
+        {title.name}
+      </List.Column>)}
+      <List.Column marginLeft />
+    </List.Header>
+    {props.services && props.services.map((service, i) => <List.Row key={i}>
+      {Titles && Titles.map(({
+        size,
+        propItem,
+        render
+      }) => {
+        return [render && service && <List.Column key={i} size={size}>
+          {render(service[propItem])}
+        </List.Column>, !render && service && <List.Column key={i} size={size}>
+          {service[propItem]}
+        </List.Column>];
+      })}
+      <ColumnBottons>
+        <ContainerButtons>
+          <Button
+            type={'secondary'}
+            //svg={<DeleteIcon />}
+            onClick={() => props.selectService(service, 'clone')}
+            text={'Clone'}
+          />
+          <Button
+            type={'secondary'}
+            svg={<DeleteIcon />}
+            onClick={() => props.selectService(service, 'delete')}
+            text={'Delete'}
+          />
+          <Button
+            type={'primary'}
+            icon={'view'}
+            onClick={() => props.navigate(`/sdk/composer/${service.id}`)}
+            text={'Edit'}
+          />
+        </ContainerButtons>
+      </ColumnBottons>
+    </List.Row>)}
+  </List>
+)
 
+const ModalSDKServiceDelete = props => (
+  <Modal
+    size={'tiny'}
+    showClose={true}
+    onCancel={() => props.actionModal()}
+    title={'Delete'}
+    visible={props.modalVisibled}
+  >
+    <Modal.Body>
+      {props.service && <Title>Are you sure you want to delete service {props.service.name} ?</Title>}
+    </Modal.Body>
+    <Modal.Footer>
+      <Button
+        text={'Yes'}
+        icon={'check'}
+        type={'primary'}
+        onClick={() => props.deleteService(props.service.id)}
+      />
+      <Button
+        text={'No'}
+        icon={'close'}
+        type={'secondary'}
+        onClick={() => props.actionModal()}
+      />
+    </Modal.Footer>
+  </Modal>
+)
 
+const ModalSDKServiceClone = props => (
+  <Modal
+    size={'tiny'}
+    showClose={true}
+    onCancel={() => props.actionModal()}
+    title={'Clone'}
+    visible={props.modalVisibled}
+  >
+    <Modal.Body>
+      {props.service && <Title>Are you sure you want to clone service {props.service.name} ?</Title>}
+    </Modal.Body>
+    <Modal.Footer>
+      <Button
+        text={'Yes'}
+        icon={'check'}
+        type={'primary'}
+        onClick={() => props.cloneService(props.service)}
+      />
+      <Button
+        text={'No'}
+        icon={'close'}
+        type={'secondary'}
+        onClick={() => props.actionModal()}
+      />
+    </Modal.Footer>
+  </Modal>
+)
 
 class ListSDKServices extends Component {
 
@@ -25,55 +125,44 @@ class ListSDKServices extends Component {
     history.push(path)
   }
 
-  render () {
-    const { services } = this.props
-    const { deleteService, cloneService } = this.props
+  render() {
+    const {
+      serviceList,
+      modalVisibledDelete,
+      modalVisibledClone,
+      service,
+    } = this.props
+
+    const {
+      deleteService,
+      cloneService,
+      actionModalDelete,
+      actionModalClone,
+      selectService,
+    } = this.actions
+
     return (
-      <List>
-      <List.Header>
-        {Titles && Titles.map(title =>
-        <List.Column size={title.size} key={title.id}>
-          {title.name}
-        </List.Column>)}
-        <List.Column marginLeft />
-      </List.Header>
-      {services && services.map((service, i) =>
-      <List.Row key={i}>
-        {Titles && Titles.map(({
-          size,
-          propItem,
-          render
-        }) => {
-          return [render && service &&
-          <List.Column key={i} size={size}>
-            {render(service[propItem])}
-          </List.Column>, !render && service &&
-          <List.Column key={i} size={size}>
-            {service[propItem]}
-          </List.Column>];
-        })}
-        <ColumnBottons>
-          <ContainerButtons>
-            <Button
-              type={'secondary'}
-              //svg={<DeleteIcon />}
-              onClick={() => cloneService(service)} text={'Clone'}
-            />
-            <Button
-              type={'secondary'}
-              svg={<DeleteIcon />}
-              onClick={() => deleteService(service)} text={'Delete'}
-            />
-            <Button
-              type={'primary'}
-              icon={'view'}
-              onClick={() => this.navigate(`/sdk/composer/${service.id}`)}
-              text={'Edit'}
-            />
-          </ContainerButtons>
-        </ColumnBottons>
-      </List.Row>)}
-      </List>
+      <React.Fragment>
+        <ModalSDKServiceDelete
+          modalVisibled={modalVisibledDelete}
+          deleteService={deleteService}
+          actionModal={actionModalDelete}
+          service={service}
+        />
+        <ModalSDKServiceClone
+          modalVisibled={modalVisibledClone}
+          selectService={selectService}
+          actionModal={actionModalClone}
+          service={service}
+          cloneService={cloneService}
+        />
+        <ListSDKService
+          navigate={this.navigate}
+          services={serviceList}
+          selectService={selectService}
+          cloneService={cloneService}
+        />
+      </React.Fragment>
     )
   }
 }
@@ -87,4 +176,10 @@ const ContainerButtons = styled.div`
 
 const ColumnBottons = styled.div`
   width: 100%;
+`
+const Title = styled.h5`
+  text-align: center;
+  color: #EFF2F7;
+  font-size: 16px;
+  font-family: ${({ theme }) => theme.fontFamily};
 `

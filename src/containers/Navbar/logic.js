@@ -38,12 +38,12 @@ export default kea({
   selectors: ({ selectors }) => ({
     userName: [
       () => [selectors.keycloak],
-      (keycloak) =>{ return keycloak.tokenParsed.name },
+      (keycloak) => keycloak.tokenParsed.name || null,
       PropTypes.string
     ],
     userRole: [
       () => [selectors.keycloak],
-      (keycloak) =>{ return giveUserRole(keycloak.tokenParsed.realm_access) },
+      (keycloak) => giveUserRole(keycloak.tokenParsed.realm_access),
       PropTypes.any
     ],
   }),

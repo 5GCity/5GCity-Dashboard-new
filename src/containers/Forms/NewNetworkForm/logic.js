@@ -17,7 +17,7 @@ import ListNewNetworksLogic from 'containers/Lists/ListNewNetworks/logic'
 import ListSlicesLogic from 'containers/Lists/ListSlices/logic'
 
 
-const defaults = {
+const DEFAULT_FORM = {
   nameInstance: null,
   description: null,
   ports: [],
@@ -65,7 +65,7 @@ export default kea({
   }),
 
   reducers: ({ actions }) => ({
-    values:[defaults, PropTypes.shape(propTypes),{
+    values:[DEFAULT_FORM, PropTypes.shape(propTypes),{
       [actions.setValue]: (state, payload) => {
         return Object.assign({}, state, { [payload.key]: payload.value })
       },
@@ -81,7 +81,7 @@ export default kea({
       [actions.removePort]: (state, payload) => {
         return Object.assign({}, state, state.ports.splice(payload.index, 1))
       },
-      [actions.submitSuccess]: () => defaults,
+      [actions.submitSuccess]: () => DEFAULT_FORM,
     }],
 
     showErrors: [false, PropTypes.bool, {

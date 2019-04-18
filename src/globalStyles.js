@@ -6,9 +6,11 @@ export const Theme = {
   headerBackground: '#eef1f6',
   primaryColor: '#8CC14E',
   secondaryColor: '#89979F',
+  dangerColor:'#DD6C6C',
   fontFamily: 'Open Sans, sans-serif',
   fontDin: 'd-din, sans-serif',
-  fontDinCondensed: 'd-din-condensed ,sans-serif'
+  fontDinCondensed: 'd-din-condensed ,sans-serif',
+  fontDinExp: 'd-din-exp ,sans-serif',
 }
 
 // Global styles

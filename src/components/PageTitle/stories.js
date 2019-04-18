@@ -6,16 +6,8 @@
  */
 import React from 'react'
 import { storiesOf } from '@storybook/react'
-import { Theme } from 'globalStyles'
-
 
 import PageTitle from './index'
-
-const bStyle = {
-  padding:30,
-  backgroundColor: Theme.bodyBackground,
-  height:'100%'
-};
 
 const State1 = () => (
   <div style={bStyle}>

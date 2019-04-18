@@ -1,17 +1,17 @@
 // Checks the validation of the whole form
-export const checkValidation = (form: {}, validations: {}): ValidatedForm => {
-  let clone: {} = { ...form }
-  let invalid: boolean = false
+export const checkValidation = (form, validations) => {
+  let clone = { ...form }
+  let invalid = false
 
   for (const key in clone) {
     if (clone.hasOwnProperty(key)) {
-      const element: any = clone[key]
-      const validationList: Array<Function> = validations[key]
+      const element = clone[key]
+      const validationList = validations[key]
       element.valid = true
 
       if (validationList && validationList.length) {
-        for (let index: number = 0; index < validationList.length; index++) {
-          const check: Function = validationList[index]
+        for (let index = 0; index < validationList.length; index++) {
+          const check = validationList[index]
           const response = check(element.value, form)
 
           if (response.result === 'end') {
@@ -37,22 +37,22 @@ export const checkValidation = (form: {}, validations: {}): ValidatedForm => {
 }
 
 // Checks the validation of a field
-export const setAndCheckValidation = (state: {}, payload: ChangedValue, validations: {}): FormState => {
-  let newStateChanges: {} = {}
+export const setAndCheckValidation = (state, payload, validations) => {
+  let newStateChanges = {}
 
   Object.keys(payload.field).forEach((fieldName) => {
-    const field: any = payload.field[fieldName]
-    const validationList: Array<Function> = validations[fieldName]
+    const field = payload.field[fieldName]
+    const validationList = validations[fieldName]
 
-    let settedField: ChangedValueValidated = {
+    let settedField = {
       value: field,
       valid: true
     }
 
     if (validationList) {
       for (var index = 0; index < validationList.length; index++) {
-        const check: Function = validationList[index]
-        const response: ValidationResult = check(field, state)
+        const check = validationList[index]
+        const response = check(field, state)
 
         if (response.result === 'end') {
           break
@@ -73,8 +73,8 @@ export const setAndCheckValidation = (state: {}, payload: ChangedValue, validati
 }
 
 // Validates and email
-export const Email = (value: string, state: {}): ValidationResult => {
-  const message: string = `O email não está no formato correcto`
+export const Email = (value, state) => {
+  const message = `O email não está no formato correcto`
   const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
   if (!regex.test(value)) {
     return { result: false, message }
@@ -84,8 +84,8 @@ export const Email = (value: string, state: {}): ValidationResult => {
 }
 
 // Validates if a field is set
-export const isRequired = (value: any, state: {}): ValidationResult => {
-  const message: string = `Campo de preenchimento obrigatório`
+export const isRequired = (value, state) => {
+  const message = `Campo de preenchimento obrigatório`
 
   if (!value) {
     return { result: false, message }
@@ -95,7 +95,7 @@ export const isRequired = (value: any, state: {}): ValidationResult => {
 }
 
 // Used to validate unrequired fields
-export const hasValue = (value: any, state: {}): ValidationResult => {
+export const hasValue = (value, state) => {
   if (!value) {
     return { result: 'end' }
   }
@@ -104,8 +104,8 @@ export const hasValue = (value: any, state: {}): ValidationResult => {
 }
 
 // Validates if its a valid postal code
-export const isValidPostalCode = (value: any, state: {}): ValidationResult => {
-  const message: string = `O código postal não está no formato correto`
+export const isValidPostalCode = (value, state) => {
+  const message = `O código postal não está no formato correto`
   const regex = /^\d{4}-\d{3}$/
   if (!regex.test(value)) {
     return { result: false, message }
@@ -114,8 +114,8 @@ export const isValidPostalCode = (value: any, state: {}): ValidationResult => {
   return { result: true }
 }
 
-export const isValidPhoneNumber = (value: any, state: {}): ValidationResult => {
-  const message: string = `Número está incorreto`
+export const isValidPhoneNumber = (value, state) => {
+  const message = `Número está incorreto`
   const regex = /^\d{9}$/
   if (!regex.test(value)) {
     return { result: false, message }
@@ -124,8 +124,8 @@ export const isValidPhoneNumber = (value: any, state: {}): ValidationResult => {
   return { result: true }
 }
 
-export const isValidWebsite = (value: any, state: {}): ValidationResult => {
-  const message: string = `Website invalido`
+export const isValidWebsite = (value, state) => {
+  const message = `Website invalido`
   const regex = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+$/
   if (!regex.test(value)) {
     return { result: false, message }

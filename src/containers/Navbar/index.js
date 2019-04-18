@@ -13,7 +13,7 @@ import { withRouter } from 'react-router-dom'
 import Brand from 'components/Brand'
 // import { MapIcon } from 'components/Icons'
 import Modal from 'components/Modal'
-import Button from 'components/Button';
+import Button from 'components/Button'
 
 
 const LINKS = [

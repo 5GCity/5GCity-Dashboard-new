@@ -21,7 +21,7 @@ test('starts from a clear state', () => {
 })
 
 test('app props correct', () => {
-  expect(logic.path).toEqual(['scenes', 'containers', 'ModalNewNetwork'])
+  expect(logic.path).toEqual(['scenes', 'containers', 'NewNetworkForm'])
 })
 
 // Write more tests here

@@ -8,38 +8,22 @@ import React from 'react'
 import styled from 'styled-components'
 
 /* Components */
-import Switch from 'components/Switch'
-import Select from 'components/Select'
-import { Button } from 'element-react'
 import { BackIcon } from 'components/Icons'
 
-export default ({ children, type, buttonBack, name, leftContent, navigateBack, ...props }) => (
-  <Wrapper type={type}>
-    <RightContainer>
+
+export const HeaderNav = ({ children, buttonBack, leftContent, navigateBack, ...props }) => (
+  <Wrapper {...props}>
+    <Right>
       {buttonBack &&
         <ButtonIcon onClick={() => navigateBack()}><BackIcon /></ButtonIcon>
       }
-      {name &&
-        <Title>{name}</Title>
+      {props.name &&
+        <Title>{props.name}</Title>
       }
-    </RightContainer>
-    <LeftContainer>
-      {leftContent && leftContent.map((el) =>
-        <React.Fragment key={el.id}>
-          {el.type === 'switch' && <Switch title={el.name} name={el.name} onText="" offText="" onColor="#8CC14E" offColor="#89979F"/>}
-        </React.Fragment>
-      )}
-      {leftContent && leftContent.map((el) =>
-        <React.Fragment key={el.id}>
-          {el.type === 'select' && <Select placeholder={el.placeholder} title={el.name} type={el.style} options={el.options} headerNav /> }
-        </React.Fragment>
-      )}
-      {leftContent && leftContent.map((el) =>
-        <React.Fragment key={el.id}>
-          {el.type === 'shopCart' && <ButtonShop onClick={props.clickFunction} icon={'check'} /> }
-        </React.Fragment>
-      )}
-    </LeftContainer>
+    </Right>
+    <Left>
+      {children && children.props.children}
+    </Left>
   </Wrapper>
 )
 
@@ -57,11 +41,11 @@ const Wrapper = styled.div`
     box-shadow: inset 0 1px 0 0 rgba(137,151,159,0.2), inset 0 -1px 0 0 rgba(137,151,159,0.2), 0 -5px 20px 0 rgba(0,0,0,0.5);
   `}
 `
-const RightContainer = styled.div`
+const Right = styled.div`
   display: flex;
   align-items: center;
 `
-const LeftContainer = styled.div`
+const Left = styled.div`
   margin-right: 24px;
   display: flex;
   align-items: center;
@@ -72,12 +56,6 @@ const ButtonIcon = styled.i`
   cursor: pointer;
 `
 
-const ButtonShop = styled(Button)`
-  border: 0px;
-  background: transparent;
-  color: white;
-`
-
 const Title = styled.p`
   margin-left: 32px;
   font-family: ${({ theme }) => theme.fontDin};
@@ -85,3 +63,7 @@ const Title = styled.p`
   font-size: 20px;
   line-height: 22px;
 `
+HeaderNav.Right = Right
+HeaderNav.Left = Left
+
+export default HeaderNav

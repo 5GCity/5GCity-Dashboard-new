@@ -2,7 +2,7 @@
  * Monitor Container
  * Please write a description
  *
- * @author Your Name <youremail@ubiwhere.com>
+ * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
 import React, { Component } from 'react'
 import Logic from './logic'

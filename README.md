@@ -37,7 +37,7 @@ Please install [Docker](https://docs.docker.com/install/) according to the desir
 
 Build Docker command:
 ```
-docker build --rm -t 5gcity:latest . --build-arg API_BASE_URL=http://206.189.7.202:8000 --build-arg AUTH_SERVER_URL=http://206.189.7.202:7070/auth --build-arg API_BASE_SDK=http://10.10.7.51:8081
+docker build --rm -t 5gcity:latest . --build-arg API_BASE_URL=https://5gcity-dashboard.i2cat.net/gw --build-arg AUTH_SERVER_URL=https://5gcity-dashboard.i2cat.net/auth --build-arg API_BASE_SDK=http://10.10.7.51:8081
 ```
 When on your console show `Successfully built xxxxxxxxxx` run command:
 
@@ -58,7 +58,7 @@ To change **Gravitee** or **Keycloak** need to pass `--build-arg` to change **Gr
 ```
 docker build --rm -t 5gcity:latest . --build-arg API_BASE_URL=http://xxx.xxx.x.xxx:8000 --build-arg AUTH_SERVER_URL=http://xxx.xxx.x.xxx:7070/auth --build-arg API_BASE_SDK=http://xx.xx.x.xx:8081
 ```
-**Note if you didn't pass `--build-arg` the default value to Gravitee is http://206.189.7.202:8000 and to Keycloack is http://206.189.7.202:7070/auth to SDK is http://10.10.7.51:8081**
+**Note if you didn't pass `--build-arg` the default value to Gravitee is https://5gcity-dashboard.i2cat.net/gw and to Keycloack is https://5gcity-dashboard.i2cat.net/auth to SDK is http://10.10.7.51:8081**
 
 For more information about Gravitee and Keycloak go to https://github.com/5GCity/5GCity-AAA
 

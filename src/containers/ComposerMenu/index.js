@@ -29,29 +29,29 @@ class ComposerMenu extends Component {
             <WrapperCatalogue title={'General'} name={'default'} key={1}>
               <Catalogue
                 name={'Bridge'}
-                key={'9998'}
-                type={'start'}
+                key={'9997'}
+                type={'bridge'}
                 onClick={(node) => createNode(node)}
               />
               <Catalogue
                 name={'External'}
-                key={'9999'}
-                type={'stop'}
+                key={'9998'}
+                type={'external'}
                 onClick={(node) => createNode(node)}
               />
-{/*               <Catalogue
+              <Catalogue
                 name={'Virtual Switch'}
                 key={'9999'}
-                type={'VS'}
+                type={'vs'}
                 onClick={(node) => createNode(node)}
-              /> */}
+              />
             </WrapperCatalogue>
             <WrapperCatalogue title={'My catalogue'} name={'catalogue'} key={2}>
             {catalogue && catalogue.map((item, i) =>
               <Catalogue
                 key={i}
                 version={item.version}
-                type={'VNF'}
+                type={'vnf'}
                 colortext='#00A294'
                 circlefill='#A8D0CE'
                 name={item.name}

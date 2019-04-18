@@ -6,7 +6,6 @@
  */
 import React from 'react'
 import { storiesOf } from '@storybook/react'
-import { Theme } from 'globalStyles'
 import * as moment from 'moment'
 import styled from 'styled-components'
 
