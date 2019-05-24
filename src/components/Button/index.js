@@ -7,7 +7,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Button } from 'element-react'
-import { darken } from 'polished'
+import { darken, lighten } from 'polished'
 
 export default ({ children, ...props }) => (
   <ButtonStyled {...props}>
@@ -19,6 +19,7 @@ export default ({ children, ...props }) => (
 )
 
 const ButtonStyled = styled(Button)`
+  padding: 4px 12px;
   border-radius: 24px;
   border: transparent;
   line-height: 15px;
@@ -32,13 +33,13 @@ const ButtonStyled = styled(Button)`
     background-color: ${theme.primaryColor};
 
     &:hover {
-      background-color: #628A34;
+      background-color: #628A34 !important;
     }
     &:active {
-       background-color: ${darken(0.1,theme.primaryColor)};
+       background-color: ${darken(0.1, theme.primaryColor)};
     }
     &:focus {
-       background-color: ${darken(0.1,theme.primaryColor)};
+       background-color: ${darken(0.1, theme.primaryColor)};
     }
     &:disabled {
       color: #fff;
@@ -46,7 +47,7 @@ const ButtonStyled = styled(Button)`
     }
   `}
 
-  ${({ type, theme }) => type === 'secondary' &&`
+  ${({ type, theme, outline }) => type === 'secondary' && !outline &&`
     background-color: ${theme.secondaryColor};
     color: #fff;
 
@@ -64,9 +65,79 @@ const ButtonStyled = styled(Button)`
       }
     &:disabled {
         color: #fff;
-        background-color: #89979F;
+        background-color: ${theme.secondaryColor};
       }
   `}
+
+  ${({ type, theme, outline }) => type === 'secondary' && outline &&`
+    background-color: transparent;
+    border: 1px solid ${theme.secondaryColor};
+    color: ${theme.secondaryColor};
+
+    &:hover {
+      color: ${darken(0.1, theme.secondaryColor)};
+      border: 1px solid ${darken(0.1, theme.secondaryColor)};
+    }
+    &:active {
+      color: ${darken(0.1, theme.secondaryColor)};
+      border: 1px solid ${darken(0.1, theme.secondaryColor)};
+      }
+    &:focus {
+      color: ${darken(0.1, theme.secondaryColor)};
+      border: 1px solid ${darken(0.1, theme.secondaryColor)};
+      }
+    &:disabled {
+      background-color: ${lighten(0.1,theme.secondaryColor)};
+    }
+`}
+
+
+${({ type, theme, outline }) => type === 'primary' && outline &&`
+  background-color: transparent;
+  border: 1px solid ${theme.primaryColor};
+  color: ${theme.primaryColor};
+
+  &:hover {
+    background-color: transparent;
+    color: ${darken(0.1, theme.primaryColor)};
+    border: 1px solid ${darken(0.1, theme.primaryColor)};
+  }
+  &:active {
+    background-color: transparent;
+    color: ${darken(0.1, theme.primaryColor)};
+    border: 1px solid ${darken(0.1, theme.primaryColor)};
+    }
+  &:focus {
+    background-color: transparent;
+    color: ${darken(0.1, theme.primaryColor)};
+    border: 1px solid ${darken(0.1, theme.primaryColor)};
+    }
+  &:disabled {
+    background-color: ${lighten(0.1,theme.primaryColor)};
+  }
+`}
+
+${({ type, theme, outline }) => type === 'primary' && !outline &&`
+background-color: ${theme.primaryColor};
+color: #fff;
+
+&:hover {
+  color: #fff;
+  background-color: #525B60;
+}
+&:active {
+  color: #fff;
+  background-color: ${darken(0.1, theme.primaryColor)};
+  }
+&:focus {
+  color: #fff;
+  background-color: ${darken(0.1, theme.primaryColor)};
+  }
+&:disabled {
+    color: #fff;
+    background-color: ${theme.primaryColor};
+  }
+`}
 
   ${({ type, theme }) => type === 'danger' &&`
   background-color: ${theme.dangerColor};
@@ -89,7 +160,12 @@ const ButtonStyled = styled(Button)`
     background-color: #DD6C6C;
   }
 `}
-
+  ${({width}) => width && `
+    min-width: ${width}px;
+  `}
+  ${({height}) => height && `
+    min-height: ${height}px;
+  `}
 
   ${({size}) => size === 'large' && `
      min-width: 125px;
@@ -104,10 +180,11 @@ const ButtonStyled = styled(Button)`
 
 
 const SvgContent = styled.i`
-  display: inline-block;
-  vertical-align: sub;
-  margin-right: 4px;
+  display: inline-flex;
+  vertical-align: middle;
+  margin-right: 8px;
   `
 
 const Text = styled.span`
+  vertical-align: middle;
 `

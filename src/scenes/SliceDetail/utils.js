@@ -12,7 +12,8 @@ const markers = [], networkLocation = [], sdnWifiLocation = []
   }
 
   const computeLocation = resources.chunks.openstackProjects.map((compute) =>
-    compute.compute)
+    compute
+  )
 
   resources.chunks.openstackVlans.forEach((network) => {
     if(network.physicalNetwork) {
@@ -33,7 +34,7 @@ const markers = [], networkLocation = [], sdnWifiLocation = []
 
   const compareComputes = () => {
     computeLocation.forEach((compute) => {
-      const { latitude, longitude } = compute.location
+      const { latitude, longitude } = compute.compute.location
 
       const locationExistsOnMarkers = markers.find((marker) =>
         marker.location.latitude === latitude &&
@@ -42,19 +43,21 @@ const markers = [], networkLocation = [], sdnWifiLocation = []
 
       if (locationExistsOnMarkers) {
         locationExistsOnMarkers.location.resources.computes.push({
-          id: compute.id ,
-          name: compute.name,
+          id: compute.compute.id ,
+          name: compute.compute.name,
+          computeData: {...compute.requirements},
           ischecked:false
         })
       } else {
         markers.push({
           location:{
-            latitude:compute.location.latitude,
-            longitude: compute.location.longitude,
+            latitude:latitude,
+            longitude: longitude,
               resources:{
                 computes:[{
-                  id: compute.id ,
-                  name: compute.name,
+                  id: compute.compute.id ,
+                  name: compute.compute.name,
+                  computeData: {...compute.requirements},
                   ischecked:false
                 }]
               }

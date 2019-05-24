@@ -52,7 +52,7 @@ export default kea({
       [actions.loadingList]: (state, payload) => !state,
       [actions.reset]: () => false
     }],
-    networkId : [null, PropTypes.object,{
+    networkId : [null, PropTypes.any,{
       [actions.deleteNetwork]: (state, payload) => payload.id,
       [actions.reset]: () => null
     }]
@@ -75,7 +75,7 @@ export default kea({
       yield put(loadingList())
       try {
 
-        let responseResult = yield call(axios.get,`${API_BASE_URL}/slicemanagerapi/network_service_instance`)
+        let responseResult = yield call(axios.get,`${API_BASE_URL}/network_service_instance`)
         const { data } = responseResult
 
         yield put(setNetworksServices(data))
@@ -90,7 +90,7 @@ export default kea({
       const networkId = yield this.get('networkId'),
       networkServices = yield this.get('networkServicesInstance'),
       { actionModalDelete, setNetworksServices } = this.actions
-
+      console.log(networkId, networkServices)
       networkServices.splice(networkServices.findIndex((i) => {
         return i.id === networkId;
       }), 1)
@@ -99,7 +99,7 @@ export default kea({
       yield put(actionModalDelete(null))
       try {
         //yield put(loading())
-        yield call(axios.delete,`${API_BASE_URL}/slicemanagerapi/network_service_instance/${networkId}`)
+        yield call(axios.delete,`${API_BASE_URL}/network_service_instance/${networkId}`)
 
       } catch(error){
         console.error(`Error ${error}`)

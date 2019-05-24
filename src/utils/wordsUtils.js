@@ -4,7 +4,7 @@ export default (words) => {
 
    var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
    var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-   Object.assign(text.style, words);
+   Object.assign(text, words);
    svg.appendChild(text);
    document.body.appendChild(svg);
 

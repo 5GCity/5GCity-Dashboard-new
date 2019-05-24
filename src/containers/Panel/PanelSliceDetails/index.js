@@ -32,20 +32,38 @@ class PanelSliceDetails extends Component {
                 key={el.id}>
                   <Name>{el.name}</Name>
                   <Id>{el.id}</Id>
-                  <Id>CPU: 6 cores </Id>
-                  <Id>RAM: 6 GB </Id>
-                  <Id>DISK: 250GB </Id>
+                  <Id>CPU Total: {el.computeData.cpus.total} cores </Id>
+                  <Id>CPU Provisioned: {el.computeData.cpus.provisioned} cores </Id>
+                  <Id>RAM Total: {el.computeData.ram.total} {el.computeData.ram.units} </Id>
+                  <Id>RAM Provisioned: {el.computeData.ram.provisioned} {el.computeData.ram.units} </Id>
+                  <Id>DISK Total: {el.computeData.storage.total} {el.computeData.storage.units} </Id>
+                  <Id>DISK Provisioned: {el.computeData.storage.provisioned} {el.computeData.storage.units} </Id>
               </TypeMarker>
             )}
             {data.networks &&
             <Title>Network</Title>
             }
-            {data.networks && data.networks.map((el, i) =>
+            {data.networks && data.networks.map((network, i) =>
                 <TypeMarker
                   className={ i === data.networks.length -1 && 'noBorder'}
-                  key={el.id}>
-                  <Name>{el.name}</Name>
-                  <Id>{el.id}</Id>
+                  key={network.id}>
+                  <Name>{network.name}</Name>
+                  <Id>{network.id}</Id>
+                  <Id>Bandwith: {network.networkData.quota.bandwidth.total} {network.networkData.quota.bandwidth.units}</Id>
+                  <Id>Bandwith Provisioned: {network.networkData.quota.bandwidth.provisioned} {network.networkData.quota.bandwidth.units}</Id>
+                  <Id>Floating Ip's: {network.networkData.quota.floatingIps.total}</Id>
+                  <Id>Floating Ip's Provisioned: {network.networkData.quota.floatingIps.provisioned}</Id>
+                  {network.networkData.quota.provisionedTags &&
+                    <Id>
+                      Provisioned Tags: {network.networkData.quota.provisionedTags.map((tag, i) =>
+                      <Tag key={i}>
+                        {tag} {i < network.networkData.quota.provisionedTags.length - 1 ? ',' : ''}
+                      </Tag>
+                      )
+                    }
+                    </Id>
+                  }
+                  <Id>Tag Range: {network.networkData.quota.tagRange.init}-{network.networkData.quota.tagRange.end}</Id>
                 </TypeMarker>
             )}
             {data.sdnWifi &&
@@ -57,9 +75,14 @@ class PanelSliceDetails extends Component {
                 key={el.id}>
                 <Name>{el.name}</Name>
                 <Id>{el.id}</Id>
-                <Id>DHCPD: {el.dhcpd}</Id>
-                <Id>DNS: {el.dns}</Id>
-                <Id>Channel: {el.channel}</Id>
+                {el.sdnData && el.sdnData.channels.map((channel,i) =>
+                <Channel key={i}>
+                  <SubTitle>Channel {i+1}</SubTitle>
+                  <Id>Bandwidth: {channel.bandwidth}</Id>
+                  <Id>Number: {channel.number}</Id>
+                  <Id>Tx Power: {channel.txPower}</Id>
+                </Channel>
+                )}
               </TypeMarker>
             )}
           </PanelInfo>
@@ -107,5 +130,16 @@ const Id = styled.p`
 const Container = styled.div`
   overflow-y: auto;
   margin: 0 0 0 20px;
-  max-height: calc(100vh - 200px);
+  height: calc(100% - 90px) !important;
   `
+const Tag = styled.span`
+
+`
+const SubTitle = styled.h6`
+  font-weight: bold;
+  color: #EFF2F7;
+`
+const Channel = styled.div`
+  margin-top: 20px;
+`
+

@@ -45,6 +45,7 @@ export default kea({
     reset: () => ({ }),
     setValue: (key, value) => ({ key, value }),
     setValues: (values) => ({ values }),
+    setSelectSlice: (slice) => ({ slice }),
    }),
 
   reducers: ({ actions }) => ({
@@ -105,14 +106,26 @@ export default kea({
       [actions.setValues]: (state, payload) => {
         return Object.assign({}, state, payload.values)
       },
-      [actions.submitSuccess]: () => FORM_SLICE,
+      [actions.reset]: () => FORM_SLICE,
     }],
     showErrors: [false, PropTypes.bool, {
       [actions.submit]: () => true,
       [actions.submitSuccess]: () => false
     }],
+    selectSlice: [{computes:[], networks:[], sdnWifi:[]}, PropTypes.object, {
+      [actions.setSelectSlice]: (state, payload) => payload.slice,
+    }],
   }),
 
+  selectors: ({ selectors }) => ({
+    locations: [
+      () => [selectors.pinsResources],
+      (pinsResources) => (
+        pinsResources && pinsResources.map(marker => [marker.location.longitude, marker.location.latitude])
+      ),
+      PropTypes.array
+    ],
+  }),
 
   start: function * () {
     const { getListResources } = this.actions
@@ -135,13 +148,28 @@ export default kea({
 
   workers: {
     *selectLocation (action){
-      const { setSelectPin } = this.actions
+      const { setSelectPin, setSelectSlice } = this.actions
       const pinsResources = yield this.get('pinsResources')
       const pinIndex =
         pinsResources.findIndex(
           marker => JSON.stringify(marker) === JSON.stringify(action.payload.resources)
         )
+        const selectPin = pinsResources[pinIndex]
+        const channelsOptions = []
+        let id = 0
+        selectPin.location.resources.sdnWifi &&
+        selectPin.location.resources.sdnWifi.forEach(wifi => {
+          wifi.sdnWifiData.forEach(channel =>
+            channelsOptions.push({
+            id: id++,
+            name: channel.number,
+            value: channel.number
+          })
+        )
+        wifi.channelOptions = channelsOptions
+        })
       yield put(setSelectPin(pinIndex))
+      yield put(setSelectSlice(selectPin.location.resources))
     },
 
     *updateMarker (){
@@ -198,9 +226,9 @@ export default kea({
     *getListResources(){
       const { setListResources } = this.actions
       try{
-        const responseComputes = yield call(axios.get , `${API_BASE_URL}/slicemanagerapi/compute`)
-        const responseNetworks = yield call(axios.get , `${API_BASE_URL}/slicemanagerapi/physical_network`)
-        const responseSdnWifi = yield call(axios.get , `${API_BASE_URL}/slicemanagerapi/sdn_wifi_access_point`)
+        const responseComputes = yield call(axios.get , `${API_BASE_URL}/compute`)
+        const responseNetworks = yield call(axios.get , `${API_BASE_URL}/physical_network`)
+        const responseSdnWifi = yield call(axios.get , `${API_BASE_URL}/sdn_wifi_access_point`)
 
         const listResources = {computes:[], networks:[], sdnWifi:[]}
 
@@ -223,7 +251,7 @@ export default kea({
     *createSlice(){
         const pinsResources = yield this.get('pinsResources'),
           chunk_ids = [], vlans_ids = [],
-        { modalStatus, loading, errorfetch, resetSliceName, modalNewSliceStatus, showError } = this.actions
+        { modalStatus, loading, errorfetch, reset, modalNewSliceStatus, showError } = this.actions
         /*
          * 1º Create OpenStack
          * 2º Create Vlan
@@ -231,7 +259,7 @@ export default kea({
          * 4º Create Chunks
          */
         yield put(showError('Slice needs a compute'))
-        const sliceName = yield this.get('sliceName')
+        const formSlice = yield this.get('formSlice')
         try{
           yield put(loading())
           let createSlice = false
@@ -242,12 +270,25 @@ export default kea({
                   // 1º Open stack
                   let currentDate = new Date()
                   const dataCompute = {
-                    "compute_id": compute.id,
-                    "description": `Test_${currentDate.valueOf()}`,
-                    "name": `Test_${currentDate.valueOf()}`,
-                    "username": `Test_${currentDate.valueOf()}`
+                    compute_id: compute.id,
+                    description: compute.computeDescription,
+                    name: compute.computeName,
+                    username: `Test_${currentDate.valueOf()}`,
+                    requirements: {
+                      cpus: {
+                        "required": compute.cpus
+                      },
+                      ram: {
+                        "required": compute.ram,
+                        "units": "MB"
+                      },
+                      storage: {
+                        "required": compute.storage,
+                        "units": "GB"
+                      }
+                    },
                   }
-                  const response = yield call(axios.post, `${API_BASE_URL}/slicemanagerapi/openstack_project`, dataCompute)
+                  const response = yield call(axios.post, `${API_BASE_URL}/openstack_project`, dataCompute)
                   chunk_ids.push(response.data.id)
                   createSlice =true
                 }
@@ -256,13 +297,27 @@ export default kea({
             if(pin.location.resources.networks){
               for (let network of pin.location.resources.networks) {
                 if(network.ischecked){
+                  console.log(network)
                   // 2º vlans
                   const dataNetwork = {
-                    "cidr": network.cidr,
-                    "openstack_project_id": chunk_ids[0],
-                    "physical_network_id": network.id,
+                    cidr: network.cidr,
+                    int_cidr: network.int_cidr,
+                    openstack_project_id: chunk_ids[0],
+                    physical_network_id: network.id,
+                    name: network.networkName,
+                    requirements: {
+                      bandwidth: {
+                        required: network.bandwidth,
+                        units: 'MB/s'
+                      },
+                      floating_ips: {
+                        required: network.floatingIps
+                      }
+                    },
+                    tag: network.tag,
                   }
-                  const response = yield call(axios.post, `${API_BASE_URL}/slicemanagerapi/openstack_vlan`, dataNetwork)
+                  console.log(dataNetwork)
+                  const response = yield call(axios.post, `${API_BASE_URL}/openstack_vlan`, dataNetwork)
                   chunk_ids.push(response.data.id)
                   vlans_ids.push(response.data.id)
                   createSlice =true
@@ -281,7 +336,7 @@ export default kea({
                     openstack_vlan_id: vlans_ids[0],
                     sdn_wifi_access_point_id: sdnWifi.id,
                   }
-                  const response = yield call(axios.post, `${API_BASE_URL}/slicemanagerapi/virtual_wifi_access_point`, dataSdnWifi)
+                  const response = yield call(axios.post, `${API_BASE_URL}/virtual_wifi_access_point`, dataSdnWifi)
                   chunk_ids.push(response.data.id)
                   createSlice =true
                 }
@@ -291,15 +346,15 @@ export default kea({
         if(createSlice){
         const dataChunk = {
         chunk_ids:chunk_ids,
-        name: sliceName
+        name: formSlice.nameSlice
         }
         // 4º Chunks
-        const responseCreateSlice = yield call(axios.post, `${API_BASE_URL}/slicemanagerapi/slic3`, dataChunk)
+        const responseCreateSlice = yield call(axios.post, `${API_BASE_URL}/slic3`, dataChunk)
 
         if(responseCreateSlice.status===200){
           yield put(loading())
           yield put(modalStatus())
-          yield put(resetSliceName())
+          yield put(reset())
           yield call(this.props.history.push, `/slices`)
         }
       }

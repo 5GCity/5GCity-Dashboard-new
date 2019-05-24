@@ -73,6 +73,10 @@ const SubMenu = styled.ul`
   &:hover {
     border-right: 3px solid ${({ theme }) => theme.primaryColor};
   }
+  ${({disabled}) => disabled && `
+  cursor: not-allowed;
+  color: rgba(255,255,255,0.3);
+`}
 `
 const Link = styled.a`
   display:block;

@@ -27,6 +27,7 @@ export const createAllPins = (resources) =>{
         locationExistsOnMarkers.location.resources.computes.push({
           id: compute.id ,
           name: compute.name,
+          computeData: {...compute.computeData.quota},
           ischecked:false
         })
       } else {
@@ -38,6 +39,7 @@ export const createAllPins = (resources) =>{
                 computes:[{
                   id: compute.id ,
                   name: compute.name,
+                  computeData: {...compute.computeData.quota},
                   ischecked:false
                 }]
               }
@@ -50,7 +52,6 @@ export const createAllPins = (resources) =>{
   const compareNetworks = () => {
     resources.networks.forEach((network) => {
       const { latitude, longitude } = network.location
-
       const locationExistsOnMarkers = markers.find((marker) =>
         marker.location.latitude === latitude &&
         marker.location.longitude === longitude
@@ -63,6 +64,8 @@ export const createAllPins = (resources) =>{
             name: network.name,
             ischecked:false,
             cidr: null,
+            int_cidr:null,
+            networkData: {...network.physicalNetworkData.quota},
           })
         } else {
           locationExistsOnMarkers.location.resources.networks = [{
@@ -70,20 +73,24 @@ export const createAllPins = (resources) =>{
               name: network.name,
               ischecked:false,
               cidr: null,
+              int_cidr:null,
+              networkData: {...network.physicalNetworkData.quota},
         }]
         locationExistsOnMarkers.location.resources.networksCount = 0
       }
       } else {
         markers.push({
           location:{
-            latitude:network.location.latitude,
-            longitude: network.location.longitude,
+            latitude:latitude,
+            longitude: longitude,
               resources:{
                 networks:[{
                   id: network.id ,
                   name: network.name,
                   ischecked:false,
+                  int_cidr:null,
                   cidr: null,
+                  networkData: {...network.physicalNetworkData.quota},
                 }]
               },
           }
@@ -111,6 +118,7 @@ export const createAllPins = (resources) =>{
             dhcpd: null,
             dns: null,
             sdnWifiName: null,
+            sdnWifiData: [...sdnWifi.sdnWifiAccessPointData.channels],
           })
         } else {
           locationExistsOnMarkers.location.resources.sdnWifi = [{
@@ -121,6 +129,7 @@ export const createAllPins = (resources) =>{
               dhcpd: null,
               dns: null,
               sdnWifiName: null,
+              sdnWifiData: [...sdnWifi.sdnWifiAccessPointData.channels],
           }]
           locationExistsOnMarkers.location.resources.sdnWifiCount = 0
       }
@@ -138,6 +147,7 @@ export const createAllPins = (resources) =>{
                   dhcpd: null,
                   dns: null,
                   sdnWifiName: null,
+                  sdnWifiData: [...sdnWifi.sdnWifiAccessPointData.channels],
                 }]
               }
           }

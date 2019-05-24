@@ -10,6 +10,7 @@ import { kea } from 'kea'
 import { put, call } from 'redux-saga/effects'
 import { setAuthorizationInterceptor } from 'interceptors'
 import Keycloak from 'keycloak-js'
+import { giveUserRole } from './utils'
 
 const { localStorage } = window
 
@@ -31,6 +32,19 @@ export default kea({
     keycloak: [null, PropTypes.any,{
       [actions.setKeycloak]: (state, payload) => payload.keycloak
     }]
+  }),
+
+  selectors: ({ selectors }) => ({
+    userName: [
+      () => [selectors.keycloak],
+      (keycloak) =>keycloak && keycloak.tokenParsed.name,
+      PropTypes.string
+    ],
+    userRole: [
+      () => [selectors.keycloak],
+      (keycloak) =>keycloak && giveUserRole(keycloak.tokenParsed.realm_access),
+      PropTypes.any
+    ],
   }),
 
   start: function * () {

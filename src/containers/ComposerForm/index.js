@@ -11,7 +11,7 @@ import styled from 'styled-components'
 /* Components */
 import Step from 'components/Step'
 import Button from 'components/Button'
-
+import { PlayIcon } from 'components/Icons'
 /* Containers */
 import FormBasicSettings from 'containers/Forms/FormBasicSettings'
 
@@ -27,21 +27,21 @@ class ComposerForm extends Component {
 
   render () {
     const { form, isSubmitting } = this.props
-    const { setValue, submit, setValueParameters,addParameter, removeParameter } = this.actions
+    const { submit, setValueParameters,addParameter, removeParameter, change } = this.actions
     return (
       <Wrapper>
         <Step>
           <Wrapper step={1} description={'General info'}>
             <FormBasicSettings
               dataForm={form}
-              setValue={setValue}
+              setValue={change}
               setValueParameters={setValueParameters}
               addParameter={addParameter}
               removeParameter={removeParameter}
             />
             <Button
               type={'primary'}
-              icon={'caret-right'}
+              svg={<PlayIcon />}
               text={'Validate'}
               float={'right'}
               disabled={isSubmitting}

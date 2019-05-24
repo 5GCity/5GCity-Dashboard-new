@@ -37,7 +37,7 @@ Please install [Docker](https://docs.docker.com/install/) according to the desir
 
 Build Docker command:
 ```
-docker build --rm -t 5gcity:latest . --build-arg API_BASE_URL=https://5gcity-dashboard.i2cat.net/gw --build-arg AUTH_SERVER_URL=https://5gcity-dashboard.i2cat.net/auth --build-arg API_BASE_SDK=http://10.10.7.51:8081
+docker build --rm -t 5gcity:latest . --build-arg API_BASE_URL=https://5gcity-dashboard.i2cat.net/gw/slicemanagerapi --build-arg AUTH_SERVER_URL=https://5gcity-dashboard.i2cat.net/auth --build-arg API_BASE_SDK=http://10.10.7.51:8081
 ```
 When on your console show `Successfully built xxxxxxxxxx` run command:
 

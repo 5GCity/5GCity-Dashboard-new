@@ -6,10 +6,10 @@
  */
 import React from 'react'
 import { storiesOf } from '@storybook/react'
-import { DeleteIcon } from 'components/Icons'
+import { DeleteIcon, CirclePlusIcon } from 'components/Icons'
+
 
 import Button from './index'
-
 
 const BtnPrimary = () => (
   <div>
@@ -43,8 +43,28 @@ const BtnDanger = () => (
   <Button type={'danger'}>No</Button>
 )
 
+const BtnOutline = () => (
+  <div>
+  <Button
+    outline={true}
+    type={'secondary'}
+    text={'Close'}
+    icon={'close'}
+  />
+  <Button
+    outline={true}
+    type={'primary'}
+    text={'Add new'}
+    width={236}
+    height={48}
+    svg={<CirclePlusIcon fill={'#8CC14E'} />}
+  />
+</div>
+)
+
 storiesOf('Button', module)
   .add('Primary', BtnPrimary)
   .add('Secondary', BtnSecondary)
   .add('Btn + Icon', BtnIcon)
   .add('Danger', BtnDanger)
+  .add('Outline', BtnOutline)

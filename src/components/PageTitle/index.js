@@ -14,7 +14,7 @@ export default ({ children, ...props }) => (
   <Wrapper {...props}>
     { props.buttonBack &&
     <RightContainer>
-      <ButtonIcon onClick={() => props.buttonBack()}><BackIcon /></ButtonIcon>
+      <BackButton onClick={() => props.buttonBack()} />
       <Title>{props.title}</Title>
     </RightContainer>
     }
@@ -50,7 +50,7 @@ const ButtonPage = styled(Button)`
   height: 32px;
 `
 
-const ButtonIcon = styled.i`
+const BackButton = styled(BackIcon)`
   cursor: pointer;
   margin-right: 36px;
 `

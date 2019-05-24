@@ -15,6 +15,7 @@ import ListSDKServices from 'containers/Lists/ListSDKServices'
 
 /* Components */
 import PageTitle from 'components/PageTitle'
+import { PlusIcon } from 'components/Icons'
 
 class SDKService extends Component {
 
@@ -30,7 +31,7 @@ class SDKService extends Component {
           title={'My Repository - Services'}
           buttonTitle={'Add new service'}
           type={'primary'}
-          icon={'plus'}
+          svg={<PlusIcon />}
           buttonFunction={() => this.navigate('/sdk/composer/0')}
         />
         <NavBar />

@@ -22,6 +22,8 @@ export const MAPBOX_TOKEN = `pk.eyJ1IjoiaHVnb2ZvbnNlY2E0MyIsImEiOiJjam9nMHRhNDEw
 export const MAPBOX_STYLE = `mapbox://styles/mapbox/dark-v9`
 export const SENTRY_URL = `https://1512cd26cf0d48cbb47374af14fb951b@sentry2.ubiwhere.com/87`
 export const MEDIA_BASE_URL = `https://api.development.test`
+export const REQUEST_CAMELIZE = ['create-descriptor']
+
 // Field Constants
 
 // Other Contants

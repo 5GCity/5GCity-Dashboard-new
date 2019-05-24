@@ -7,26 +7,18 @@
 import React, { Component } from 'react'
 import Logic from './logic'
 import styled from 'styled-components'
+import { TITLE_LIST } from './utils'
 
 /* Components */
 import List from 'components/List'
 import Modal from 'components/Modal'
 import Button from 'components/Button'
+import { PlayIcon, CloseIcon, CheckIcon } from 'components/Icons'
 
 /* Containers */
 import NewNetworkForm from 'containers/Forms/NewNetworkForm'
 
-const Titles = [{
-  id: 1,
-  size: 350,
-  name: 'Id',
-  propItem: 'id',
-}, {
-  id: 2,
-  size: 400,
-  name: 'Name',
-  propItem: 'name',
-}]
+
 
 /**
  *  Modal to Show error
@@ -65,15 +57,15 @@ const ModalNewInstance = (props) => (
     <Modal.Footer>
       <Button
         disabled={props.isSubmitting}
-        onClick={props.submit}
+        onClick={() => props.submit()}
         text={'Yes'}
-        icon={'check'}
+        svg={<CheckIcon />}
         type={'primary'}
         loading={props.loading}
       />
       <Button
         text={'No'}
-        icon={'close'}
+        svg={<CloseIcon />}
         type={'secondary'}
         onClick={props.actionModal}
       />
@@ -85,7 +77,7 @@ const ModalNewInstance = (props) => (
 const ListNetworkServices = (props) => (
   <List>
     <List.Header>
-      {Titles.map(title =>
+      {TITLE_LIST.map(title =>
       <List.Column size={title.size} key={title.id}>
         {title.name}
       </List.Column>)}
@@ -93,7 +85,7 @@ const ListNetworkServices = (props) => (
     </List.Header>
     {props.networkServices && props.networkServices.map((networkService, i) =>
     <List.Row key={i}>
-      {Titles && Titles.map(({
+      {TITLE_LIST && TITLE_LIST.map(({
         size,
         propItem,
         render
@@ -112,6 +104,7 @@ const ListNetworkServices = (props) => (
             type={'primary'}
             onClick={() => props.setSelectNetwork(networkService)}
             text={'Instantiate'}
+            svg={<PlayIcon />}
           />
         </ContainerButtons>
       </ColumnBottons>
@@ -124,9 +117,8 @@ class ListNewNetworks extends Component {
 
   render() {
     const {
-      networkServices, modalError, modalVisibled,
-      isSubmitting, submit, loading } = this.props,
-      { actionModalError, actionModal, setSelectNetwork } = this.actions
+      networkServices, modalError, modalVisibled, isSubmitting, loading } = this.props,
+      { actionModalError, actionModal, setSelectNetwork, submit } = this.actions
 
     return (
       <Wrapper>

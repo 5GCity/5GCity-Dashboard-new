@@ -18,7 +18,10 @@ import Select from 'components/Select'; */
 import ListSlices from 'containers/Lists/ListSlices'
 import Navbar from 'containers/Navbar'
 
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom'
+
+/* Components */
+import { PlusIcon } from 'components/Icons'
 
 class Slices extends Component {
 
@@ -35,7 +38,7 @@ class Slices extends Component {
           title={'slices'}
           buttonTitle={'Add new slice'}
           type={'primary'}
-          icon={'plus'}
+          svg={<PlusIcon />}
           buttonFunction={() => this.navigate('/slices/new')}
         />
         <Navbar />

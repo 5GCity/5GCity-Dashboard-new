@@ -12,6 +12,7 @@ import Modal from 'components/Modal'
 import Form from 'components/Form'
 import Input from 'components/Input'
 import Button from 'components/Button'
+import { CheckIcon, CloseIcon } from 'components/Icons'
 
 class ModalServiceParameters extends Component {
   render () {
@@ -28,7 +29,7 @@ class ModalServiceParameters extends Component {
         labelPosition={'top'}
       >
       <Modal.Body>
-      {service.parameter.map((param, index) =>
+      {service && service.parameter.map((param, index) =>
         <Form.Item
           key={index}
           label={param}
@@ -43,13 +44,13 @@ class ModalServiceParameters extends Component {
       <Modal.Footer>
       <Button
           text={'Yes'}
-          icon={'check'}
+          svg={<CheckIcon />}
           type={'primary'}
           onClick={() => submitForm(form)}
         />
         <Button
           text={'No'}
-          icon={'close'}
+          svg={<CloseIcon />}
           type={'secondary'}
           onClick={action}
         />

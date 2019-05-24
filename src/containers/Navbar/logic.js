@@ -2,13 +2,13 @@
  * Navbar Container Logic
  * Please write a description
  *
- * @author Your Name <gpatriarca@ubiwhere.com>
+ * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
 
 import { kea } from 'kea'
-import { put } from 'redux-saga/effects'
+import { put, call } from 'redux-saga/effects'
 import PropTypes from 'prop-types'
-import { giveUserRole } from './utils'
+import { LINKS, ChangeLink } from './utils'
 
 /* Logic */
 import AppLogic from 'containers/App/logic'
@@ -19,7 +19,9 @@ export default kea({
   connect: {
     props: [
       AppLogic, [
-        'keycloak'
+        'keycloak',
+        'userName',
+        'userRole',
       ]
     ]
   },
@@ -27,42 +29,83 @@ export default kea({
   actions: () => ({
     modalChangeStatus:() => ({ }),
     logout: () => ({ }),
+    changeLink: (menu) => ({ menu }),
+    setlinks: (links) => ({ links }),
+    changeLastLink: (path) => ({ path }),
+    getLocation: () => ({}),
+
+    reset: () => ({}),
   }),
 
   reducers: ({ actions }) => ({
     modalStatus: [false, PropTypes.boolean,{
       [actions.modalChangeStatus]: (state, payload) => !state,
-    }]
+      [actions.reset]: () => false,
+    }],
+    allLinks: [LINKS, PropTypes.array,{
+      [actions.setlinks]: (state, payload) => payload.links,
+    }],
   }),
 
   selectors: ({ selectors }) => ({
-    userName: [
-      () => [selectors.keycloak],
-      (keycloak) => keycloak.tokenParsed.name || null,
-      PropTypes.string
+    links: [
+      () => [selectors.allLinks, selectors.userRole],
+      (allLink, userRole) => allLink.filter(link => link.show.find(user => user === userRole)),
+      PropTypes.array
     ],
-    userRole: [
-      () => [selectors.keycloak],
-      (keycloak) => giveUserRole(keycloak.tokenParsed.realm_access),
-      PropTypes.any
-    ],
-  }),
-
-  takeLatest: ({ actions, workers }) => ({
-    [actions.logout]:workers.logout,
   }),
 
   start: function * () {
+    const { getLocation } = this.actions
 
+    yield put(getLocation())
   },
 
+  stop: function * () {
+    const { reset } = this.actions
+
+    yield put(reset())
+  },
+
+  takeLatest: ({ actions, workers }) => ({
+    [actions.logout]:workers.logout,
+    [actions.changeLink]: workers.changeLink,
+    [actions.getLocation]: workers.getLocation,
+  }),
+
   workers: {
+    *getLocation() {
+      const { setlinks }= this.actions
+      const path = this.props.location.pathname
+      const links = yield this.get('links')
+      const menu = links.find(link => link.path === path)
+
+      if(menu){
+        const newLinks = ChangeLink(menu)
+        yield put(setlinks(newLinks))
+        yield call(this.props.history.push, menu.path)
+      }
+    },
+
     * logout(){
       const { modalChangeStatus } = this.actions
       yield put(modalChangeStatus())
       const keycloak = yield this.get('keycloak')
       keycloak.logout()
     },
+
+    * changeLink(action) {
+      const { setlinks }= this.actions
+      const menu = action.payload.menu
+
+      if(menu.path === undefined && menu.children){
+        const newLinks = ChangeLink(menu)
+        yield put(setlinks(newLinks))
+        yield call(this.props.history.push, menu.path)
+      } else if(menu.path && !menu.disabled){
+        yield call(this.props.history.push, menu.path)
+      }
+    }
   }
 })
 

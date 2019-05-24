@@ -26,7 +26,7 @@ const Wrapper = styled.div`
   z-index: 1;
   width: 100%;
   display: ${(props) => props.show ? 'initial' : 'none'};
-	background-color: ${({theme}) => rgba(theme.bodyBackground, 0.7) };
+  background-color: ${({theme, backgroundColor}) => backgroundColor ? backgroundColor : rgba(theme.bodyBackground, 0.7) };
 `
 
 const RightNav = styled.div`
@@ -34,7 +34,7 @@ const RightNav = styled.div`
   flex-direction: column;
   flex: auto;
 	height: 100%;
-	width: 268px;
+  width: 268px;
 	background: ${({theme}) => rgba(theme.bodyBackground, 0.98) };
   position: fixed;
   right: 0px;

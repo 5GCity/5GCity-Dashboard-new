@@ -5,3 +5,14 @@
  * @author Your Name <youremail@ubiwhere.com>
  */
 
+export const TITLE_LIST = [{
+  id: 1,
+  size: 350,
+  name: 'Id',
+  propItem: 'id',
+}, {
+  id: 2,
+  size: 400,
+  name: 'Name',
+  propItem: 'name',
+}]

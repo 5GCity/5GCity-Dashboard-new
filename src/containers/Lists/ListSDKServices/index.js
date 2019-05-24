@@ -13,7 +13,7 @@ import { withRouter } from 'react-router-dom'
 /* Component */
 import List from 'components/List'
 import Button from 'components/Button'
-import { DeleteIcon } from 'components/Icons'
+import { DeleteIcon, EditIcon, CheckIcon, CloseIcon, AddIcon } from 'components/Icons'
 import Modal from 'components/Modal'
 
 const ListSDKService = props => (
@@ -40,7 +40,7 @@ const ListSDKService = props => (
         <ContainerButtons>
           <Button
             type={'secondary'}
-            //svg={<DeleteIcon />}
+            svg={<AddIcon />}
             onClick={() => props.selectService(service, 'clone')}
             text={'Clone'}
           />
@@ -52,7 +52,7 @@ const ListSDKService = props => (
           />
           <Button
             type={'primary'}
-            icon={'view'}
+            svg={<EditIcon />}
             onClick={() => props.navigate(`/sdk/composer/${service.id}`)}
             text={'Edit'}
           />
@@ -76,13 +76,13 @@ const ModalSDKServiceDelete = props => (
     <Modal.Footer>
       <Button
         text={'Yes'}
-        icon={'check'}
+        svg={<CheckIcon />}
         type={'primary'}
         onClick={() => props.deleteService(props.service.id)}
       />
       <Button
         text={'No'}
-        icon={'close'}
+        svg={<CloseIcon />}
         type={'secondary'}
         onClick={() => props.actionModal()}
       />
@@ -104,13 +104,13 @@ const ModalSDKServiceClone = props => (
     <Modal.Footer>
       <Button
         text={'Yes'}
-        icon={'check'}
+        svg={<CheckIcon />}
         type={'primary'}
         onClick={() => props.cloneService(props.service)}
       />
       <Button
         text={'No'}
-        icon={'close'}
+        svg={<CloseIcon />}
         type={'secondary'}
         onClick={() => props.actionModal()}
       />

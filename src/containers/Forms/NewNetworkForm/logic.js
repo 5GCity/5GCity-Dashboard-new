@@ -31,8 +31,6 @@ const propTypes = {
   slice_id: PropTypes.string,
 }
 
-const message = 'This field is required'
-
 export default kea({
   path: () => ['scenes', 'containers', 'NewNetworkForm'],
 
@@ -48,9 +46,7 @@ export default kea({
     actions: [
       ListNewNetworksLogic, [
         'actionModal',
-        'submitSuccess',
-        'submitFailure',
-        'submit'
+        'submit',
       ]
     ]
   },
@@ -86,7 +82,6 @@ export default kea({
 
     showErrors: [false, PropTypes.bool, {
       [actions.submit]: () => true,
-      [actions.submitSuccess]: () => false
     }],
   }),
 
@@ -102,65 +97,38 @@ export default kea({
       },
       PropTypes.array
     ],
-    errors: [
-      () => [selectors.values],
-      (values) => ({
-        nameInstance: !values.nameInstance ? message : null,
-        description: !values.description ? message : null,
-        // ports: !values.message ? message : null,
-        slice_id: !values.slice_id ? message : null
-      }),
-      PropTypes.object
-    ],
-    hasErrors: [
-      () => [selectors.errors],
-      (errors) => Object.values(errors).filter(k => k).length > 0,
-      PropTypes.bool
-    ]
   }),
 
   takeLatest: ({ actions, workers }) => ({
-    [actions.submit]: workers.submitFormWorker,
+    [actions.submit]: workers.submitForm,
     [actions.runInstance]: workers.runInstanceWorker,
   }),
 
   workers: {
-    * submitFormWorker () {
-      const { submitSuccess, submitFailure, actionModal, runInstance } = this.actions
+    * submitForm () {
+      const { actionModal, runInstance } = this.actions
+        console.log('entrou Submit')
 
-      // get the form data...
-      const values = yield this.get('values')
-      console.log('Submitting form with values:', values)
-
-      // simulate a 1sec async request.
-      // yield delay(1000)
-
-      if (true) {
-        // if the request was successful
         yield put(runInstance())
         yield put(actionModal())
-        yield put(submitSuccess())
-      } else {
-        // if the request was Error
-        yield put(submitFailure())
-      }
     },
 
     * runInstanceWorker () {
-      const values = yield this.get('values'),
-      network_id = yield this.get('selectNetwork'),
-      { actionModalError } = this.actions,
+      const values = yield this.get('values')
+      const network = yield this.get('selectNetwork'),
+      { actionModalError } = this.actions
 
-      dataRunInstance ={
+      const dataRunInstance ={
           description: values.description,
           name: values.nameInstance,
-          network_service_id: network_id,
+          network_service_id: network.id,
           ports: values.ports,
-          slic3_id: values.slice_id
+          slic3_id: values.slice_id,
+          floating_ip_required: true,
         }
-
+        console.log(this.props)
       try {
-        yield call(axios.post,`${API_BASE_URL}/slicemanagerapi/network_service_instance`, dataRunInstance)
+        yield call(axios.post,`${API_BASE_URL}/network_service_instance`, dataRunInstance)
         yield call(this.props.history.push, `/network`)
       } catch(error){
         console.error(`Error ${error}`)

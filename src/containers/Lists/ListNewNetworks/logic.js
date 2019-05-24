@@ -23,14 +23,12 @@ export default kea({
     actionModalError: () => ({ }),
     loading: () => ({ }),
 
-    submit: true,
-    submitSuccess: true,
-    submitFailure: true,
+    submit: () => ({}),
   }),
 
   reducers: ({ actions }) => ({
     loading: [false, PropTypes.bool, {
-      [actions.loading]: (state, payload) => !state
+      [actions.loading]: (state, payload) => !state,
     }],
     modalVisibled: [false, PropTypes.bool,{
       [actions.actionModal]: (state, payload) => !state,
@@ -40,16 +38,11 @@ export default kea({
       [actions.actionModalError]: (state, payload) => !state,
     }],
     selectNetwork: [null, PropTypes.string,{
-      [actions.setSelectNetwork]: (state, payload) => payload.network
+      [actions.setSelectNetwork]: (state, payload) => payload.network,
     }],
     networkServices: [[], PropTypes.array,{
       [actions.fetchNetworksServices]: (state, payload) => null,
       [actions.setNetworksServices]: (state, payload) => payload.networkService
-    }],
-    isSubmitting: [false, PropTypes.bool, {
-      [actions.submit]: () => true,
-      [actions.submitSuccess]: () => false,
-      [actions.submitFailure]: () => false,
     }],
   }),
 
@@ -66,7 +59,7 @@ export default kea({
     * fetchNetworksServicesWorker () {
       const { setNetworksServices } = this.actions
       try {
-        let responseResult = yield call(axios.get,`${API_BASE_URL}/slicemanagerapi/network_service`)
+        let responseResult = yield call(axios.get,`${API_BASE_URL}/network_service`)
         const { data } = responseResult
         yield put(setNetworksServices(data))
 

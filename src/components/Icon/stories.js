@@ -6,27 +6,17 @@
  */
 import React from 'react'
 import { storiesOf } from '@storybook/react'
-import { Theme } from 'globalStyles';
 
 import Icon from './index'
-
-const bStyle = {
-  padding:'30px',
-  backgroundColor: Theme.bodyBackground,
-  height:'100%'
-};
+import { DeleteIcon } from 'components/Icons'
 
 
 const exampleOne = () => (
-  <div style={bStyle}>
-    <Icon icon={'test'}/>
-  </div>
+    <Icon svg={<DeleteIcon />}/>
 )
 
 const exampleTwo = () => (
-  <div style={bStyle}>
     <Icon small icon={'edit'}/>
-  </div>
 )
 
 storiesOf('Icon', module)

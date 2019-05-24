@@ -12,7 +12,7 @@ import { withRouter } from 'react-router'
 /* Component */
 import HeaderNav from 'components/HeaderNav'
 import Tabs  from 'components/Tabs'
-import { BackIcon } from 'components/Icons'
+import { BackIcon, PublishIcon, SaveIcon } from 'components/Icons'
 import Button from 'components/Button'
 
 /* Container */
@@ -20,6 +20,8 @@ import ComposerForm from 'containers/ComposerForm'
 import Composer from 'containers/Composer'
 import ComposerMenu from 'containers/ComposerMenu'
 import ModalServiceParameters from 'containers/Modals/ModalServiceParameters'
+import PanelErrors from 'containers/PanelErrors'
+
 
 class SDKContainer extends Component {
 
@@ -28,9 +30,9 @@ class SDKContainer extends Component {
     history.push('/sdk/services')
   }
 
-  componentDidUpdate() {
-    const { changeId } = this.actions
-    changeId(Number(this.props.match.params.id))
+  componentDidMount() {
+    const { setSerivce } = this.actions
+    setSerivce(Number(this.props.match.params.id))
   }
 
   render () {
@@ -48,6 +50,8 @@ class SDKContainer extends Component {
       isSaved,
       isSaveLoading,
       modalPublishStatus,
+      errorsMessages,
+      panelError,
       activeTab } = this.props
     const {
       modalAction,
@@ -60,9 +64,16 @@ class SDKContainer extends Component {
       configParams,
       publishComposer,
       actionModalPublish,
+      changeStatusPanel,
     } = this.actions
 
     return (
+      <Container>
+      <PanelErrors
+        show={panelError}
+        messages={errorsMessages}
+        close={changeStatusPanel}
+      />
       <Wrapper>
         {modalPublishStatus &&
         <ModalServiceParameters
@@ -82,6 +93,7 @@ class SDKContainer extends Component {
               key={1}
               type={isSaved ? 'primary': 'secondary'}
               text={isSaved ? 'Saved Draft': 'Unsaved Draft'}
+              svg={<SaveIcon />}
               loading={isSaveLoading}
               disabled={isSaved}
               onClick={() => saveComposer()}
@@ -91,7 +103,7 @@ class SDKContainer extends Component {
               type={isPublishStatus}
               text={'Publish'}
               loading={isPublishLoading}
-              icon={'upload'}
+              svg={<PublishIcon />}
               onClick={() => publishComposer()}
             />
           </HeaderNav.Left>
@@ -133,7 +145,8 @@ class SDKContainer extends Component {
             </Tabs.Pane>
           </Tabs>
       </Wrapper>
-    )
+      </Container>
+      )
   }
 }
 
@@ -143,3 +156,4 @@ const Wrapper = styled.div`
   height: calc(100vh - 136px) !important;
   background-color: #324148;
 `
+const Container = styled.section``

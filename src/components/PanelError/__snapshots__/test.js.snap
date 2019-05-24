@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+.c0 {
+  position: absolute;
+  width: 392px;
+  right: 0;
+  z-index: 1;
+  bottom: 0;
+  top: 80px;
+  overflow: scroll;
+  padding-top: 12px;
+  display: none;
+  box-shadow: 5px 5px 20px 0 rgba(0,0,0,0.5);
+}
+
+<div
+  className="c0"
+/>
+`;

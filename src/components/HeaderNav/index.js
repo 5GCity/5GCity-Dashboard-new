@@ -15,7 +15,7 @@ export const HeaderNav = ({ children, buttonBack, leftContent, navigateBack, ...
   <Wrapper {...props}>
     <Right>
       {buttonBack &&
-        <ButtonIcon onClick={() => navigateBack()}><BackIcon /></ButtonIcon>
+        <BackButton onClick={() => navigateBack()} />
       }
       {props.name &&
         <Title>{props.name}</Title>
@@ -51,16 +51,16 @@ const Left = styled.div`
   align-items: center;
 `
 
-const ButtonIcon = styled.i`
-  margin-left: 24px;
+const BackButton = styled(BackIcon)`
+  margin: 32px 24px;
   cursor: pointer;
 `
 
 const Title = styled.p`
-  margin-left: 32px;
   font-family: ${({ theme }) => theme.fontDin};
   color: white;
   font-size: 20px;
+  font-weight: bold;
   line-height: 22px;
 `
 HeaderNav.Right = Right

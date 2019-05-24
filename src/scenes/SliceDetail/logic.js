@@ -39,6 +39,19 @@ export default kea({
     }]
   }),
 
+
+  selectors: ({ selectors }) => ({
+    location: [
+      () => [selectors.slice],
+      (slice) =>  {
+        const array = []
+        slice && slice.markers.length > 0 && array.push([slice.markers[0].location.longitude, slice.markers[0].location.latitude])
+        return array
+      },
+      PropTypes.array
+    ],
+  }),
+
   start: function * () {
     const { fetchSlice } = this.actions
     yield put(fetchSlice())
@@ -62,7 +75,7 @@ export default kea({
       const { setSlice } = this.actions
        try {
         const selectSlice = this.props.match.params.id
-        const responseResult = yield call(axios.get,`${API_BASE_URL}/slicemanagerapi/slic3/${selectSlice}/chunks`)
+        const responseResult = yield call(axios.get,`${API_BASE_URL}/slic3/${selectSlice}/chunks`)
         const { data } = responseResult
 
         yield put(setSlice(data))

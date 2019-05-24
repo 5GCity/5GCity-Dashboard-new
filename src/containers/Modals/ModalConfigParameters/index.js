@@ -6,53 +6,59 @@
  */
 import React, { Component } from 'react'
 import Logic from './logic'
-import styled from 'styled-components'
 
 /* Component */
 import Modal from 'components/Modal'
 import Input from 'components/Input'
 import Button from 'components/Button'
 import Form from 'components/Form'
+import { CheckIcon, CloseIcon } from 'components/Icons'
 
 class ModalConfigParameters extends Component {
   render () {
-    const { visibled, modalAction, title, data, form } = this.props
-    const { setValue, submitForm } = this.actions
+    const { visibled, title, modalNodeConfigData, form } = this.props
+    const { change, submit, configParams } = this.actions
+
     return (
       <Modal
         size={'small'}
         title={title}
         visible={visibled}
-        onCancel={modalAction}
+        onCancel={()=> configParams(null)}
+        closeOnClickModal={false}
       >
         <Form
           labelPosition={'top'}
         >
         <Modal.Body>
-        {data.extra_info.parameter.map((param, index) =>
+
+        {form.mapping_expression && form.mapping_expression.array.map((map, index) =>
           <Form.Item
             key={index}
-            label={param}
+            label={modalNodeConfigData.extra_info.parameter[index]}
+            required={true}
+            status={!map.valid}
           >
             <Input
-              value={form.mapping_expression[index]}
-              onChange ={ value => setValue('mapping_expression', value, index) }
+              value={map.value}
+              onChange ={ value => change('mapping_expression', value, index) }
             />
+            <Form.Error>{map.message}</Form.Error>
           </Form.Item>
         )}
         </Modal.Body>
         <Modal.Footer>
         <Button
             text={'Yes'}
-            icon={'check'}
+            svg={<CheckIcon />}
             type={'primary'}
-            onClick={() => submitForm(form)}
+            onClick={() => submit()}
           />
           <Button
             text={'No'}
-            icon={'close'}
+            svg={<CloseIcon />}
             type={'secondary'}
-            onClick={modalAction}
+            onClick={()=> configParams(null)}
           />
         </Modal.Footer>
         </Form>
@@ -63,6 +69,3 @@ class ModalConfigParameters extends Component {
 
 export default Logic(ModalConfigParameters)
 
-const Wrapper = styled.div`
-
-`

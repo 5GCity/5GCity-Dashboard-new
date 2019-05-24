@@ -67,11 +67,11 @@ export default kea({
       try{
         const serviceId = this.props.service.id
         const parameters = yield this.get('form')
-        const body = {parameter_values: parameters.parameters_values}
+        const body = {parameterValues: parameters.parameters_values}
         let postDescriptor = yield call(axios.post,`${API_BASE_SDK}/sdk/composer/services/${serviceId}/create-descriptor`,body)
         const { status, data } = postDescriptor
         if(status === 200){
-          let responseResult = yield call(axios.post,`${API_BASE_SDK}/sdk/composer/services/${data}/publish`)
+          let responseResult = yield call(axios.post,`${API_BASE_SDK}/sdk/composer/service/${data}/publish`)
           const { status } = responseResult
           if(status === 201) {
             yield call(this.props.action)

@@ -52,9 +52,9 @@ class PanelNewSlice extends Component {
                 <Checkbox key={compute.id} label={compute.name}>
                   <Name>{compute.name}</Name>
                   <Id>{compute.id}</Id>
-                  <Id>CPU: 6 cores </Id>
-                  <Id>RAM: 6 GB </Id>
-                  <Id>DISK: 250GB </Id>
+                  <Id>CPU: {compute.computeData.cpus.total} cores </Id>
+                  <Id>RAM: {compute.computeData.ram.total} {compute.computeData.ram.units} </Id>
+                  <Id>DISK: {compute.computeData.storage.total} {compute.computeData.storage.units} </Id>
                 </Checkbox>
               </Checkbox.Group>
             )

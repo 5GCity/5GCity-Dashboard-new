@@ -17,9 +17,9 @@ import SideBar from './index'
 const LINKS = [
   { id: 1, path: '/infoManagement', name: 'Info Management', icon: null, disabled: false , show: ['Inf. Owner'] ,active: false},
   { id: 2, path: '/slices', name: 'Slices', icon:/*<MapIcon />*/ null, disabled: false , show: ['Inf. Owner','Slice Requester'] ,active: true},
-  { id: 3, path: '/network', name: 'Network Services', icon: null, disabled:true , show: ['Inf. Owner','Slice Requester'] ,active: false},
-  { id: 4, path: '/catalogue', name: 'Catalogue', icon: null, disabled:false , show: ['Inf. Owner','Slice Requester'] ,active: false},
-  { id: 5, path: '/sdk/services', name: 'SDK', icon: null, disabled:false , show: ['Slice Requester'] ,children: [
+  { id: 3, path: '/network', name: 'Network Services', icon: null, disabled: false , show: ['Inf. Owner','Slice Requester'] ,active: false},
+  { id: 4, path: '/catalogue', name: 'Catalogue', icon: null, disabled: false , show: ['Inf. Owner','Slice Requester'] ,active: false},
+  { id: 5, path: '/sdk/services', name: 'SDK', icon: null, disabled: false , show: ['Slice Requester'] ,children: [
     {
     path: '/sdk/services',
     name: 'service'

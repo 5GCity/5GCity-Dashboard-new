@@ -13,6 +13,7 @@ import NavBar from 'containers/Navbar'
 
 /* Components */
 import PageTitle from 'components/PageTitle'
+import { PlusIcon } from 'components/Icons'
 
 /* Container */
 import ListNetworks from 'containers/Lists/ListNetworks'
@@ -31,7 +32,7 @@ class Network extends Component {
           title={'running network services'}
           buttonTitle={'Add new network service'}
           type={'primary'}
-          icon={'plus'}
+          svg={<PlusIcon />}
           buttonFunction={() => this.navigate('/network/new')}
         />
         <NavBar />

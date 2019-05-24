@@ -12,6 +12,7 @@ import Input from 'components/Input'
 import Button from 'components/Button'
 import Collapse from 'components/Collapse'
 import Catalogue from 'components/Catalogue'
+import { PlusIcon } from 'components/Icons'
 
 
 class ComposerMenu extends Component {
@@ -76,7 +77,7 @@ class ComposerMenu extends Component {
           <Button
             type={'secondary'}
             text={'Add from public repository'}
-            icon={'plus'}
+            svg={<PlusIcon />}
             dsiabled={true}
           />
         </WrapperButton>

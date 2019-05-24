@@ -1558,7 +1558,7 @@ class Composer extends Component {
   }
 
   render() {
-    const { modalStatus, modalData, modalAction, modalConfigStatus, modalNodeConfigData, configParams } = this.props
+    const { modalStatus, modalData, modalAction, modalConfigStatus, modalNodeConfigData } = this.props
     return(
       <React.Fragment>
         <D3>
@@ -1580,7 +1580,6 @@ class Composer extends Component {
         <ModalConfigParameters
           visibled={modalConfigStatus}
           title={'Configure Parameters'}
-          modalAction={configParams}
           data={modalNodeConfigData}
         />
         }

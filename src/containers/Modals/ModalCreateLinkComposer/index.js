@@ -7,24 +7,34 @@
 import React, { Component } from 'react'
 import Logic from './logic'
 import styled from 'styled-components'
-import { Layout, Form } from 'element-react'
+import { Layout } from 'element-react'
 
 /* Components */
 import Input from 'components/Input'
 import Select from 'components/Select'
 import Button from 'components/Button'
 import Modal from 'components/Modal'
-
+import Form from 'components/Form'
+import { DeleteIcon, PlusIcon, CheckIcon, CloseIcon } from 'components/Icons'
 class ModalCreateLinkComposer extends Component {
   render () {
-    const { visibled, modalAction, title, newService, form } = this.props
-    const { setValue, createLink, setValuePorts, removePort, addPort } = this.actions
+    const { visibled, title, newService, form } = this.props
+    const { change, setValuePorts, removePort, addPort, submit, modalAction } = this.actions
+    const {
+      name_connection_source,
+      name_connection_target,
+      options_select_source,
+      options_select_target,
+      required_ports,
+      link_name,
+    } = form
     return (
       <Modal
         size={'small'}
         title={title}
         visible={visibled}
-        onCancel={modalAction}
+        onCancel={() => modalAction(null)}
+        closeOnClickModal={false}
       >
         {newService.source && newService.target &&
         <Form
@@ -35,50 +45,63 @@ class ModalCreateLinkComposer extends Component {
             <Layout.Col span="12">
               <Title>{newService.source.name}</Title>
               {newService.source.type !== 'bridge' &&
-                <Form.Item label={'Connection name'}>
+                <Form.Item
+                  label={'Connection name'}
+                  required={true}
+                  status={!name_connection_source.valid}
+                >
                   <Input
-                    value={form.name_connection_source}
-                    onChange={value => setValue('name_connection_source', value)}
+                    value={name_connection_source.value}
+                    onChange={value => change({name_connection_source: value})}
                   />
+                  <Form.Error>{name_connection_source.message}</Form.Error>
                 </Form.Item>
               }
                 {newService.source.options &&
-                <Form.Item label={'Connection Point'}>
+                <Form.Item
+                  label={'Connection Point'}
+                  required={true}
+                  status={!options_select_source.valid}
+                >
                   <Select
-                    selectOption={form.options_select_source || null}
+                    selectOption={options_select_source.value}
                     placeholder={'Select Point'}
                     options={newService.source.options}
-                    onChange={value => setValue('options_select_source', value)}
+                    onChange={value => change({options_select_source: value})}
                   />
+                  <Form.Error>{options_select_source.message}</Form.Error>
                 </Form.Item>
                 }
-                {newService.source.type === 'external' && form.required_ports.map((port, index) =>
+                {newService.source.type === 'external' && required_ports.array.map((port, index) =>
                 <Form.Item
                   key={index}
                   label={`Port ${index + 1}`}
+                  required={true}
+                  status={!port.valid}
                 >
                 <Layout.Row gutter="2">
                 <Layout.Col span="16">
                     <Input
-                      value ={port}
+                      value ={port.value}
                       onChange ={ value => setValuePorts('required_ports', value, index) }
                     />
                 </Layout.Col>
                 <Layout.Col span="8">
                     <Button
                       text={'Remove'}
-                      icon={'delete'}
+                      svg={<DeleteIcon />}
                       type={'danger'}
                       onClick={() => removePort(index)}
                     />
                 </Layout.Col>
                 </Layout.Row>
+                <Form.Error>{required_ports.array[index].message}</Form.Error>
                 </Form.Item>
                 )}
                 {newService.source.type === 'external' &&
                   <Button
                     text={'Add Port'}
-                    icon={'plus'}
+                    svg={<PlusIcon />}
                     type={'primary'}
                     onClick={() => addPort()}
                   />
@@ -87,50 +110,63 @@ class ModalCreateLinkComposer extends Component {
             <Layout.Col span="12">
               <Title>{newService.target.name}</Title>
               {newService.target.type !== 'vs' && newService.target.type !== 'bridge'  &&
-                <Form.Item label={'Connection name'}>
+                <Form.Item
+                  label={'Connection name'}
+                  required={true}
+                  status={!name_connection_target.valid}
+                >
                   <Input
-                    value={form.name_connection_target}
-                    onChange={value => setValue('name_connection_target', value)}
+                    value={name_connection_target.value}
+                    onChange={value => change({name_connection_target: value})}
                   />
+                  <Form.Error>{name_connection_target.message}</Form.Error>
                 </Form.Item>
               }
                 {newService.target.options &&
-                <Form.Item label={'Connection Point'}>
+                <Form.Item
+                  label={'Connection Point'}
+                  required={true}
+                  status={!options_select_target.valid}
+                >
                   <Select
-                    selectOption={form.options_select_target || null}
+                    selectOption={options_select_target.value}
                     placeholder={'Select Point'}
                     options={newService.target.options}
-                    onChange={value => setValue('options_select_target', value)}
+                    onChange={value => change({options_select_target: value})}
                   />
+                  <Form.Error>{options_select_target.message}</Form.Error>
                 </Form.Item>
                 }
-                {newService.target.type === 'external' && form.required_ports.map((port, index) =>
+                {newService.target.type === 'external' && required_ports.array.map((port, index) =>
                  <Form.Item
                   key={`${index}`}
                   label={`Port ${index + 1}`}
+                  required={true}
+                  status={!port.valid}
                 >
                 <Layout.Row gutter="2">
                 <Layout.Col span="16">
                     <Input
-                      value={port}
+                      value={port.value}
                       onChange={ value => setValuePorts('required_ports', value, index) }
                     />
                   </Layout.Col>
                   <Layout.Col span="8">
                     <Button
                       text={'Remove'}
-                      icon={'delete'}
+                      svg={<DeleteIcon />}
                       type={'danger'}
                       onClick={() => removePort(index)}
                     />
                   </Layout.Col>
                   </Layout.Row>
+                  <Form.Error>{port.message}</Form.Error>
                 </Form.Item>
                 )}
                 {newService.target.type === 'external' &&
                   <Button
                     text={'Add Port'}
-                    icon={'plus'}
+                    svg={<PlusIcon />}
                     type={'primary'}
                     onClick={() => addPort()}
                   />
@@ -139,11 +175,16 @@ class ModalCreateLinkComposer extends Component {
           </Layout.Row>
           <Layout.Row gutter="20">
             <Layout.Col span="24">
-              <Form.Item label={'Link Name'}>
+              <Form.Item
+                label={'Link Name'}
+                required={true}
+                status={!link_name.valid}
+              >
                   <Input
-                    value={form.link_name}
-                    onChange={value => setValue('link_name', value)}
+                    value={link_name.value}
+                    onChange={value => change({link_name: value})}
                   />
+                  <Form.Error>{link_name.message}</Form.Error>
               </Form.Item>
             </Layout.Col>
           </Layout.Row>
@@ -153,15 +194,15 @@ class ModalCreateLinkComposer extends Component {
        <Modal.Footer>
         <Button
             text={'Yes'}
-            icon={'check'}
+            svg={<CheckIcon />}
             type={'primary'}
-            onClick={() => createLink(form)}
+            onClick={() => submit()}
           />
           <Button
             text={'No'}
-            icon={'close'}
+            svg={<CloseIcon />}
             type={'secondary'}
-            onClick={modalAction}
+            onClick={() => modalAction(null)}
           />
         </Modal.Footer>
       </Modal>

@@ -7,30 +7,55 @@
 
 import { kea } from 'kea'
 import { put } from 'redux-saga/effects'
-import { createFormFunction, changeLinkProperties } from './utils'
+import { createFormFunction, changeLinkProperties, createForm } from './utils'
 
 import PropTypes from 'prop-types'
-//import * as Check from 'validations'
+import * as Check from 'validations'
 
 /* Logic */
 import ComposerMainLogic from 'containers/SDKContainer/logic'
 
-const DEFAULT_FORM = {
-  link_name: null,
-  name_connection_source:null,
-  options_select_source: null,
-  name_connection_target:null,
-  options_select_target: null,
-  required_ports: [],
+export const DEFAULT_FORM = {
+  link_name: {
+    value: null,
+  },
+  name_connection_source: {
+    value: null
+  },
+  options_select_source:{
+    value: null
+  },
+  name_connection_target:{
+    value: null
+  },
+  options_select_target:{
+    value: null
+  },
+  required_ports:{
+    array: []
+  },
 }
 
-const propTypes = {
-  link_name: PropTypes.string,
-  name_connection_source: PropTypes.string,
-  name_connection_target: PropTypes.string,
-  options_select_source: PropTypes.any,
-  options_select_target: PropTypes.any,
-  required_ports: PropTypes.any,
+const VALIDATIONS = {
+  link_name: [
+    Check.isRequired,
+  ],
+  name_connection_source: [
+    Check.isRequired,
+  ],
+  options_select_source: [
+    Check.isRequired,
+  ],
+  name_connection_target: [
+    Check.isRequired,
+  ],
+  options_select_target: [
+    Check.isRequired,
+  ],
+  required_ports: [
+    Check.isRequired,
+    Check.isNumber,
+  ],
 }
 
 export default kea({
@@ -42,6 +67,7 @@ export default kea({
         'createLink',
         'setData',
         'modalAction',
+        'changeSaveStatus',
       ]
     ],
     props: [
@@ -53,40 +79,45 @@ export default kea({
   },
 
   actions: () => ({
-    setValue: (key, value) => ({ key, value }),
-    setValues: (values) => ({ values }),
+    change: (field) => ({ field }),
     setValuePorts: (key, value, index) => ({ key, value, index }),
     addPort: (index) => ({ index }),
     removePort: (index) => ({ index }),
     createLink: (form) => ({ form }),
     getForm: () => ({ }),
-    setForm : ( form ) => ({ form }),
+    setForm : (form) => ({ form }),
+    changeForm: (form) => ({ form }),
 
-    submit: true,
-    submitSuccess: true,
-    submitFailure: true,
+    submit: () => ({ }),
+    error: (error) => ({ error }),
+    reset: () => true,
   }),
 
   reducers: ({ actions }) => ({
-    form:[DEFAULT_FORM, PropTypes.shape(propTypes),{
-      [actions.setValue]: (state, payload) => {
-        return Object.assign({}, state, { [payload.key]: payload.value })
-      },
-      [actions.setValues]: (state, payload) => {
-        return Object.assign({}, state, payload.values)
-      },
-      [actions.setValuePorts]:(state, payload) => {
-        return Object.assign({}, state, state.required_ports[payload.index]= payload.value)
-      },
+    form:[DEFAULT_FORM, PropTypes.any,{
+      [actions.change]: (state, payload) => Check.setAndCheckValidation(state, payload, VALIDATIONS),
+      [actions.setValuePorts]:(state, payload) => Check.setAndCheckValidationArray(state, payload, VALIDATIONS),
       [actions.addPort]: (state, payload) => {
-        return Object.assign({}, state, state.required_ports.push(null))
+        return Object.assign({}, state, state.required_ports.array.push({value: null, valid: false}))
       },
       [actions.removePort]: (state, payload) => {
-        return Object.assign({}, state, state.required_ports.splice(payload.index, 1))
+        return Object.assign({}, state, state.required_ports.array.splice(payload.index, 1))
       },
+      [actions.setForm]: (state, payload) => Check.checkValidation(payload.form, VALIDATIONS).form,
+      [actions.changeForm]: (state, payload) => payload.form,
+      [actions.reset]: () => DEFAULT_FORM,
+      [actions.modalAction]: (state, payload) => state
+    }],
+    dirty: [false, PropTypes.bool, {
+      [actions.change]: () => true,
+      [actions.error]: () => true,
+      [actions.reset]: () => false,
+    }],
 
-      [actions.setForm]: (state, payload) => payload.form,
-      [actions.submitSuccess]: () => DEFAULT_FORM,
+    submiting: [false, PropTypes.bool, {
+      [actions.submit]: () => true,
+      [actions.error]: () => false,
+      [actions.reset]: () => false,
     }],
   }),
 
@@ -111,40 +142,65 @@ export default kea({
 
   start: function * () {
     const { getForm } = this.actions
-
     yield put(getForm())
   },
 
   takeLatest: ({ actions, workers }) => ({
-    [actions.createLink]: workers.createLink,
+    [actions.submit]: workers.submit,
     [actions.getForm]: workers.getForm
   }),
 
   workers: {
-    * createLink (action) {
+    * getForm () {
+      const linkSelect = yield this.get('modalData')
+      const { changeForm } = this.actions
+      const setDefaultValues = { ...DEFAULT_FORM }
+      setDefaultValues.link_name.value = linkSelect.target.type === 'vs' ? linkSelect.target.virtual_switch_name : linkSelect.link_name
+      setDefaultValues.name_connection_source.value = linkSelect.connection_name_source
+      setDefaultValues.options_select_source.value = linkSelect.connection_point_source_selected
+      setDefaultValues.name_connection_target.value = linkSelect.connection_name_target
+      setDefaultValues.options_select_target.value = linkSelect.connection_point_target_selected
+      setDefaultValues.required_ports.array = linkSelect.required_ports || []
+
+      const validForm = Check.checkValidation(setDefaultValues, VALIDATIONS).form
+      yield put(changeForm(validForm))
+    },
+
+    * submit () {
+      const {
+        error,
+        setForm,
+        setData,
+        modalAction,
+        changeSaveStatus,
+        reset,
+      } = this.actions
+      const getForm = yield this.get('form')
+      const dirty = yield this.get('dirty')
       const linkSelect = yield this.get('modalData')
       const d3Data = yield this.get('d3Data')
-      const { setData, modalAction } = this.actions
-      const newInfo = action.payload.form
-      const newData = changeLinkProperties(linkSelect, d3Data, newInfo)
+      // Check validations
+      const form = createForm(linkSelect, getForm)
+      const validation = Check.checkValidation(form, VALIDATIONS)
 
-      yield put(setData(newData))
-      yield put(modalAction(null))
-    },
-    * getForm () {
-      const formSelect = yield this.get('modalData')
-      const { setForm } = this.actions
-      const setDefaultValues = {...DEFAULT_FORM}
-      if('link_name' in formSelect) {
-        setDefaultValues.link_name = formSelect.target.type === 'vs' ? formSelect.target.virtual_switch_name : formSelect.link_name
-        setDefaultValues.name_connection_source = formSelect.connection_name_source
-        setDefaultValues.options_select_source = formSelect.connection_point_source_selected
-        setDefaultValues.name_connection_target = formSelect.connection_name_target
-        setDefaultValues.options_select_target = formSelect.connection_point_target_selected
-        setDefaultValues.required_ports = formSelect.required_ports || []
+      if (dirty && validation.invalid) {
+        yield put(error([]))
+        return false
+      } else if (!dirty && validation.invalid) {
+        yield put(setForm(validation.form))
+        yield put(error([]))
+        return false
+      } else if (!validation.invalid && !dirty) {
+        yield put(modalAction(null))
+        yield put(reset())
+      } else if (!validation.invalid && dirty) {
+        const newData = changeLinkProperties(linkSelect, d3Data, form)
+        yield put(setData(newData))
+        yield put(changeSaveStatus(false))
+        yield put(modalAction(null))
+        yield put(reset())
       }
-      yield put(setForm(setDefaultValues))
-    }
+    },
   }
 
 })

@@ -11,7 +11,8 @@ import axios from 'axios'
 import { API_BASE_SDK } from 'config'
 import PropTypes from 'prop-types'
 import { NEW_SERVICE } from './utils'
-import { addNode , transformToD3Object, removeLink, removeNode, createNewLink, transformToJSON, changeNode } from './utils'
+import { addNode , transformToD3Object, removeLink, removeNode, createNewLink,
+  transformToJSON, changeNode } from './utils'
 import { Message } from 'element-react'
 
 const DEFAULT_D3 = {nodes:[], links:[]}
@@ -38,7 +39,6 @@ export default kea({
     getServiceId: (id) => ({ id }),
     removeLink: (selectlink) => ({ selectlink }),
     createLink: (source, target) => ({ source, target }),
-    changeId: (id) => ({ id }),
     configParams: (node) => ({ node }),
     changeConfigParams: (node) => ({ node }),
     changePublishStatus: (status) => ({ status }),
@@ -46,6 +46,9 @@ export default kea({
     activeLoadingSave: () => ({ }),
     changeSaveStatus: (status) => ({ status }),
     actionModalPublish: () => ({ }),
+    changeStatusPanel: () => ({ }),
+    setErrors: (errors) => ({ errors }),
+    setSerivce: (id) => ({ id }),
 
     reset: () => ({ })
   }),
@@ -89,15 +92,15 @@ export default kea({
       [actions.configParams]: (state, payload) => !state,
       [actions.changeConfigParams]: (state, payload) => !state,
     }],
-    modalNodeConfigData: [null, PropTypes.object,{
+    modalNodeConfigData: [ null, PropTypes.object,{
       [actions.configParams]: (state, payload) => payload.node,
     }],
     catalogueMenu: [[], PropTypes.array, {
       [actions.changeCatalogue]: (state, payload) => payload.catalogue,
       [actions.reset]: () => [],
     }],
-    idService: [0, PropTypes.number, {
-      [actions.changeId]: (state, payload) => payload.id,
+    idService: [0, PropTypes.any, {
+      [actions.setSerivce]: (state, payload) => payload.id,
     }],
     isPublishLoading: [false, PropTypes.bool, {
       [actions.activeLoading]: (state, payload) => !state,
@@ -119,6 +122,15 @@ export default kea({
     modalPublishStatus: [false, PropTypes.bool, {
       [actions.actionModalPublish]: (state,payload) => !state,
       [actions.publishComposer]: (state, payload) => !state,
+    }],
+    errorsMessages: [null, PropTypes.array, {
+      [actions.setErrors]: (state, payload) => payload.errors,
+      [actions.reset]: () => null,
+    }],
+    panelError: [false, PropTypes.bool, {
+      [actions.changeStatusPanel]: () => false,
+      [actions.setErrors]: () => true,
+      [actions.reset]: () => false,
     }]
   }),
 
@@ -192,33 +204,45 @@ export default kea({
     },
 
     * saveComposer() {
-      const { activeLoadingSave, changeSaveStatus, changeId } = this.actions
+      const { activeLoadingSave, changeSaveStatus, setSerivce, setErrors } = this.actions
       yield put(activeLoadingSave())
+      let typeRequest = null
+      const service = yield this.get('serviceInfo')
+      const serviceId = yield this.get('idService')
+      const d3Data = yield this.get('d3Data')
+      const objectFinal = transformToJSON(service, d3Data)
+      const { errors, invalid, composer } = objectFinal
+      if(!invalid){
       try{
-        const service = yield this.get('serviceInfo')
-        const serviceId = yield this.get('idService')
-        const d3Data = yield this.get('d3Data')
-        const json = transformToJSON(service, d3Data)
         let responseResult
         if(serviceId > 0) {
-          responseResult = yield call(axios.put,`${API_BASE_SDK}/sdk/composer/services/`, json)
+          composer.id = serviceId
+          responseResult = yield call(axios.put,`${API_BASE_SDK}/sdk/composer/services/`, composer)
+          typeRequest = 'put'
         } else {
-          responseResult = yield call(axios.post,`${API_BASE_SDK}/sdk/composer/services/`, json)
+          responseResult = yield call(axios.post,`${API_BASE_SDK}/sdk/composer/services/`, composer)
+          typeRequest = 'post'
         }
         const { data } = responseResult
-          yield put(changeId(data))
-          yield put(changeSaveStatus(true))
-          yield put(activeLoadingSave())
+        if(typeRequest === 'post') {
+          yield put(setSerivce(data))
+        }
+        yield put(changeSaveStatus(true))
+        yield put(activeLoadingSave())
       }catch (error){
         Message({
           showClose: false,
-          message: 'Error cannot save',
+          message: 'Cannot save',
           type: 'error'
         })
           yield put(changeSaveStatus(false))
-          console.error(`Error ${error}`)
           yield put(activeLoadingSave())
         }
+      } else {
+        yield put(setErrors(errors))
+        yield put(changeSaveStatus(false))
+        yield put(activeLoadingSave())
+      }
     },
 
     * createNode(action) {

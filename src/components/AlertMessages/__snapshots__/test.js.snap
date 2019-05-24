@@ -1,0 +1,104 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+.c0 {
+  height: 108px;
+  width: 320px;
+  opacity: 0.98;
+  border-radius: 6px;
+  background-color: #EFF2F7;
+  box-shadow: 0 0 20px 0 rgba(0,0,0,0.15);
+  margin: 10px auto;
+}
+
+.c1 {
+  height: 48px;
+  width: 48px;
+  background-color: #D84F4F;
+  border-radius: 50%;
+  position: relative;
+  top: 24px;
+  left: -24px;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2),0 0 10px 0 rgba(216,79,79,0.5);
+}
+
+.c2 {
+  color: #fff;
+  position: relative;
+  top: 13px;
+  left: 15px;
+}
+
+.c3 {
+  text-align: left;
+  position: relative;
+  top: -40px;
+  margin-left: 40px;
+}
+
+.c4 {
+  margin: 4px 0;
+  font-size: 14px;
+  -webkit-letter-spacing: 0.5px;
+  -moz-letter-spacing: 0.5px;
+  -ms-letter-spacing: 0.5px;
+  letter-spacing: 0.5px;
+  line-height: 20px;
+  color: #D84F4F;
+  font-weight: bold;
+}
+
+.c5 {
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 16px;
+  display: inline-block;
+  color: #37474F;
+  width: 80px;
+  margin: 4px 0;
+}
+
+.c6 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 600;
+  height: 32px;
+  width: 184px;
+  line-height: 16px;
+}
+
+<div
+  className="c0"
+>
+  <div
+    className="c1"
+  >
+    <i
+      className="el-icon-close c2"
+      style={Object {}}
+    />
+  </div>
+  <div
+    className="c3"
+  >
+    <p
+      className="c4"
+    />
+  </div>
+  <div
+    className="c3"
+  >
+    <p
+      className="c5"
+    >
+      Description:
+    </p>
+    <div
+      className="c6"
+    />
+  </div>
+</div>
+`;

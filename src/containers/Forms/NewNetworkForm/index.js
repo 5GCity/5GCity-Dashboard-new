@@ -5,19 +5,23 @@
  * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
 import React, { Component } from 'react'
-//import styled from 'styled-components'
+import styled from 'styled-components'
+import Logic from './logic'
+import { Layout } from 'element-react'
+import { withRouter } from 'react-router-dom'
 
 /* Components */
 import Select from 'components/Select'
 import Button from 'components/Button'
-import Logic from './logic'
 import Input from 'components/Input'
-import { Form, Layout } from 'element-react'
+import Form from 'components/Form'
+import { DeleteIcon, PlusIcon } from 'components/Icons'
+
 
 
 class NewNetworkForm extends Component {
   render () {
-    const { values, listSlices, errors } = this.props,
+    const { values, listSlices } = this.props,
     { setValue, addPort, setValuePorts, removePort } = this.actions,
     { nameInstance, description, ports, slice_id } = values
     return (
@@ -35,7 +39,10 @@ class NewNetworkForm extends Component {
           </Form.Item>
           </Layout.Col>
           <Layout.Col>
-          <Form.Item label={'Description'} message={errors.description}>
+          <Form.Item
+            label={'Description'}
+            required={true}
+          >
             <Input
               value={description}
               onChange={value => setValue('description', value)}
@@ -46,7 +53,7 @@ class NewNetworkForm extends Component {
           { ports.map((port, index) =>
             <Form.Item
               key={index}
-              label={`Ports ${index}`}
+              label={`Ports ${ index+1 }`}
               prop={ports[index]}
             >
             <Layout.Col span="18">
@@ -58,7 +65,7 @@ class NewNetworkForm extends Component {
             <Layout.Col span="6">
                 <Button
                   text={'Remove'}
-                  icon={'delete'}
+                  svg={<DeleteIcon />}
                   type={'danger'}
                   onClick={() => removePort(index)}
                 />
@@ -66,9 +73,9 @@ class NewNetworkForm extends Component {
             </Form.Item>
             )}
 
-            <Button
+            <AddButton
               text={'Add Port'}
-              icon={'plus'}
+              svg={<PlusIcon />}
               type={'primary'}
               onClick={() => addPort()}
             />
@@ -88,4 +95,9 @@ class NewNetworkForm extends Component {
   }
 }
 
-export default Logic(NewNetworkForm)
+export default withRouter(Logic(NewNetworkForm))
+
+
+const AddButton = styled(Button)`
+  margin-bottom: 20px;
+`

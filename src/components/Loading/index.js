@@ -8,7 +8,7 @@ import styled from 'styled-components'
 import { Loading } from 'element-react'
 
 export default styled(Loading)`
-  height: 100vh;
+  height: 100%;
 
 > div:first-child {
   background-color: transparent !important;

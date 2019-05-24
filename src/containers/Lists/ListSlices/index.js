@@ -14,7 +14,7 @@ import { Titles, TitlesUser } from './utils'
 import List from 'components/List'
 import Modal from 'components/Modal'
 import Button from 'components/Button'
-import { DeleteIcon } from 'components/Icons'
+import { DeleteIcon, EyeIcon, SettingIcon, CheckIcon, CloseIcon } from 'components/Icons'
 
 
 
@@ -34,14 +34,14 @@ const ModalDeleteSlice = (props) => (
     <Modal.Footer>
       <Button
         text={'Yes'}
-        icon={'check'}
+        svg={<CheckIcon />}
         type={'primary'}
         loading={props.loading}
-        onClick={() => props.deleteSlice(props.sliceSelect.id)}
+        onClick={() => props.deleteSlice()}
       />
       <Button
         text={'No'}
-        icon={'close'}
+        svg={<CloseIcon />}
         type={'secondary'}
         onClick={() => props.actionModal()}
       />
@@ -61,7 +61,7 @@ const ListAllSlices = (props) => (
       <List.Column marginLeft />
     </List.Header>
     {props.slices && props.slices.map((slice, i) =>
-    <List.Row key={i}>
+    <List.Row key={i} row={1450}>
       {props.title && props.title.map(({
         size,
         propItem,
@@ -84,13 +84,13 @@ const ListAllSlices = (props) => (
           />
           <Button
             type={'primary'}
-            icon={'view'}
+            svg={<EyeIcon />}
             onClick={() =>
             props.navigate(`/slice/${slice.id}`)} text={'View'}
           />
           <Button
             type={'primary'}
-            icon={'setting'}
+            svg={<SettingIcon />}
             onClick={() => props.navigate(`/monitor/slice/${slice.id}`)}
             text={'Monitoring'}
           />

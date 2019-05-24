@@ -17,7 +17,7 @@ import { BackIcon } from 'components/Icons'
 
 /* Containers */
 import SliceMap from 'containers/SliceMap'
-import PanelSliceDetails from 'containers/Panel/PanelSliceDetails'
+import PanelChunkDetail from 'containers/Panel/PanelChunkDetail'
 
 class SliceDetail extends Component {
 
@@ -27,7 +27,7 @@ class SliceDetail extends Component {
   }
 
   render () {
-    const { slice, rightPanelInfo, panel  } = this.props
+    const { slice, rightPanelInfo, panel, location } = this.props
     const { panelAction , infoMarker } = this.actions
     return (
       <Wrapper>
@@ -38,12 +38,13 @@ class SliceDetail extends Component {
           navigateBack={() => this.navigateToBack()}
           name={slice.name}
         />
-        <PanelSliceDetails
+        <PanelChunkDetail
           show={panel}
           data={rightPanelInfo && rightPanelInfo}
           close={panelAction}
         />
         <SliceMap
+          location={location}
           markers={slice.markers}
           markerColor={Theme.primaryColor}
           onClick={(marker) => infoMarker(marker)}

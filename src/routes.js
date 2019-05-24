@@ -17,7 +17,8 @@ import SliceNew from 'scenes/SliceNew'
 import Network from 'scenes/Network'
 import NetworkNew from 'scenes/NetworkNew'
 import Catalogue from 'scenes/Catalogue'
-import InfoManagement from 'scenes/InfoManagement'
+import InfManagementView from 'scenes/InfManagementView'
+import infraManagementResource from 'scenes/infraManagementResource'
 import Monitoring from 'scenes/Monitoring'
 import SDK from 'scenes/SDK'
 import SDKService from 'scenes/SDKService'
@@ -89,11 +90,11 @@ export const Routes = {
   },
 
 
-  InfoManagement: {
-      key: 'InfoManagement',
-      name: 'InfoManagement',
-      path: '/infoManagement',
-      component: InfoManagement,
+  InfManagementView: {
+      key: 'InfManagementView',
+      name: 'InfManagementView',
+      path: '/infManagementView',
+      component: InfManagementView,
       crumb: ['inicio']
   },
 
@@ -120,6 +121,15 @@ export const Routes = {
       name: 'SDKService',
       path: '/sdk/services',
       component: SDKService,
+      crumb: ['inicio']
+  },
+
+
+  infraManagementResource: {
+      key: 'infraManagementResource',
+      name: 'infraManagementResource',
+      path: '/infManagement',
+      component: infraManagementResource,
       crumb: ['inicio']
   },
 

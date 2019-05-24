@@ -7,24 +7,23 @@
 
 import { kea } from 'kea'
 import { put } from 'redux-saga/effects'
-//import { delay } from 'redux-saga'
-//import { } from 'config'
-//import { } from 'utils'
-//import { } from './utils'
-
 import PropTypes from 'prop-types'
-//import * as Check from 'validations'
+import * as Check from 'validations'
+import { setForm } from './utils'
 
 /* Logic */
 import ComposerMainLogic from 'containers/SDKContainer/logic'
 
-
 const DEFAULT_FORM = {
-  mapping_expression: [],
+  mapping_expression:{
+    array: [ ]
+  },
 }
 
-const propTypes = {
-  mapping_expression: PropTypes.any,
+const VALIDATIONS = {
+  mapping_expression: [
+    Check.isRequired
+  ],
 }
 
 export default kea({
@@ -34,30 +33,48 @@ export default kea({
     actions: [
       ComposerMainLogic,[
         'changeConfigParams',
+        'changeSaveStatus',
+        'configParams',
       ]
     ],
+    props: [
+      ComposerMainLogic,[
+        'modalNodeConfigData'
+      ]
+    ]
   },
 
   actions: () => ({
     getForm: () => ({ }),
+    change: (key, value, index) => ({ key, value, index }),
     setForm : ( form ) => ({ form }),
-    setValue: (key, value, index) => ({ key, value, index }),
-    setValues: (values) => ({ values }),
-    submitForm: (form) => ({ form }),
-    submitSuccess: () => ({ }),
+    changeForm: ( form ) => ({ form }),
+
+    error: (error) => ({ error }),
+    submit: () => ({}),
+    reset: () => true,
   }),
 
   reducers: ({ actions }) => ({
     form:[DEFAULT_FORM, PropTypes.any,{
-      [actions.setValue]: (state, payload) => {
-        return Object.assign({}, state, state.mapping_expression[payload.index]= payload.value)
-      },
-      [actions.setValues]: (state, payload) => {
-        return Object.assign({}, state, payload.values)
-      },
+      [actions.change]: (state, payload) => Check.setAndCheckValidationArray(state, payload, VALIDATIONS),
+      [actions.setForm]: (state, payload) => Check.checkValidation(payload.form, VALIDATIONS).form,
 
-      [actions.setForm]: (state, payload) => payload.form,
-      [actions.submitSuccess]: () => DEFAULT_FORM,
+      [actions.changeForm]: (state, payload) => payload.form,
+      [actions.reset]: () => DEFAULT_FORM,
+    }],
+    dirty: [false, PropTypes.bool, {
+      [actions.change]: () => true,
+      [actions.response]: () => false,
+      [actions.error]: () => true,
+      [actions.reset]: () => false
+    }],
+
+    submiting: [false, PropTypes.bool, {
+      [actions.submit]: () => true,
+      [actions.error]: () => false,
+      [actions.response]: () => false,
+      [actions.reset]: () => false
     }],
   }),
 
@@ -72,25 +89,57 @@ export default kea({
 
   takeLatest: ({ actions, workers }) => ({
     [actions.getForm]: workers.getForm,
-    [actions.submitForm]: workers.submitForm,
+    [actions.submit]: workers.submit,
   }),
 
   workers: {
     * getForm () {
-      const { setForm } = this.actions
-      const data = this.props.data
-      const setDefaultValues = {...DEFAULT_FORM}
-      setDefaultValues.mapping_expression = data.mapping_expression
-      yield put(setForm(setDefaultValues))
+      const { changeForm } = this.actions
+      const node = yield this.get('modalNodeConfigData')
+      const setDefaultValues = { ...DEFAULT_FORM }
+      setDefaultValues.mapping_expression.array = setForm(node)
+      const validForm = Check.checkValidation(setDefaultValues, VALIDATIONS).form
+      yield put(changeForm(validForm))
     },
-    * submitForm (action) {
-      const { changeConfigParams, submitSuccess } = this.actions
-      const newData = action.payload.form.mapping_expression
-      const data = this.props.data
-      data.mapping_expression = newData
-      yield put(changeConfigParams(data))
-      yield put(submitSuccess())
-    }
+
+    * submit () {
+      const {
+        error,
+        setForm,
+        changeSaveStatus,
+        changeConfigParams,
+      } = this.actions
+      const form = yield this.get('form')
+      const dirty = yield this.get('dirty')
+      const node = yield this.get('modalNodeConfigData')
+      // Check validations
+      const validation = Check.checkValidation(form, VALIDATIONS)
+
+      if (dirty && validation.invalid) {
+        yield put(error([]))
+        return false
+      } else if (!dirty && validation.invalid) {
+        yield put(setForm(validation.form))
+        yield put(error([]))
+        return false
+      } else if (!validation.invalid && !dirty) {
+        const array = []
+        validation.form.mapping_expression.array.forEach(element => {
+          array.push(element.value)
+        })
+        node.mapping_expression = array
+        yield put(changeConfigParams(node))
+        yield put(changeSaveStatus(false))
+      } else if (!validation.invalid && dirty) {
+        const array = []
+        validation.form.mapping_expression.array.forEach(element => {
+          array.push(element.value)
+        })
+        node.mapping_expression = array
+        yield put(changeConfigParams(node))
+        yield put(changeSaveStatus(false))
+      }
+    },
   }
 
 })

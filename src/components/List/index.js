@@ -33,7 +33,7 @@ const Column = styled.div`
 `
 
 const Row = styled.div`
-  min-width: 1200px;
+  min-width: ${({row}) => row || 1200 }px;
   display: flex;
   flex-direction: row;
   flex-flow: no-wrap;

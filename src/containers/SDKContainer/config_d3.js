@@ -129,7 +129,7 @@ export const newVirtualSwtichNode = (link_name) => (
 )
 
 export const newVNFNode = (nodeInfo, mapping_expression) => {
-  const arrayExpression = mapping_expression  === undefined ? []: mapping_expression
+  const arrayExpression = mapping_expression  === undefined ? [undefined] : mapping_expression
   const position = Position(nodeInfo.connectionPoint.length)
   return {
     ...NODE_TYPE.VNF,

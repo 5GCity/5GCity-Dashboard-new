@@ -25,7 +25,7 @@ export default kea({
       NavBarLogic, [
         'userRole'
       ]
-    ]
+    ],
   },
 
   actions: () => ({
@@ -91,36 +91,44 @@ export default kea({
   * fetchSlices () {
     const { setSlices } = this.actions
 
+
     try {
-      let responseResult = yield call(axios.get,`${API_BASE_URL}/slicemanagerapi/slic3`)
+      let responseResult = yield call(axios.get,`${API_BASE_URL}/slic3`)
       const { data } = responseResult
       data.map(el => el.status = "Approved")
 
       yield put(setSlices(data))
 
+
     } catch(error){
       console.error(`Error ${error}`)
+
     }
   },
 
   * deleteSlice () {
-    const { fetchSlices, isLoading, openModal, closeModal } = this.actions
+    const { fetchSlices, isLoading, actionModal } = this.actions
     const sliceSelect = yield this.get('sliceSelect')
-   yield put(openModal())
+    console.log(sliceSelect)
     try {
       yield put(isLoading())
-      yield call(axios.delete,`${API_BASE_URL}/slicemanagerapi/slic3/${sliceSelect.id}`)
-
-    /*if(sliceSelect.chunks.openstackVlans.length > 0){
-        for (const openstack of sliceSelect.chunks.openstackVlans) {
+      yield call(axios.delete,`${API_BASE_URL}/slic3/${sliceSelect.id}`)
+    if(sliceSelect.chunks.virtualWifiAccessPoints.length > 0){
+      for (const virtualWifi of sliceSelect.chunks.virtualWifiAccessPoints) {
+      console.log('apagou virtual_Wifi')
+      yield call(axios.delete,`${API_BASE_URL}/virtual_wifi_access_point/${virtualWifi.id}`)
+      }
+    }
+    if(sliceSelect.chunks.openstackVlans.length > 0){
+        for (const vlan of sliceSelect.chunks.openstackVlans) {
           console.log('apagou openstack_vlan')
-          yield call(axios.delete,`${API_BASE_URL}/slicemanagerapi/openstack_vlan/${openstack.id}`)
+          yield call(axios.delete,`${API_BASE_URL}/openstack_vlan/${vlan.id}`)
         }
       }
       for (const openstack of sliceSelect.chunks.openstackProjects) {
         console.log('apagou openstack_project')
-      yield call(axios.delete,`${API_BASE_URL}/slicemanagerapi/openstack_project/${openstack.id}`)
-      } */
+      yield call(axios.delete,`${API_BASE_URL}/openstack_project/${openstack.id}`)
+      }
 
       yield put(fetchSlices())
 
@@ -129,7 +137,7 @@ export default kea({
       console.error(`Error ${error}`)
     }
     yield put(isLoading())
-    yield put(closeModal())
+    yield put(actionModal())
   }
   }
 

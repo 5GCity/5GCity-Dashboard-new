@@ -25,8 +25,8 @@ test('checkValidation returns a valid form', () => {
   const expectedValidation = {
     invalid: false,
     form: {
-      fieldOne: { value: 'test', valid: true },
-      fieldTwo: { value: 'email@example.com', valid: true }
+      fieldOne: { value: 'test', valid: true, message: '' },
+      fieldTwo: { value: 'email@example.com', message:'', valid: true }
     }
   }
 

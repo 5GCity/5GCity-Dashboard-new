@@ -34,6 +34,7 @@ export const NEW_SERVICE = {
 
 let idLink = 0
 let idNode = 0
+let idError = 0
 /**
  * Change to d3 links format
  * @param {array} ObjectD3
@@ -377,7 +378,6 @@ export const removeNode = (selectNode, d3Data, catalogue) => {
   })
   const findCatalogue = selectNode.extra_info && catalogue.find(catalogue => catalogue.id === selectNode.extra_info.id)
   if(findCatalogue) {
-    console.log(findCatalogue)
     findCatalogue.disabled = false
   }
 
@@ -466,6 +466,7 @@ const removeConnectionPoint = (source, target, node) => {
 
 
 export const transformToJSON = (service, d3Data) => {
+  const object = { invalid: false, errors: [], composer:[] }
   const link = [], component = [], connection_point = []
   const {nodes, links} = d3Data
   nodes.forEach(node => {
@@ -475,8 +476,10 @@ export const transformToJSON = (service, d3Data) => {
         component_type: "SDK_FUNCTION",
         mapping_expression: node.mapping_expression,
       })
+      verifyMappingExpression(node, object)
     }
   })
+
   links.forEach(item => {
     if (item.target.type === 'vs') {
       const findExsitLink =link.find(link => link.name === item.link_name)
@@ -487,6 +490,7 @@ export const transformToJSON = (service, d3Data) => {
           name: item.link_name,
           connection_point_names: [item.connection_name_source]
         })
+        verifyLink(item, object, 'target' ,'vs')
       }
     }  else if(item.target.type === 'bridge' || item.source.type === 'bridge') {
       const connection_points = []
@@ -509,13 +513,15 @@ export const transformToJSON = (service, d3Data) => {
     switch (item.source.type) {
       case 'vnf':
         const findCP = item.source.connection_point.find(connection => connection.link_id === item.id)
-        connection_point.push({
-          internal_cp_id: findCP.id,
-          internal_cp_name: findCP.name,
-          name: item.connection_name_source,
-          required_port: item.required_ports,
-          type: "INTERNAL"
-        })
+        if (findCP)
+          connection_point.push({
+            internal_cp_id: findCP.id,
+            internal_cp_name: findCP.name,
+            name: item.connection_name_source,
+            required_port: item.required_ports,
+            type: "INTERNAL"
+          })
+        verifyLink(item, object, 'source' ,'vnf')
       break;
       case 'external':
         connection_point.push({
@@ -523,6 +529,7 @@ export const transformToJSON = (service, d3Data) => {
           required_port: item.required_ports,
           type: item.source.type.toUpperCase()
         })
+        verifyLink(item, object, 'source' ,'external')
       break;
       default:
         break;
@@ -538,6 +545,7 @@ export const transformToJSON = (service, d3Data) => {
       break;
       case 'vnf':
         const findCP = item.target.connection_point.find(connection => connection.link_id === item.id)
+        if (findCP)
         connection_point.push({
           internal_cp_id: findCP.id,
           internal_cp_name: findCP.name,
@@ -545,16 +553,20 @@ export const transformToJSON = (service, d3Data) => {
           required_port: item.required_ports,
           type: "INTERNAL"
         })
+        verifyLink(item, object, 'target' ,'vnf')
       break;
 
       default:
         break;
     }
   })
-  service.component = component
-  service.link = link
-  service.connection_point = connection_point
-  return service
+
+  object.composer = { ...service }
+  object.composer.component = component
+  object.composer.link = link
+  object.composer.connection_point = connection_point
+  verifyComposer(object.composer, object)
+  return object
 }
 
 export const changeNode = (nodeSelect, d3Data) => {
@@ -572,4 +584,168 @@ export const changeNode = (nodeSelect, d3Data) => {
     }
   })
   return newD3Data
+}
+
+
+const verifyMappingExpression = (node, object) => {
+  if (node.extra_info.parameter.length > 0) {
+    node.mapping_expression.forEach(mapping_expression => {
+      if(typeof(mapping_expression) !== 'string'){
+        object.invalid = true
+        object.errors.push({
+          id: idError++,
+          type: 'danger',
+          title:'Error',
+          location: node.extra_info.name,
+          description: 'Please input configure paramaters'
+        })
+      }
+    })
+  }
+}
+
+const verifyLink = (link, object, source, type) => {
+    // Verify Name
+    if (typeof(link.link_name) !== 'string') {
+      object.invalid = true
+      object.errors.push({
+        id: idError++,
+        type: 'danger',
+        title:'Error',
+        location: 'Link',
+        description: 'Please input name on link'
+      })
+    }
+
+    if (type === 'vnf' && source === 'source') {
+      const node_name = link.source.extra_info.name
+      // Verify connection Name source
+      if(typeof(link.connection_name_source) !== 'string') {
+        object.invalid = true
+        object.errors.push({
+          id: idError++,
+          type: 'danger',
+          title:'Error',
+          location: node_name,
+          description: 'Please input connection name'
+        })
+      }
+      // Verify connection Point source
+      if(!Array.isArray(link.connection_point_source_selected)) {
+        object.invalid = true
+        object.errors.push({
+          id: idError++,
+          type: 'danger',
+          title:'Error',
+          location: node_name ,
+          description: 'Please input connection point'
+        })
+      }
+    }
+    if (type === 'external' && source === 'source') {
+      const node_name = 'External'
+      // Verify connection Point source
+      if(typeof(link.connection_name_source) !== 'string') {
+        object.invalid = true
+        object.errors.push({
+          id: idError++,
+          type: 'danger',
+          title:'Error',
+          location: node_name,
+          description: 'Please input name on link'
+        })
+      }
+    }
+    // Verify connection Name target
+    if (type === 'vnf' && source === 'target') {
+      const node_name = link.target.extra_info.name
+      if(typeof(link.connection_name_target) !== 'string') {
+        object.invalid = true
+        object.errors.push({
+          id: idError++,
+          type: 'danger',
+          title:'Error',
+          location:node_name,
+          description: 'Please input connection name'
+        })
+      }
+      // Verify connection Point target
+      if(!Array.isArray(link.connection_point_target_selected)) {
+        object.invalid = true
+        object.errors.push({
+          id: idError++,
+          type: 'danger',
+          title:'Error',
+          location: node_name,
+          description: 'Please input connection point'
+        })
+      }
+    }
+    if (type === 'external' && source === 'target') {
+      const node_name = 'External'
+        // Verify connection Name target
+      if(typeof(link.connection_name_target) !== 'string') {
+        object.invalid = true
+        object.errors.push({
+          id: idError++,
+          type: 'danger',
+          title:'Error',
+          location: node_name,
+          description: 'Please input name on link'
+        })
+      }
+    }
+}
+
+const verifyComposer = (composer, object) => {
+  if (typeof(composer.name) !== 'string') {
+    object.invalid = true
+    object.errors.push({
+      id: idError++,
+      type: 'danger',
+      title:'Error Composer',
+      location: 'Composer',
+      description: 'Please input name'
+    })
+  }
+  if (typeof(composer.version) !== 'string') {
+    object.invalid = true
+    object.errors.push({
+      id: idError++,
+      type: 'danger',
+      title:'Error Composer',
+      location: 'Composer',
+      description: 'Please input version'
+    })
+  }
+  if (typeof(composer.designer) !== 'string') {
+    object.invalid = true
+    object.errors.push({
+      id: idError++,
+      type: 'danger',
+      title:'Error Composer',
+      location: 'Composer',
+      description: 'Please input designer'
+    })
+  }
+  if (typeof(composer.license.type) !== 'string') {
+    object.invalid = true
+    object.errors.push({
+      id: idError++,
+      type: 'danger',
+      title:'Error Composer',
+      location: 'Composer',
+      description: 'Please input type'
+    })
+  }
+  if (typeof(composer.license.url) !== 'string') {
+    object.invalid = true
+    object.errors.push({
+      id: idError++,
+      type: 'danger',
+      title:'Error Composer',
+      location: 'Composer',
+      description: 'Please input url'
+    })
+  }
 }

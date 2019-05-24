@@ -21,48 +21,158 @@ export const NodeMarkerIcon = props => (
 )
 
 export const DeleteIcon = props => (
-  <svg width={20} height={20} {...props}>
+  <svg width={props.width || 24} height={props.height || 24} {...props}>
     <path
-      d="M4.833 16.333c0 .917.75 1.667 1.667 1.667h6.667c.916 0 1.666-.75 1.666-1.667v-10h-10v10zm10.834-12.5H12.75L11.917 3H7.75l-.833.833H4V5.5h11.667V3.833z"
-      fill="#FFF"
+      d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
+      fill={props.fill || '#fff'}
       fillRule="nonzero"
     />
-  </svg>
+</svg>
 )
 
 export const EditIcon = props => (
   <svg width={props.width || 20} height={props.height || 20} {...props}>
     <path
       d="M2 13.877v3.125h3.125l9.217-9.217-3.125-3.125L2 13.877zM16.758 5.37a.83.83 0 0 0 0-1.175l-1.95-1.95a.83.83 0 0 0-1.175 0l-1.525 1.525 3.125 3.125 1.525-1.525z"
-      fill="#FFF"
+      fill={props.fill || '#FFF'}
       fillRule="nonzero"
     />
   </svg>
 )
 
 export const MapIcon = props => (
-  <svg width={props.width || 32} height={props.height || 32} {...props}>
+  <svg width={props.width || 24} height={props.height || 24} {...props}>
     <path
       d="M27.333 4l-.213.04L20 6.8 12 4 4.48 6.533a.672.672 0 0 0-.48.64v20.16a.66.66 0 0 0 .667.667l.213-.04L12 25.2l8 2.8 7.52-2.533a.672.672 0 0 0 .48-.64V4.667A.66.66 0 0 0 27.333 4zM20 25.333l-8-2.813V6.667l8 2.813v15.853z"
-      fill="#FFF"
+      fill={props.fill}
       fillRule="nonzero"
     />
   </svg>
 )
 
-export const BackIcon = props => (
-  <svg width={24} height={24} {...props}>
-    <defs>
+export const NetworkServicesIcon = props => (
+  <svg width={props.width || 24} height={props.height || 24} {...props}>
       <path
-        id="BackIcon__a"
-        d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"
+        d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"
+        fill={props.fill || 'white'}
+        fillRule="nonzero"
       />
-    </defs>
-    <use fill="#89979F" xlinkHref="#BackIcon__a" fillRule="evenodd" />
   </svg>
 )
 
+export const BackIcon = props => (
+  <svg width={24} height={24} {...props}>
+      <path
+        d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"
+        fill={props.fill || '#89979F'}
+      />
+  </svg>
+)
 
+export const PlayIcon = props => (
+  <svg width={24} height={24} {...props}>
+    <path fill="white" fillRule="nonzero" d="M7 5v14l11-7z" />
+  </svg>
+)
+
+export const PlusIcon = props => (
+  <svg width={24} height={24} {...props}>
+      <path
+        d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"
+        fill={props.fill || '#fff'}
+        fillRule="nonzero"
+      />
+  </svg>
+)
+
+export const EyeIcon = props => (
+  <svg width={24} height={24} {...props}>
+    <path
+      d="M12 5C7 5 2.73 8.11 1 12.5 2.73 16.89 7 20 12 20s9.27-3.11 11-7.5C21.27 8.11 17 5 12 5zm0 12.5c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
+      fill={props.fill || '#fff'}
+      fillRule="nonzero"
+    />
+</svg>
+)
+
+export const SettingIcon = props => (
+  <svg width={24} height={24} {...props}>
+    <path
+      d="M19.46 12.98c.04-.32.07-.64.07-.98 0-.34-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46a.503.503 0 0 0-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65a.488.488 0 0 0-.49-.42h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98 0 .33.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zm-7.43 2.52c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"
+      fill={props.fill || '#fff'}
+      fillRule="nonzero"
+    />
+</svg>
+)
+
+export const CirclePlusIcon = props => (
+  <svg width={props.width || 24} height={props.height || 24} {...props}>
+    <path
+      d="M12 24c6.627 0 12-5.373 12-12S18.627 0 12 0 0 5.373 0 12s5.373 12 12 12zm0-1.5C6.201 22.5 1.5 17.799 1.5 12S6.201 1.5 12 1.5 22.5 6.201 22.5 12 17.799 22.5 12 22.5zm6-9.643h-5.143V18h-1.714v-5.143H6v-1.714h5.143V6h1.714v5.143H18v1.714z"
+      fill={props.fill || '#fff'}
+      fillRule="nonzero"
+    />
+  </svg>
+)
+export const CheckIcon = props => (
+  <svg width={24} height={24} {...props}>
+    <path
+      fill={props.fill || '#fff'}
+      fillRule="nonzero"
+      d="M8.59 15.58l-4.17-4.17L3 12.82l5.59 5.59 12-12L19.18 5z"
+    />
+</svg>
+)
+
+export const CloseIcon = props => (
+  <svg width={24} height={24} {...props}>
+    <path
+      d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+      fill={props.fill || '#fff'}
+      fillRule="nonzero"
+    />
+</svg>
+)
+
+export const PublishIcon = props => (
+  <svg width={24} height={24} {...props}>
+    <path
+      d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"
+      fill={props.fill || '#fff'}
+      fillRule="nonzero"
+    />
+</svg>
+)
+
+export const SaveIcon = props => (
+  <svg width={24} height={24} {...props}>
+    <path
+      d="M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"
+      fill={props.fill || '#fff'}
+      fillRule="nonzero"
+    />
+</svg>
+)
+
+export const ServiceIcon = props => (
+  <svg width={24} height={24} {...props}>
+    <path
+      d="M21 16H3V4h18v12zm0-14H3c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h7v2H8v2h8v-2h-2v-2h7a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"
+      fill={props.fill || '#fff'}
+      fillRule="nonzero"
+    />
+</svg>
+)
+
+export const AddIcon = props => (
+  <svg width={24} height={24} {...props}>
+  <path
+    d="M12 24c6.627 0 12-5.373 12-12S18.627 0 12 0 0 5.373 0 12s5.373 12 12 12zm0-1.5C6.201 22.5 1.5 17.799 1.5 12S6.201 1.5 12 1.5 22.5 6.201 22.5 12 17.799 22.5 12 22.5zm6-9.643h-5.143V18h-1.714v-5.143H6v-1.714h5.143V6h1.714v5.143H18v1.714z"
+    fill={props.fill || '#fff'}
+    fillRule="nonzero"
+  />
+</svg>
+)
 // Start Catalogue
 export const Start = props => (
   <g {...props}>
