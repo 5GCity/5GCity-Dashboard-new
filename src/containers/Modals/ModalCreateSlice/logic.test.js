@@ -1,5 +1,5 @@
 /**
- * ComposerForm Logic Tests
+ * ModalCreateSlice Logic Tests
  * Please write a description
  *
  * @author Your Name <youremail@ubiwhere.com>
@@ -21,8 +21,7 @@ test('starts from a clear state', () => {
 })
 
 test('app props correct', () => {
-  expect(logic.path).toEqual(['scenes', 'containers', 'ComposerForm'])
+  expect(logic.path).toEqual(['scenes', 'containers', 'ModalCreateSlice'])
 })
 
 // Write more tests here
-

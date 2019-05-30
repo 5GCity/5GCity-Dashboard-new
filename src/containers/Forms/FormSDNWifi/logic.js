@@ -96,7 +96,22 @@ export default kea({
       [actions.removeChannel]: (state, payload) => Object.assign({}, state, state.channels.splice(payload.index,1)),
       [actions.changeForm]: (state, payload) => payload.form,
       [actions.changeChannel]:(state, payload) => Check.setAndCheckValidationArray(state, payload, VALIDATIONS),
-      [actions.reset]: () => DEFAULT_FORM,
+      [actions.reset]: () => {
+        let channels = [...DEFAULT_FORM.channels]
+        channels = [{
+          bandwidth: {
+            value: null
+          },
+          number:{
+            value: null
+          },
+          txPower:{
+            value: null
+          }
+        }]
+        DEFAULT_FORM.channels = channels
+        return DEFAULT_FORM
+      }
     }],
     dirty: [false, PropTypes.bool, {
       [actions.change]: () => true,
@@ -116,6 +131,12 @@ export default kea({
     const { getForm } = this.actions
 
     yield put(getForm())
+  },
+
+  stop: function * () {
+    const { reset } = this.actions
+
+    yield put(reset())
   },
 
   workers: {

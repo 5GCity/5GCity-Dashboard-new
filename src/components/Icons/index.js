@@ -164,6 +164,14 @@ export const ServiceIcon = props => (
 </svg>
 )
 
+export const CloneIcon = props => (
+  <svg width={24} height={24} {...props}>
+  <path
+    fill={props.fill || '#fff'}
+    d="M16 8h-2v3h-3v2h3v3h2v-3h3v-2h-3M2 12c0-2.79 1.64-5.2 4-6.32V3.5C2.5 4.76 0 8.09 0 12s2.5 7.24 6 8.5v-2.18C3.64 17.2 2 14.79 2 12m13-9c-4.96 0-9 4.04-9 9s4.04 9 9 9 9-4.04 9-9-4.04-9-9-9m0 16c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7z" />
+</svg>
+)
+
 export const AddIcon = props => (
   <svg width={24} height={24} {...props}>
   <path
@@ -267,5 +275,217 @@ export const CirclePlus = props => (
     <circle r="6" cx="7" cy="7" stroke="#89979F" strokeWidth="1" fill="transparent"></circle>
     <rect x="4" y="6.75" width="6" height="0.75" rx="0" fill="#89979F"></rect>
     <rect x="4" y="-7.35" width="6" height="0.75" ry="0" fill="#89979F" transform="rotate(90)"></rect>
+  </svg>
+)
+
+export const NoDataIcon = props => (
+  <svg width={252} height={240} {...props}>
+  <defs>
+    <linearGradient
+      x1="49.999%"
+      y1="100%"
+      x2="49.999%"
+      y2="0%"
+      id="prefix__a"
+    >
+      <stop stopColor="gray" stopOpacity={0.25} offset="0%" />
+      <stop stopColor="gray" stopOpacity={0.12} offset="54%" />
+      <stop stopColor="gray" stopOpacity={0.1} offset="100%" />
+    </linearGradient>
+    <linearGradient x1="50%" y1="100%" x2="50%" y2="0%" id="prefix__b">
+      <stop stopColor="gray" stopOpacity={0.25} offset="0%" />
+      <stop stopColor="gray" stopOpacity={0.12} offset="54%" />
+      <stop stopColor="gray" stopOpacity={0.1} offset="100%" />
+    </linearGradient>
+    <linearGradient
+      x1="60.274%"
+      y1="98.88%"
+      x2="39.783%"
+      y2="1.029%"
+      id="prefix__c"
+    >
+      <stop stopColor="gray" stopOpacity={0.25} offset="0%" />
+      <stop stopColor="gray" stopOpacity={0.12} offset="54%" />
+      <stop stopColor="gray" stopOpacity={0.1} offset="100%" />
+    </linearGradient>
+    <linearGradient
+      x1="49.999%"
+      y1="100%"
+      x2="49.999%"
+      y2="0%"
+      id="prefix__d"
+    >
+      <stop stopColor="gray" stopOpacity={0.25} offset="0%" />
+      <stop stopColor="gray" stopOpacity={0.12} offset="54%" />
+      <stop stopColor="gray" stopOpacity={0.1} offset="100%" />
+    </linearGradient>
+    <linearGradient x1="50%" y1="100%" x2="50%" y2="0%" id="prefix__e">
+      <stop stopColor="gray" stopOpacity={0.25} offset="0%" />
+      <stop stopColor="gray" stopOpacity={0.12} offset="54%" />
+      <stop stopColor="gray" stopOpacity={0.1} offset="100%" />
+    </linearGradient>
+    <linearGradient x1="50%" y1="99.914%" x2="50%" y2="-.086%" id="prefix__f">
+      <stop stopColor="gray" stopOpacity={0.25} offset="0%" />
+      <stop stopColor="gray" stopOpacity={0.12} offset="54%" />
+      <stop stopColor="gray" stopOpacity={0.1} offset="100%" />
+    </linearGradient>
+  </defs>
+  <g fillRule="nonzero" fill="none">
+    <path
+      fill="#89979F"
+      d="M21.216 41.636L152.37 13.462l38.882 181.424-131.155 28.173z"
+    />
+    <path
+      transform="rotate(-12.11 173.933 -3.04)"
+      d="M17.51 11.74l129.613-.03-.043 179.271-129.613.03z"
+      opacity={0.5}
+      fill="url(#prefix__a)"
+    />
+    <path
+      fill="#5A666D"
+      d="M25.98 45.17l123.495-26.528 36.738 171.419-123.496 26.528z"
+    />
+    <path
+      fill="url(#prefix__b)"
+      transform="rotate(-12.11 87.889 31.87)"
+      d="M56.56 24.28l62.662-.016-.004 15.196-62.662.014z"
+    />
+    <path
+      d="M83.185 9.929c-4.73 1.017-7.723 5.77-6.683 10.617 1.04 4.846 5.716 7.956 10.436 6.939 4.721-1.017 7.723-5.771 6.683-10.617-1.04-4.846-5.706-7.956-10.436-6.94zm2.968 13.859a5.172 5.172 0 0 1-5.406-2.02 5.186 5.186 0 0 1-.177-5.775 5.173 5.173 0 0 1 9.438 1.649 5.125 5.125 0 0 1-.652 3.875 5.114 5.114 0 0 1-3.203 2.271z"
+      fill="url(#prefix__c)"
+    />
+    <path
+      fill="#8CC14E"
+      d="M56.173 30.245l59.974-12.883 3.044 14.202-59.974 12.884z"
+    />
+    <path
+      d="M83.185 9.929c-4.63.995-7.577 5.558-6.583 10.192.993 4.635 5.55 7.586 10.18 6.591 4.63-.994 7.577-5.557 6.584-10.192a8.583 8.583 0 0 0-3.727-5.407 8.565 8.565 0 0 0-6.454-1.184zm2.836 13.244a4.945 4.945 0 0 1-5.11-2.03 4.958 4.958 0 0 1-.083-5.503 4.946 4.946 0 0 1 8.993 1.652 4.954 4.954 0 0 1-3.8 5.881z"
+      fill="#8CC14E"
+    />
+    <path fill="#89979F" d="M79.157 35.926h134.14v185.553H79.157z" />
+    <path
+      d="M.086.037h129.607v179.281H.086z"
+      opacity={0.5}
+      transform="translate(81.34 39.027)"
+      fill="url(#prefix__d)"
+    />
+    <path fill="#5A666D" d="M83.074 40.385h126.307v175.32H83.074z" />
+    <path fill="url(#prefix__e)" d="M115.064 32.783h62.659v15.196h-62.659z" />
+    <path
+      d="M146.393 17.95c-4.837 0-8.76 4.019-8.76 8.979 0 4.96 3.923 8.979 8.76 8.979 4.838 0 8.76-4.02 8.76-8.98 0-4.96-3.922-8.979-8.76-8.979zm0 14.16a5.175 5.175 0 0 1-4.867-3.112 5.186 5.186 0 0 1 1.042-5.687 5.17 5.17 0 0 1 5.653-1.18 5.181 5.181 0 0 1 3.225 4.798 5.117 5.117 0 0 1-5.053 5.156v.025z"
+      fill="url(#prefix__f)"
+    />
+    <path fill="#8CC14E" d="M115.724 32.131h61.339v14.526h-61.339z" />
+    <path
+      d="M146.393 17.95a8.573 8.573 0 0 0-7.92 5.298 8.59 8.59 0 0 0 1.858 9.353 8.566 8.566 0 0 0 9.343 1.86 8.583 8.583 0 0 0 5.292-7.929c0-4.74-3.838-8.583-8.573-8.583zm0 13.536a4.95 4.95 0 0 1-4.941-4.954 4.95 4.95 0 0 1 4.941-4.954 4.95 4.95 0 0 1 4.954 4.942 4.957 4.957 0 0 1-1.452 3.503 4.945 4.945 0 0 1-3.502 1.447v.016z"
+      fill="#8CC14E"
+    />
+    <g opacity={0.5} fill="#8CC14E">
+      <path d="M4.687 226.494H5.84v6.555H4.687z" />
+      <path d="M8.54 229.195v1.156H1.991v-1.156z" />
+    </g>
+    <g opacity={0.5} fill="#8CC14E">
+      <path d="M138.582 0h1.154v6.555h-1.154z" />
+      <path d="M142.434 2.698v1.156h-6.547V2.698z" />
+    </g>
+    <path
+      d="M236.677 237.406a1.417 1.417 0 0 1-.788-1.711.683.683 0 0 0 .03-.157.71.71 0 0 0-1.274-.47.682.682 0 0 0-.08.138c-.286.66-1.021 1-1.709.79a.68.68 0 0 0-.157-.03.709.709 0 0 0-.47 1.274c.044.032.09.06.139.08.659.288.998 1.024.789 1.712a.683.683 0 0 0-.03.157.71.71 0 0 0 1.273.47.682.682 0 0 0 .08-.138c.287-.66 1.022-1 1.71-.79a.68.68 0 0 0 .156.03.709.709 0 0 0 .47-1.275.681.681 0 0 0-.139-.08zM41.95 174.392a1.417 1.417 0 0 1-.789-1.712.683.683 0 0 0 .03-.157.71.71 0 0 0-1.273-.47.682.682 0 0 0-.08.139c-.287.66-1.022.999-1.71.79a.68.68 0 0 0-.156-.031.709.709 0 0 0-.47 1.275c.043.032.09.059.138.08.66.287.999 1.023.79 1.711a.683.683 0 0 0-.031.157.71.71 0 0 0 1.273.47.682.682 0 0 0 .08-.138c.287-.66 1.022-1 1.71-.79a.68.68 0 0 0 .156.031.709.709 0 0 0 .47-1.275.681.681 0 0 0-.138-.08zM204.141 20.952a1.417 1.417 0 0 1-.788-1.712.683.683 0 0 0 .03-.157.71.71 0 0 0-1.273-.47.682.682 0 0 0-.08.138c-.287.66-1.022 1-1.71.79a.68.68 0 0 0-.156-.03.709.709 0 0 0-.47 1.275c.043.032.089.058.138.08.659.287.998 1.023.789 1.711a.683.683 0 0 0-.03.157.71.71 0 0 0 1.273.47.682.682 0 0 0 .08-.138c.287-.66 1.022-1 1.71-.79a.68.68 0 0 0 .156.03.709.709 0 0 0 .47-1.275.681.681 0 0 0-.139-.08z"
+      fill="#8CC14E"
+      opacity={0.5}
+    />
+    <ellipse
+      fill="#8CC14E"
+      opacity={0.5}
+      cx={249.434}
+      cy={96.636}
+      rx={2.311}
+      ry={2.314}
+    />
+    <ellipse
+      fill="#8CC14E"
+      opacity={0.5}
+      cx={70.821}
+      cy={229.444}
+      rx={2.311}
+      ry={2.314}
+    />
+    <ellipse
+      fill="#8CC14E"
+      opacity={0.5}
+      cx={225.698}
+      cy={146.652}
+      rx={2.311}
+      ry={2.314}
+    />
+    <ellipse
+      fill="#8CC14E"
+      opacity={0.5}
+      cx={26.747}
+      cy={29.608}
+      rx={2.311}
+      ry={2.314}
+    />
+    <ellipse
+      fill="#8CC14E"
+      opacity={0.5}
+      cx={2.311}
+      cy={92.73}
+      rx={2.311}
+      ry={2.314}
+    />
+  </g>
+</svg>
+)
+
+export const ErrorIcon = props => (
+  <svg width={120} height={120} {...props}>
+    <defs>
+      <circle id="prefix__a" cx={60} cy={60} r={40} />
+      <mask
+        id="prefix__b"
+        maskContentUnits="userSpaceOnUse"
+        maskUnits="objectBoundingBox"
+        x={0}
+        y={0}
+        width={80}
+        height={80}
+        fill="#fff"
+      >
+        <use xlinkHref="#prefix__a" />
+      </mask>
+      <path
+        d="M17.333 17.333h-2.666v-8h2.666v8zm0 5.334h-2.666V20h2.666v2.667zM16 2.667C8.636 2.667 2.667 8.637 2.667 16A13.333 13.333 0 1 0 16 2.667z"
+        id="prefix__c"
+      />
+    </defs>
+    <g fill="none" fillRule="evenodd">
+      <path
+        d="M60 120c33.137 0 60-26.863 60-60S93.137 0 60 0 0 26.863 0 60s26.863 60 60 60z"
+        fill="#5A666D"
+        opacity={0.302}
+      />
+      <path
+        d="M60 110c27.614 0 50-22.386 50-50S87.614 10 60 10 10 32.386 10 60s22.386 50 50 50z"
+        fill="#5A666D"
+        opacity={0.599}
+      />
+      <use
+        strokeOpacity={0.299}
+        stroke="#EFF2F7"
+        mask="url(#prefix__b)"
+        strokeWidth={2}
+        strokeDasharray="3 4"
+        xlinkHref="#prefix__a"
+      />
+      <g transform="translate(44 44)">
+        <mask id="prefix__d" fill="#fff">
+          <use xlinkHref="#prefix__c" />
+        </mask>
+        <use fill="#757575" fillRule="nonzero" xlinkHref="#prefix__c" />
+        <g mask="url(#prefix__d)" fill="#FFF">
+          <path d="M0 0h32v32H0z" />
+        </g>
+      </g>
+    </g>
   </svg>
 )

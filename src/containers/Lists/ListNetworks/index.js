@@ -11,9 +11,9 @@ import styled from 'styled-components'
 import { TITLE_LIST } from './utils'
 /* Components */
 import List from 'components/List'
-import Loading from 'components/Loading'
 import Modal from 'components/Modal'
 import Button from 'components/Button'
+import NoData from 'components/NoData'
 import { DeleteIcon, EyeIcon, SettingIcon, CheckIcon, CloseIcon } from 'components/Icons'
 
 
@@ -107,7 +107,7 @@ const ListNetwork = (props) => (
       </List.Column>)}
       <List.Column marginLeft />
     </List.Header>
-    {props.networkServicesInstance && props.networkServicesInstance.map(network =>
+    {props.networkServicesInstance.map(network =>
     <List.Row key={network.id}>
       {TITLE_LIST && TITLE_LIST.map(({
         size,
@@ -160,13 +160,13 @@ class ListNetworks extends Component {
 
   render() {
     const { networkServicesInstance,
-      loadingList,
       modalInfo,
       networkSelect,
-      modalDelete } = this.props
+      modalDelete,
+      noData } = this.props
     const { actionModal, actionModalDelete, deleteNetwork } = this.actions
     return (
-      <Loading loading={loadingList}>
+      <Wrapper>
         <ModalInfo
           modalInfo={modalInfo}
           networkSelect={networkSelect}
@@ -179,18 +179,30 @@ class ListNetworks extends Component {
           actionModalDelete={actionModalDelete}
           deleteNetwork={deleteNetwork}
         />
+        {networkServicesInstance &&
         <ListNetwork
           navigate={this.navigate}
           networkServicesInstance={networkServicesInstance}
           actionModal={actionModal}
           actionModalDelete={actionModalDelete}
         />
-      </Loading>
+        }
+        {noData &&
+        <NoData
+          title={'You don’t have any network services yet...'}
+          message={'Click on the “Add new  network service” button to add your first service!'}
+        />
+        }
+      </Wrapper>
     )
   }
 }
 
 export default withRouter(Logic(ListNetworks))
+
+const Wrapper = styled.div`
+
+`
 
 const Field = styled.p`
   color: white;

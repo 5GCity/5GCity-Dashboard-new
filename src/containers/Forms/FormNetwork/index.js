@@ -15,7 +15,7 @@ import Form from 'components/Form'
 import Input from 'components/Input'
 import Button from 'components/Button'
 import Select from 'components/Select'
-import { PlusIcon } from 'components/Icons'
+import { PlusIcon, DeleteIcon } from 'components/Icons'
 
 class FormNetwork extends Component {
   render () {
@@ -72,7 +72,7 @@ class FormNetwork extends Component {
                 status={!proTags.valid}
               >
               <Layout.Row gutter="6">
-              <Layout.Col span="16">
+              <Layout.Col span="12">
                   <Input
                     value={proTags.value}
                     onChange ={ value => setValueProvisioned('provisionedTags', value, index)}
@@ -83,6 +83,7 @@ class FormNetwork extends Component {
                   <Button
                     text={'Remove'}
                     type={'danger'}
+                    svg={<DeleteIcon />}
                     onClick={() => removeProvisionedTags(index)}
                   />
               </Layout.Col>

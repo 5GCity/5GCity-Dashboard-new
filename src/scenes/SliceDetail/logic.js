@@ -13,8 +13,20 @@ import { createSlice } from './utils'
 
 import PropTypes from 'prop-types'
 
+/* Logic */
+import AppLogic from 'containers/App/logic'
+
 export default kea({
   path: () => ['scenes', 'SliceDetail'],
+
+  connect: {
+    actions: [
+      AppLogic, [
+        'addLoadingPage',
+        'removeLoadingPage',
+      ]
+    ],
+  },
 
   actions: () => ({
     fetchSlice: () => ({ }),
@@ -72,16 +84,21 @@ export default kea({
 
     * fetchSlice () {
 
-      const { setSlice } = this.actions
+      const { setSlice, addLoadingPage, removeLoadingPage } = this.actions
+
+      // add Loading page
+      yield put(addLoadingPage())
        try {
         const selectSlice = this.props.match.params.id
         const responseResult = yield call(axios.get,`${API_BASE_URL}/slic3/${selectSlice}/chunks`)
         const { data } = responseResult
 
+        yield put(removeLoadingPage())
         yield put(setSlice(data))
 
       }catch(error){
         console.error(`Error ${error}`)
+        yield put(removeLoadingPage())
       }
     }
   }

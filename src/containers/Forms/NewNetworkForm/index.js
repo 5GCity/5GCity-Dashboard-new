@@ -21,55 +21,67 @@ import { DeleteIcon, PlusIcon } from 'components/Icons'
 
 class NewNetworkForm extends Component {
   render () {
-    const { values, listSlices } = this.props,
-    { setValue, addPort, setValuePorts, removePort } = this.actions,
-    { nameInstance, description, ports, slice_id } = values
+    const { form, listSlices } = this.props,
+    { change, addPort, setValuePorts, removePort } = this.actions,
+    { nameInstance, description, ports, slice_id } = form
     return (
-      <Layout.Row gutter="20">
+      <Layout.Row>
       {listSlices &&
         <Form
           labelPosition={'top'}
         >
           <Layout.Col>
-          <Form.Item label={'Name of Instance'}>
+          <Form.Item
+            label={'Name of Instance'}
+            required={true}
+            status={!nameInstance.valid}
+          >
             <Input
-              value={nameInstance}
-              onChange={value => setValue('nameInstance', value)}
+              value={nameInstance.value}
+              onChange={value => change({nameInstance: value})}
             />
+            <Form.Error>{nameInstance.message}</Form.Error>
           </Form.Item>
           </Layout.Col>
           <Layout.Col>
           <Form.Item
             label={'Description'}
             required={true}
+            status={!description.valid}
           >
             <Input
-              value={description}
-              onChange={value => setValue('description', value)}
+              value={description.value}
+              onChange={value => change({description: value})}
             />
+            <Form.Error>{description.message}</Form.Error>
           </Form.Item>
           </Layout.Col>
           <Layout.Col>
-          { ports.map((port, index) =>
+          { ports.array.map((port, index) =>
             <Form.Item
               key={index}
               label={`Ports ${ index+1 }`}
               prop={ports[index]}
+              required={true}
+              status={!port.valid}
             >
-            <Layout.Col span="18">
-                <Input
-                  value ={port}
-                  onChange ={ value => setValuePorts('ports', value, index) }
-                />
-            </Layout.Col>
-            <Layout.Col span="6">
-                <Button
-                  text={'Remove'}
-                  svg={<DeleteIcon />}
-                  type={'danger'}
-                  onClick={() => removePort(index)}
-                />
+              <Layout.Row gutter="12">
+                <Layout.Col span="18">
+                    <Input
+                      value ={port.value}
+                      onChange ={ value => setValuePorts('ports', value, index) }
+                    />
+                    <Form.Error>{port.message}</Form.Error>
                 </Layout.Col>
+                <Layout.Col span="6">
+                    <Button
+                      text={'Remove'}
+                      svg={<DeleteIcon />}
+                      type={'danger'}
+                      onClick={() => removePort(index)}
+                    />
+                    </Layout.Col>
+              </Layout.Row>
             </Form.Item>
             )}
 
@@ -84,9 +96,12 @@ class NewNetworkForm extends Component {
             <Select
               placeholder={'Select Slice'}
               options={listSlices}
-              value={slice_id}
-              onChange={value => setValue('slice_id', value)}
+              value={slice_id.value}
+              onChange={value => change({slice_id: value})}
+              required={true}
+              status={!slice_id.valid}
             />
+            <Form.Error>{slice_id.message}</Form.Error>
           </Form.Item>
         </Form>
       }

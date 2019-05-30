@@ -59,7 +59,6 @@ class PanelChunkDetail extends Component {
                 key={wifi.id}>
                 <Name>{wifi.name}</Name>
                 <Id>{wifi.id}</Id>
-                {console.log(wifi)}
               </TypeMarker>
             )}
           </PanelInfo>

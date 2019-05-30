@@ -33,11 +33,11 @@ import { MapIcon, NetworkServicesIcon, ServiceIcon } from 'components/Icons'
 ]
 
 export const ChangeLink = menu => {
-  const linksCopy = LINKS
+  const linksCopy = [ ...LINKS ]
   for (let i = 0; i < linksCopy.length; i++) {
     const element = linksCopy[i]
       if(element.id === menu.id){
-        element.active = !element.active
+        element.active = true
       } else if (menu.disabled) {
         element.active = false
       } else {

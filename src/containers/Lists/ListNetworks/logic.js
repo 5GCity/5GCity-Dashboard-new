@@ -11,23 +11,40 @@ import axios from 'axios'
 import { API_BASE_URL } from 'config'
 import PropTypes from 'prop-types'
 
+/*Logic*/
+import AppLogic from 'containers/App/logic'
 
 export default kea({
   path: () => ['scenes', 'containers', 'ListNetworks'],
+
+    connect: {
+    actions: [
+      AppLogic, [
+        'addLoadingPage',
+        'removeLoadingPage',
+      ],
+    ],
+    props:[
+      AppLogic, [
+        'keycloak'
+      ]
+    ]
+  },
 
   actions: () => ({
     fetchNetworksServicesInstance: () => ({ }),
     setNetworksServices: (networks) => ({ networks }),
     actionModal: (networkSelect) => ({ networkSelect }),
-    loadingList: () => ({ }),
     actionModalDelete: (networkSelect) => ({ networkSelect }),
     loading: () => ({ }),
     deleteNetwork: (id) => ({ id }),
+    setNoData: () => ({}),
+    removeNoData: () => ({}),
     reset: () => ({ }),
   }),
 
   reducers: ({ actions }) => ({
-    networkServicesInstance:[[], PropTypes.array,{
+    networkServicesInstance:[null, PropTypes.array,{
       [actions.fetchNetworksServicesInstance]: (state, payload) => null,
       [actions.setNetworksServices]: (state, payload) => payload.networks
     }],
@@ -48,13 +65,13 @@ export default kea({
       [actions.loading]: (state, payload) => !state,
       [actions.reset]: () => false
     }],
-    loadingList: [false, PropTypes.bool, {
-      [actions.loadingList]: (state, payload) => !state,
-      [actions.reset]: () => false
-    }],
-    networkId : [null, PropTypes.any,{
+    networkId: [null, PropTypes.any,{
       [actions.deleteNetwork]: (state, payload) => payload.id,
       [actions.reset]: () => null
+    }],
+    noData: [false, PropTypes.bool, {
+      [actions.setNoData]: () => true,
+      [actions.removeNoData]: () => false,
     }]
   }),
 
@@ -64,6 +81,13 @@ export default kea({
     yield put(fetchNetworksServicesInstance())
   },
 
+  stop: function * () {
+    const { removeNoData, removeLoadingPage } = this.actions
+
+    yield put(removeNoData())
+    yield put(removeLoadingPage())
+  },
+
   takeLatest: ({ actions, workers }) => ({
     [actions.fetchNetworksServicesInstance]: workers.fetchNetworks,
     [actions.deleteNetwork]: workers.deleteNetworkService,
@@ -71,26 +95,31 @@ export default kea({
 
   workers: {
     * fetchNetworks () {
-      const { setNetworksServices, loadingList } = this.actions
-      yield put(loadingList())
+      const { setNetworksServices, addLoadingPage, removeLoadingPage, setNoData } = this.actions
+      yield put(addLoadingPage())
       try {
 
         let responseResult = yield call(axios.get,`${API_BASE_URL}/network_service_instance`)
         const { data } = responseResult
+        if(data.length > 0){
+          yield put(setNetworksServices(data))
+        } else {
+          yield put(setNoData())
+        }
+        yield put(removeLoadingPage())
 
-        yield put(setNetworksServices(data))
-        yield put(loadingList())
-
-      } catch(error){
-        console.error(`Error ${error}`)
-        yield put(loadingList())
+      } catch(er){
+        if (er.response.status === 401) {
+          const keycloak = yield this.get('keycloak')
+          keycloak.logout()
+        }
+        yield put(removeLoadingPage())
       }
     },
     * deleteNetworkService () {
       const networkId = yield this.get('networkId'),
       networkServices = yield this.get('networkServicesInstance'),
       { actionModalDelete, setNetworksServices } = this.actions
-      console.log(networkId, networkServices)
       networkServices.splice(networkServices.findIndex((i) => {
         return i.id === networkId;
       }), 1)

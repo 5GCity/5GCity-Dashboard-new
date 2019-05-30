@@ -6,7 +6,7 @@ const decamelizeKeysTransformer = function (data) {
   return data && JSON.stringify(decamelizeKeys(data))
 }
 
-export const setAuthorizationInterceptor = (authToken) => {
+export const setAuthorizationInterceptor = authToken => {
   axios.interceptors.request.use((config) => {
     config.headers.Authorization = `${AUTH_TOKEN_TYPE} ${authToken}`
     return config

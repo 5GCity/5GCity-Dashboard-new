@@ -9,7 +9,7 @@ import styled from 'styled-components'
 import { darken } from 'polished';
 
 export default ({ children, icon, ...props }) => (
-  <RoundButton size={props.size}>
+  <RoundButton>
     <IconContent>{icon}</IconContent>
   </RoundButton>
 )

@@ -17,6 +17,9 @@ import { AddResource, CreateAllPins } from './utils'
 import PropTypes from 'prop-types'
 //import * as Check from 'validations'
 
+/* Logic */
+import AppLogic from 'containers/App/logic'
+
 const DEFAULT_RESOURCE = {
   location:{
     longitude: null,
@@ -31,6 +34,15 @@ const DEFAULT_RESOURCE = {
 
 export default kea({
   path: () => ['scenes', 'containers', 'infraManagement'],
+
+  connect: {
+    actions: [
+      AppLogic, [
+        'addLoadingPage',
+        'removeLoadingPage',
+      ]
+    ],
+  },
 
   actions: () => ({
     loading: () => ({}),
@@ -54,10 +66,6 @@ export default kea({
       [actions.getInfoMarker]: (state, payload) => payload.marker,
       [actions.reset]: () => DEFAULT_RESOURCE,
     }],
-    loading: [false, PropTypes.bool, {
-      [actions.loading]: (state, payload) => !state,
-      [actions.reset]: () => false
-    }],
     modalStatus:[false, PropTypes.bool, {
       [actions.changeModalStatus]: (state,payload) => !state,
     }],
@@ -78,13 +86,13 @@ export default kea({
 
   start: function * () {
     const { fetchResources } = this.actions
-
     yield put(fetchResources())
   },
 
   stop: function * () {
-    const { reset } = this.actions
+    const { reset, removeLoadingPage } = this.actions
 
+    yield put(removeLoadingPage())
     yield put(reset())
   },
 
@@ -95,8 +103,8 @@ export default kea({
 
   workers: {
     *fetchResources (action) {
-      const { setListResources, loading } = this.actions
-      yield put(loading())
+      const { setListResources, addLoadingPage, removeLoadingPage } = this.actions
+      yield put(addLoadingPage())
       try{
         const responseComputes = yield call(axios.get , `${API_BASE_URL}/compute`)
         const responseNetworks = yield call(axios.get , `${API_BASE_URL}/physical_network`)
@@ -115,12 +123,12 @@ export default kea({
         }
 
         yield(put(setListResources(listResources)))
-        yield put(loading())
+        yield put(removeLoadingPage())
       }
       catch (error) {
         console.log(error)
         yield(put(setListResources(null)))
-        yield put(loading())
+        yield put(removeLoadingPage())
       }
     },
 

@@ -11,8 +11,25 @@ import PropTypes from 'prop-types'
 import axios from 'axios'
 import { API_BASE_URL } from 'config'
 
+/*Logic*/
+import AppLogic from 'containers/App/logic'
+
 export default kea({
   path: () => ['scenes', 'containers', 'ListNewNetworks'],
+
+  connect: {
+    actions: [
+      AppLogic, [
+        'addLoadingPage',
+        'removeLoadingPage',
+      ],
+    ],
+    props:[
+      AppLogic, [
+        'keycloak'
+      ]
+    ]
+  },
 
   actions: () => ({
     fetchNetworksServices: () => ({ }),
@@ -37,7 +54,7 @@ export default kea({
     modalError: [false, PropTypes.bool,{
       [actions.actionModalError]: (state, payload) => !state,
     }],
-    selectNetwork: [null, PropTypes.string,{
+    selectNetwork: [null, PropTypes.any,{
       [actions.setSelectNetwork]: (state, payload) => payload.network,
     }],
     networkServices: [[], PropTypes.array,{
@@ -51,20 +68,29 @@ export default kea({
     yield put(fetchNetworksServices())
   },
 
+  stop: function * () {
+    const { removeLoadingPage } = this.actions
+
+    yield put(removeLoadingPage())
+  },
+
   takeLatest: ({ actions, workers }) => ({
     [actions.fetchNetworksServices]: workers.fetchNetworksServicesWorker,
   }),
 
   workers: {
     * fetchNetworksServicesWorker () {
-      const { setNetworksServices } = this.actions
+      const { setNetworksServices, addLoadingPage, removeLoadingPage } = this.actions
+      yield put(addLoadingPage())
       try {
         let responseResult = yield call(axios.get,`${API_BASE_URL}/network_service`)
         const { data } = responseResult
         yield put(setNetworksServices(data))
+        yield put(removeLoadingPage())
 
       } catch(error){
         console.error(`Error ${error}`)
+        yield put(removeLoadingPage())
       }
     },
   }

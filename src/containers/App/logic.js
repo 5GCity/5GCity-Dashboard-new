@@ -21,8 +21,10 @@ export default kea({
 
   actions: () => ({
     checkLoggedUser: () => ({}),
-    decreaseLoading: () => ({ }),
-    setKeycloak: (keycloak)=> ({ keycloak})
+    decreaseLoading: () => ({}),
+    setKeycloak: (keycloak)=> ({ keycloak}),
+    addLoadingPage: () => ({}),
+    removeLoadingPage: () => ({}),
   }),
 
   reducers: ({ actions }) => ({
@@ -31,7 +33,11 @@ export default kea({
     }],
     keycloak: [null, PropTypes.any,{
       [actions.setKeycloak]: (state, payload) => payload.keycloak
-    }]
+    }],
+    loadingPage:[false, PropTypes.bool,{
+      [actions.addLoadingPage]: () => true,
+      [actions.removeLoadingPage]: () => false,
+    }],
   }),
 
   selectors: ({ selectors }) => ({
@@ -74,7 +80,8 @@ export default kea({
           const keycloak = Keycloak('/keycloak.json')
           keycloak.init({onLoad: 'login-required'})
             .success(function(authenticated) {
-                localStorage.setItem('keycloak', JSON.stringify(keycloak))
+              authenticated && localStorage.setItem('keycloak', JSON.stringify(keycloak))
+              !authenticated && keycloak.login()
               resolve(keycloak)
             })
             .error(function(error) {
@@ -88,6 +95,6 @@ export default kea({
       yield put(setKeycloak(keycloak))
       yield call(setAuthorizationInterceptor, keycloak.token)
       yield put(decreaseLoading())
-    }
-  }
+    },
+  },
 })

@@ -6,7 +6,7 @@
  */
 import React from 'react'
 import { storiesOf } from '@storybook/react'
-import { DeleteIcon, CirclePlusIcon } from 'components/Icons'
+import { DeleteIcon, CirclePlusIcon, CheckIcon } from 'components/Icons'
 
 
 import Button from './index'
@@ -43,6 +43,10 @@ const BtnDanger = () => (
   <Button type={'danger'}>No</Button>
 )
 
+const BtnLoading = () => (
+  <Button type={'primary'} loading={true} svg={<CheckIcon />}>Yes</Button>
+)
+
 const BtnOutline = () => (
   <div>
   <Button
@@ -67,4 +71,5 @@ storiesOf('Button', module)
   .add('Secondary', BtnSecondary)
   .add('Btn + Icon', BtnIcon)
   .add('Danger', BtnDanger)
+  .add('Loading', BtnLoading)
   .add('Outline', BtnOutline)

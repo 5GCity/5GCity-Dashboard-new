@@ -13,8 +13,10 @@ import { withRouter } from 'react-router-dom'
 /* Component */
 import List from 'components/List'
 import Button from 'components/Button'
-import { DeleteIcon, EditIcon, CheckIcon, CloseIcon, AddIcon } from 'components/Icons'
+import { DeleteIcon, EditIcon, CheckIcon, CloseIcon, CloneIcon } from 'components/Icons'
 import Modal from 'components/Modal'
+import NoData from 'components/NoData'
+import ErroPage from 'components/ErroPage'
 
 const ListSDKService = props => (
   <List>
@@ -40,7 +42,7 @@ const ListSDKService = props => (
         <ContainerButtons>
           <Button
             type={'secondary'}
-            svg={<AddIcon />}
+            svg={<CloneIcon />}
             onClick={() => props.selectService(service, 'clone')}
             text={'Clone'}
           />
@@ -131,6 +133,8 @@ class ListSDKServices extends Component {
       modalVisibledDelete,
       modalVisibledClone,
       service,
+      noData,
+      errorFecth,
     } = this.props
 
     const {
@@ -156,12 +160,23 @@ class ListSDKServices extends Component {
           service={service}
           cloneService={cloneService}
         />
+        {serviceList &&
         <ListSDKService
           navigate={this.navigate}
           services={serviceList}
           selectService={selectService}
           cloneService={cloneService}
         />
+        }
+        {noData &&
+        <NoData
+          title={'You don’t have any services yet...'}
+          message={'Click on the “Add new service” button to add your first service!'}
+        />
+        }
+        {errorFecth &&
+        <ErroPage />
+        }
       </React.Fragment>
     )
   }

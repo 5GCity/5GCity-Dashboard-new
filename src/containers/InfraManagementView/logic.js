@@ -13,11 +13,22 @@ import PropTypes from 'prop-types'
 import { CreateAllPins } from './utils'
 
 
+/* Logic */
+import AppLogic from 'containers/App/logic'
+
 export default kea({
   path: () => ['scenes', 'containers', 'InfoManagementView'],
 
+  connect: {
+    actions: [
+      AppLogic, [
+        'addLoadingPage',
+        'removeLoadingPage',
+      ]
+    ],
+  },
+
   actions: () => ({
-    loading: () => ({ }),
     fetchResources: () => ({ }),
     panelAction: () => ({ }),
     setListResources: (resources) => ({ resources }),
@@ -40,10 +51,6 @@ export default kea({
       [actions.infoMarker]: (state, payload) => payload.marker,
       [actions.reset]: () => null,
     }],
-    loading: [false, PropTypes.bool, {
-      [actions.loading]: (state, payload) => !state,
-      [actions.reset]: () => false
-    }],
   }),
 
   selectors: ({ selectors }) => ({
@@ -58,11 +65,14 @@ export default kea({
 
   start: function * () {
     const { fetchResources } = this.actions
+
     yield put(fetchResources())
   },
 
   stop: function * () {
-    const { reset } = this.actions
+    const { reset, removeLoadingPage } = this.actions
+
+    yield put(removeLoadingPage())
     yield put(reset())
   },
 
@@ -72,8 +82,8 @@ export default kea({
 
   workers: {
     *getListResources () {
-      const { setListResources, loading } = this.actions
-      yield put(loading())
+      const { setListResources, addLoadingPage, removeLoadingPage } = this.actions
+      yield put(addLoadingPage())
       try{
         const responseComputes = yield call(axios.get , `${API_BASE_URL}/compute`)
         const responseNetworks = yield call(axios.get , `${API_BASE_URL}/physical_network`)
@@ -92,15 +102,14 @@ export default kea({
         }
 
         yield(put(setListResources(listResources)))
-        yield put(loading())
+        yield put(removeLoadingPage())
       }
       catch (error) {
         console.log(error)
         yield(put(setListResources(null)))
-        yield put(loading())
+        yield put(removeLoadingPage())
       }
     },
   }
-
 })
 

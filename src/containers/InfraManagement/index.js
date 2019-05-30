@@ -15,7 +15,6 @@ import SliceMap from 'containers/SliceMap'
 /* Component */
 import HeaderNav from 'components/HeaderNav'
 import { BackIcon, CheckIcon, CloseIcon } from 'components/Icons'
-import Loading from 'components/Loading'
 import Modal from 'components/Modal'
 import Button from 'components/Button'
 
@@ -64,7 +63,7 @@ class InfraManagement extends Component {
 
   render() {
     const { addResource, getInfoMarker, changeModalStatus, submitModal } = this.actions
-    const { pinsResources, loading, locations, modalStatus, modalInfo } = this.props
+    const { pinsResources, locations, modalStatus, modalInfo } = this.props
     return (
       <Wrapper>
         <ModalDeleteResource
@@ -73,8 +72,6 @@ class InfraManagement extends Component {
           modalStatus={modalStatus}
           modalInfo={modalInfo}
         />
-
-        <Loading loading={loading}>
           <HeaderNav
             buttonBack={<BackIcon />}
             navigateBack={() => this.navigateToBack()}
@@ -89,7 +86,6 @@ class InfraManagement extends Component {
               onClick={(marker) => getInfoMarker(marker)}
             />
           }
-        </Loading>
       </Wrapper>
     )
   }

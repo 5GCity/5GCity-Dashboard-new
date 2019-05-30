@@ -47,19 +47,23 @@ export const Titles = [{
 ]
 
 export const getResult = services => {
-  const array = []
-  services &&
-  services.forEach(service => {
-    array.push({
-      name: service.name,
-      id: service.id,
-      design: service.designer,
-      version: service.version,
-      repository: service.repository || null,
-      lastUpdate: service.lastUpdate || null,
+  if(services){
+    const array = []
+    services &&
+    services.forEach(service => {
+      array.push({
+        name: service.name,
+        id: service.id,
+        design: service.designer,
+        version: service.version,
+        repository: service.repository || null,
+        lastUpdate: service.lastUpdate || null,
+      })
     })
-  })
-  return array
+    return array
+} else {
+  return null
+}
 }
 
 export const changeName = (selectService, services) => {

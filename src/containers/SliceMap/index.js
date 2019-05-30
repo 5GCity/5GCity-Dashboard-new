@@ -25,7 +25,6 @@ class SliceMap extends Component {
 
   componentDidMount() {
     const { location } = this.props
-    console.log(location)
     let viewport = {
       ...this.state.viewport,
       longitude: 0,
@@ -53,7 +52,7 @@ class SliceMap extends Component {
 
       const {longitude, latitude, zoom} = new WebMercatorViewport(this.state.viewport)
         .fitBounds(coordinates, {
-          padding: 20,
+          padding: 40,
           offset: [0, -100]
         })
         viewport = {
@@ -67,6 +66,56 @@ class SliceMap extends Component {
       }
     }
         this.setState({viewport})
+  }
+
+  componentDidUpdate(prevProps) {
+    const { location } = this.props
+    const locationLength = location && location.length
+    const prevLocationLength = prevProps.location &&  prevProps.location.length
+    const needUpdate = Math.abs(locationLength - prevLocationLength)
+      if (needUpdate !== 0) {
+      let viewport = {
+        ...this.state.viewport,
+        longitude: 0,
+        latitude: 0,
+        zoom: 2,
+        maxPitch: 0,
+        minPitch: 0,
+        minZoom: 2,
+        dragRotate: false,
+      }
+      if (location) {
+      if(location.length === 1) {
+        viewport.longitude = location[0][0]
+        viewport.latitude = location[0][1]
+        viewport.zoom = 16
+        viewport.transitionDuration = 4000
+        viewport.transitionInterpolator = new FlyToInterpolator()
+      } else if (location.length > 1) {
+        const bounds = location.reduce(function(bounds, coord) {
+        return bounds.extend(coord)
+        }, new mapboxgl.LngLatBounds(location[0], location[0]))
+        const coordinates = []
+        coordinates.push([bounds._ne.lng, bounds._ne.lat])
+        coordinates.push([bounds._sw.lng, bounds._sw.lat])
+
+        const {longitude, latitude, zoom} = new WebMercatorViewport(this.state.viewport)
+          .fitBounds(coordinates, {
+            padding: 40,
+            offset: [0, -100]
+          })
+          viewport = {
+            ...this.state.viewport,
+            longitude,
+            latitude,
+            zoom,
+            transitionDuration: 3000,
+            transitionInterpolator: new FlyToInterpolator()
+          }
+        }
+      }
+        this.setState({viewport})
+    }
   }
 
  //mapController = new MyMapController()

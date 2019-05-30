@@ -108,7 +108,11 @@ export default kea({
       },
       [actions.removeProvisionedTags]: (state, payload) => Object.assign({}, state, state.provisionedTags.array.splice(payload.index,1)),
       [actions.changeForm]: (state, payload) => payload.form,
-      [actions.reset]: () => DEFAULT_FORM,
+      [actions.reset]: () => {
+        const form = { ...DEFAULT_FORM }
+        form.provisionedTags.array = []
+        return form
+      },
     }],
 
     dirty: [false, PropTypes.bool, {
@@ -124,6 +128,12 @@ export default kea({
     const { getForm } = this.actions
 
     yield put(getForm())
+  },
+
+  stop: function * () {
+    const { reset } = this.actions
+
+    yield put(reset())
   },
 
   takeLatest: ({ actions, workers }) => ({

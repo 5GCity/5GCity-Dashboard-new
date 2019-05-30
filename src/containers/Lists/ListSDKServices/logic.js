@@ -14,9 +14,26 @@ import { getResult, changeName } from './utils'
 import PropTypes from 'prop-types'
 //import * as Check from 'validations'
 
+/*Logic*/
+import AppLogic from 'containers/App/logic'
+
 
 export default kea({
   path: () => ['scenes', 'containers', 'ListSDKServices'],
+
+  connect: {
+    actions: [
+      AppLogic, [
+        'addLoadingPage',
+        'removeLoadingPage',
+      ]
+    ],
+    props: [
+      AppLogic, [
+        'keycloak',
+      ]
+    ]
+  },
 
   actions: () => ({
     fetchServices: () => ({ }),
@@ -27,6 +44,9 @@ export default kea({
     actionModalDelete: () => ({ }),
     actionModalClone: () => ({ }),
     selectService: (service, type) => ({ service, type }),
+    setNoData: () => ({}),
+    removeNoData: () => ({}),
+    setErroFecth: () =>({}),
   }),
 
   reducers: ({ actions }) => ({
@@ -46,6 +66,14 @@ export default kea({
     service: [null, PropTypes.object, {
       [actions.selectService]: (state, payload) => payload.service,
     }],
+    noData: [false, PropTypes.bol, {
+      [actions.setNoData]: () => true,
+      [actions.removeNoData]: () => false,
+    }],
+    errorFecth: [false, PropTypes.bol, {
+      [actions.setErroFecth]: () => true,
+      [actions.reset]: () => false,
+    }],
   }),
 
   start: function * () {
@@ -55,9 +83,11 @@ export default kea({
   },
 
   stop: function * () {
-    const { reset } = this.actions
+    const { reset, removeNoData, removeLoadingPage } = this.actions
 
+    yield put(removeNoData())
     yield put(reset())
+    yield put(removeLoadingPage())
   },
 
   takeLatest: ({ actions, workers }) => ({
@@ -78,15 +108,27 @@ export default kea({
 
   workers: {
     * fetchServices () {
-      const { setServices } = this.actions
+      const { setServices, addLoadingPage, removeLoadingPage, setNoData, setErroFecth } = this.actions
+
+      //
+      yield put(addLoadingPage())
       try {
         let responseResult = yield call(axios.get,`${API_BASE_SDK}/sdk/composer/services`)
         const { data } = responseResult
-
-        yield put(setServices(data))
-
-      } catch(error){
-        console.error(`Error ${error}`)
+        if(data.length > 0){
+          yield put(setServices(data))
+        } else {
+          yield put(setNoData())
+        }
+        yield put(removeLoadingPage())
+      } catch(err){
+        console.log(err.response)
+        if(err.response === undefined) { yield put(setErroFecth()) }
+        if (err.response.status === 401) {
+          const keycloak = yield this.get('keycloak')
+          keycloak.logout()
+        }
+        yield put(removeLoadingPage())
       }
     },
 

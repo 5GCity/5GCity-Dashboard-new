@@ -11,17 +11,33 @@ import axios from 'axios'
 import PropTypes from 'prop-types'
 import { API_BASE_URL } from 'config'
 import { createAllPins } from './utils'
+import * as Check from 'validations'
+
+/* Logic */
+import AppLogic from 'containers/App/logic'
 
 const FORM_SLICE = {
-  nameSlice: null,
+  nameSlice: {
+    value: null,
+  },
 }
-
-const propTypes = {
-  nameSlice: PropTypes.string,
+const VALIDATIONS = {
+  nameSlice: [
+    Check.isRequired
+  ],
 }
 
 export default kea({
   path: () => ['scenes', 'SliceNew'],
+
+  connect: {
+    actions: [
+      AppLogic, [
+        'addLoadingPage',
+        'removeLoadingPage',
+      ]
+    ],
+  },
 
   actions: () => ({
     getListResources: () => ({ }),
@@ -43,8 +59,8 @@ export default kea({
     resetSliceName: () => ({ }),
     showError: (error)  => ({ error }),
     reset: () => ({ }),
-    setValue: (key, value) => ({ key, value }),
-    setValues: (values) => ({ values }),
+    setValue: (field) => ({ field }),
+    setForm: (form) => ({ form }),
     setSelectSlice: (slice) => ({ slice }),
    }),
 
@@ -99,13 +115,9 @@ export default kea({
     error: [null, PropTypes.string, {
       [actions.showError]: (state, payload) => payload.error,
     }],
-    formSlice:[FORM_SLICE, PropTypes.shape(propTypes),{
-      [actions.setValue]: (state, payload) => {
-        return Object.assign({}, state, { [payload.key]: payload.value })
-      },
-      [actions.setValues]: (state, payload) => {
-        return Object.assign({}, state, payload.values)
-      },
+    formSlice:[FORM_SLICE, PropTypes.object,{
+      [actions.setValue]: (state, payload) =>  Check.setAndCheckValidation(state, payload, VALIDATIONS),
+      [actions.setForm]: (state, payload) =>  Check.checkValidation(payload.form, VALIDATIONS).form,
       [actions.reset]: () => FORM_SLICE,
     }],
     showErrors: [false, PropTypes.bool, {
@@ -134,7 +146,9 @@ export default kea({
   },
 
   stop: function * () {
-    const { reset } = this.actions
+    const { reset, removeLoadingPage } = this.actions
+
+    yield put(removeLoadingPage())
     yield put(reset())
   },
 
@@ -224,7 +238,10 @@ export default kea({
     },
 
     *getListResources(){
-      const { setListResources } = this.actions
+      const { setListResources, addLoadingPage, removeLoadingPage } = this.actions
+
+      // add Loading
+      yield put(addLoadingPage())
       try{
         const responseComputes = yield call(axios.get , `${API_BASE_URL}/compute`)
         const responseNetworks = yield call(axios.get , `${API_BASE_URL}/physical_network`)
@@ -241,17 +258,32 @@ export default kea({
         if(responseSdnWifi) {
           responseSdnWifi.data.map(el => listResources.sdnWifi.push(el))
         }
+        yield put(removeLoadingPage())
         yield(put(setListResources(listResources)))
       }
       catch (error) {
-        console.log(error)
+        yield put(removeLoadingPage())
       }
     },
 
     *createSlice(){
         const pinsResources = yield this.get('pinsResources'),
           chunk_ids = [], vlans_ids = [],
-        { modalStatus, loading, errorfetch, reset, modalNewSliceStatus, showError } = this.actions
+        { modalStatus, loading, errorfetch, reset, modalNewSliceStatus, showError, getListResources } = this.actions
+        const formSlice = yield this.get('formSlice')
+
+        const findSlice = pinsResources.find(pin => pin.color === '#1e90ff')
+        const validation = Check.checkValidation(formSlice, VALIDATIONS)
+
+        if (validation.invalid){
+          yield put(modalNewSliceStatus())
+          yield put(modalStatus())
+          yield put(showError('Input Slice name'))
+        } else if (!findSlice) {
+          yield put(modalNewSliceStatus())
+          yield put(modalStatus())
+          yield put(showError('Select a Compute'))
+        } else {
         /*
          * 1º Create OpenStack
          * 2º Create Vlan
@@ -259,7 +291,7 @@ export default kea({
          * 4º Create Chunks
          */
         yield put(showError('Slice needs a compute'))
-        const formSlice = yield this.get('formSlice')
+
         try{
           yield put(loading())
           let createSlice = false
@@ -297,7 +329,6 @@ export default kea({
             if(pin.location.resources.networks){
               for (let network of pin.location.resources.networks) {
                 if(network.ischecked){
-                  console.log(network)
                   // 2º vlans
                   const dataNetwork = {
                     cidr: network.cidr,
@@ -316,7 +347,6 @@ export default kea({
                     },
                     tag: network.tag,
                   }
-                  console.log(dataNetwork)
                   const response = yield call(axios.post, `${API_BASE_URL}/openstack_vlan`, dataNetwork)
                   chunk_ids.push(response.data.id)
                   vlans_ids.push(response.data.id)
@@ -346,7 +376,7 @@ export default kea({
         if(createSlice){
         const dataChunk = {
         chunk_ids:chunk_ids,
-        name: formSlice.nameSlice
+        name: formSlice.nameSlice.value
         }
         // 4º Chunks
         const responseCreateSlice = yield call(axios.post, `${API_BASE_URL}/slic3`, dataChunk)
@@ -364,9 +394,10 @@ export default kea({
         yield put(modalNewSliceStatus())
         yield put(modalStatus())
         yield put(errorfetch())
-        console.log(error)
+        yield put(showError(error.response.data.message))
+        yield put(getListResources())
       }
-
     }
   }
+}
 })

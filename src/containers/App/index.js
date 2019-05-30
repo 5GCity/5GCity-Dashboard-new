@@ -7,17 +7,17 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import Logic from './logic'
-
 import Routes from 'routes'
 
 import { Switch, Route, withRouter } from 'react-router'
 
-
+/* Components */
+import Loading from 'components/Loading'
 
 class App extends Component {
 
   render () {
-    const { loading } = this.props
+    const { loading, loadingPage } = this.props
 
     if (loading) {
       return null
@@ -25,18 +25,19 @@ class App extends Component {
 
     return (
       <Main>
-        <RouteContainer>
-          <Switch>
-            {Routes.map((route) =>
-              <Route
-                exact
-                key={route.key}
-                path={route.path}
-                component={route.component}
-              />
-            )}
-          </Switch>
-        </RouteContainer>
+        <Loading fullscreen={true} loading={loadingPage} />
+          <RouteContainer>
+            <Switch>
+              {Routes.map((route) =>
+                <Route
+                  exact
+                  key={route.key}
+                  path={route.path}
+                  component={route.component}
+                />
+              )}
+            </Switch>
+          </RouteContainer>
       </Main>
     )
   }

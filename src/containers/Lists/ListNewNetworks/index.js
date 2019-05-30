@@ -33,8 +33,16 @@ const ModalError = props => (
     title="Error"
   >
     <Modal.Body>
-      <Error> Error to create new instance </Error>
+      <Error>  {props.message || 'Error to create new instance' } </Error>
     </Modal.Body>
+    <Modal.Footer>
+      <Button
+        text={'ok'}
+        svg={<CheckIcon />}
+        type={'primary'}
+        onClick={props.actionModalError}
+      />
+    </Modal.Footer>
   </Modal>
 )
 

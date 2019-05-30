@@ -15,6 +15,7 @@ import PropTypes from 'prop-types'
 
 /* Logic */
 import NavBarLogic from 'containers/Navbar/logic'
+import AppLogic from 'containers/App/logic'
 
 
 export default kea({
@@ -26,6 +27,12 @@ export default kea({
         'userRole'
       ]
     ],
+    actions :[
+      AppLogic, [
+        'addLoadingPage',
+        'removeLoadingPage',
+      ]
+    ]
   },
 
   actions: () => ({
@@ -72,9 +79,10 @@ export default kea({
   },
 
   stop: function * () {
-    const { reset } = this.actions
+    const { reset, removeLoadingPage } = this.actions
 
-
+    // remove loading page
+    yield put(removeLoadingPage())
     yield put(reset())
   },
 
@@ -89,44 +97,42 @@ export default kea({
   workers: {
 
   * fetchSlices () {
-    const { setSlices } = this.actions
-
-
+    const { setSlices, addLoadingPage, removeLoadingPage } = this.actions
+    // Loading
+    yield put(addLoadingPage())
     try {
       let responseResult = yield call(axios.get,`${API_BASE_URL}/slic3`)
       const { data } = responseResult
       data.map(el => el.status = "Approved")
 
       yield put(setSlices(data))
-
+      yield put(removeLoadingPage())
 
     } catch(error){
-      console.error(`Error ${error}`)
-
+     yield put(removeLoadingPage())
     }
   },
 
   * deleteSlice () {
     const { fetchSlices, isLoading, actionModal } = this.actions
     const sliceSelect = yield this.get('sliceSelect')
-    console.log(sliceSelect)
     try {
       yield put(isLoading())
       yield call(axios.delete,`${API_BASE_URL}/slic3/${sliceSelect.id}`)
     if(sliceSelect.chunks.virtualWifiAccessPoints.length > 0){
       for (const virtualWifi of sliceSelect.chunks.virtualWifiAccessPoints) {
-      console.log('apagou virtual_Wifi')
+      console.log('delete virtual_Wifi')
       yield call(axios.delete,`${API_BASE_URL}/virtual_wifi_access_point/${virtualWifi.id}`)
       }
     }
     if(sliceSelect.chunks.openstackVlans.length > 0){
         for (const vlan of sliceSelect.chunks.openstackVlans) {
-          console.log('apagou openstack_vlan')
+          console.log('delete openstack_vlan')
           yield call(axios.delete,`${API_BASE_URL}/openstack_vlan/${vlan.id}`)
         }
       }
       for (const openstack of sliceSelect.chunks.openstackProjects) {
-        console.log('apagou openstack_project')
+        console.log('delete openstack_project')
       yield call(axios.delete,`${API_BASE_URL}/openstack_project/${openstack.id}`)
       }
 
@@ -134,7 +140,7 @@ export default kea({
 
 
     } catch(error){
-      console.error(`Error ${error}`)
+      console.error(error.response.status)
     }
     yield put(isLoading())
     yield put(actionModal())

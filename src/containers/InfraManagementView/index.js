@@ -16,7 +16,6 @@ import PanelSliceDetails from 'containers/Panel/PanelSliceDetails'
 /* Components */
 import HeaderNav from 'components/HeaderNav'
 import { BackIcon } from 'components/Icons'
-import Loading from 'components/Loading'
 
 class InfraManagementView extends Component {
 
@@ -27,12 +26,9 @@ class InfraManagementView extends Component {
 
   render () {
     const { panelAction, infoMarker } = this.actions
-    const { pinsResources, panel, rightPanelInfo , loading, locations} = this.props
+    const { pinsResources, panel, rightPanelInfo, locations} = this.props
     return (
       <Wrapper>
-        <Loading
-          loading={loading}
-        >
         <HeaderNav
           buttonBack={<BackIcon />}
           navigateBack={() => this.navigateToBack()}
@@ -51,7 +47,6 @@ class InfraManagementView extends Component {
             onClick={(marker) => infoMarker(marker.location.resources) }
           />
         }
-        </Loading>
       </Wrapper>
     )
   }
