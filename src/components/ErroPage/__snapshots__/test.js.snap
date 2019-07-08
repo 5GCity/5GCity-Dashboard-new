@@ -1,0 +1,128 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+.c0 {
+  display: block;
+  margin-top: 150px;
+}
+
+.c1 {
+  text-align: center;
+}
+
+.c2 {
+  color: #EFF2F7;
+  font-size: 24px;
+  line-height: 32px;
+  -webkit-letter-spacing: 0.6px;
+  -moz-letter-spacing: 0.6px;
+  -ms-letter-spacing: 0.6px;
+  letter-spacing: 0.6px;
+  text-align: center;
+}
+
+.c3 {
+  font-size: 16px;
+  line-height: 16px;
+  font-weight: 600;
+  text-align: center;
+}
+
+<div
+  className="c0"
+>
+  <div
+    className="c1"
+  >
+    <svg
+      height={120}
+      width={120}
+    >
+      <defs>
+        <circle
+          cx={60}
+          cy={60}
+          id="prefix__a"
+          r={40}
+        />
+        <mask
+          fill="#fff"
+          height={80}
+          id="prefix__b"
+          maskContentUnits="userSpaceOnUse"
+          maskUnits="objectBoundingBox"
+          width={80}
+          x={0}
+          y={0}
+        >
+          <use
+            xlinkHref="#prefix__a"
+          />
+        </mask>
+        <path
+          d="M17.333 17.333h-2.666v-8h2.666v8zm0 5.334h-2.666V20h2.666v2.667zM16 2.667C8.636 2.667 2.667 8.637 2.667 16A13.333 13.333 0 1 0 16 2.667z"
+          id="prefix__c"
+        />
+      </defs>
+      <g
+        fill="none"
+        fillRule="evenodd"
+      >
+        <path
+          d="M60 120c33.137 0 60-26.863 60-60S93.137 0 60 0 0 26.863 0 60s26.863 60 60 60z"
+          fill="#5A666D"
+          opacity={0.302}
+        />
+        <path
+          d="M60 110c27.614 0 50-22.386 50-50S87.614 10 60 10 10 32.386 10 60s22.386 50 50 50z"
+          fill="#5A666D"
+          opacity={0.599}
+        />
+        <use
+          mask="url(#prefix__b)"
+          stroke="#EFF2F7"
+          strokeDasharray="3 4"
+          strokeOpacity={0.299}
+          strokeWidth={2}
+          xlinkHref="#prefix__a"
+        />
+        <g
+          transform="translate(44 44)"
+        >
+          <mask
+            fill="#fff"
+            id="prefix__d"
+          >
+            <use
+              xlinkHref="#prefix__c"
+            />
+          </mask>
+          <use
+            fill="#757575"
+            fillRule="nonzero"
+            xlinkHref="#prefix__c"
+          />
+          <g
+            fill="#FFF"
+            mask="url(#prefix__d)"
+          >
+            <path
+              d="M0 0h32v32H0z"
+            />
+          </g>
+        </g>
+      </g>
+    </svg>
+  </div>
+  <h1
+    className="c2"
+  >
+    Sorry, an error occurred
+  </h1>
+  <h2
+    className="c3"
+  >
+    We couldn't retrieve data at the moment. Please refresh and try again...
+  </h2>
+</div>
+`;

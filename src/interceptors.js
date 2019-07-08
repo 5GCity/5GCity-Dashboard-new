@@ -1,6 +1,8 @@
 import axios from 'axios'
 import { camelizeKeys, decamelizeKeys } from 'humps'
 import { AUTH_TOKEN_TYPE, REQUEST_CAMELIZE } from 'config'
+//import {service} from 'utils'
+//import objectMapper from 'object-mapper'
 
 const decamelizeKeysTransformer = function (data) {
   return data && JSON.stringify(decamelizeKeys(data))
@@ -27,6 +29,14 @@ export const removeAuthorizationInterceptor = () => {
 // Converts all responses for CamelCase
 axios.interceptors.response.use((response) => {
   response.data = camelizeKeys(response.data)
+/*   const data = Object.assign({}, response)
+  console.log(response)
+  const findSchema = REQUEST_SCHEMA.find(url => response.config.url.includes(url))
+  if(findSchema && data.config.method === 'get'){
+    console.log(data.data)
+    data.data = objectMapper(response.data, service())
+    console.log(data.data)
+  } */
   return response
 }, (error) => {
   return Promise.reject(error)
@@ -49,7 +59,6 @@ axios.interceptors.request.use((request) => {
       request.transformRequest = [decamelizeKeysTransformer]
     }
   }
-
   return request
 }, function (error) {
   return Promise.reject(error)

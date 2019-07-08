@@ -59,6 +59,10 @@ class PanelChunkDetail extends Component {
                 key={wifi.id}>
                 <Name>{wifi.name}</Name>
                 <Id>{wifi.id}</Id>
+                <Id>Id: {wifi.id}</Id>
+                <Id>Channel: {wifi.channel}</Id>
+                <Id>DNS IP: {wifi.dns}</Id>
+                <Id>DHCPD IP: {wifi.dhcpd}</Id>
               </TypeMarker>
             )}
           </PanelInfo>

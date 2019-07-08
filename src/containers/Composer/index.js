@@ -7,7 +7,8 @@
 import React, { Component } from 'react'
 import Logic from './logic'
 import styled from 'styled-components'
-import { select, zoom, event, drag, symbol, symbolTriangle, symbolWye, selectAll } from 'd3'
+import { select, zoom, event, drag, symbol, symbolTriangle, symbolWye, selectAll,
+   forceLink, forceSimulation, forceManyBody, forceCollide } from 'd3'
 import { CONFIG_D3 as d3Config, CONFIG_NODE, GLOBAL_VALUES, verifyCanLink } from '../SDKContainer/config_d3'
 import './d3.css'
 import Dimensions from 'react-dimensions'
@@ -89,7 +90,6 @@ class Composer extends Component {
     var zoomD3 = zoom()
     .scaleExtent([d3Config.zoom.min_zoom, d3Config.zoom.max_zoom])
     .on('zoom', zoomed)
-
 
     // Area
     const svg =
@@ -244,6 +244,12 @@ class Composer extends Component {
 
       groupVirtualSwitch.attr('transform', d => `translate(${d.x},${d.y})`)
     }
+    // Simulation
+    const simulation = forceSimulation()
+  .force("charge", forceManyBody())
+   .force('collision', forceCollide().radius( d =>
+      d.w
+    ))
 
     this.updateData = newd3Data => {
       nodes = newd3Data.nodes
@@ -306,8 +312,16 @@ class Composer extends Component {
       // REMOVE MENU bridge and VS
       selectAll('g .group_bridge_menu').lower()
       selectAll('g .group_vs_menu').lower()
-    }
 
+        // Simulation link
+        simulation.force("link",
+        forceLink()
+        .id(d => d.id))
+        // Simulation Node
+        simulation
+        .nodes(nodes)
+        .on("tick", () =>  tick(path, groupBridge, groupExternal, groupVNF, groupVirtualSwitch))
+    }
     const restart = () => {
       /**LINKS**/
       path = path.data(links)
@@ -1523,7 +1537,9 @@ class Composer extends Component {
       if(optionSelect_Draw){
         removeCircleOption(optionSelect_Draw.node, optionSelect_Draw.position)
         const findNodeMouseUp = nodes.find(node => node.id === optionSelect_Draw.node.id)
-        findNodeMouseUp[optionSelect_Draw.position].isLink = false
+        if(findNodeMouseUp){
+          findNodeMouseUp[optionSelect_Draw.position].isLink = false
+        }
       }
     }
     dragLine.classed('hidden', true);

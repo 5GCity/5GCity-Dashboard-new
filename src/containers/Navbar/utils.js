@@ -25,7 +25,7 @@ import { MapIcon, NetworkServicesIcon, ServiceIcon } from 'components/Icons'
   {
     path: '/sdk/functions',
     name: 'function',
-    disabled: true,
+    disabled: false,
     active: false,
   }
 ] ,active: false,
@@ -43,7 +43,23 @@ export const ChangeLink = menu => {
       } else {
         element.active = false
       }
+      element.children && element.children.forEach(child => child.active = false)
     }
   return linksCopy
 }
 
+export const ChangeSubMenuLink = (menu, subMenu) => {
+  const linksCopy = [ ...LINKS ]
+  linksCopy.forEach(link => {
+    link.active = false
+    if(link === menu){
+      link.active = true
+      link.children.forEach(child => {
+        if(child === subMenu){
+          child.active = true
+        }
+      })
+    }
+  })
+  return linksCopy
+}

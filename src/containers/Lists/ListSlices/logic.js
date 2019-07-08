@@ -24,7 +24,10 @@ export default kea({
   connect: {
     props: [
       NavBarLogic, [
-        'userRole'
+        'userRole',
+      ],
+      AppLogic, [
+        'keycloak',
       ]
     ],
     actions :[
@@ -47,7 +50,9 @@ export default kea({
     isLoading: () => ({ }),
     actionModal: () => ({ }),
     reset: () => ({ }),
-
+    setErroFecth: () =>({}),
+    setNoData: () =>({}),
+    removeNoData: () => ({}),
   }),
 
   reducers: ({ actions }) => ({
@@ -68,7 +73,15 @@ export default kea({
       [actions.actionModal]: (state, payload) => !state,
       [actions.sliceInfo]: (state, payload) => !state,
       [actions.reset]: () => false,
-    }]
+    }],
+    noData: [false, PropTypes.bol, {
+      [actions.setNoData]: () => true,
+      [actions.removeNoData]: () => false,
+    }],
+    errorFecth: [false, PropTypes.bol, {
+      [actions.setErroFecth]: () => true,
+      [actions.reset]: () => false,
+    }],
   }),
 
     start: function * () {
@@ -79,10 +92,11 @@ export default kea({
   },
 
   stop: function * () {
-    const { reset, removeLoadingPage } = this.actions
+    const { reset, removeLoadingPage, removeNoData } = this.actions
 
     // remove loading page
     yield put(removeLoadingPage())
+    yield put(removeNoData())
     yield put(reset())
   },
 
@@ -97,19 +111,41 @@ export default kea({
   workers: {
 
   * fetchSlices () {
-    const { setSlices, addLoadingPage, removeLoadingPage } = this.actions
+    const { setSlices, addLoadingPage, removeLoadingPage, setErroFecth, setNoData } = this.actions
     // Loading
     yield put(addLoadingPage())
     try {
       let responseResult = yield call(axios.get,`${API_BASE_URL}/slic3`)
       const { data } = responseResult
       data.map(el => el.status = "Approved")
-
-      yield put(setSlices(data))
+      if(data.length > 0){
+        yield put(setSlices(data))
+      } else {
+        yield put(setNoData())
+      }
       yield put(removeLoadingPage())
 
-    } catch(error){
-     yield put(removeLoadingPage())
+    } catch(error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        if (error.response.status === 401) {
+          const keycloak = yield this.get('keycloak')
+          keycloak.logout()
+        } else if (error.response.status === 404) {
+          console.log(404)
+          yield put(setErroFecth())
+        }
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        yield put(setErroFecth())
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        yield put(setErroFecth())
+      }
+      yield put(removeLoadingPage())
     }
   },
 

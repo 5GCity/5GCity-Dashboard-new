@@ -28,10 +28,6 @@ exports[`renders correctly 1`] = `
 
 <div
   className="c0"
-  disabled={undefined}
-  onClick={undefined}
-  to={undefined}
-  width={undefined}
 >
   <i
     className="el-icon-undefined c1"

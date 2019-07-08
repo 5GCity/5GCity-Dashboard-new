@@ -11,10 +11,10 @@ import axios from 'axios'
 import { API_BASE_URL } from 'config'
 
 import PropTypes from 'prop-types'
-//import * as Check from 'validations'
 
 /* Logic */
 import InfraManagementLogic from 'containers/InfraManagement/logic'
+import AppLogic from 'containers/App/logic'
 
 export default kea({
   path: () => ['scenes', 'containers', 'PanelResource'],
@@ -26,8 +26,12 @@ export default kea({
         'getInfoMarker',
         'fetchResources',
         'changeModalStatus',
-        'submitModal'
+        'submitModal',
       ],
+      AppLogic, [
+        'addLoadingPage',
+        'removeLoadingPage',
+      ]
     ],
     props: [
       InfraManagementLogic, [
@@ -39,10 +43,11 @@ export default kea({
 
   actions: () => ({
     changeEdition: (resource) =>  ({ resource }),
-    submit: () => ({}),
     reset: () => ({}),
     closePanel: () => ({}),
     deleteItem:(item) => ({ item }),
+
+    submit: () => ({}),
   }),
 
   reducers: ({ actions }) => ({
@@ -71,7 +76,7 @@ export default kea({
   },
 
   takeLatest: ({ actions, workers }) => ({
-    [actions.submitModal]: workers.deleteResource
+    [actions.submitModal]: workers.deleteResource,
   }),
 
   workers: {
@@ -81,13 +86,13 @@ export default kea({
       try{
         switch (type) {
           case 'compute':
-              yield call(axios.delete , `${API_BASE_URL}/compute/${id}`)
+              yield call(axios.delete, `${API_BASE_URL}/compute/${id}`)
             break
           case 'network':
-              yield call(axios.delete , `${API_BASE_URL}/physical_network/${id}`)
+              yield call(axios.delete, `${API_BASE_URL}/physical_network/${id}`)
             break
-          case 'wifi':
-              yield call(axios.delete , `${API_BASE_URL}/sdn_wifi_access_point/${id}`)
+          case 'ran':
+              yield call(axios.delete, `${API_BASE_URL}/ran_infrastructure/${id}`)
             break
           default:
             break;

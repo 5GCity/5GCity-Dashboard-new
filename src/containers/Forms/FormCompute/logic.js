@@ -16,6 +16,7 @@ import mapValues from 'lodash/mapValues'
 /* Logic */
 import PanelResourceLogic from 'containers/Panel/PanelResource/logic'
 import InfraManagementLogic from 'containers/InfraManagement/logic'
+import AppLogic from 'containers/App/logic'
 
 const DEFAULT_FORM = {
   name: {
@@ -55,6 +56,10 @@ export default kea({
 
   connect: {
     actions: [
+      AppLogic, [
+        'addLoadingPage',
+        'removeLoadingPage',
+      ],
       PanelResourceLogic, [
         'submit',
         'closePanel',
@@ -62,6 +67,7 @@ export default kea({
       ],
       InfraManagementLogic, [
         'fetchResources',
+        'changeModalErrorStatus',
       ]
     ],
     props: [
@@ -74,7 +80,6 @@ export default kea({
   actions: () => ({
     getForm: () => ({}),
     response: (response) => ({ response }),
-    error: (error) => ({ error }),
     change: (field) => ({ field }),
     setForm: (form) => ({ form }),
     changeForm: (form) => ({ form }),
@@ -94,7 +99,6 @@ export default kea({
       [actions.change]: () => true,
       [actions.setValueParameters]: () => true,
       [actions.response]: () => false,
-      [actions.error]: () => true,
       [actions.reset]: () => false
     }],
 
@@ -104,6 +108,13 @@ export default kea({
     const { getForm } = this.actions
 
     yield put(getForm())
+  },
+
+  stop: function * () {
+    const { reset, removeLoadingPage } = this.actions
+
+    yield put(removeLoadingPage())
+    yield put(reset())
   },
 
   takeLatest: ({ actions, workers }) => ({
@@ -140,17 +151,21 @@ export default kea({
     },
     * submit () {
       const {
-        error,
         setForm,
         changeEdition,
         closePanel,
         reset,
         fetchResources,
+        changeModalErrorStatus,
+        addLoadingPage,
+        removeLoadingPage,
       } = this.actions
       const form = yield this.get('form')
       const dirty = yield this.get('dirty')
       const resource = yield this.get('editResource')
 
+      // add Loading
+      yield put(addLoadingPage())
       const newCompute = {
         name: null,
         compute_data:{
@@ -178,11 +193,9 @@ export default kea({
       const validation = Check.checkValidation(form, VALIDATIONS)
 
       if (dirty && validation.invalid) {
-        yield put(error([]))
         return false
       } else if (!dirty && validation.invalid) {
         yield put(setForm(validation.form))
-        yield put(error([]))
         return false
       } else if (!validation.invalid && !dirty) {
         yield put(changeEdition(null))
@@ -196,17 +209,22 @@ export default kea({
         newCompute.compute_data.quota.storage.total = params.storage
         try {
           yield call(axios.post, `${API_BASE_URL}/compute`, newCompute)
+          yield put(removeLoadingPage())
           yield put(fetchResources())
           yield put(closePanel())
           yield put(reset())
-        } catch (er) {
-          console.log(er)
-          if (er.response.data) {
-            // map WS return errors to form format
-            // put the errors on each field and changed them to invalid
-            yield put(changeForm(newForm))
+        } catch (error) {
+          yield put(removeLoadingPage())
+          console.log(error.request.status)
+          if (error.request.status === 500) {
+            yield put(changeModalErrorStatus({message: 'Internal Error'}))
+            yield put(closePanel())
+          } else if (error.request.status === 404) {
+            yield put(changeModalErrorStatus({message: 'Url Not Found'}))
+            yield put(closePanel())
+          } else {
+            yield put(closePanel())
           }
-          yield put(error([]))
         }
       }
     },

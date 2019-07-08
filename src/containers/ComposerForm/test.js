@@ -7,20 +7,16 @@ import React from 'react'
 import renderer from 'react-test-renderer'
 import ComposerForm from './index'
 import 'jest-styled-components'
-
-import { Store } from 'store'
-import { Theme } from 'globalStyles'
-import { ThemeProvider } from 'styled-components'
 import { Provider } from 'react-redux'
+import { getStore } from 'kea'
+const store = getStore()
 
 it('renders correctly', () => {
   const tree = renderer
     .create(
-      <ThemeProvider theme={Theme}>
-        <Provider store={Store}>
+      <Provider store={store}>
         <ComposerForm />
-        </Provider>
-      </ThemeProvider>
+      </Provider>
     )
     .toJSON()
 

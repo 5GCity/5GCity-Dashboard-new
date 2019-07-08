@@ -15,6 +15,7 @@ import Modal from 'components/Modal'
 import Button from 'components/Button'
 import NoData from 'components/NoData'
 import { DeleteIcon, EyeIcon, SettingIcon, CheckIcon, CloseIcon } from 'components/Icons'
+import ErroPage from 'components/ErroPage'
 
 
 const ModalInfo = (props) => (
@@ -143,6 +144,7 @@ const ListNetwork = (props) => (
             svg={<SettingIcon />}
             onClick={() => props.navigate(`/monitor/ns_id/${network.id}`)}
             text={'Monitoring'}
+            disabled={true}
           />
         </ContainerButtons>
       </ColumnBottons>
@@ -163,7 +165,7 @@ class ListNetworks extends Component {
       modalInfo,
       networkSelect,
       modalDelete,
-      noData } = this.props
+      noData, errorFecth } = this.props
     const { actionModal, actionModalDelete, deleteNetwork } = this.actions
     return (
       <Wrapper>
@@ -192,6 +194,9 @@ class ListNetworks extends Component {
           title={'You don’t have any network services yet...'}
           message={'Click on the “Add new  network service” button to add your first service!'}
         />
+        }
+        {errorFecth &&
+        <ErroPage />
         }
       </Wrapper>
     )

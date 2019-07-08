@@ -15,30 +15,16 @@ import SliceMap from 'containers/SliceMap'
 
 /* Components */
 import HeaderNav from 'components/HeaderNav'
-import Modal from 'components/Modal'
 import Button from 'components/Button'
 import Input from 'components/Input'
 import PanelRight from 'components/PanelRight'
 import { BackIcon, CheckIcon } from 'components/Icons'
 import Select from 'components/Select'
 import Form from 'components/Form'
+
+/* Containers */
 import ModalCreateSlice from 'containers/Modals/ModalCreateSlice'
-
-const ModalError = (props) => (
-  <Modal
-    size={'tiny'}
-    showClose={true}
-    onCancel={props.modalStatus}
-    title="Error"
-    visible={props.modalError}
-  >
-    <Modal.Body>
-      <Erro>{props.error}</Erro>
-    </Modal.Body>
-    <Modal.Footer />
-  </Modal>
-);
-
+import ModalErrorSlice from 'containers/Modals/ModalErrorSlice'
 
 class SliceNew extends Component {
 
@@ -50,8 +36,8 @@ class SliceNew extends Component {
 
   infoMarkerContainer = () => {
     const { selectSlice, selectPin } = this.props
-    const { changeNetwork, changeComputes, changeSDN } = this.actions
-    const { computes, networks, sdnWifi } = selectSlice
+    const { changeNetwork, changeComputes, changeBoxes, changeRAN } = this.actions
+    const { computes, networks, rans } = selectSlice
     return (
       <Form
         labelWidth="120"
@@ -172,8 +158,8 @@ class SliceNew extends Component {
                       onChange={(value) => changeNetwork(selectPin, i, 'bandwidth', value)}
                     />
                   </Form.Item>
-                  <Id>Bandwidth Total: {network.networkData.bandwidth.total} {network.networkData.bandwidth.units}</Id>
-                  <Id>Bandwidth Provisioned: {network.networkData.bandwidth.provisioned} {network.networkData.bandwidth.units}</Id>
+                  <Id>Bandwidth Total: {network.networkData.quota.bandwidth.total} {network.networkData.quota.bandwidth.units}</Id>
+                  <Id>Bandwidth Provisioned: {network.networkData.quota.bandwidth.provisioned} {network.networkData.quota.bandwidth.units}</Id>
                   <Form.Item label="Floating IP's">
                     <Input
                       type="text"
@@ -181,8 +167,8 @@ class SliceNew extends Component {
                       onChange={(value) => changeNetwork(selectPin, i, 'floatingIps', value)}
                     />
                   </Form.Item>
-                  <Id>Floating IP's Total: {network.networkData.floatingIps.total} {network.networkData.floatingIps.units}</Id>
-                  <Id>Floating IP's Provisioned: {network.networkData.floatingIps.provisioned} {network.networkData.floatingIps.units}</Id>
+                  <Id>Floating IP's Total: {network.networkData.quota.floatingIps.total} {network.networkData.quota.floatingIps.units}</Id>
+                  <Id>Floating IP's Provisioned: {network.networkData.quota.floatingIps.provisioned} {network.networkData.quota.floatingIps.units}</Id>
                   <Form.Item label="Tag">
                     <Input
                       type="text"
@@ -191,13 +177,13 @@ class SliceNew extends Component {
                     />
                   </Form.Item>
                   <Id>
-                    Tag Range: {network.networkData.tagRange.init} - {network.networkData.tagRange.end}
+                    Tag Range: {network.networkData.quota.tagRange.init} - {network.networkData.quota.tagRange.end}
                   </Id>
-                  {network.networkData.provisionedTags &&
+                  {network.networkData.quota.provisionedTags &&
                     <Id>
-                      Provisioned Tags: {network.networkData.provisionedTags.map((tag, i) =>
+                      Provisioned Tags: {network.networkData.quota.provisionedTags.map((tag, i) =>
                         <Tag key={i}>
-                          {tag} {i < network.networkData.provisionedTags.length - 1 ? ',' : ''}
+                          {tag} {i < network.networkData.quota.provisionedTags.length - 1 ? ',' : ''}
                         </Tag>
                       )
                       }
@@ -208,52 +194,50 @@ class SliceNew extends Component {
               }
             </React.Fragment>
           )}
-          {sdnWifi &&
-            <TitlePanel>Wifi</TitlePanel>
+          {rans &&
+            <TitlePanel>Physical Networks</TitlePanel>
           }
-          {sdnWifi && sdnWifi.map((sdnWifi, i) =>
-            <React.Fragment key={i}>
-              <Form.Item>
-                <Checkbox.Group
-                  value={sdnWifi.ischecked === false ? [] : [sdnWifi.name]}
-                  onChange={(value) => changeSDN(selectPin, i, 'ischecked', value.length > 0 ? true : false)}>
-                  <Checkbox label={sdnWifi.name}>
-                    <Name>{sdnWifi.name}</Name>
-                    <Id>{sdnWifi.id}</Id>
-                  </Checkbox>
-                </Checkbox.Group>
-              </Form.Item>
-              {sdnWifi.ischecked &&
-                <FormContainer key={i}>
-                  <Form.Item label="Name" >
-                    <Input
-                      type="text"
-                      value={sdnWifi.sdnWifiName}
-                      onChange={(value) => changeSDN(selectPin, i, 'sdnWifiName', value)} />
+          {rans && rans.map((ran, ranIndex) =>
+            <React.Fragment key={ran.id}>
+              <Name>{ran.name}</Name>
+              {ran.chunketeTopology.boxes && ran.chunketeTopology.boxes.map((box, boxIndex) =>
+              <React.Fragment key={box.id}>
+                <Name>{box.name}</Name>
+                <Id>{box.id}</Id>
+                {box.phys && box.phys.map((phy, physIndex)=>
+                <React.Fragment key={phy.id}>
+                  <Form.Item key={phy.id}>
+                    <Checkbox.Group
+                      value={phy.ischecked === false ? [] : [phy.name]}
+                      onChange={(value) => changeBoxes(selectPin, ranIndex, boxIndex, physIndex, 'ischecked', value.length > 0 ? true : false)}>
+                      <Checkbox
+                        key={phy.id}
+                        label={phy.name}
+                      >
+                      </Checkbox>
+                    </Checkbox.Group>
                   </Form.Item>
-                  <Form.Item label="DNS IP" >
-                    <Input
-                      type="text"
-                      value={sdnWifi.dns}
-                      onChange={(value) => changeSDN(selectPin, i, 'dns', value)} />
-                  </Form.Item>
-                  <Form.Item label="DHCPD IP" >
-                    <Input
-                      type="text"
-                      value={sdnWifi.dhcpd}
-                      onChange={(value) => changeSDN(selectPin, i, 'dhcpd', value)} />
-                  </Form.Item>
-                  <Form.Item label="Channel">
-                    <Select
-                      placeholder={'Select Channel'}
-                      type={'default'}
-                      options={sdnWifi.channelOptions}
-                      onChange={value => changeSDN(selectPin, i, 'channel', value)}
-                      selectOption={sdnWifi.channel}
-                    />
-                  </Form.Item>
-                </FormContainer>
-              }
+                  <Id>{phy.type}</Id>
+                </React.Fragment>
+                )}
+              </React.Fragment>
+              )}
+              <FormContainer key={ranIndex}>
+                <Form.Item label="Assigned Quota">
+                  <Input
+                    type="text"
+                    value={ran.assignedQuota}
+                    onChange={(value) => changeRAN(selectPin, ranIndex, 'assignedQuota', value)}
+                  />
+                </Form.Item>
+                <Form.Item label="Name">
+                  <Input
+                    type="text"
+                    value={ran.chunketeName}
+                    onChange={(value) => changeRAN(selectPin, ranIndex, 'chunketeName', value)}
+                  />
+                </Form.Item>
+              </FormContainer>
             </React.Fragment>
           )}
         </React.Fragment>
@@ -288,7 +272,10 @@ class SliceNew extends Component {
           name={'Add new slice'}
         >
           <HeaderNav.Left>
-            <ButtonShop onClick={() => modalNewSliceStatus()} svg={<CheckIcon />} />
+            <ButtonShop
+              onClick={() => modalNewSliceStatus()}
+              svg={<CheckIcon />}
+            />
           </HeaderNav.Left>
         </HeaderNav>
         <PanelRight
@@ -313,7 +300,7 @@ class SliceNew extends Component {
         <SliceMap
           location={locations}
           markers={pinsResources}
-          onClick={(marker) => selectLocation(marker)}
+          markerClick={(marker) => selectLocation(marker)}
         />
         {/* Modal Create Slice */}
         <ModalCreateSlice
@@ -325,7 +312,7 @@ class SliceNew extends Component {
           setValue={setValue}
         />
         {/* Modal Error */}
-        <ModalError
+        <ModalErrorSlice
           modalError={modalError}
           error={error}
           modalStatus={modalStatus}
@@ -356,7 +343,6 @@ const Name = styled.p`
   font-weight: bold;
   color: #EFF2F7;
   font-family: ${({ theme }) => theme.fontFamily};
-
 `
 
 const Id = styled.p`
@@ -370,29 +356,25 @@ const Id = styled.p`
 const FormContainer = styled.div`
   margin-left: 5px;
 `
-const Erro = styled.h3`
-  text-align: center;
-  color: #fff;
-`
 
 const Container = styled.div`
   overflow-y: auto;
   margin: 0 0 0 20px;
   max-height: calc(100vh - 200px);
-  `
+`
 
 const Bottom = styled.div`
-background-color: rgba(255,255,255,0.05);
-height: 80px;
-width: 100%;
-position: absolute;
-bottom: 80px;
+  background-color: rgba(255,255,255,0.05);
+  height: 80px;
+  width: 100%;
+  position: absolute;
+  bottom: 80px;
 `
 const BottomContainer = styled.div`
-display: flex;
-align-items: center;
-justify-content: center;
-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 `
 const Tag = styled.span`
 

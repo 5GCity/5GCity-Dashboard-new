@@ -5,7 +5,7 @@
  * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
 export const createSlice = (resources) => {
-const markers = [], networkLocation = [], sdnWifiLocation = []
+const markers = [], networkLocation = []
 
   if(!resources) {
     return markers
@@ -14,20 +14,16 @@ const markers = [], networkLocation = [], sdnWifiLocation = []
   const computeLocation = resources.chunks.openstackProjects.map((compute) =>
     compute
   )
-
+  const sdnWifiLocation = resources.chunks.virtualWifiAccessPoints.map(wifi =>
+    wifi
+  )
+  console.log(resources)
   resources.chunks.openstackVlans.forEach((network) => {
     if(network.physicalNetwork) {
       networkLocation.push({
         cidr: network.cidr,
         tag: network.tag,
         ...network.physicalNetwork
-      })
-    } else if (network.sdnWifiAccessPoint) {
-      sdnWifiLocation.push({
-        dhcpd: network.dhcpdIp,
-        dns: network.dnsIp,
-        channel: network.channel,
-        ...network.sdnWifiAccessPoint
       })
     }
   })
@@ -116,8 +112,10 @@ const markers = [], networkLocation = [], sdnWifiLocation = []
   }
 
   const compareSDN = () => {
+    console.log(sdnWifiLocation)
     sdnWifiLocation.forEach((sdnWifi) => {
-      const { latitude, longitude } = sdnWifi.location
+      console.log(sdnWifi)
+      const { latitude, longitude } = sdnWifi.sdnWifiAccessPoint.location
 
       const locationExistsOnMarkers = markers.find((marker) =>
         marker.location.latitude === latitude &&
@@ -129,19 +127,17 @@ const markers = [], networkLocation = [], sdnWifiLocation = []
           locationExistsOnMarkers.location.resources.sdnWifi.push({
             id: sdnWifi.id ,
             name: sdnWifi.name,
-            ischecked: false,
             channel: sdnWifi.channel,
-            dhcpd: sdnWifi.dhcpd,
-            dns: sdnWifi.dns,
+            dhcpd: sdnWifi.dhcpdIp,
+            dns: sdnWifi.dnsIp,
           })
         } else {
           locationExistsOnMarkers.location.resources.sdnWifi = [{
               id: sdnWifi.id ,
               name: sdnWifi.name,
-              ischecked: false,
               channel: sdnWifi.channel,
-              dhcpd: sdnWifi.dhcpd,
-              dns: sdnWifi.dns,
+              dhcpd: sdnWifi.dhcpdIp,
+              dns: sdnWifi.dnsIp,
           }]
       }
       } else {
@@ -153,10 +149,9 @@ const markers = [], networkLocation = [], sdnWifiLocation = []
                 sdnWifi:[{
                   id: sdnWifi.id ,
                   name: sdnWifi.name,
-                  ischecked: false,
                   channel: sdnWifi.channel,
-                  dhcpd: sdnWifi.dhcpd,
-                  dns: sdnWifi.dns,
+                  dhcpd: sdnWifi.dhcpdIp,
+                  dns: sdnWifi.dnsIp,
                 }]
               }
           }

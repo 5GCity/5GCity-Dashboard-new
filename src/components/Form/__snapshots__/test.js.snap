@@ -1,8 +1,27 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders correctly 1`] = `
-.c0 .el-form--label-top .el-form-item__label {
-  color: red;
+.c0 .el-form-item {
+  margin-bottom: 30px;
+}
+
+.c0 .el-form-item.is-required .el-form-item__label:after {
+  content: '*';
+  margin-left: 5px;
+}
+
+.c0 .el-form-item.is-required .el-form-item__label:before {
+  content: '';
+}
+
+.c0 .el-input-group__append,
+.c0 .el-input-group__prepend {
+  background: transparent;
+}
+
+.c0 .el-input-group__append,
+.c0 .el-input-group__prepend {
+  border: none;
 }
 
 <form

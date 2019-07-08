@@ -63,27 +63,27 @@ class PanelResourceInfo extends Component {
           onClick={() => addNewItem({type: 'network', id: 0, location: {latitude: data.location.latitude , longitude: data.location.longitude }})}
           svg={<CirclePlusIcon fill={'#8CC14E'} />}
         />
-      <Title>Wifi network</Title>
-        {data.location.resources.sdnWifi && data.location.resources.sdnWifi.map(wifi =>
-          <Item key={wifi.id}>
-            <Name>{wifi.name}</Name>
+      <Title>RAN Controller</Title>
+        {data.location.resources.rans && data.location.resources.rans.map(ran =>
+          <Item key={ran.id}>
+            <Name>{ran.name}</Name>
             <ContainerIcons>
-              <Delete onClick={() => deleteItem({ type:'wifi', id: wifi.id, name:wifi.name, })} />
+              <Delete onClick={() => deleteItem({ type:'ran', id: ran.id, name:ran.name, })} />
               {/* <Separator />
-              <Edit onClick={() => editItem({ type:'wifi', id: wifi.id })} /> */}
+              <Edit onClick={() => editItem({ type:'ran', id: wifi.id })} /> */}
             </ContainerIcons>
           </Item>
         )}
-        {!data.location.resources.sdnWifi &&
-          <Info>Add your first wifi network</Info>
+        {!data.location.resources.rans &&
+          <Info>Add your first RAN Controller</Info>
         }
-        <AddNewBtn
+         <AddNewBtn
           outline={true}
           type={'primary'}
           text={'Add new'}
           width={236}
           height={48}
-          onClick={() => addNewItem({type: 'wifi', id: 0, location: {latitude: data.location.latitude , longitude: data.location.longitude }})}
+          onClick={() => addNewItem({type: 'ran', id: 0, location: {latitude: data.location.latitude , longitude: data.location.longitude }})}
           svg={<CirclePlusIcon fill={'#8CC14E'} />}
         />
     </Panel>

@@ -41,6 +41,7 @@ export default kea({
     setNoData: () => ({}),
     removeNoData: () => ({}),
     reset: () => ({ }),
+    setErroFecth: () =>({}),
   }),
 
   reducers: ({ actions }) => ({
@@ -72,7 +73,11 @@ export default kea({
     noData: [false, PropTypes.bool, {
       [actions.setNoData]: () => true,
       [actions.removeNoData]: () => false,
-    }]
+    }],
+    errorFecth: [false, PropTypes.bol, {
+      [actions.setErroFecth]: () => true,
+      [actions.reset]: () => false,
+    }],
   }),
 
   start: function * () {
@@ -95,7 +100,7 @@ export default kea({
 
   workers: {
     * fetchNetworks () {
-      const { setNetworksServices, addLoadingPage, removeLoadingPage, setNoData } = this.actions
+      const { setNetworksServices, addLoadingPage, removeLoadingPage, setNoData, setErroFecth } = this.actions
       yield put(addLoadingPage())
       try {
 
@@ -109,9 +114,24 @@ export default kea({
         yield put(removeLoadingPage())
 
       } catch(er){
-        if (er.response.status === 401) {
-          const keycloak = yield this.get('keycloak')
-          keycloak.logout()
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          if (error.response.status === 401) {
+            const keycloak = yield this.get('keycloak')
+            keycloak.logout()
+          } else if (error.response.status === 404) {
+            console.log(404)
+            yield put(setErroFecth())
+          }
+        } else if (error.request) {
+          // The request was made but no response was received
+          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+          // http.ClientRequest in node.js
+          yield put(setErroFecth())
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          yield put(setErroFecth())
         }
         yield put(removeLoadingPage())
       }

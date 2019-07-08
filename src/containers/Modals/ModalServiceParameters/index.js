@@ -6,6 +6,7 @@
  */
 import React, { Component } from 'react'
 import Logic from './logic'
+import { withRouter } from 'react-router-dom'
 
 /* Component */
 import Modal from 'components/Modal'
@@ -16,7 +17,7 @@ import { CheckIcon, CloseIcon } from 'components/Icons'
 
 class ModalServiceParameters extends Component {
   render () {
-    const { status, action, title, service, form } = this.props
+    const { status, action, title, service, form, isPublishLoading } = this.props
     const { setValue, submitForm } = this.actions
     return (
       <Modal
@@ -29,7 +30,7 @@ class ModalServiceParameters extends Component {
         labelPosition={'top'}
       >
       <Modal.Body>
-      {service && service.parameter.map((param, index) =>
+      {service && service.parameters.map((param, index) =>
         <Form.Item
           key={index}
           label={param}
@@ -45,6 +46,7 @@ class ModalServiceParameters extends Component {
       <Button
           text={'Yes'}
           svg={<CheckIcon />}
+          loading={isPublishLoading}
           type={'primary'}
           onClick={() => submitForm(form)}
         />
@@ -61,5 +63,5 @@ class ModalServiceParameters extends Component {
   }
 }
 
-export default Logic(ModalServiceParameters)
+export default withRouter(Logic(ModalServiceParameters))
 

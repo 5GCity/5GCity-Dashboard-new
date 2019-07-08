@@ -38,15 +38,15 @@ export default styled(Input)`
     left:0;
     right:none;
   }
-  .el-input__inner{
+  .el-input__inner {
     padding-left:35px;
     padding-right:none;
   }
   `}
 
   ${({ theme }) => theme && `
-    .el-input__inner:focus{
-      border-color: ${({theme})=> lighten(0.5,theme.bodyBackground)}
+    .el-input__inner:focus {
+      border-color: ${({theme})=> lighten(0.5,theme.bodyBackground)};
     }
     `
   }

@@ -47,7 +47,7 @@ class SliceDetail extends Component {
           location={location}
           markers={slice.markers}
           markerColor={Theme.primaryColor}
-          onClick={(marker) => infoMarker(marker)}
+          markerClick={(marker) => infoMarker(marker)}
         />
       </React.Fragment>
       }

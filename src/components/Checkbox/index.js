@@ -2,14 +2,17 @@
  * Checkbox Component
  * Please write a description
  *
- * @author Your Name <youremail@ubiwhere.com>
+ * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
 import React from 'react'
 import styled from 'styled-components'
 import { Checkbox } from 'element-react'
+import { rgba } from 'polished'
 
 export default ({ children, ...props }) => (
-  <Checkbox {...props}>Checkbox</Checkbox>
+  <CheckboxContainer {...props}>
+    {props.title}
+  </CheckboxContainer>
 )
 
-const Wrapper = styled.div``
+

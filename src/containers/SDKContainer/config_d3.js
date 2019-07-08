@@ -1,4 +1,4 @@
-import { addNewNode, randomNumber } from '../SDKContainer/utils'
+import { addNewNode, randomXY } from '../SDKContainer/utils'
 
 export const GLOBAL_VALUES = {
   VNF:{w: 125, h: 122, type: 'vnf'},
@@ -67,8 +67,9 @@ const NODE_TYPE ={
   },
 }
 
-export const newBridgeNode = () => (
-  {
+export const newBridgeNode = () => {
+  const position = randomXY()
+ return {
     max_conections: GLOBAL_VALUES.EXTERNAL.max_conections,
     fill: GLOBAL_VALUES.BRIDGE.color,
     w: GLOBAL_VALUES.BRIDGE.w,
@@ -81,34 +82,34 @@ export const newBridgeNode = () => (
       isLink: false
     },
     id: addNewNode(),
-    x: randomNumber(),
-    y: randomNumber(),
+    ...position,
     array_link: ['right']
   }
-)
+}
 
-export const newExtrenalNode = () => (
-  {
-    max_conections: GLOBAL_VALUES.EXTERNAL.max_conections,
-    fill: GLOBAL_VALUES.EXTERNAL.color,
-    w: GLOBAL_VALUES.EXTERNAL.w,
-    h: GLOBAL_VALUES.EXTERNAL.h,
-    border: 5,
-    type: GLOBAL_VALUES.EXTERNAL.type,
-    left: {
-      x: 0,
-      y: GLOBAL_VALUES.EXTERNAL.h / 2,
-      isLink: false,
-    },
-    id: addNewNode(),
-    x: randomNumber(),
-    y: randomNumber(),
-    array_link: ['left']
-  }
-)
+export const newExtrenalNode = () => {
+  const position = randomXY()
+  return {
+      max_conections: GLOBAL_VALUES.EXTERNAL.max_conections,
+      fill: GLOBAL_VALUES.EXTERNAL.color,
+      w: GLOBAL_VALUES.EXTERNAL.w,
+      h: GLOBAL_VALUES.EXTERNAL.h,
+      border: 5,
+      type: GLOBAL_VALUES.EXTERNAL.type,
+      left: {
+        x: 0,
+        y: GLOBAL_VALUES.EXTERNAL.h / 2,
+        isLink: false,
+      },
+      id: addNewNode(),
+      array_link: ['left'],
+      ...position
+    }
+}
 
-export const newVirtualSwtichNode = (link_name) => (
-  {
+export const newVirtualSwtichNode = (link_name) => {
+  const position = randomXY()
+  return {
     max_conections: GLOBAL_VALUES.VS.max_conections,
     fill: GLOBAL_VALUES.VS.color,
     w: GLOBAL_VALUES.VS.w,
@@ -117,8 +118,7 @@ export const newVirtualSwtichNode = (link_name) => (
     type: GLOBAL_VALUES.VS.type,
     virtual_switch_name: link_name,
     id: addNewNode(),
-    x: randomNumber(),
-    y: randomNumber(),
+    ...position,
     right:{
       x: GLOBAL_VALUES.VS.w / 2,
       y: GLOBAL_VALUES.VS.h / 2,
@@ -126,16 +126,16 @@ export const newVirtualSwtichNode = (link_name) => (
     },
     array_link: ['right']
   }
-)
+}
 
 export const newVNFNode = (nodeInfo, mapping_expression) => {
   const arrayExpression = mapping_expression  === undefined ? [undefined] : mapping_expression
-  const position = Position(nodeInfo.connectionPoint.length)
+  const position = Position(nodeInfo.connectionPoints.length)
+  const XY = randomXY()
   return {
     ...NODE_TYPE.VNF,
     id: addNewNode(),
-    x: randomNumber(),
-    y: randomNumber(),
+    ...XY,
     extra_info: {
       version: nodeInfo.version,
       name: nodeInfo.name,
@@ -144,11 +144,11 @@ export const newVNFNode = (nodeInfo, mapping_expression) => {
       vnfd_id: nodeInfo.vnfdId,
       vnfd_version: nodeInfo.vnfdVersion,
       id: nodeInfo.id,
-      parameter:[...nodeInfo.parameter],
+      parameter:[...nodeInfo.parameters],
     },
     mapping_expression: arrayExpression,
-    connection_point:[...nodeInfo.connectionPoint],
-    max_connections: nodeInfo.connectionPoint.length,
+    connection_point:[...nodeInfo.connectionPoints],
+    max_connections: nodeInfo.connectionPoints.length,
     circle_text: nodeInfo.vnfdId && "VNF",
     array_link: position.array_link,
     ...position.links,

@@ -20,8 +20,11 @@ import Catalogue from 'scenes/Catalogue'
 import InfManagementView from 'scenes/InfManagementView'
 import infraManagementResource from 'scenes/infraManagementResource'
 import Monitoring from 'scenes/Monitoring'
+/* SDK */
 import SDK from 'scenes/SDK'
 import SDKService from 'scenes/SDKService'
+import SDKFunctions from 'scenes/SDKFunctions'
+import SDKFunction from 'scenes/SDKFunction'
 
 // Define routes here
 export const Routes = {
@@ -41,7 +44,7 @@ export const Routes = {
         name: 'Slices',
         path: '/slices',
         component: Slices,
-        crumb: ['inicio']
+        crumb: ['Slice']
     },
 
 
@@ -95,7 +98,7 @@ export const Routes = {
       name: 'InfManagementView',
       path: '/infManagementView',
       component: InfManagementView,
-      crumb: ['inicio']
+      crumb: ['Slice']
   },
 
 
@@ -113,7 +116,7 @@ export const Routes = {
       name: 'SDK',
       path: '/sdk/composer/:id',
       component: SDK,
-      crumb: ['inicio']
+      crumb: ['Slice']
   },
 
   SDKService: {
@@ -121,16 +124,31 @@ export const Routes = {
       name: 'SDKService',
       path: '/sdk/services',
       component: SDKService,
-      crumb: ['inicio']
+      crumb: ['Slice']
   },
 
+  SDKFunctions: {
+    key: 'SDKFunctions',
+    name: 'SDKFunctions',
+    path: '/sdk/functions',
+    component: SDKFunctions,
+    crumb: ['Slice']
+},
+
+  SDKFunction: {
+    key: 'SDKFunction',
+    name: 'SDKFunction',
+    path: '/sdk/function/:id',
+    component: SDKFunction,
+    crumb: ['Slice']
+  },
 
   infraManagementResource: {
       key: 'infraManagementResource',
       name: 'infraManagementResource',
       path: '/infManagement',
       component: infraManagementResource,
-      crumb: ['inicio']
+      crumb: ['Slice']
   },
 
   notfound: {

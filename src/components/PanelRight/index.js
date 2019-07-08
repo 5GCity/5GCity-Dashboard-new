@@ -23,10 +23,10 @@ export default ({ children, ...props }) => (
 const Wrapper = styled.div`
   position: fixed;
 	height: 100%;
-  z-index: 1;
+  z-index: 5;
   width: 100%;
   display: ${(props) => props.show ? 'initial' : 'none'};
-  background-color: ${({theme, backgroundColor}) => backgroundColor ? backgroundColor : rgba(theme.bodyBackground, 0.7) };
+  background-color: ${({ backgroundColor }) => backgroundColor ? backgroundColor : rgba('#37474F', 0.7) }; //theme.bodyBackground
 `
 
 const RightNav = styled.div`
@@ -35,7 +35,7 @@ const RightNav = styled.div`
   flex: auto;
 	height: 100%;
   width: 268px;
-	background: ${({theme}) => rgba(theme.bodyBackground, 0.98) };
+	background: ${() => rgba('#37474F', 0.98) }; //theme.bodyBackground
   position: fixed;
   right: 0px;
 `

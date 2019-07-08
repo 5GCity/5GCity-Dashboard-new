@@ -41,7 +41,7 @@ exports[`renders correctly 1`] = `
       onFocus={[Function]}
       onKeyDown={[Function]}
       type="text"
-      value="2019-02-26"
+      value="2019-06-03"
     />
   </div>
 </span>

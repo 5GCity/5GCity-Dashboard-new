@@ -8,7 +8,7 @@
 import { kea } from 'kea'
 import { put, call } from 'redux-saga/effects'
 import PropTypes from 'prop-types'
-import { LINKS, ChangeLink } from './utils'
+import { LINKS, ChangeLink, ChangeSubMenuLink } from './utils'
 
 /* Logic */
 import AppLogic from 'containers/App/logic'
@@ -78,10 +78,25 @@ export default kea({
       const { setlinks }= this.actions
       const path = this.props.location.pathname
       const links = yield this.get('links')
-      const menu = links.find(link => link.path === path)
-
-      if(menu){
+      let menu = null
+      let subMenu = null
+      links.forEach(link => {
+        if (link.path === path) {
+          menu = link
+        }
+        link.children && link.children.forEach(child => {
+          if (child.path === path) {
+            menu = link
+            subMenu = child
+          }
+        })
+      })
+      if (menu && !subMenu) {
         const newLinks = ChangeLink(menu)
+        yield put(setlinks(newLinks))
+        yield call(this.props.history.push, menu.path)
+      } else if (menu && subMenu) {
+        const newLinks = ChangeSubMenuLink(menu, subMenu)
         yield put(setlinks(newLinks))
         yield call(this.props.history.push, menu.path)
       }

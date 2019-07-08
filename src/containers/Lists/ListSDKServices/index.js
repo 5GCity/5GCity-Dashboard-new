@@ -120,6 +120,30 @@ const ModalSDKServiceClone = props => (
   </Modal>
 )
 
+
+const ModalError = props => (
+  <Modal
+    size={'tiny'}
+    showClose={true}
+    onCancel={() => props.actionModalError()}
+    title={'Error'}
+    visible={props.modalErrorVisibled}
+  >
+    <Modal.Body>
+      <Error>{props.modalErrorMessage}</Error>
+    </Modal.Body>
+    <Modal.Footer>
+      <Button
+      text={'Ok'}
+      svg={<CheckIcon />}
+      type={'primary'}
+      onClick={() => props.actionModalError()}
+    />
+    </Modal.Footer>
+  </Modal>
+)
+
+
 class ListSDKServices extends Component {
 
   navigate = (path) => {
@@ -135,6 +159,8 @@ class ListSDKServices extends Component {
       service,
       noData,
       errorFecth,
+      modalErrorVisibled,
+      modalErrorMessage,
     } = this.props
 
     const {
@@ -143,6 +169,7 @@ class ListSDKServices extends Component {
       actionModalDelete,
       actionModalClone,
       selectService,
+      actionModalError,
     } = this.actions
 
     return (
@@ -161,22 +188,27 @@ class ListSDKServices extends Component {
           cloneService={cloneService}
         />
         {serviceList &&
-        <ListSDKService
-          navigate={this.navigate}
-          services={serviceList}
-          selectService={selectService}
-          cloneService={cloneService}
-        />
+          <ListSDKService
+            navigate={this.navigate}
+            services={serviceList}
+            selectService={selectService}
+            cloneService={cloneService}
+          />
         }
         {noData &&
-        <NoData
-          title={'You don’t have any services yet...'}
-          message={'Click on the “Add new service” button to add your first service!'}
-        />
+          <NoData
+            title={'You don’t have any services yet...'}
+            message={'Click on the “Add new service” button to add your first service!'}
+          />
         }
         {errorFecth &&
-        <ErroPage />
+          <ErroPage />
         }
+        <ModalError
+          modalErrorVisibled={modalErrorVisibled}
+          modalErrorMessage={modalErrorMessage}
+          actionModalError={actionModalError}
+        />
       </React.Fragment>
     )
   }
@@ -197,4 +229,11 @@ const Title = styled.h5`
   color: #EFF2F7;
   font-size: 16px;
   font-family: ${({ theme }) => theme.fontFamily};
+`
+const Error = styled.h3`
+  text-align: center;
+  color: #EFF2F7;
+  font-size: 16px;
+  font-family: ${({ theme }) => theme.fontFamily};
+
 `

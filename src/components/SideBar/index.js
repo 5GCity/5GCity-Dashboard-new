@@ -77,7 +77,11 @@ const SubMenu = styled.ul`
   cursor: not-allowed;
   color: rgba(255,255,255,0.3);
 `}
+${({active, theme }) => active && `
+  border-right: 3px solid ${theme.primaryColor};
+`}
 `
+
 const Link = styled.a`
   display:block;
   font-size: 14px;

@@ -11,7 +11,7 @@ import styled from 'styled-components'
 /* Containers */
 import FormCompute from 'containers/Forms/FormCompute'
 import FormNetwork from 'containers/Forms/FormNetwork'
-import FormSDNWifi from 'containers/Forms/FormSDNWifi'
+import FormRAN from 'containers/Forms/FormRAN'
 
 class PanelResourceEdition extends Component {
   render () {
@@ -26,8 +26,8 @@ class PanelResourceEdition extends Component {
         {type === 'network' &&
           <FormNetwork />
         }
-        {type === 'wifi' &&
-          <FormSDNWifi />
+        {type === 'ran' &&
+          <FormRAN />
         }
       </Panel>
     )

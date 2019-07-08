@@ -5,8 +5,7 @@
 import 'interceptors'
 // ! Do not remove the env comments they are used for building the correct environemnt
 // env
-export * from 'environments/production'
-// env
+export * from 'environments/docker'
 
 // Core Constants
 export const VERSION = process.env.VERSION && process.env.VERSION.replace(/"/g, '')
@@ -21,4 +20,7 @@ export const API_DATE_FORMAT = `YYYY-MM-DD`
 // Other Contants
 export const MAPBOX_TOKEN = `pk.eyJ1IjoiaHVnb2ZvbnNlY2E0MyIsImEiOiJjam9nMHRhNDEwOWRnM2txenI0Mng5aHVvIn0.WIeLY3YLpDHAO9X76J5usA`
 export const MAPBOX_STYLE = `mapbox://styles/mapbox/dark-v9`
-export const REQUEST_CAMELIZE = ['create-descriptor']
+export const SENTRY_URL = `https://1512cd26cf0d48cbb47374af14fb951b@sentry2.ubiwhere.com/87`
+export const MEDIA_BASE_URL = `https://api.development.test`
+export const REQUEST_CAMELIZE = ['create_descriptor','services','functions','chunkete_chunk']
+//export const REQUEST_SCHEMA = ['/sdk/services']

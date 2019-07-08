@@ -28,7 +28,7 @@ const Wrapper = styled.div`
   position: absolute;
   width: 100%;
   height: 100%;
-  background-color: ${({ theme }) => rgba(theme.secondaryColor, 0.15) };
+  background-color: ${({ theme }) => rgba('#89979F', 0.15) }; //theme.secondaryColor
   justify-content: center;
   align-items: center;
   z-index:999;

@@ -8,13 +8,13 @@ import React, { Component } from 'react'
 import Logic from './logic'
 import styled from 'styled-components'
 import { Layout } from 'element-react'
-import { NAMES } from './utils'
+//import { NAMES } from './utils'
 
 /* Component */
 import Form from 'components/Form'
 import Input from 'components/Input'
 import Button from 'components/Button'
-import Select from 'components/Select'
+//import Select from 'components/Select'
 import { PlusIcon, DeleteIcon } from 'components/Icons'
 
 class FormNetwork extends Component {
@@ -31,12 +31,9 @@ class FormNetwork extends Component {
             required={true}
             status={!name.valid}
           >
-            <Select
-              placeholder={'Select Name'}
-              type={'default'}
-              options={NAMES}
+            <Input
+              value={name.value}
               onChange={value => change({name: value})}
-              selectOption={name.value}
             />
             <Form.Error>{name.message}</Form.Error>
             </Form.Item>

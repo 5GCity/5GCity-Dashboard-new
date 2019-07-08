@@ -29,20 +29,6 @@ export const Titles = [{
   propItem: 'version',
   render: (vendor) =>
     !vendor ? "N.A" : vendor
-},{
-  id: 5,
-  size: 120,
-  name: 'Repository',
-  propItem: 'repository',
-  render: (vendor) =>
-    !vendor ? "N.A" : vendor
-}, {
-  id: 6,
-  size: 150,
-  name: 'Last Update',
-  propItem: 'lastUpdate',
-  render: (vendor) =>
-    !vendor ? "N.A" : vendor
 }
 ]
 
@@ -66,12 +52,21 @@ export const getResult = services => {
 }
 }
 
-export const changeName = (selectService, services) => {
-  const findService = services.find(item => item.id === selectService.id)
+let idCopy = Date.now()
+
+export const changeName = (itemSelect, services) => {
+  const allServices = [...services]
+  const findService = allServices.find(item => item.id === itemSelect.id)
   if (findService) {
-    findService.name = `Copy_${selectService.name}`
-    findService.component.forEach(item => delete(item.id))
-    findService.connectionPoint.forEach(item => delete(item.id))
+    findService.name = `Copy_${itemSelect.name}_${idCopy++}`
+    findService.component && findService.component.forEach(item => delete(item.id))
+    findService.connectionPoints && findService.connectionPoints.forEach(item => delete(item.id))
+    findService.intMonitoringParameters && findService.intMonitoringParameters.forEach(item => delete(item.id))
+    findService.extMonitoringParameters && findService.extMonitoringParameters.forEach(item => delete(item.id))
+    findService.link && findService.link.forEach(item => delete(item.id))
+    findService.actionRules && findService.actionRules.forEach(item => delete(item.id))
+    findService.actions && findService.actions.forEach(item => delete(item.id))
+    findService.l3Connectivity && findService.l3Connectivity.forEach(item => delete(item.id))
     delete(findService.id)
   }
   return findService

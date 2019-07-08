@@ -70,4 +70,8 @@ injectGlobal`
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+/* MAPBOX */
+.mapboxgl-marker >svg {
+  position: absolute;
+}
 `

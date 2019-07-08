@@ -7,7 +7,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Icon } from 'element-react'
-import {  } from 'polished'
+import { rgba } from 'polished'
 /* import PropTypes from 'prop-types' */
 
 
@@ -28,14 +28,13 @@ const Wrapper = styled.div`
   color: #fff;
   text-align: center;
   cursor: pointer;
-  height: 92px;
+  height: ${({props}) => `${props}px`};
   padding: 14px 16px;
   position: relative;
-  box-shadow: inset 0 -1px 0 0 rgba(137,151,159,0.15);
-
+  box-shadow: inset 0 -1px 0 0 ${({theme}) => rgba(theme.secondaryColor, 0.8)};
 
    :hover {
-    background-color: rgba(137,151,159,0.2);
+    background-color: ${({theme}) => rgba(theme.secondaryColor, 0.2)};
   }
 
   ${({ active }) => active && `

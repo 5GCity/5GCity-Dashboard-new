@@ -80,7 +80,7 @@ const Rect = styled.rect`
   rx: 10%;
   stroke-width: 1.5;
   stroke-dasharray: 5;
-  stroke: ${({theme}) => rgba(theme.secondaryColor, 0.3)};
+  stroke: ${() => rgba('#89979F', 0.3)}; // theme.secondaryColor
 `
 
 const Version = styled.text`
@@ -102,7 +102,7 @@ const SVGContainer = styled.svg`
   margin: 8px 4px;
   &:hover {
     ${Rect} {
-      fill: ${({theme}) => rgba(theme.secondaryColor, 0.1)};
+      fill: ${() => rgba('#89979F', 0.1)}; //theme.secondaryColor
     }
     ${PlusCatalogue} {
       visibility: visible;

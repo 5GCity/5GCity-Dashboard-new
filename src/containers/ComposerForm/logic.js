@@ -10,8 +10,10 @@ import { put } from 'redux-saga/effects'
 
 import PropTypes from 'prop-types'
 import * as Check from 'validations'
+import { AddNewParameter } from './utils'
 
 import SDKContainerLogic from 'containers/SDKContainer/logic'
+
 
 
 const DEFAULT_FORM = {
@@ -31,7 +33,7 @@ const DEFAULT_FORM = {
     value: null
   },
   service_parameter:{
-    array: []
+    array: [{value: null, valid: false}]
   },
 }
 
@@ -92,9 +94,7 @@ export default kea({
       [actions.setForm]: (state, payload) => Check.checkValidation(payload.form, VALIDATIONS).form,
 
       [actions.setValueParameters]:(state, payload) => Check.setAndCheckValidationArray(state, payload, VALIDATIONS),
-      [actions.addParameter]: (state, payload) => {
-        return Object.assign({}, state, state.service_parameter.array.push({value:null, valid: false}))
-      },
+      [actions.addParameter]: (state, payload) =>  Check.checkValidation(AddNewParameter(state), VALIDATIONS).form,
       [actions.removeParameter]: (state, payload) => {
         return Object.assign({}, state, state.service_parameter.array.splice(payload.index,1))
       },
@@ -147,7 +147,7 @@ export default kea({
       setDefaultValues.service_version.value =  form.version
       setDefaultValues.service_license_type.value =  form.license.type
       setDefaultValues.service_license_url.value =  form.license.url
-      setDefaultValues.service_parameter.array =  form.parameter
+      setDefaultValues.service_parameter.array =  form.parameters.length <= 0 ? setDefaultValues.service_parameter.array : form.parameters
 
       const validForm = Check.checkValidation(setDefaultValues, VALIDATIONS).form
       yield put(changeForm(validForm))
@@ -171,7 +171,7 @@ export default kea({
       form.service_parameter.array.forEach(element => {
         newArrayParameters.push(element.value)
       })
-      service.parameter = newArrayParameters
+      service.parameters = newArrayParameters
       // Check validations
       const validation = Check.checkValidation(form, VALIDATIONS)
 

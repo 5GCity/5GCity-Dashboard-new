@@ -6,7 +6,7 @@
  */
 
 
-export const createAllPins = (resources) =>{
+export const CreateAllPins = resources => {
   const markers = []
 
 
@@ -15,7 +15,7 @@ export const createAllPins = (resources) =>{
   }
 
   const compareComputes = () => {
-    resources.computes.forEach((compute) => {
+    resources.computes.length > 0 && resources.computes.forEach((compute) => {
       const { latitude, longitude } = compute.location
 
       const locationExistsOnMarkers = markers.find((marker) =>
@@ -42,7 +42,7 @@ export const createAllPins = (resources) =>{
                   computeData: {...compute.computeData.quota},
                   ischecked:false
                 }]
-              }
+              },
           }
         })
       }
@@ -50,9 +50,10 @@ export const createAllPins = (resources) =>{
   }
 
   const compareNetworks = () => {
-    resources.networks.forEach((network) => {
+    resources.networks.length > 0 && resources.networks.forEach((network) => {
       const { latitude, longitude } = network.location
-      const locationExistsOnMarkers = markers.find((marker) =>
+
+      const locationExistsOnMarkers = markers.find( marker =>
         marker.location.latitude === latitude &&
         marker.location.longitude === longitude
       )
@@ -62,36 +63,29 @@ export const createAllPins = (resources) =>{
           locationExistsOnMarkers.location.resources.networks.push({
             id: network.id ,
             name: network.name,
-            ischecked:false,
-            cidr: null,
-            int_cidr:null,
-            networkData: {...network.physicalNetworkData.quota},
+            networkData: {...network.physicalNetworkData},
+            ischecked:false
           })
         } else {
           locationExistsOnMarkers.location.resources.networks = [{
               id: network.id ,
               name: network.name,
-              ischecked:false,
-              cidr: null,
-              int_cidr:null,
-              networkData: {...network.physicalNetworkData.quota},
+              networkData: {...network.physicalNetworkData},
+              ischecked:false
         }]
-        locationExistsOnMarkers.location.resources.networksCount = 0
       }
       } else {
         markers.push({
           location:{
-            latitude:latitude,
-            longitude: longitude,
+            latitude:network.location.latitude,
+            longitude: network.location.longitude,
               resources:{
                 networks:[{
                   id: network.id ,
                   name: network.name,
-                  ischecked:false,
-                  int_cidr:null,
-                  cidr: null,
-                  networkData: {...network.physicalNetworkData.quota},
-                }]
+                  networkData: {...network.physicalNetworkData},
+                  ischecked:false
+                }],
               },
           }
         })
@@ -99,66 +93,9 @@ export const createAllPins = (resources) =>{
     })
   }
 
-  const compareSDN = () => {
-    resources.sdnWifi.forEach((sdnWifi) => {
-      const { latitude, longitude } = sdnWifi.location
-
-      const locationExistsOnMarkers = markers.find((marker) =>
-        marker.location.latitude === latitude &&
-        marker.location.longitude === longitude
-      )
-
-      if(locationExistsOnMarkers) {
-        if(locationExistsOnMarkers.location.resources.sdnWifi) {
-          locationExistsOnMarkers.location.resources.sdnWifi.push({
-            id: sdnWifi.id ,
-            name: sdnWifi.name,
-            ischecked: false,
-            channel: null,
-            dhcpd: null,
-            dns: null,
-            sdnWifiName: null,
-            sdnWifiData: [...sdnWifi.sdnWifiAccessPointData.channels],
-          })
-        } else {
-          locationExistsOnMarkers.location.resources.sdnWifi = [{
-              id: sdnWifi.id ,
-              name: sdnWifi.name,
-              ischecked: false,
-              channel: null,
-              dhcpd: null,
-              dns: null,
-              sdnWifiName: null,
-              sdnWifiData: [...sdnWifi.sdnWifiAccessPointData.channels],
-          }]
-          locationExistsOnMarkers.location.resources.sdnWifiCount = 0
-      }
-      } else {
-        markers.push({
-          location:{
-            latitude:sdnWifi.location.latitude,
-            longitude: sdnWifi.location.longitude,
-              resources:{
-                sdnWifi:[{
-                  id: sdnWifi.id ,
-                  name: sdnWifi.name,
-                  ischecked: false,
-                  channel: null,
-                  dhcpd: null,
-                  dns: null,
-                  sdnWifiName: null,
-                  sdnWifiData: [...sdnWifi.sdnWifiAccessPointData.channels],
-                }]
-              }
-          }
-        })
-      }
-    })
-  }
 
   compareComputes()
   compareNetworks()
-  compareSDN()
-
+  console.log(markers)
   return markers
 }

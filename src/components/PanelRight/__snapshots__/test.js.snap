@@ -1,3 +1,44 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders correctly 1`] = `null`;
+exports[`renders correctly 1`] = `
+.c0 {
+  position: fixed;
+  height: 100%;
+  z-index: 1;
+  width: 100%;
+  display: none;
+  background-color: rgba(55,71,79,0.7);
+}
+
+.c1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-flex: auto;
+  -ms-flex: auto;
+  flex: auto;
+  height: 100%;
+  width: 268px;
+  background: rgba(55,71,79,0.98);
+  position: fixed;
+  right: 0px;
+}
+
+<div
+  className="c0"
+  data={
+    Object {
+      "subtitle": "Cabinet",
+      "title": "0020110b0c30c",
+    }
+  }
+>
+  <div
+    className="c1"
+  />
+</div>
+`;

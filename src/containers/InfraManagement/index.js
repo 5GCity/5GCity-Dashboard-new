@@ -10,7 +10,7 @@ import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
 
 /* Containers */
-import SliceMap from 'containers/SliceMap'
+import MapAdd from 'containers/MapAdd'
 
 /* Component */
 import HeaderNav from 'components/HeaderNav'
@@ -51,7 +51,7 @@ const ModalDeleteResource = (props) => (
       />
     </Modal.Footer>
   </Modal>
-);
+)
 
 
 class InfraManagement extends Component {
@@ -62,8 +62,9 @@ class InfraManagement extends Component {
   }
 
   render() {
-    const { addResource, getInfoMarker, changeModalStatus, submitModal } = this.actions
-    const { pinsResources, locations, modalStatus, modalInfo } = this.props
+    const {  getInfoMarker, changeModalStatus, submitModal, changeModalErrorStatus ,addResource } = this.actions
+    const { pinsResources, locations, modalStatus, modalInfo, modalErrorStatus, modalErrorData } = this.props
+    let statusMarker = true
     return (
       <Wrapper>
         <ModalDeleteResource
@@ -72,6 +73,27 @@ class InfraManagement extends Component {
           modalStatus={modalStatus}
           modalInfo={modalInfo}
         />
+        <Modal
+          size={'tiny'}
+          title={'Error'}
+          visible={modalErrorStatus}
+          onCancel={() => changeModalErrorStatus(null)}
+          closeOnClickModal={false}
+        >
+        <Modal.Body>
+          <Message>
+            {modalErrorData && modalErrorData.message}
+          </Message>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            text={'ok'}
+            svg={<CheckIcon />}
+            type={'primary'}
+            onClick={() => changeModalErrorStatus(null)}
+          />
+        </Modal.Footer>
+        </Modal>
           <HeaderNav
             buttonBack={<BackIcon />}
             navigateBack={() => this.navigateToBack()}
@@ -79,11 +101,11 @@ class InfraManagement extends Component {
           />
           <PanelResource />
           {pinsResources &&
-            <SliceMap
+            <MapAdd
               location={locations}
               markers={pinsResources}
-              mapClick={({ lngLat }) => addResource(lngLat)}
-              onClick={(marker) => getInfoMarker(marker)}
+              mapClick={({lngLat}) => statusMarker && addResource(lngLat) }
+              markerClick={(marker) => getInfoMarker(marker)}
             />
           }
       </Wrapper>

@@ -21,7 +21,7 @@ import PanelResourceEdition from 'containers/Panel/PanelResourceEdition'
 class PanelResource extends Component {
   render () {
     const { edition, markerSelect, editResource, panelStatus } = this.props
-    const { changeEdition, submit, closePanel, changeModalStatus } = this.actions
+    const { changeEdition, closePanel, changeModalStatus, submit } = this.actions
     return (
       <PanelRight
       show={panelStatus}

@@ -1,0 +1,65 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+.c0 {
+  width: 100px;
+  height: 106px;
+  cursor: pointer;
+  margin: 8px 4px;
+}
+
+.c0:hover .c1 {
+  fill: rgba(137,151,159,0.1);
+}
+
+.c0:hover .c3 {
+  visibility: visible;
+}
+
+.c2 {
+  fill: transparent;
+  width: 100px;
+  height: 106px;
+  rx: 10%;
+  stroke-width: 1.5;
+  stroke-dasharray: 5;
+  stroke: rgba(137,151,159,0.3);
+}
+
+.c4 {
+  visibility: hidden;
+}
+
+<svg
+  className="c0"
+  onClick={[Function]}
+>
+  <g
+    className=""
+  >
+    <rect
+      className="c1 c2"
+    />
+    <g
+      className="c3 c4"
+      transform="translate(33,40)"
+    >
+      <rect
+        fill="white"
+        height="5"
+        rx="0"
+        width="32"
+        y="13"
+      />
+      <rect
+        fill="white"
+        height="5"
+        ry="0"
+        transform="rotate(90)"
+        width="32"
+        y="-18"
+      />
+    </g>
+  </g>
+</svg>
+`;

@@ -36,10 +36,10 @@ const ButtonStyled = styled(Button)`
       background-color: #628A34 !important;
     }
     &:active {
-       background-color: ${darken(0.1, theme.primaryColor)};
+       background-color: ${({ theme }) => theme && darken(0.1, theme.primaryColor)};
     }
     &:focus {
-       background-color: ${darken(0.1, theme.primaryColor)};
+       background-color: ${({ theme }) => theme && darken(0.1, theme.primaryColor)};
     }
     &:disabled {
       color: #fff;
@@ -127,11 +127,11 @@ color: #fff;
 }
 &:active {
   color: #fff;
-  background-color: ${darken(0.1, theme.primaryColor)};
+  background-color:${darken(0.1, theme.primaryColor)};
   }
 &:focus {
   color: #fff;
-  background-color: ${darken(0.1, theme.primaryColor)};
+  background-color:${darken(0.1, theme.primaryColor)};
   }
 &:disabled {
     color: #fff;

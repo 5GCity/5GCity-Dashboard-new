@@ -30,25 +30,22 @@ class ComposerForm extends Component {
     const { submit, setValueParameters,addParameter, removeParameter, change } = this.actions
     return (
       <Wrapper>
-        <Step>
-          <Wrapper step={1} description={'General info'}>
-            <FormBasicSettings
-              dataForm={form}
-              setValue={change}
-              setValueParameters={setValueParameters}
-              addParameter={addParameter}
-              removeParameter={removeParameter}
-            />
-            <Button
-              type={'primary'}
-              svg={<PlayIcon />}
-              text={'Validate'}
-              float={'right'}
-              disabled={isSubmitting}
-              onClick={submit}
-            />
-          </Wrapper>
-        </Step>
+        <WrapperStep>
+          <Step>
+            <Step step={1} description={'General info'} />
+          </Step>
+          </WrapperStep>
+        <ContainerForm>
+          <FormBasicSettings
+            dataForm={form}
+            setValue={change}
+            setValueParameters={setValueParameters}
+            addParameter={addParameter}
+            removeParameter={removeParameter}
+            isSubmitting={isSubmitting}
+            submit={submit}
+          />
+        </ContainerForm>
       </Wrapper>
     )
   }
@@ -57,4 +54,15 @@ class ComposerForm extends Component {
 export default Logic(ComposerForm)
 
 const Wrapper = styled.div`
+
+`
+const ContainerForm = styled.div`
+  margin-left: 40px;
+  display: inline-flex;
+`
+const WrapperStep = styled.div`
+  display: inline-flex;
+`
+const ButtonSubmit = styled(Button)`
+
 `

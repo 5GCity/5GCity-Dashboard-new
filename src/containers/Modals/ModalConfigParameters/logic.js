@@ -85,6 +85,9 @@ export default kea({
   },
 
   stop: function * () {
+    const { reset } = this.actions
+
+    yield put(reset())
   },
 
   takeLatest: ({ actions, workers }) => ({

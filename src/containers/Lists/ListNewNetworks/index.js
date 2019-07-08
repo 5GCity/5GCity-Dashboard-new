@@ -14,6 +14,8 @@ import List from 'components/List'
 import Modal from 'components/Modal'
 import Button from 'components/Button'
 import { PlayIcon, CloseIcon, CheckIcon } from 'components/Icons'
+import NoData from 'components/NoData'
+import ErroPage from 'components/ErroPage'
 
 /* Containers */
 import NewNetworkForm from 'containers/Forms/NewNetworkForm'
@@ -125,7 +127,7 @@ class ListNewNetworks extends Component {
 
   render() {
     const {
-      networkServices, modalError, modalVisibled, isSubmitting, loading } = this.props,
+      networkServices, modalError, modalVisibled, isSubmitting, loading, noData, errorFecth } = this.props,
       { actionModalError, actionModal, setSelectNetwork, submit } = this.actions
 
     return (
@@ -141,10 +143,21 @@ class ListNewNetworks extends Component {
           modalError={modalError}
           actionModalError={actionModalError}
         />
+        {networkServices &&
         <ListNetworkServices
           networkServices={networkServices}
           setSelectNetwork={setSelectNetwork}
         />
+        }
+        {noData &&
+        <NoData
+          title={'You don’t have any services catalogue yet...'}
+          message={'Create a new service!'}
+        />
+        }
+        {errorFecth &&
+        <ErroPage />
+        }
       </Wrapper>
     )
   }

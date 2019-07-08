@@ -7,21 +7,15 @@
 import React, { Component } from 'react'
 import Logic from './logic'
 import styled from 'styled-components'
-
+import { withRouter } from 'react-router-dom'
 
 /* Components */
-import PageTitle from 'components/PageTitle';
-/* import Input from 'components/Input';
-import Select from 'components/Select'; */
+import PageTitle from 'components/PageTitle'
+import { PlusIcon } from 'components/Icons'
 
 /* Containers */
 import ListSlices from 'containers/Lists/ListSlices'
 import Navbar from 'containers/Navbar'
-
-import { withRouter } from 'react-router-dom'
-
-/* Components */
-import { PlusIcon } from 'components/Icons'
 
 class Slices extends Component {
 

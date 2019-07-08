@@ -42,7 +42,7 @@ export default kea({
     configParams: (node) => ({ node }),
     changeConfigParams: (node) => ({ node }),
     changePublishStatus: (status) => ({ status }),
-    activeLoading: () => ({ }),
+    activeLoadingPublish: () => ({ }),
     activeLoadingSave: () => ({ }),
     changeSaveStatus: (status) => ({ status }),
     actionModalPublish: () => ({ }),
@@ -103,10 +103,11 @@ export default kea({
       [actions.setSerivce]: (state, payload) => payload.id,
     }],
     isPublishLoading: [false, PropTypes.bool, {
-      [actions.activeLoading]: (state, payload) => !state,
+      [actions.activeLoadingPublish]: (state, payload) => !state,
     }],
-    isPublishStatus: ['secondary', PropTypes.string, {
-      [actions.changePublishStatus]: (state, payload) => payload.status,
+    isPublish: [true ,PropTypes.bool, {
+      [actions.changePublishStatus]: (state, payload) => false,
+      [actions.changeConfigParams]: (state, payload) => false,
     }],
     isSaved: [true ,PropTypes.bool, {
       [actions.changePublishStatus]: (state, payload) => false,
@@ -122,6 +123,7 @@ export default kea({
     modalPublishStatus: [false, PropTypes.bool, {
       [actions.actionModalPublish]: (state,payload) => !state,
       [actions.publishComposer]: (state, payload) => !state,
+      [actions.reset]: () => false,
     }],
     errorsMessages: [null, PropTypes.array, {
       [actions.setErrors]: (state, payload) => payload.errors,
@@ -171,7 +173,7 @@ export default kea({
     * fetchFunctions () {
       const { setFunctions, fetchServiceId } = this.actions
        try {
-         let responseResult = yield call(axios.get,`${API_BASE_SDK}/sdk/composer/functions`)
+         let responseResult = yield call(axios.get,`${API_BASE_SDK}/sdk/functions/`)
          const { data } = responseResult
          yield put(setFunctions(data))
          yield put(fetchServiceId())
@@ -186,10 +188,10 @@ export default kea({
       const serviceId = yield this.get('idService')
       try{
           if (serviceId > 0) {
-            let responseResult = yield call(axios.get,`${API_BASE_SDK}/sdk/composer/services/${serviceId}`)
+            let responseResult = yield call(axios.get,`${API_BASE_SDK}/sdk/services/${serviceId}`)
             const { data } = responseResult
             yield put(setServiceInfo(data))
-            const {d3Data, newCatalogue} = transformToD3Object(data, catalogue)
+            let {d3Data, newCatalogue} = transformToD3Object(data, catalogue)
             yield put(setData(d3Data))
             yield put(changeCatalogue(newCatalogue))
             yield put(changeSaveStatus(true))
@@ -217,10 +219,10 @@ export default kea({
         let responseResult
         if(serviceId > 0) {
           composer.id = serviceId
-          responseResult = yield call(axios.put,`${API_BASE_SDK}/sdk/composer/services/`, composer)
+          responseResult = yield call(axios.put,`${API_BASE_SDK}/sdk/services/`, composer)
           typeRequest = 'put'
         } else {
-          responseResult = yield call(axios.post,`${API_BASE_SDK}/sdk/composer/services/`, composer)
+          responseResult = yield call(axios.post,`${API_BASE_SDK}/sdk/services/`, composer)
           typeRequest = 'post'
         }
         const { data } = responseResult
@@ -229,12 +231,37 @@ export default kea({
         }
         yield put(changeSaveStatus(true))
         yield put(activeLoadingSave())
-      }catch (error){
         Message({
           showClose: false,
-          message: 'Cannot save',
-          type: 'error'
+          message: 'Service Save',
+          type: 'success'
         })
+      }catch (error){
+        switch (error.response.status) {
+          case 400:
+            Message({
+              showClose: false,
+              message: error.response.data,
+              type: 'error'
+            })
+          break;
+          case 403:
+            Message({
+              showClose: false,
+              message: error.response.data,
+              type: 'error'
+            })
+          break;
+
+          default:
+            Message({
+              showClose: false,
+              message: 'Cannot save',
+              type: 'error'
+            })
+          break;
+        }
+
           yield put(changeSaveStatus(false))
           yield put(activeLoadingSave())
         }

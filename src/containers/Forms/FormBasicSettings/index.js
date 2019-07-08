@@ -16,13 +16,14 @@ import Input from 'components/Input'
 import Form from 'components/Form'
 import Select from 'components/Select'
 import Button from 'components/Button'
-import { DeleteIcon, PlusIcon } from 'components/Icons'
+import { DeleteIcon, PlusIcon, PlayIcon } from 'components/Icons'
 import { LICENSE_TYPE } from './utils'
 
 
 class FormBasicSettings extends Component {
   render () {
-    const { dataForm, setValue, removeParameter, addParameter, setValueParameters } = this.props
+    const { dataForm, setValue, removeParameter, addParameter,
+      setValueParameters, isSubmitting, submit } = this.props
     const {
       service_name,
       service_designer,
@@ -77,10 +78,11 @@ class FormBasicSettings extends Component {
               <Form.Error>{service_license_url.message}</Form.Error>
             </Form.Item>
             <SubTitle>Parameter</SubTitle>
-            {service_parameter.array.map((parameter, index) =>
+            {service_parameter.array && service_parameter.array.map((parameter, index) =>
                 <Form.Item
                   key={index}
                   label={`parameter ${index + 1}`}
+                  status={!parameter.valid}
                 >
                 <Layout.Row gutter="4">
                 <Layout.Col span="16">
@@ -98,6 +100,7 @@ class FormBasicSettings extends Component {
                     />
                 </Layout.Col>
                 </Layout.Row>
+                <Form.Error>{parameter.message}</Form.Error>
                 </Form.Item>
                 )}
                 <Button
@@ -106,6 +109,14 @@ class FormBasicSettings extends Component {
                   type={'primary'}
                   onClick={() => addParameter()}
                 />
+        <Button
+          type={'primary'}
+          svg={<PlayIcon />}
+          text={'Validate'}
+          float={'right'}
+          disabled={isSubmitting}
+          onClick={submit}
+        />
           </Form>
       </Wrapper>
     )
@@ -115,7 +126,7 @@ class FormBasicSettings extends Component {
 export default Logic(FormBasicSettings)
 
 const Wrapper = styled.div`
-
+  width: 640px;
 `
 
 const SubTitle = styled.p`

@@ -18,4 +18,9 @@ export const NAMES = [{
   id: 2,
   name: "Private",
   value: "private"
+ },
+ {
+  id: 3,
+  name: "External",
+  value: "external"
  }]

@@ -10,7 +10,7 @@ import { put, call } from 'redux-saga/effects'
 import axios from 'axios'
 import PropTypes from 'prop-types'
 import { API_BASE_URL } from 'config'
-import { createAllPins } from './utils'
+import { CreateAllPins } from './utils'
 import * as Check from 'validations'
 
 /* Logic */
@@ -53,7 +53,8 @@ export default kea({
     setSelectPin: (pin) => ({ pin }),
     changeNetwork: (selectPin, networkSelectIndex, field, value ) => ({ selectPin, networkSelectIndex, field, value }),
     changeComputes: (selectPin, computeSelectIndex, field, value ) => ({ selectPin, computeSelectIndex, field, value }),
-    changeSDN: (selectPin, sdnSelectIndex, field, value ) => ({ selectPin, sdnSelectIndex, field, value }),
+    changeBoxes: (selectPin ,boxIndex, physIndex, field, value ) => ({ selectPin ,boxIndex, physIndex, field, value }),
+    changeRAN: (selectPin, ranIndex , field, value) =>({selectPin, ranIndex, field, value}),
     updateMarker: () => ({  }),
     change: (value) => ({ value }),
     resetSliceName: () => ({ }),
@@ -79,7 +80,7 @@ export default kea({
       [actions.reset]: (state, payload) => false,
     }],
     pinsResources: [null, PropTypes.any, {
-      [actions.setListResources]: (state, payload) => createAllPins(payload.resources),
+      [actions.setListResources]: (state, payload) => CreateAllPins(payload.resources),
       [actions.changeNetwork]: (state, payload) => {
         const { selectPin, networkSelectIndex, field, value } = payload
         const clone = [...state]
@@ -92,10 +93,17 @@ export default kea({
         clone[selectPin].location.resources.computes[computeSelectIndex][field] = value
         return clone
       },
-      [actions.changeSDN]: (state, payload) => {
-        const { selectPin, sdnSelectIndex, field, value } = payload
+      [actions.changeBoxes]: (state, payload) => {
+        const { selectPin, ranIndex, boxIndex, physIndex, field, value } = payload
         const clone = [...state]
-        clone[selectPin].location.resources.sdnWifi[sdnSelectIndex][field] = value
+        console.log(clone)
+        //clone[selectPin].location.resources.rans[ranIndex].chunketeTopology.boxes[boxIndex].phys[physIndex][field] = value
+        return clone
+      },
+      [actions.changeRAN]: (state, payload) => {
+        const { selectPin, ranIndex, field, value } = payload
+        const clone = [...state]
+        clone[selectPin].location.resources.rans[ranIndex][field] = value
         return clone
       }
     }],
@@ -169,19 +177,7 @@ export default kea({
           marker => JSON.stringify(marker) === JSON.stringify(action.payload.resources)
         )
         const selectPin = pinsResources[pinIndex]
-        const channelsOptions = []
-        let id = 0
-        selectPin.location.resources.sdnWifi &&
-        selectPin.location.resources.sdnWifi.forEach(wifi => {
-          wifi.sdnWifiData.forEach(channel =>
-            channelsOptions.push({
-            id: id++,
-            name: channel.number,
-            value: channel.number
-          })
-        )
-        wifi.channelOptions = channelsOptions
-        })
+        console.log(selectPin)
       yield put(setSelectPin(pinIndex))
       yield put(setSelectSlice(selectPin.location.resources))
     },
@@ -194,17 +190,17 @@ export default kea({
       let found = false
 
       if (resources.computes) {
-        found = resources.computes.find((compute) => compute.ischecked)
+        found = resources.computes.find(compute => compute.ischecked)
         resources.computesCount++
       }
 
       if (!found && resources.networks) {
-        found = resources.networks.find((network) => network.ischecked)
+        found = resources.networks.find(network => network.ischecked)
          resources.networksCount++
       }
 
-      if(!found && resources.sdnWifi){
-        found = resources.sdnWifi.find((sdn) => sdn.ischecked)
+      if(!found && resources.rans){
+        found = resources.rans.find((sdn) => sdn.ischecked)
         resources.sdnWifiCount++
       }
 
@@ -214,13 +210,15 @@ export default kea({
 
       const existCompute = resources.computes && resources.computes.find((sdn) => sdn.ischecked)
       const existNetwork = resources.networks && resources.networks.find((sdn) => sdn.ischecked)
-      const existSdn = resources.sdnWifi && resources.sdnWifi.find((sdn) => sdn.ischecked)
+      const existSdn = resources.sdnWifi && resources.rans.find((sdn) => sdn.ischecked)
 
       if (existSdn && existNetwork && existCompute) {
         yield put(actionPanel())
       } else if (existNetwork && existCompute) {
         yield put(actionPanel())
       } else if (!existSdn && !existNetwork && !existCompute){
+        yield put(actionPanel())
+      } else if (!existSdn && !existNetwork && existCompute){
         yield put(actionPanel())
       } else {
         if (existSdn && !existNetwork){
@@ -229,8 +227,6 @@ export default kea({
           yield put(showError('Slice needs a compute'))
         } else if (!existSdn && existNetwork && !existCompute) {
           yield put(showError('Slice needs a compute'))
-        } else if(!existSdn && !existNetwork && existCompute) {
-          yield put(showError('Slice needs a network'))
         }
         pinsResources[pinIndex].color = null
         yield put(errorfetch())
@@ -243,21 +239,24 @@ export default kea({
       // add Loading
       yield put(addLoadingPage())
       try{
-        const responseComputes = yield call(axios.get , `${API_BASE_URL}/compute`)
-        const responseNetworks = yield call(axios.get , `${API_BASE_URL}/physical_network`)
-        const responseSdnWifi = yield call(axios.get , `${API_BASE_URL}/sdn_wifi_access_point`)
+        const responseComputes = yield call(axios.get, `${API_BASE_URL}/compute`)
+        const responseNetworks = yield call(axios.get, `${API_BASE_URL}/physical_network`)
+        const responseRAN = yield call(axios.get, `${API_BASE_URL}/ran_infrastructure`)
 
-        const listResources = {computes:[], networks:[], sdnWifi:[]}
+        const listResources = {computes:[], networks:[], rans:[]}
 
-        if(responseComputes) {
-          responseComputes.data.map(el => listResources.computes.push(el))
+        responseComputes && responseComputes.data.map(el => listResources.computes.push(el))
+
+        responseNetworks && responseNetworks.data.map(el => listResources.networks.push(el))
+
+        if(responseRAN) {
+          for (let index = 0; index < responseRAN.data.length; index++) {
+            const elementId = responseRAN.data[index].id;
+            const responseChunketeTopology = yield call(axios.get, `${API_BASE_URL}/ran_infrastructure/${elementId}/chunkete_topology`)
+            responseRAN.data.map(el => listResources.rans.push({...el, chunketeTopology: responseChunketeTopology.data || null }))
+          }
         }
-        if(responseNetworks) {
-          responseNetworks.data.map(el => listResources.networks.push(el))
-        }
-        if(responseSdnWifi) {
-          responseSdnWifi.data.map(el => listResources.sdnWifi.push(el))
-        }
+
         yield put(removeLoadingPage())
         yield(put(setListResources(listResources)))
       }
@@ -287,7 +286,7 @@ export default kea({
         /*
          * 1º Create OpenStack
          * 2º Create Vlan
-         * 3º Virtual Create Wifi Access Point
+         * 3º Create Chunkete Chunk
          * 4º Create Chunks
          */
         yield put(showError('Slice needs a compute'))
@@ -354,25 +353,35 @@ export default kea({
                 }
               }
             }
-            if(pin.location.resources.sdnWifi){
-              for (let sdnWifi of pin.location.resources.sdnWifi) {
-                if(sdnWifi.ischecked){
-                  // 3º Virtual Wifi Access Point
-                  const dataSdnWifi = {
-                    channel: sdnWifi.channel,
-                    dhcpd_ip: sdnWifi.dhcpd,
-                    dns_ip: sdnWifi.dns,
-                    name: sdnWifi.sdnWifiName,
-                    openstack_vlan_id: vlans_ids[0],
-                    sdn_wifi_access_point_id: sdnWifi.id,
+            if(pin.location.resources.rans){
+              for (let indexRAN = 0; indexRAN < pin.location.resources.rans.length; indexRAN++) {
+                const ran = pin.location.resources.rans[indexRAN]
+                const physicalList = []
+                for (let indexBox = 0; indexBox < ran.chunketeTopology.boxes.length; indexBox++) {
+                  const box = ran.chunketeTopology.boxes[indexBox]
+                  for (let indexPhys = 0; indexPhys < box.phys.length; indexPhys++) {
+                    const phy = box.phys[indexPhys]
+                    if(phy.ischecked){
+                      physicalList.push({id: phy.id})
+                    }
                   }
-                  const response = yield call(axios.post, `${API_BASE_URL}/virtual_wifi_access_point`, dataSdnWifi)
+                }
+                const newChunkete = {
+                  assignedQuota: ran.assignedQuota,
+                  name: ran.chunketeName,
+                  topology: {
+                    linkList: [],
+                    physicalInterfaceList: physicalList,
+                  }
+                }
+
+                  // 3º Create Chunkete Chunk
+                  const response = yield call(axios.post, `${API_BASE_URL}/ran_infrastructure/${ran.id}/chunkete_chunk`, newChunkete)
                   chunk_ids.push(response.data.id)
-                  createSlice =true
+                  createSlice = true
                 }
               }
             }
-          }
         if(createSlice){
         const dataChunk = {
         chunk_ids:chunk_ids,

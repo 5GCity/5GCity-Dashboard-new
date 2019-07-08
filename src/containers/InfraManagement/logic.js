@@ -9,13 +9,9 @@ import { kea } from 'kea'
 import { put, call } from 'redux-saga/effects'
 import axios from 'axios'
 import { API_BASE_URL } from 'config'
-//import { delay } from 'redux-saga'
-//import { } from 'config'
-//import { } from 'utils'
 import { AddResource, CreateAllPins } from './utils'
 
 import PropTypes from 'prop-types'
-//import * as Check from 'validations'
 
 /* Logic */
 import AppLogic from 'containers/App/logic'
@@ -27,7 +23,7 @@ const DEFAULT_RESOURCE = {
     resources:{
       computes:[],
       networks:[],
-      sdnWifi:[]
+      rans:[]
     }
   }
 }
@@ -52,8 +48,11 @@ export default kea({
     addResource: (location) => ({ location }),
     getInfoMarker: (marker) => ({ marker }),
     changeModalStatus: (info) => ({ info }),
+    changeModalErrorStatus: (message) => ({ message }),
+    getAllControllers: (controllers) => ({ controllers }),
     reset: () => ({ }),
     submitModal: () => ({ }),
+    closePanelInfo: () => ({ }),
   }),
 
   reducers: ({ actions }) => ({
@@ -71,6 +70,15 @@ export default kea({
     }],
     modalInfo: [null, PropTypes.object, {
       [actions.changeModalStatus]: (state,payload) => payload.info,
+    }],
+    modalErrorStatus:[false, PropTypes.bool, {
+      [actions.changeModalErrorStatus]: (state,payload) => !state,
+    }],
+    modalErrorData: [null, PropTypes.object, {
+      [actions.changeModalErrorStatus]: (state,payload) => payload.message,
+    }],
+    addNewMarker: [true, PropTypes.bool, {
+      [actions.getInfoMarker]: (state) => !state,
     }],
   }),
 
@@ -108,19 +116,15 @@ export default kea({
       try{
         const responseComputes = yield call(axios.get , `${API_BASE_URL}/compute`)
         const responseNetworks = yield call(axios.get , `${API_BASE_URL}/physical_network`)
-        const responseSdnWifi = yield call(axios.get , `${API_BASE_URL}/sdn_wifi_access_point`)
+        const responseRAN = yield call(axios.get , `${API_BASE_URL}/ran_infrastructure`)
 
-        const listResources = {computes:[], networks:[], sdnWifi:[]}
+        const listResources = {computes:[], networks:[], rans:[]}
 
-        if(responseComputes) {
-          responseComputes.data.map(el => listResources.computes.push(el))
-        }
-        if(responseNetworks) {
-          responseNetworks.data.map(el => listResources.networks.push(el))
-        }
-        if(responseSdnWifi) {
-          responseSdnWifi.data.map(el => listResources.sdnWifi.push(el))
-        }
+        responseComputes && responseComputes.data.map(el => listResources.computes.push(el))
+
+        responseNetworks && responseNetworks.data.map(el => listResources.networks.push(el))
+
+        responseRAN && responseRAN.data.map(el => listResources.rans.push(el))
 
         yield(put(setListResources(listResources)))
         yield put(removeLoadingPage())

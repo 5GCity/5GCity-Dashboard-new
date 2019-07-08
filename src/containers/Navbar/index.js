@@ -77,6 +77,7 @@ class Navbar extends Component {
           show={menu.active}
           onClick={() => changeLink(submenu) }
           disabled={submenu.disabled}
+          active={submenu.active}
         >
             <SideBar.Link>{submenu.name}</SideBar.Link>
         </SideBar.SubMenu>

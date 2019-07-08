@@ -6,160 +6,140 @@
  */
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import ReactMapGL,{ Marker, FlyToInterpolator } from 'react-map-gl'
 import mapboxgl from 'mapbox-gl'
-import WebMercatorViewport from 'viewport-mercator-project'
-import { MAPBOX_TOKEN , MAPBOX_STYLE } from 'config'
+import { MAPBOX_TOKEN , MAPBOX_STYLE, LOCATION } from 'config'
+import ReactMapboxGl, { Marker, Layer, Feature } from 'react-mapbox-gl'
 import Dimensions from 'react-dimensions'
-import { NodeMarkerIcon, NodeWifiIcon } from 'components/Icons'
-//import MyMapController from './mapController'
+import { NodeMarkerIcon, NodeRanIcon, NodeWifiIcon } from 'components/Icons'
+
+const Map = ReactMapboxGl({
+  accessToken: MAPBOX_TOKEN,
+  minZoom: 2,
+  maxZoom: 20,
+  logoPosition: 'bottom-right',
+  dragRotate: false,
+  pitchWithRotate: false,
+  touchZoomRotate: false,
+})
+
+const lineLayout = {
+  'line-cap': 'round',
+  'line-join': 'round'
+}
+const linePaint = {
+  'line-color': '#8CC14E',
+  'line-width': 4,
+  "line-dasharray": [3.2,3.2],
+ }
+
 
 class SliceMap extends Component {
 
    state = {
-    viewport: {
-      width: this.props.containerWidth,
-      height: this.props.containerHeight,
+    mapConfig: {
+      containerStyle: {
+        width: this.props.containerWidth,
+        height: this.props.containerHeight,
+      },
+      center:LOCATION,
+      fitBounds: null,
     }
   }
 
   componentDidMount() {
     const { location } = this.props
-    let viewport = {
-      ...this.state.viewport,
-      longitude: 0,
-      latitude: 0,
-      zoom: 2,
-      maxPitch: 0,
-      minPitch: 0,
-      minZoom: 2,
-      dragRotate: false,
+    let mapConfig = {
+      ...this.state.mapConfig,
     }
     if (location) {
-    if(location.length === 1) {
-      viewport.longitude = location[0][0]
-      viewport.latitude = location[0][1]
-      viewport.zoom = 16
-      viewport.transitionDuration = 4000
-      viewport.transitionInterpolator = new FlyToInterpolator()
-    } else if (location.length > 1) {
-      const bounds = location.reduce(function(bounds, coord) {
-      return bounds.extend(coord)
-      }, new mapboxgl.LngLatBounds(location[0], location[0]))
-      const coordinates = []
-      coordinates.push([bounds._ne.lng, bounds._ne.lat])
-      coordinates.push([bounds._sw.lng, bounds._sw.lat])
-
-      const {longitude, latitude, zoom} = new WebMercatorViewport(this.state.viewport)
-        .fitBounds(coordinates, {
-          padding: 40,
-          offset: [0, -100]
-        })
-        viewport = {
-          ...this.state.viewport,
-          longitude,
-          latitude,
-          zoom,
-          transitionDuration: 3000,
-          transitionInterpolator: new FlyToInterpolator()
-        }
+      if(location.length === 1) {
+        mapConfig.center = location[0]
+      } else if (location.length > 1) {
+        var bounds = location.reduce(function(bounds, coord) {
+          return bounds.extend(coord);
+        }, new mapboxgl.LngLatBounds(location[0], location[0]))
+        let boundsTemp =[[bounds._sw.lng, bounds._sw.lat], [bounds._ne.lng, bounds._ne.lat]]
+        mapConfig.fitBounds = boundsTemp
       }
     }
-        this.setState({viewport})
+    setTimeout(() => {
+      this.setState({mapConfig})
+    }, 200);
   }
 
-  componentDidUpdate(prevProps) {
-    const { location } = this.props
-    const locationLength = location && location.length
-    const prevLocationLength = prevProps.location &&  prevProps.location.length
-    const needUpdate = Math.abs(locationLength - prevLocationLength)
-      if (needUpdate !== 0) {
-      let viewport = {
-        ...this.state.viewport,
-        longitude: 0,
-        latitude: 0,
-        zoom: 2,
-        maxPitch: 0,
-        minPitch: 0,
-        minZoom: 2,
-        dragRotate: false,
+  componentDidUpdate (prevProps) {
+    if (this.props.location !== prevProps.location) {
+      const { location } = this.props
+      let mapConfig = {
+        ...this.state.mapConfig,
       }
       if (location) {
-      if(location.length === 1) {
-        viewport.longitude = location[0][0]
-        viewport.latitude = location[0][1]
-        viewport.zoom = 16
-        viewport.transitionDuration = 4000
-        viewport.transitionInterpolator = new FlyToInterpolator()
-      } else if (location.length > 1) {
-        const bounds = location.reduce(function(bounds, coord) {
-        return bounds.extend(coord)
-        }, new mapboxgl.LngLatBounds(location[0], location[0]))
-        const coordinates = []
-        coordinates.push([bounds._ne.lng, bounds._ne.lat])
-        coordinates.push([bounds._sw.lng, bounds._sw.lat])
-
-        const {longitude, latitude, zoom} = new WebMercatorViewport(this.state.viewport)
-          .fitBounds(coordinates, {
-            padding: 40,
-            offset: [0, -100]
-          })
-          viewport = {
-            ...this.state.viewport,
-            longitude,
-            latitude,
-            zoom,
-            transitionDuration: 3000,
-            transitionInterpolator: new FlyToInterpolator()
-          }
+        if(location.length === 1) {
+          mapConfig.center = location[0]
+        } else if (location.length > 1) {
+          var bounds = location.reduce(function(bounds, coord) {
+            return bounds.extend(coord);
+          }, new mapboxgl.LngLatBounds(location[0], location[0]))
+          let boundsTemp =[[bounds._sw.lng, bounds._sw.lat], [bounds._ne.lng, bounds._ne.lat]]
+          mapConfig.fitBounds = boundsTemp
         }
       }
-        this.setState({viewport})
+      this.setState({mapConfig})
     }
   }
 
- //mapController = new MyMapController()
-
   render () {
-    const { markers, onClick, markerColor, mapClick } = this.props
+    const { markers, markerColor,markerClick, links } = this.props
     return (
       <Wrapper>
-        <ReactMapGL
-          mapStyle={MAPBOX_STYLE}
-          mapboxApiAccessToken={MAPBOX_TOKEN}
-          {...this.state.viewport}
-          //interactiveLayerIds={this.state.interactiveLayerIds}
-          onViewportChange={(viewport) => this.setState({viewport})}
-          onClick={(e) => mapClick && mapClick(e)}
-          //controller={this.mapController}
+        <Map
+          style={MAPBOX_STYLE}
+          {...this.state.mapConfig}
+          fitBoundsOptions={{ padding: { top: 20, bottom: 20, left: 40, right: 40 }, linear: false }}
+          bounds={this.state.mapConfig.fitBounds}
         >
-            { markers && markers.map((marker, i) =>
-               <Marker
-                key={i}
-                draggable={marker.draggable}
-                latitude={marker.location.latitude}
-                longitude={marker.location.longitude}
-                offsetLeft={-10}
-                offsetTop={-20}
-              >
-                { !marker.location.resources.sdnWifi  &&
-                <NodeMarkerIcon
-                  key={i}
-                  color={marker.color || markerColor}
-                  onClick={() => onClick(marker)}
-                />
-                }
-                { marker.location.resources.sdnWifi &&
-                <NodeWifiIcon
-                  key={i}
-                  color={marker.color || markerColor}
-                  onClick={() => onClick(marker)}
-                />
-                }
-              </Marker>
+          <Layer
+            type="line"
+            id="physicalNetworkLine"
+            paint={linePaint}
+            layout={lineLayout}
+          >
+            {links && links.map(link =>
+            <Feature
+              key={link.id}
+              coordinates={link.coordinates}
+            />
             )}
-
-        </ReactMapGL>
+          </Layer>
+          {markers && markers.map((marker, i) =>
+          <Marker
+            key={i}
+            draggable={marker.draggable}
+            coordinates={[marker.location.longitude,marker.location.latitude]}
+            offset={[-16,-45]}
+            onClick={() => markerClick(marker)}
+          >
+            {!marker.location.resources.rans  &&
+            <NodeMarkerIcon
+              key={marker.id}
+              color={marker.color || markerColor}
+            />
+            }
+            {marker.location.resources.rans &&
+            <NodeRAN
+              key={marker.id}
+              color={marker.color || markerColor}
+            />
+            }
+            {marker.location.resources.isChunkete &&
+            <NodeWifiIcon
+              key={marker.id}
+              color={marker.color || markerColor}
+            />
+            }
+          </Marker>
+          )}
+        </Map>
       </Wrapper>
     )
   }
@@ -173,4 +153,21 @@ const Wrapper = styled.div`
 .mapboxgl-ctrl-bottom-right{
   display:none;
 }
+`
+const AddIcon = styled.button`
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  width: 26px;
+  height: 26px;
+  background-color: rgb(249, 249, 249);
+  opacity: 0.95;
+  cursor: pointer;
+  border: 0px;
+  background-position: 0px -26px;
+  outline: 0px;
+  border-radius: 2px;
+`
+const NodeRAN = styled(NodeRanIcon)`
+  background-size: 36px 44px;
 `

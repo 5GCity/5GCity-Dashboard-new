@@ -39,7 +39,7 @@ export const CreateAllPins = resources => {
                   name: compute.name,
                   computeData: {...compute.computeData.quota},
                 }]
-              }
+              },
           }
         })
       }
@@ -79,7 +79,7 @@ export const CreateAllPins = resources => {
                   id: network.id ,
                   name: network.name,
                   networkData: {...network.physicalNetworkData}
-                }]
+                }],
               },
           }
         })
@@ -87,9 +87,9 @@ export const CreateAllPins = resources => {
     })
   }
 
-  const compareSDN = () => {
-    resources.sdnWifi.length > 0 && resources.sdnWifi.forEach((sdnWifi) => {
-      const { latitude, longitude } = sdnWifi.location
+  const compareRAN = () => {
+    resources.rans.length > 0 && resources.rans.forEach((ran) => {
+      const { latitude, longitude } = ran.location
 
       const locationExistsOnMarkers = markers.find((marker) =>
         marker.location.latitude === latitude &&
@@ -97,41 +97,116 @@ export const CreateAllPins = resources => {
       )
 
       if(locationExistsOnMarkers) {
-        if(locationExistsOnMarkers.location.resources.sdnWifi) {
-          locationExistsOnMarkers.location.resources.sdnWifi.push({
-            id: sdnWifi.id ,
-            name: sdnWifi.name,
-            sdnData: {...sdnWifi.sdnWifiAccessPointData}
+        if(locationExistsOnMarkers.location.resources.rans) {
+          locationExistsOnMarkers.location.resources.rans.push({
+            id: ran.id ,
+            name: ran.name,
+            controller_url:ran.ranInfrastructureData.controllerUrl,
+            username: ran.ranInfrastructureData.username,
+            password: ran.ranInfrastructureData.password
           })
         } else {
-          locationExistsOnMarkers.location.resources.sdnWifi = [{
-              id: sdnWifi.id ,
-              name: sdnWifi.name,
-              sdnData: {...sdnWifi.sdnWifiAccessPointData}
+          locationExistsOnMarkers.location.resources.rans = [{
+              id: ran.id ,
+              name: ran.name,
+              controller_url:ran.ranInfrastructureData.controllerUrl,
+              username: ran.ranInfrastructureData.username,
+              password: ran.ranInfrastructureData.password
           }]
       }
       } else {
         markers.push({
           location:{
-            latitude:sdnWifi.location.latitude,
-            longitude: sdnWifi.location.longitude,
+            latitude:ran.location.latitude,
+            longitude: ran.location.longitude,
               resources:{
-                sdnWifi:[{
-                  id: sdnWifi.id ,
-                  name: sdnWifi.name,
-                  sdnData: {...sdnWifi.sdnWifiAccessPointData}
-                }]
-              }
+                rans:[{
+                  id: ran.id ,
+                  name: ran.name,
+                  controller_url:ran.ranInfrastructureData.controllerUrl,
+                  username: ran.ranInfrastructureData.username,
+                  password: ran.ranInfrastructureData.password,
+                }],
+              },
           }
         })
       }
     })
   }
 
+  const compareChunketeTopology = () => {
+    resources.rans.length > 0 && resources.rans.forEach((ran) => {
+      ran.chunketeTopology.boxes.length > 0 && ran.chunketeTopology.boxes.forEach(box => {
+        const { latitude, longitude } = box.location
+
+        const locationExistsOnMarkers = markers.find((marker) =>
+          marker.location.latitude === latitude &&
+          marker.location.longitude === longitude
+        )
+
+        if(locationExistsOnMarkers) {
+          if(locationExistsOnMarkers.location.resources.boxes) {
+            locationExistsOnMarkers.location.resources.boxes.push({
+              id: box.id ,
+              name: box.name,
+              physical: [...box.phys],
+              info: box.location.info,
+            })
+          } else {
+            locationExistsOnMarkers.location.resources.boxes = [{
+              id: box.id ,
+              name: box.name,
+              physical: [...box.phys],
+              info: box.location.info,
+            }]
+        }
+        } else {
+          markers.push({
+            location:{
+              latitude:box.location.latitude,
+              longitude: box.location.longitude,
+                resources:{
+                  boxes:[{
+                    id: box.id ,
+                    name: box.name,
+                    physical: [...box.phys],
+                    info: box.location.info,
+                  }],
+                },
+            }
+          })
+        }
+      })
+    })
+  }
+
   compareComputes()
   compareNetworks()
-  compareSDN()
-
+  compareRAN()
+  compareChunketeTopology()
   return markers
+}
+
+export const CreateAllLinks = rans => {
+  const links = []
+
+  if (!rans) {
+    return links
+  }
+
+  rans.length > 0 && rans.forEach(ran => {
+    const { latitude, longitude } = ran.location
+    ran.chunketeTopology.boxes.forEach(chunkete => {
+      links.push({
+        id: ran.id,
+        type: 'MultiLineString',
+        coordinates: [
+          [chunkete.location.longitude, chunkete.location.latitude],
+          [longitude, latitude]
+        ]
+      })
+    })
+  })
+  return links
 }
 

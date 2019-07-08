@@ -10,7 +10,10 @@ import { storiesOf } from '@storybook/react'
 import Checkbox from './index'
 
 const State1 = () => (
-  <Checkbox />
+  <Checkbox checked>
+    public
+    5c6bca6bd306de3b9037cc57
+  </Checkbox>
 )
 
 storiesOf('Checkbox', module)

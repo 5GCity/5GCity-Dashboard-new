@@ -15,6 +15,8 @@ import List from 'components/List'
 import Modal from 'components/Modal'
 import Button from 'components/Button'
 import { DeleteIcon, EyeIcon, SettingIcon, CheckIcon, CloseIcon } from 'components/Icons'
+import NoData from 'components/NoData'
+import ErroPage from 'components/ErroPage'
 
 
 
@@ -89,6 +91,7 @@ const ListAllSlices = (props) => (
             props.navigate(`/slice/${slice.id}`)} text={'View'}
           />
           <Button
+            disabled={true}
             type={'primary'}
             svg={<SettingIcon />}
             onClick={() => props.navigate(`/monitor/slice/${slice.id}`)}
@@ -109,7 +112,7 @@ class ListSlices extends Component {
   }
 
   render() {
-    const { slices, userRole, modalVisibled, loading, sliceSelect } = this.props
+    const { slices, userRole, modalVisibled, loading, sliceSelect, noData, errorFecth } = this.props
     const { deleteSlice, actionModal, sliceInfo } = this.actions
     const title = userRole === 'Inf. Owner' ? Titles : TitlesUser
     return (
@@ -121,12 +124,23 @@ class ListSlices extends Component {
           deleteSlice={deleteSlice}
           actionModal={actionModal}
         />
+        {slices &&
         <ListAllSlices
           navigate={this.navigate}
           slices={slices}
           sliceInfo={sliceInfo}
           title={title}
         />
+        }
+        {noData &&
+        <NoData
+          title={'You don’t have any slice yet...'}
+          message={'Click on the “Add new slice button to add your first slice!'}
+        />
+        }
+        {errorFecth &&
+        <ErroPage />
+        }
       </Wrapper>
     )
   }

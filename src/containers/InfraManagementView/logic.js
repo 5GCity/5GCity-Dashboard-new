@@ -10,7 +10,7 @@ import axios from 'axios'
 import { put , call } from 'redux-saga/effects'
 import { API_BASE_URL } from 'config'
 import PropTypes from 'prop-types'
-import { CreateAllPins } from './utils'
+import { CreateAllPins, CreateAllLinks } from './utils'
 
 
 /* Logic */
@@ -32,6 +32,7 @@ export default kea({
     fetchResources: () => ({ }),
     panelAction: () => ({ }),
     setListResources: (resources) => ({ resources }),
+    setChunketeTopology: (rans) => ({ rans }),
     infoMarker: (marker) => ({ marker }),
     reset: () => ({ }),
   }),
@@ -41,6 +42,9 @@ export default kea({
       [actions.setListResources]: (state, payload) => CreateAllPins(payload.resources),
       [actions.addToListResources]: (state, payload) => payload.resources,
       [actions.reset]: () => null,
+    }],
+    linksResources: [null, PropTypes.array, {
+      [actions.setChunketeTopology]: (state, payload) =>CreateAllLinks(payload.rans),
     }],
     panel: [false, PropTypes.bool,{
       [actions.panelAction]:(state, payload) => !state,
@@ -82,14 +86,14 @@ export default kea({
 
   workers: {
     *getListResources () {
-      const { setListResources, addLoadingPage, removeLoadingPage } = this.actions
+      const { setListResources, addLoadingPage, removeLoadingPage, setChunketeTopology } = this.actions
       yield put(addLoadingPage())
       try{
         const responseComputes = yield call(axios.get , `${API_BASE_URL}/compute`)
         const responseNetworks = yield call(axios.get , `${API_BASE_URL}/physical_network`)
-        const responseSdnWifi = yield call(axios.get , `${API_BASE_URL}/sdn_wifi_access_point`)
+        const responseRAN = yield call(axios.get , `${API_BASE_URL}/ran_infrastructure`)
 
-        const listResources = {computes:[], networks:[], sdnWifi:[]}
+        const listResources = {computes:[], networks:[], rans:[]}
 
         if(responseComputes) {
           responseComputes.data.map(el => listResources.computes.push(el))
@@ -97,10 +101,14 @@ export default kea({
         if(responseNetworks) {
           responseNetworks.data.map(el => listResources.networks.push(el))
         }
-        if(responseSdnWifi) {
-          responseSdnWifi.data.map(el => listResources.sdnWifi.push(el))
+        if(responseRAN) {
+          for (let index = 0; index < responseRAN.data.length; index++) {
+            const elementId = responseRAN.data[index].id;
+            const responseChunketeTopology = yield call(axios.get, `${API_BASE_URL}/ran_infrastructure/${elementId}/chunkete_topology`)
+            responseRAN.data.map(el => listResources.rans.push({...el, chunketeTopology: responseChunketeTopology.data || null }))
+          }
+          yield(put(setChunketeTopology(listResources.rans)))
         }
-
         yield(put(setListResources(listResources)))
         yield put(removeLoadingPage())
       }

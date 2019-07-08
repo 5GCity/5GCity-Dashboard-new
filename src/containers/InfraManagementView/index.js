@@ -26,7 +26,7 @@ class InfraManagementView extends Component {
 
   render () {
     const { panelAction, infoMarker } = this.actions
-    const { pinsResources, panel, rightPanelInfo, locations} = this.props
+    const { pinsResources, panel, rightPanelInfo, locations, linksResources} = this.props
     return (
       <Wrapper>
         <HeaderNav
@@ -44,7 +44,9 @@ class InfraManagementView extends Component {
             location={locations}
             markers={pinsResources}
             markerColor={'#1e90ff'}
-            onClick={(marker) => infoMarker(marker.location.resources) }
+            markerClick={(marker) => infoMarker(marker.location.resources) }
+            linkClick={(link) => console.log(link)}
+            links={linksResources}
           />
         }
       </Wrapper>

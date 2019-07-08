@@ -12,7 +12,6 @@ exports[`renders correctly 1`] = `
 }
 
 .c0 .el-dialog__title {
-  color: #8CC14E;
   font-weight: bold;
   font-size: 20px;
   line-height: 24px;
@@ -24,6 +23,7 @@ exports[`renders correctly 1`] = `
 
 .c0 .el-dialog__body {
   box-shadow: 0 0 50px 0 rgba(0,0,0,0.2);
+  color: white;
 }
 
 .c0 .el-dialog__footer {
@@ -69,14 +69,6 @@ exports[`renders correctly 1`] = `
           />
         </button>
       </div>
-      <div
-        className="el-dialog__body"
-        style={Object {}}
-      />
-      <div
-        className="el-dialog__footer dialog-footer"
-        style={Object {}}
-      />
     </div>
   </div>
   <div

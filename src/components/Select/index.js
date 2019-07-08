@@ -49,8 +49,8 @@ input {
 
 .el-select-dropdown {
   position: absolute !important;
-  background: ${({ theme }) => theme.bodyBackground};
-  border-color: ${({ theme }) => theme.bodyBackground};
+  background: ${({theme}) => theme.bodyBackground};
+  border-color: ${({theme}) => theme.bodyBackground};
   box-shadow: 0 0 10px 0 rgba(0,0,0,0.2);
   left: 0!important;
   border-top: 0;
@@ -64,11 +64,11 @@ input {
 }
 
 .el-select-dropdown__item.selected {
-  background-color:${({ theme }) => lighten(0.1,theme.bodyBackground)};
+  background-color:${({theme}) => lighten(0.1,theme.bodyBackground)};
 }
 
 .el-select-dropdown__item.hover, .el-select-dropdown__item:hover {
-  background: ${({ theme }) => darken(0.1,theme.bodyBackground)};
+  background: ${({theme}) => darken(0.1, theme.bodyBackground)};
 }
 
 .el-select-dropdown__item.is-disabled {

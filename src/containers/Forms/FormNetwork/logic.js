@@ -17,6 +17,7 @@ import mapValues from 'lodash/mapValues'
 /* Logic */
 import PanelResourceLogic from 'containers/Panel/PanelResource/logic'
 import InfraManagementLogic from 'containers/InfraManagement/logic'
+import AppLogic from 'containers/App/logic'
 
 const DEFAULT_FORM = {
   name: {
@@ -69,6 +70,10 @@ export default kea({
 
   connect: {
     actions: [
+      AppLogic, [
+        'addLoadingPage',
+        'removeLoadingPage',
+      ],
       PanelResourceLogic, [
         'submit',
         'closePanel',
@@ -76,6 +81,7 @@ export default kea({
       ],
       InfraManagementLogic, [
         'fetchResources',
+        'changeModalErrorStatus',
       ]
     ],
     props: [
@@ -88,7 +94,6 @@ export default kea({
   actions: () => ({
     getForm: () => ({}),
     response: (response) => ({ response }),
-    error: (error) => ({ error }),
     setValueProvisioned: (key, value, index) => ({ key, value, index }),
     change: (field) => ({ field }),
     setForm: (form) => ({ form }),
@@ -119,7 +124,6 @@ export default kea({
       [actions.change]: () => true,
       [actions.response]: () => false,
       [actions.setValueProvisioned]: () => false,
-      [actions.error]: () => true,
       [actions.reset]: () => false
     }],
   }),
@@ -131,8 +135,9 @@ export default kea({
   },
 
   stop: function * () {
-    const { reset } = this.actions
+    const { reset, removeLoadingPage } = this.actions
 
+    yield put(removeLoadingPage())
     yield put(reset())
   },
 
@@ -171,16 +176,22 @@ export default kea({
     },
     * submit () {
       const {
-        error,
         setForm,
         changeEdition,
         reset,
         fetchResources,
         closePanel,
+        changeModalErrorStatus,
+        removeLoadingPage,
+        addLoadingPage,
       } = this.actions
       const form = yield this.get('form')
       const dirty = yield this.get('dirty')
       const resource = yield this.get('editResource')
+
+      // Add Loading
+      yield put(addLoadingPage())
+
       const newPhysicalNetwork = {
         name: null,
         physical_network_data:{
@@ -208,11 +219,9 @@ export default kea({
       const validation = Check.checkValidation(form, VALIDATIONS)
 
       if (dirty && validation.invalid) {
-        yield put(error([]))
         return false
       } else if (!dirty && validation.invalid) {
         yield put(setForm(validation.form))
-        yield put(error([]))
         return false
       } else if (!validation.invalid && !dirty) {
         yield put(changeEdition(null))
@@ -230,16 +239,27 @@ export default kea({
         newPhysicalNetwork.physical_network_data.quota.tag_range.init = params.tagRangeInit
         try {
           yield call(axios.post, `${API_BASE_URL}/physical_network`, newPhysicalNetwork)
+          yield put(removeLoadingPage())
           yield put(fetchResources())
           yield put(closePanel())
           yield put(reset())
-        } catch (er) {
-          console.log(er)
-          if (er.response.data) {
-            // map WS return errors to form format
-            // put the errors on each field and changed them to invalid
+        } catch (error) {
+          yield put(removeLoadingPage())
+          console.error(error.request.status)
+          if (error.request.status === 500) {
+            yield put(changeModalErrorStatus({message: 'Internal Error'}))
+            yield put(closePanel())
+          } else if (error.request.status === 404) {
+            yield put(changeModalErrorStatus({message: 'Url Not Found'}))
+            yield put(closePanel())
+          } else if (error.request.status === 418) {
+            yield put(changeModalErrorStatus(error.response.data))
+            yield put(closePanel())
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            yield put(closePanel())
           }
-          yield put(error([]))
+          yield put(reset())
         }
       }
     },

@@ -47,6 +47,8 @@ export default kea({
     setNoData: () => ({}),
     removeNoData: () => ({}),
     setErroFecth: () =>({}),
+    setMessageError: (error) => ({error}),
+    actionModalError: () =>({}),
   }),
 
   reducers: ({ actions }) => ({
@@ -74,6 +76,13 @@ export default kea({
       [actions.setErroFecth]: () => true,
       [actions.reset]: () => false,
     }],
+    modalErrorVisibled: [ false, PropTypes.bool ,{
+      [actions.actionModalError]: (state, payload) => !state,
+    }],
+    modalErrorMessage: [null, PropTypes.string ,{
+      [actions.setMessageError]: (state, payload) => payload.error,
+      [actions.reset]: () => null,
+    }]
   }),
 
   start: function * () {
@@ -113,7 +122,7 @@ export default kea({
       //
       yield put(addLoadingPage())
       try {
-        let responseResult = yield call(axios.get,`${API_BASE_SDK}/sdk/composer/services`)
+        let responseResult = yield call(axios.get,`${API_BASE_SDK}/sdk/services/`)
         const { data } = responseResult
         if(data.length > 0){
           yield put(setServices(data))
@@ -121,40 +130,70 @@ export default kea({
           yield put(setNoData())
         }
         yield put(removeLoadingPage())
-      } catch(err){
-        console.log(err.response)
-        if(err.response === undefined) { yield put(setErroFecth()) }
-        if (err.response.status === 401) {
-          const keycloak = yield this.get('keycloak')
-          keycloak.logout()
+      } catch(error){
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          if (error.response.status === 401) {
+            const keycloak = yield this.get('keycloak')
+            keycloak.logout()
+          } else if (error.response.status === 404) {
+            console.log(404)
+            yield put(setErroFecth())
+          }
+        } else if (error.request) {
+          // The request was made but no response was received
+          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+          // http.ClientRequest in node.js
+          yield put(setErroFecth())
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          yield put(setErroFecth())
         }
         yield put(removeLoadingPage())
       }
     },
 
     * deleteService (action) {
-      const { fetchServices, actionModalDelete } = this.actions
+      const { fetchServices, actionModalDelete, setMessageError, actionModalError } = this.actions
       const id = action.payload.service
       try {
-        yield call(axios.delete,`${API_BASE_SDK}/sdk/composer/services/${id}`)
+        yield call(axios.delete,`${API_BASE_SDK}/sdk/services/${id}`)
 
+        yield put(actionModalDelete())
         yield put(fetchServices())
       } catch(error){
-        console.error(`Error ${error}`)
+        switch (error.response.status) {
+          case 400:
+            yield put(setMessageError(error.response.data))
+          break;
+          case 403:
+            yield put(setMessageError(error.response.data))
+          break;
+          default:
+            yield put(setMessageError('Error'))
+          break;
+        }
+        yield put(actionModalDelete())
+        yield put(actionModalError())
       }
-      yield put(actionModalDelete())
     },
 
     * cloneService (action) {
       const service = action.payload.service
-      const { actionModalClone,fetchServices } = this.actions
+      const { actionModalClone,fetchServices, actionModalError, setMessageError } = this.actions
       const services = yield this.get('services')
       try {
         const copyService = changeName(service,services)
-        yield call(axios.post,`${API_BASE_SDK}/sdk/composer/services`, copyService)
+        yield call(axios.post,`${API_BASE_SDK}/sdk/services/`, copyService)
         yield put(fetchServices())
       } catch(error){
-        console.log(error)
+        if(error.response.data){
+          yield put(setMessageError(error.response.data))
+        }else {
+          yield put(setMessageError('Error to clone Service'))
+        }
+        yield put(actionModalError())
       }
       yield put(actionModalClone())
     },

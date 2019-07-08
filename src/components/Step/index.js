@@ -10,7 +10,6 @@ import styled from 'styled-components'
 export default ({ children, ...props }) => (
   <Wrapper>
     {children &&
-    <React.Fragment>
       <StepContainer>
       {children && children.props &&
         <Item>
@@ -21,8 +20,8 @@ export default ({ children, ...props }) => (
           <Title>{children.props.description}</Title>
         </Item>
         }
-        {children && children.length > 1 && children.map(child =>
-        <Item>
+        {children && children.length > 1 && children.map((child, i) =>
+        <Item key={i}>
         <Icon activeStep={child.props.active}>
           <Circle cx="12" cy="12" r="12" />
           <Step x="50%" y="50%" dy="0.1em">{child.props.step}</Step>
@@ -31,10 +30,6 @@ export default ({ children, ...props }) => (
       </Item>
         )}
       </StepContainer>
-      <Content>
-        {children}
-      </Content>
-    </React.Fragment>
     }
   </Wrapper>
 )
@@ -46,15 +41,14 @@ const Wrapper = styled.div`
 const StepContainer = styled.div`
   width: 320px;
   height: 100vh;
-  background-color:${({ theme }) => theme.bodyBackground };
 `
 const Item = styled.div`
   display: flex;
-  justify-content:center;
   &:first-child {
     margin-top: 64px;
   }
   margin-top: 28px;
+  margin-left: 30px;
 `
 const Title = styled.h2`
   margin-left: 12px;
@@ -91,9 +85,4 @@ const Step = styled.text`
   stroke-width: 1px;
   text-anchor: middle;
   alignment-baseline: middle;
-`
-const Content = styled.div`
-  margin-top: 64px;
-  margin-left: 40px;
-  width: 640px;
 `

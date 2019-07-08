@@ -66,21 +66,39 @@ class PanelSliceDetails extends Component {
                   <Id>Tag Range: {network.networkData.quota.tagRange.init}-{network.networkData.quota.tagRange.end}</Id>
                 </TypeMarker>
             )}
-            {data.sdnWifi &&
-              <Title>Wifi</Title>
+            {data.rans &&
+              <Title>RAN Controller</Title>
             }
-            {data.sdnWifi && data.sdnWifi.map((el, i) =>
+            {data.rans && data.rans.map((ran, i) =>
               <TypeMarker
-                className={ i ===  data.sdnWifi.length -1 && 'noBorder'}
-                key={el.id}>
-                <Name>{el.name}</Name>
-                <Id>{el.id}</Id>
-                {el.sdnData && el.sdnData.channels.map((channel,i) =>
+                className={ i ===  data.rans.length -1 && 'noBorder'}
+                key={ran.id}>
+                <Name>{ran.name}</Name>
+                <Id>{ran.id}</Id>
+                <Id>Username: {ran.username}</Id>
+              </TypeMarker>
+            )}
+            {data.boxes &&
+              <Title>Physical Networks</Title>
+            }
+            {data.boxes && data.boxes.map((box, i) =>
+              <TypeMarker
+                className={ i ===  data.boxes.length -1 && 'noBorder'}
+                key={box.id}>
+                <Name>{box.name}</Name>
+                <Id>{box.info}</Id>
+                {box.physical && box.physical.map((phys,i) =>
                 <Channel key={i}>
-                  <SubTitle>Channel {i+1}</SubTitle>
-                  <Id>Bandwidth: {channel.bandwidth}</Id>
-                  <Id>Number: {channel.number}</Id>
-                  <Id>Tx Power: {channel.txPower}</Id>
+                <SubTitle>Name: {phys.name}</SubTitle>
+                <Id>Id: {phys.id}</Id>
+                <Id>Type: {phys.type}</Id>
+                  {phys.config &&
+                  <React.Fragment>
+                  <Id>Bandwidth: {phys.config.channelBandwidth}</Id>
+                  <Id>Number: {phys.config.channelNumber}</Id>
+                  <Id>Tx Power: {phys.config.txPower}</Id>
+                  </React.Fragment>
+                  }
                 </Channel>
                 )}
               </TypeMarker>
@@ -113,8 +131,7 @@ const TypeMarker = styled.div`
 
 const Name = styled.p`
   margin: 12px 0;
-  font-size: 12px;
-  line-height: 12px;
+  font-size: 18px;
   font-weight: bold;
   color: #EFF2F7;
   font-family: ${Theme.fontFamily};
@@ -141,5 +158,6 @@ const SubTitle = styled.h6`
 `
 const Channel = styled.div`
   margin-top: 20px;
+  margin-left: 10px;
 `
 
