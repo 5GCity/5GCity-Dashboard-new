@@ -4,22 +4,20 @@
  *
  * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
-export const createSlice = (resources) => {
-const markers = [], networkLocation = []
+export const createSlice = resources => {
+  const markers = []
+  const networkLocation = []
 
-  if(!resources) {
+  if (!resources) {
     return markers
   }
 
   const computeLocation = resources.chunks.openstackProjects.map((compute) =>
     compute
   )
-  const sdnWifiLocation = resources.chunks.virtualWifiAccessPoints.map(wifi =>
-    wifi
-  )
-  console.log(resources)
+
   resources.chunks.openstackVlans.forEach((network) => {
-    if(network.physicalNetwork) {
+    if (network.physicalNetwork) {
       networkLocation.push({
         cidr: network.cidr,
         tag: network.tag,
@@ -39,24 +37,24 @@ const markers = [], networkLocation = []
 
       if (locationExistsOnMarkers) {
         locationExistsOnMarkers.location.resources.computes.push({
-          id: compute.compute.id ,
+          id: compute.compute.id,
           name: compute.compute.name,
           computeData: {...compute.requirements},
-          ischecked:false
+          ischecked: false
         })
       } else {
         markers.push({
-          location:{
-            latitude:latitude,
+          location: {
+            latitude: latitude,
             longitude: longitude,
-              resources:{
-                computes:[{
-                  id: compute.compute.id ,
-                  name: compute.compute.name,
-                  computeData: {...compute.requirements},
-                  ischecked:false
-                }]
-              }
+            resources: {
+              computes: [{
+                id: compute.compute.id,
+                name: compute.compute.name,
+                computeData: {...compute.requirements},
+                ischecked: false
+              }]
+            }
           }
         })
       }
@@ -72,10 +70,10 @@ const markers = [], networkLocation = []
         marker.location.longitude === longitude
       )
 
-      if(locationExistsOnMarkers) {
-        if(locationExistsOnMarkers.location.resources.networks) {
+      if (locationExistsOnMarkers) {
+        if (locationExistsOnMarkers.location.resources.networks) {
           locationExistsOnMarkers.location.resources.networks.push({
-            id: network.id ,
+            id: network.id,
             name: network.name,
             ischecked: false,
             cidr: network.cidr,
@@ -83,77 +81,27 @@ const markers = [], networkLocation = []
           })
         } else {
           locationExistsOnMarkers.location.resources.networks = [{
-              id: network.id ,
-              name: network.name,
-              ischecked: false,
-              cidr: network.cidr,
-              tag: network.tag
+            id: network.id,
+            name: network.name,
+            ischecked: false,
+            cidr: network.cidr,
+            tag: network.tag
           }]
-
-      }
+        }
       } else {
         markers.push({
-          location:{
-            latitude:network.location.latitude,
+          location: {
+            latitude: network.location.latitude,
             longitude: network.location.longitude,
-              resources:{
-                networks:[{
-                  id: network.id ,
-                  name: network.name,
-                  ischecked: false,
-                  cidr: network.cidr,
-                  tag: network.tag
-                }]
-              }
-          }
-        })
-      }
-    })
-  }
-
-  const compareSDN = () => {
-    console.log(sdnWifiLocation)
-    sdnWifiLocation.forEach((sdnWifi) => {
-      console.log(sdnWifi)
-      const { latitude, longitude } = sdnWifi.sdnWifiAccessPoint.location
-
-      const locationExistsOnMarkers = markers.find((marker) =>
-        marker.location.latitude === latitude &&
-        marker.location.longitude === longitude
-      )
-
-      if(locationExistsOnMarkers) {
-        if(locationExistsOnMarkers.location.resources.sdnWifi) {
-          locationExistsOnMarkers.location.resources.sdnWifi.push({
-            id: sdnWifi.id ,
-            name: sdnWifi.name,
-            channel: sdnWifi.channel,
-            dhcpd: sdnWifi.dhcpdIp,
-            dns: sdnWifi.dnsIp,
-          })
-        } else {
-          locationExistsOnMarkers.location.resources.sdnWifi = [{
-              id: sdnWifi.id ,
-              name: sdnWifi.name,
-              channel: sdnWifi.channel,
-              dhcpd: sdnWifi.dhcpdIp,
-              dns: sdnWifi.dnsIp,
-          }]
-      }
-      } else {
-        markers.push({
-          location:{
-            latitude:sdnWifi.location.latitude,
-            longitude: sdnWifi.location.longitude,
-              resources:{
-                sdnWifi:[{
-                  id: sdnWifi.id ,
-                  name: sdnWifi.name,
-                  channel: sdnWifi.channel,
-                  dhcpd: sdnWifi.dhcpdIp,
-                  dns: sdnWifi.dnsIp,
-                }]
-              }
+            resources: {
+              networks: [{
+                id: network.id,
+                name: network.name,
+                ischecked: false,
+                cidr: network.cidr,
+                tag: network.tag
+              }]
+            }
           }
         })
       }
@@ -162,10 +110,89 @@ const markers = [], networkLocation = []
 
   compareComputes()
   compareNetworks()
-  compareSDN()
 
   return ({
-  "name": resources.name,
-  "markers": markers
+    'name': resources.name,
+    'markers': markers
   })
+}
+
+export const CreateSliceChunk = list => {
+  const chunk = list.chunk
+  const slice = list.slice
+  const boxes = list.boxes
+
+  // 1º Create Compute and networks
+  const markerObject = createSlice(chunk)
+  // Add Chunkete
+  const boxesChoose = []
+  slice.chunks.chunketeChunks.forEach(chunkete => {
+    chunkete.topology.physicalInterfaceList.forEach(phy => {
+      let phyId = phy.id
+      boxes.forEach(box => {
+        const find = box.phys.find(phy => phy.id === phyId)
+        if (find) {
+          boxesChoose.push({
+            location: {
+              latitude: box.location.latitude,
+              longitude: box.location.longitude
+            },
+            boxName: box.name,
+            boxId: box.id,
+            boxInfo: box.location.info,
+            phys: [{
+              phyId: find.id,
+              phyName: find.name,
+              phyType: find.type,
+              phyConfig: find.config
+            }]
+          })
+        }
+      })
+    })
+  })
+    // Create Object box
+  boxesChoose.length > 0 && boxesChoose.forEach(box => {
+    const { latitude, longitude } = box.location
+
+    const locationExistsOnMarkers = markerObject.markers.find((marker) =>
+        marker.location.latitude === latitude &&
+        marker.location.longitude === longitude
+      )
+
+    if (locationExistsOnMarkers) {
+      if (locationExistsOnMarkers.location.resources.boxes) {
+        locationExistsOnMarkers.location.resources.boxes.push({
+          id: box.boxId,
+          name: box.boxName,
+          info: box.boxInfo,
+          physical: [...box.phys]
+        })
+      } else {
+        locationExistsOnMarkers.location.resources.boxes = [{
+          id: box.boxId,
+          name: box.boxName,
+          info: box.boxInfo,
+          physical: [...box.phys]
+        }]
+      }
+    } else {
+      markerObject.markers.push({
+        location: {
+          latitude: box.location.latitude,
+          longitude: box.location.longitude,
+          resources: {
+            boxes: [{
+              info: box.boxInfo,
+              id: box.boxId,
+              name: box.boxName,
+              physical: [...box.phys]
+            }]
+          }
+        }
+      })
+    }
+  })
+
+  return markerObject
 }

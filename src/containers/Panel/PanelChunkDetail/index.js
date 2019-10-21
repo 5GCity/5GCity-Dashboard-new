@@ -17,8 +17,8 @@ class PanelChunkDetail extends Component {
     const { show, data, close } = this.props
     return (
       <PanelRight
-      show={show}
-      close={close}
+        show={show}
+        close={close}
       >
         <Container>
           {data &&
@@ -28,41 +28,52 @@ class PanelChunkDetail extends Component {
             }
             {data.computes && data.computes.map((compute, i) =>
               <TypeMarker
-                className={ i ===  data.computes.length -1 && 'noBorder'}
+                className={i === data.computes.length - 1 && 'noBorder'}
                 key={compute.id}>
-                  <Name>{compute.name}</Name>
-                  <Id>{compute.id}</Id>
-                  <Id>CPU: {compute.computeData.cpus.required} cores </Id>
-                  <Id>RAM: {compute.computeData.ram.required} {compute.computeData.ram.units} </Id>
-                  <Id>DISK: {compute.computeData.storage.required} {compute.computeData.storage.units} </Id>
+                <Name>{compute.name}</Name>
+                <Id>{compute.id}</Id>
+                <Id>CPU: {compute.computeData.cpus.required} cores </Id>
+                <Id>RAM: {compute.computeData.ram.required} {compute.computeData.ram.units} </Id>
+                <Id>DISK: {compute.computeData.storage.required} {compute.computeData.storage.units} </Id>
               </TypeMarker>
             )}
             {data.networks &&
             <Title>Network</Title>
             }
             {data.networks && data.networks.map((network, i) =>
-                <TypeMarker
-                  className={ i === data.networks.length -1 && 'noBorder'}
-                  key={network.id}>
-                  <Name>{network.name}</Name>
-                  <Id>Id: {network.id}</Id>
-                  <Id>Tag: {network.tag}</Id>
-                  <Id>CIDR: {network.cidr}</Id>
-                </TypeMarker>
-            )}
-            {data.sdnWifi &&
-              <Title>Wifi</Title>
-            }
-            {data.sdnWifi && data.sdnWifi.map((wifi, i) =>
               <TypeMarker
-                className={ i ===  data.sdnWifi.length -1 && 'noBorder'}
-                key={wifi.id}>
-                <Name>{wifi.name}</Name>
-                <Id>{wifi.id}</Id>
-                <Id>Id: {wifi.id}</Id>
-                <Id>Channel: {wifi.channel}</Id>
-                <Id>DNS IP: {wifi.dns}</Id>
-                <Id>DHCPD IP: {wifi.dhcpd}</Id>
+                className={i === data.networks.length - 1 && 'noBorder'}
+                key={network.id}>
+                <Name>{network.name}</Name>
+                <Id>Id: {network.id}</Id>
+                <Id>Tag: {network.tag}</Id>
+                <Id>CIDR: {network.cidr}</Id>
+              </TypeMarker>
+            )}
+            {console.log(data)}
+            {data.boxes &&
+              <Title>Access Networks</Title>
+            }
+            {data.boxes && data.boxes.map((box, i) =>
+              <TypeMarker
+                className={i === data.boxes.length - 1 && 'noBorder'}
+                key={i}>
+                <Name>{box.name}</Name>
+                <Id>{box.info}</Id>
+                {box.physical && box.physical.map((phys, i) =>
+                  <Channel key={i}>
+                    <SubTitle>Name: {phys.phyName}</SubTitle>
+                    <Id>Id: {phys.phyId}</Id>
+                    <Id>Type: {phys.phyType}</Id>
+                    {phys.phyConfig &&
+                    <React.Fragment>
+                      <Id>Bandwidth: {phys.phyConfig.channelBandwidth}</Id>
+                      <Id>Number: {phys.phyConfig.channelNumber}</Id>
+                      <Id>Tx Power: {phys.phyConfig.txPower}</Id>
+                    </React.Fragment>
+                  }
+                  </Channel>
+                )}
               </TypeMarker>
             )}
           </PanelInfo>
@@ -112,3 +123,12 @@ const Container = styled.div`
   margin: 0 0 0 20px;
   height: calc(100% - 90px) !important;
   `
+
+const SubTitle = styled.h6`
+  font-weight: bold;
+  color: #EFF2F7;
+`
+const Channel = styled.div`
+  margin-top: 20px;
+  margin-left: 10px;
+`

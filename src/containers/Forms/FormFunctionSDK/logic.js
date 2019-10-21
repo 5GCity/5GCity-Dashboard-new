@@ -8,7 +8,7 @@
 import { kea } from 'kea'
 import { put, call } from 'redux-saga/effects'
 import axios from 'axios'
-import { API_BASE_SDK } from 'config'
+import { API_SDK } from 'config'
 import { AddParameter, GetJsonFunction,
   DEFAULT_FORM, TransformInForm, DEFAULT_FORM_NEW } from './utils'
 import { mapValues } from 'lodash'
@@ -20,46 +20,47 @@ import * as Check from 'validations'
 /* Logic */
 import FunctionLogic from 'containers/Function/logic'
 import AppLogic from 'containers/App/logic'
+import PageTitleOrganizationLogic from 'containers/PageTitleOrganization/logic'
 
 const VALIDATIONS = {
   functionName: [
-    Check.isRequired,
+    Check.isRequired
+  ],
+  functionSliceId: [
+    Check.isRequired
   ],
   functionOwner: [
-    Check.isRequired,
+    Check.isRequired
   ],
   functionVendor: [
-    Check.isRequired,
+    Check.isRequired
   ],
   functionVersion: [
-    Check.isRequired,
+    Check.isRequired
   ],
   functionVNFId: [
-    Check.isRequired,
+    Check.isRequired
   ],
   functionDescription: [
-    Check.isRequired,
+    Check.isRequired
   ],
   functionInstExp: [
-    Check.isRequired,
+    Check.isRequired
   ],
   functionFlavourExp: [
-    Check.isRequired,
-  ],
-  functionGroup: [
-    Check.isRequired,
+    Check.isRequired
   ],
   functionMaxInst: [
-    Check.isRequired,
+    Check.isRequired
   ],
   functionMinInst: [
-    Check.isRequired,
+    Check.isRequired
   ],
   functionAccessLevel: [
-    Check.isRequired,
+    Check.isRequired
   ],
   functionvisibility: [
-    Check.isRequired,
+    Check.isRequired
   ]
 }
 
@@ -70,18 +71,21 @@ export default kea({
     actions: [
       FunctionLogic, [
         'nextStep',
-        'prevStep',
+        'prevStep'
       ],
       AppLogic, [
         'addLoadingPage',
-        'removeLoadingPage',
-      ],
+        'removeLoadingPage'
+      ]
     ],
     props: [
       FunctionLogic, [
         'currentStep',
         'previousButton',
-        'buttonSubmit',
+        'buttonSubmit'
+      ],
+      PageTitleOrganizationLogic, [
+        'organizations'
       ]
     ]
   },
@@ -97,24 +101,24 @@ export default kea({
     removeParameter: (index) => ({ index }),
     submit: () => ({ }),
 
-    reset: () => ({}),
+    reset: () => ({})
   }),
 
   reducers: ({ actions }) => ({
     form: [DEFAULT_FORM, PropTypes.object, {
       [actions.change]: (state, payload) => Check.setAndCheckValidation(state, payload, VALIDATIONS),
       [actions.setForm]: (state, payload) => Check.checkValidation(payload.form, VALIDATIONS).form,
-      [actions.changeParameters]:(state, payload) => Check.setAndCheckValidationArray(state, payload, VALIDATIONS),
+      [actions.changeParameters]: (state, payload) => Check.setAndCheckValidationArray(state, payload, VALIDATIONS),
       [actions.addParameter]: (state, payload) => AddParameter(state),
       [actions.removeParameter]: (state, payload) =>
-        Object.assign({}, state, state.functionParameters.array.splice(payload.index,1)),
+        Object.assign({}, state, state.functionParameters.array.splice(payload.index, 1)),
       [actions.reset]: () => DEFAULT_FORM
     }],
 
     dirty: [false, PropTypes.bool, {
       [actions.change]: () => true,
-      [actions.reset]: () => false,
-    }],
+      [actions.reset]: () => false
+    }]
   }),
 
   start: function * () {
@@ -131,31 +135,31 @@ export default kea({
 
   takeLatest: ({ actions, workers }) => ({
     [actions.getFunction]: workers.getFunction,
-    [actions.submit]: workers.submit,
+    [actions.submit]: workers.submit
   }),
 
   workers: {
-    * getFunction() {
-        const { setForm } = this.actions
-        const functionId = Number(this.props.match.params.id)
-        try{
-            if (functionId > 0) {
-              let responseResult = yield call(axios.get,`${API_BASE_SDK}/sdk/functions/${functionId}`)
-              const { data } = responseResult
-              const form = TransformInForm(data)
-              const validForm = Check.checkValidation(form, VALIDATIONS).form
-              yield put(setForm(validForm))
-            } else {
-              yield put(setForm(DEFAULT_FORM_NEW))
-            }
-        } catch(error){
-          console.error(`Error ${error}`)
+    * getFunction () {
+      const { setForm } = this.actions
+      const functionId = Number(this.props.match.params.id)
+      try {
+        if (functionId > 0) {
+          let responseResult = yield call(axios.get, `${API_SDK}/sdk/functions/${functionId}`)
+          const { data } = responseResult
+          const form = TransformInForm(data)
+          const validForm = Check.checkValidation(form, VALIDATIONS).form
+          yield put(setForm(validForm))
+        } else {
+          yield put(setForm(DEFAULT_FORM_NEW))
         }
+      } catch (error) {
+        console.error(`Error ${error}`)
+      }
     },
     * submit () {
       const {
         removeLoadingPage,
-        addLoadingPage,
+        addLoadingPage
       } = this.actions
       const form = yield this.get('form')
       const dirty = yield this.get('dirty')
@@ -168,11 +172,10 @@ export default kea({
       const validation = Check.checkValidation(form, VALIDATIONS)
 
       if (dirty && validation.invalid) {
-        yield put(error([]))
+        yield put(removeLoadingPage())
         return false
       } else if (!dirty && validation.invalid) {
-        yield put(setForm(validation.form))
-        yield put(error([]))
+        yield put(removeLoadingPage())
         return false
       } else if (!validation.invalid && !dirty) {
         yield call(this.props.history.push, `/sdk/functions`)
@@ -180,14 +183,13 @@ export default kea({
         // Transform object and remove uneeded state values
         let params = mapValues(form, ({ value }) => value)
         const newFunction = GetJsonFunction(params, form)
-        console.log(newFunction)
         try {
-          if(idFunction > 0) {
+          if (idFunction > 0) {
             newFunction.id = idFunction
-            yield call(axios.put,`${API_BASE_SDK}/sdk/functions/`, newFunction)
+            yield call(axios.put, `${API_SDK}/sdk/functions/`, newFunction)
             yield call(this.props.history.push, `/sdk/functions`)
           } else {
-            yield call(axios.post,`${API_BASE_SDK}/sdk/functions/`, newFunction)
+            yield call(axios.post, `${API_SDK}/sdk/functions/`, newFunction)
             yield call(this.props.history.push, `/sdk/functions`)
           }
           yield put(removeLoadingPage())
@@ -200,7 +202,7 @@ export default kea({
                 message: error.response.data,
                 type: 'error'
               })
-            break;
+              break
 
             default:
               Message({
@@ -208,12 +210,11 @@ export default kea({
                 message: 'Cannot Create Function',
                 type: 'error'
               })
-            break;
+              break
           }
         }
       }
-    },
+    }
   }
 
 })
-

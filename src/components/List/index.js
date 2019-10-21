@@ -18,7 +18,7 @@ const Header = styled.div`
   text-transform: uppercase;
   background-color: transparent;
   color: ${({ theme }) => theme.secondaryColor};
-  ${({ theme }) => theme &&`
+  ${({ theme }) => theme && `
   font-family: ${({ theme }) => theme.fontDin};
   `}
   font-size: 12px;
@@ -29,11 +29,11 @@ const Header = styled.div`
 
 const Column = styled.div`
   padding-right: 10px;
-  flex: 0 0 ${({size}) => size }px;
+  flex: 0 0 ${({size}) => size}px;
 `
 
 const Row = styled.div`
-  min-width: ${({row}) => row || 1200 }px;
+  min-width: ${({row}) => row || 1200}px;
   display: flex;
   flex-direction: row;
   flex-flow: no-wrap;

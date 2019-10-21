@@ -1,8 +1,8 @@
 import axios from 'axios'
 import { camelizeKeys, decamelizeKeys } from 'humps'
 import { AUTH_TOKEN_TYPE, REQUEST_CAMELIZE } from 'config'
-//import {service} from 'utils'
-//import objectMapper from 'object-mapper'
+// import {service} from 'utils'
+// import objectMapper from 'object-mapper'
 
 const decamelizeKeysTransformer = function (data) {
   return data && JSON.stringify(decamelizeKeys(data))
@@ -42,14 +42,13 @@ axios.interceptors.response.use((response) => {
   return Promise.reject(error)
 })
 
-
 // Converts all requests to under-cased
 axios.interceptors.request.use((request) => {
   const currentContentType = request.headers['Content-Type']
 
   // Converts URL get params to underscored
   if (request.params) {
-      request.params = decamelizeKeys(request.params)
+    request.params = decamelizeKeys(request.params)
   }
 
   if (!currentContentType) {
@@ -63,7 +62,5 @@ axios.interceptors.request.use((request) => {
 }, function (error) {
   return Promise.reject(error)
 })
-
-
 
 export default axios

@@ -16,7 +16,8 @@ import { CheckIcon } from 'components/Icons'
 /* Container */
 import PanelResourceInfo from 'containers/Panel/PanelResourceInfo'
 import PanelResourceEdition from 'containers/Panel/PanelResourceEdition'
-
+import PanelWifi from 'containers/Panel/PanelWifi'
+import PanelLTE from 'containers/Panel/PanelLTE'
 
 class PanelResource extends Component {
   render () {
@@ -24,20 +25,37 @@ class PanelResource extends Component {
     const { changeEdition, closePanel, changeModalStatus, submit } = this.actions
     return (
       <PanelRight
-      show={panelStatus}
-      close={closePanel}
+        show={panelStatus}
+        close={closePanel}
       >
         <Container>
-          {edition ?
+          {edition &&
           <PanelResourceEdition
             data={editResource}
           />
-          :
+          }
+          { !markerSelect.location.isLTE &&
+            !markerSelect.location.isWifi &&
+            !edition &&
           <PanelResourceInfo
             data={markerSelect}
             deleteItem={(item) => changeModalStatus(item)}
             editItem={(item) => changeEdition(item)}
             addNewItem={(item) => changeEdition(item)}
+          />
+          }
+          {markerSelect.location.isWifi &&
+            !edition &&
+          <PanelWifi
+            data={markerSelect.location.resources.wifi}
+            editItem={(item) => changeEdition(item)}
+          />
+          }
+          { markerSelect.location.isLTE &&
+            !edition &&
+          <PanelLTE
+            data={markerSelect.location.resources.LTE}
+            editItem={(item) => changeEdition(item)}
           />
           }
         </Container>
@@ -65,7 +83,7 @@ class PanelResource extends Component {
   }
 }
 
-export default Logic (PanelResource)
+export default Logic(PanelResource)
 
 const Container = styled.div`
   overflow-y: auto;

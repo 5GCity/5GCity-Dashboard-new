@@ -10,15 +10,11 @@ import styled from 'styled-components'
 
 /* Components */
 import Step from 'components/Step'
-import Button from 'components/Button'
-import { PlayIcon } from 'components/Icons'
 /* Containers */
 import FormBasicSettings from 'containers/Forms/FormBasicSettings'
 
 class ComposerForm extends Component {
-
-
-  componentDidUpdate(prevProps) {
+  componentDidUpdate (prevProps) {
     const { getServiceInfo } = this.actions
     if (this.props.serviceData !== prevProps.serviceData) {
       getServiceInfo()
@@ -26,18 +22,26 @@ class ComposerForm extends Component {
   }
 
   render () {
-    const { form, isSubmitting } = this.props
+    const { form, isSubmitting, steps, organizations } = this.props
     const { submit, setValueParameters,addParameter, removeParameter, change } = this.actions
     return (
       <Wrapper>
         <WrapperStep>
           <Step>
-            <Step step={1} description={'General info'} />
+            {steps.map(step =>
+            <Step
+              key={step.id}
+              step={step.id}
+              description={step.description}
+              active={step.active}
+            />
+            )}
           </Step>
-          </WrapperStep>
+        </WrapperStep>
         <ContainerForm>
           <FormBasicSettings
             dataForm={form}
+            organizations={organizations}
             setValue={change}
             setValueParameters={setValueParameters}
             addParameter={addParameter}
@@ -62,7 +66,4 @@ const ContainerForm = styled.div`
 `
 const WrapperStep = styled.div`
   display: inline-flex;
-`
-const ButtonSubmit = styled(Button)`
-
 `

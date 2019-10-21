@@ -15,7 +15,7 @@ import { action } from '@storybook/addon-actions'
 const State1 = () => (
   <PanelError>
     <CloseButton
-      outline={true}
+      outline
       type={'secondary'}
       text={'Close'}
       icon={'close'}
@@ -27,6 +27,6 @@ const State1 = () => (
 storiesOf('PanelError', module)
   .add('Default', State1)
 
-  const CloseButton = styled(Button)`
+const CloseButton = styled(Button)`
     float:right;
   `

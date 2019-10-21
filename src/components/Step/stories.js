@@ -11,12 +11,11 @@ import Step from './index'
 
 const State1 = () => (
   <Step>
-    <Step step={1} description={'General info'}>
-      <h1>This is Step 1</h1>
-    </Step>
-    <Step step={2} description={'Configuration Properties'} activeStep={true}>
-      <h1>This is Step 2</h1>
-    </Step>
+    <Step step={1} description={'General info'} active={false} validation={null} />
+    <Step step={2} description={'Configuration Success'} active={false} validation={'success'} />
+    <Step step={3} description={'Configuration Danger'} active={false} validation={'danger'} />
+    <Step step={4} description={'Configuration Warning'} active={false} validation={'warning'} />
+    <Step step={5} description={'Configuration Active'} active={true} validation={null} />
   </Step>
 )
 

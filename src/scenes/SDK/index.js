@@ -18,6 +18,4 @@ class SDK extends Component {
   }
 }
 
-
 export default Logic(SDK)
-

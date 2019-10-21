@@ -1,0 +1,10 @@
+{
+  "realm": "5gcity",
+  "auth-server-url": "<AUTH_SERVER_URL>",
+  "ssl-required": "none",
+  "resource": "my_client",
+  "credentials": {
+    "secret": "348e4121-2a64-4a4c-9cc7-7111b3f25621"
+  },
+  "confidential-port": 0
+}

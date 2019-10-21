@@ -5,8 +5,8 @@
  * @param {*} idToken
  */
 export const axiosAuthInterceptor = (config, idToken) => {
-    if (!config.ignoreAuth) {
-      config.headers.Authorization = `Bearer ${idToken}`
-    }
-    return config
+  if (!config.ignoreAuth) {
+    config.headers.Authorization = `Bearer ${idToken}`
   }
+  return config
+}

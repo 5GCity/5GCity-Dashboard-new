@@ -10,8 +10,9 @@ import { put, call } from 'redux-saga/effects'
 import PropTypes from 'prop-types'
 import * as Check from 'validations'
 import axios from 'axios'
-import { API_BASE_URL } from 'config'
+import { API_SLICE_MANAGEMENT } from 'config'
 import mapValues from 'lodash/mapValues'
+import { NewCompute } from './utils'
 
 /* Logic */
 import PanelResourceLogic from 'containers/Panel/PanelResource/logic'
@@ -20,34 +21,50 @@ import AppLogic from 'containers/App/logic'
 
 const DEFAULT_FORM = {
   name: {
-    value: null,
+    value: null
+  },
+  availabilityZone: {
+    value: null
   },
   cpu: {
-    value: null,
+    value: null
   },
-  ram:{
-    value: null,
+  ram: {
+    value: null
   },
-  storage:{
-    value: null,
+  ramUnit: {
+    value: 'MB'
   },
+  storage: {
+    value: null
+  },
+  storageUnit: {
+    value: 'GB'
+  }
 }
 
 const VALIDATIONS = {
   name: [
-    Check.isRequired,
+    Check.isRequired
+  ],
+  availabilityZone: [
+    Check.isRequired
   ],
   cpu: [
     Check.isRequired,
-    Check.isNumber,
+    Check.isNumber
   ],
   ram: [
     Check.isRequired,
-    Check.isNumber,
+    Check.isNumber
+  ],
+  ramUnit: [
   ],
   storage: [
     Check.isRequired,
-    Check.isNumber,
+    Check.isNumber
+  ],
+  storageUnit: [
   ],
 }
 
@@ -58,22 +75,22 @@ export default kea({
     actions: [
       AppLogic, [
         'addLoadingPage',
-        'removeLoadingPage',
+        'removeLoadingPage'
       ],
       PanelResourceLogic, [
         'submit',
         'closePanel',
-        'changeEdition',
+        'changeEdition'
       ],
       InfraManagementLogic, [
         'fetchResources',
-        'changeModalErrorStatus',
+        'changeModalErrorStatus'
       ]
     ],
     props: [
       PanelResourceLogic, [
-        'editResource',
-      ],
+        'editResource'
+      ]
     ]
   },
 
@@ -83,16 +100,16 @@ export default kea({
     change: (field) => ({ field }),
     setForm: (form) => ({ form }),
     changeForm: (form) => ({ form }),
-    reset: () => ({}),
+    reset: () => ({})
   }),
 
   reducers: ({ actions }) => ({
-    form:[DEFAULT_FORM, PropTypes.object,{
+    form: [DEFAULT_FORM, PropTypes.object, {
       [actions.change]: (state, payload) => Check.setAndCheckValidation(state, payload, VALIDATIONS),
       [actions.setForm]: (state, payload) => Check.checkValidation(payload.form, VALIDATIONS).form,
 
       [actions.changeForm]: (state, payload) => payload.form,
-      [actions.reset]: () => DEFAULT_FORM,
+      [actions.reset]: () => DEFAULT_FORM
     }],
 
     dirty: [false, PropTypes.bool, {
@@ -100,7 +117,7 @@ export default kea({
       [actions.setValueParameters]: () => true,
       [actions.response]: () => false,
       [actions.reset]: () => false
-    }],
+    }]
 
   }),
 
@@ -119,7 +136,7 @@ export default kea({
 
   takeLatest: ({ actions, workers }) => ({
     [actions.getForm]: workers.getForm,
-    [actions.submit]: workers.submit,
+    [actions.submit]: workers.submit
   }),
 
   workers: {
@@ -128,21 +145,21 @@ export default kea({
       const resource = yield this.get('editResource')
       let setDefaultValues = { ...DEFAULT_FORM }
 
-      if(resource.id !== 0) {
+      if (resource.id !== 0) {
         try {
-          const request = yield call(axios.get, `${API_BASE_URL}/compute/${resource.id}`)
+          const request = yield call(axios.get, `${API_SLICE_MANAGEMENT}/compute/${resource.id}`)
           const { data } = request
 
           setDefaultValues.name.value = data.name
-          setDefaultValues.cpu.value =  data.computeData.quota.cpus.total
-          setDefaultValues.ram.value =  data.computeData.quota.ram.total
-          setDefaultValues.storage.value =  data.computeData.quota.storage.total
+          setDefaultValues.cpu.value = data.computeData.quota.cpus.total
+          setDefaultValues.ram.value = data.computeData.quota.ram.total
+          setDefaultValues.storage.value = data.computeData.quota.storage.total
         } catch (er) {
           console.log(er)
           if (er.response.data) {
             // map WS return errors to form format
             // put the errors on each field and changed them to invalid
-            yield put(changeForm(newForm))
+            yield put(changeForm())
           }
         }
       }
@@ -158,7 +175,7 @@ export default kea({
         fetchResources,
         changeModalErrorStatus,
         addLoadingPage,
-        removeLoadingPage,
+        removeLoadingPage
       } = this.actions
       const form = yield this.get('form')
       const dirty = yield this.get('dirty')
@@ -166,32 +183,8 @@ export default kea({
 
       // add Loading
       yield put(addLoadingPage())
-      const newCompute = {
-        name: null,
-        compute_data:{
-          quota:{
-            cpus: {
-              provisioned: 0,
-              total: null
-            },
-            ram: {
-              provisioned: 0,
-              total: null,
-              units: 'MB'
-            },
-            storage: {
-              provisioned: 0,
-              total: null,
-              units: 'GB'
-            }
-          }
-        },
-        location: {...resource.location}
-      }
-
       // Check validations
       const validation = Check.checkValidation(form, VALIDATIONS)
-
       if (dirty && validation.invalid) {
         return false
       } else if (!dirty && validation.invalid) {
@@ -203,12 +196,19 @@ export default kea({
       } else if (!validation.invalid && dirty) {
         // Transform object and remove uneeded state values
         let params = mapValues(form, ({ value }) => value)
+        const newCompute = NewCompute
+        newCompute.location = { ...resource.location }
         newCompute.name = params.name
+        newCompute.compute_data.availability_zone = params.availabilityZone
         newCompute.compute_data.quota.cpus.total = params.cpu
         newCompute.compute_data.quota.ram.total = params.ram
+        newCompute.compute_data.quota.ram.units = params.ramUnit
         newCompute.compute_data.quota.storage.total = params.storage
+        newCompute.compute_data.quota.storage.units = params.storageUnit
+
+        console.log(newCompute)
         try {
-          yield call(axios.post, `${API_BASE_URL}/compute`, newCompute)
+          yield call(axios.post, `${API_SLICE_MANAGEMENT}/compute`, newCompute)
           yield put(removeLoadingPage())
           yield put(fetchResources())
           yield put(closePanel())
@@ -227,8 +227,7 @@ export default kea({
           }
         }
       }
-    },
+    }
   }
 
 })
-

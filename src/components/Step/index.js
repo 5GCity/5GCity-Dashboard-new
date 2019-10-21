@@ -11,23 +11,41 @@ export default ({ children, ...props }) => (
   <Wrapper>
     {children &&
       <StepContainer>
-      {children && children.props &&
+        {children && children.props &&
         <Item>
           <Icon activeStep={children.props.active}>
-            <Circle cx="12" cy="12" r="12" />
-            <Step x="50%" y="50%" dy="0.1em">{children.props.step}</Step>
+            <Circle cx={12} cy={12} r={12} />
+            <Step x={'50%'} y={'50%'} dy={'0.1em'}>
+              {children.props.step}
+            </Step>
           </Icon>
           <Title>{children.props.description}</Title>
         </Item>
         }
-        {children && children.length > 1 && children.map((child, i) =>
-        <Item key={i}>
-        <Icon activeStep={child.props.active}>
-          <Circle cx="12" cy="12" r="12" />
-          <Step x="50%" y="50%" dy="0.1em">{child.props.step}</Step>
-        </Icon>
-        <Title>{child.props.description}</Title>
-      </Item>
+        {children && children.length > 0 && children.map((child, i) =>
+          <Item
+            key={i}
+        >
+            <Icon>
+              <Circle
+                cx='12'
+                cy='12'
+                r='12'
+                active={child.props.active || false}
+                validation={child.props.validation || null}
+          />
+              <Step
+                x='50%'
+                y='50%'
+                dy='0.1em'
+                active={child.props.active || false}
+                validation={child.props.validation || null}
+          >
+                {child.props.step}
+              </Step>
+            </Icon>
+            <Title>{child.props.description}</Title>
+          </Item>
         )}
       </StepContainer>
     }
@@ -41,6 +59,7 @@ const Wrapper = styled.div`
 const StepContainer = styled.div`
   width: 320px;
   height: 100vh;
+  cursor: pointer;
 `
 const Item = styled.div`
   display: flex;
@@ -56,7 +75,7 @@ const Title = styled.h2`
   color: white;
   letter-spacing: 1px;
   line-height: 0px;
-  font-family: ${({ theme }) => theme.fontDinExp };
+  font-family: ${({ theme }) => theme.fontDinExp};
   font-weight: bold;
   text-transform: uppercase;
 `
@@ -66,16 +85,28 @@ const Icon = styled.svg`
   height: 24px;
 `
 const Circle = styled.circle`
-  ${({activeStep}) => activeStep && `
+  ${({active}) => active && `
     fill: white;
   `}
-  ${({activeStep}) => !activeStep && `
-    fill: #5A666D;
+  ${({validation, active}) => validation === 'success' && !active && `
+    fill: #8CC14E;
+    opacity: 0.3;
+  `}
+  ${({validation, active}) => validation === 'danger' && !active && `
+    fill: #DD6C6C;
+    opacity: 0.3;
+  `}
+  ${({validation, active}) => validation === 'warning' && !active && `
+    fill: orange;
+    opacity: 0.3;
+  `}
+  ${({validation, active}) => !validation && !active && `
+  fill: #5A666D;
 `}
 `
 const Step = styled.text`
   ${({activeStep}) => activeStep && `
-    stroke: ${({ theme }) => theme.bodyBackground };
+    stroke: ${({ theme }) => theme.bodyBackground};
   `}
   ${({activeStep}) => !activeStep && `
     stroke: #fff;
@@ -85,4 +116,20 @@ const Step = styled.text`
   stroke-width: 1px;
   text-anchor: middle;
   alignment-baseline: middle;
+  ${({active}) => active && `
+    stroke: #324148;
+  `}
+  ${({validation, active}) => validation === 'success' && !active && `
+    stroke: #8CC14E;
+  `}
+  ${({validation, active}) => validation === 'danger' && !active && `
+    stroke: #DD6C6C;
+  `}
+  ${({validation, active}) => validation === 'warning' && !active && `
+    stroke: orange;
+  `}
+  ${({validation, active}) => !validation && !active && `
+    stroke: white;
+  `}
+
 `

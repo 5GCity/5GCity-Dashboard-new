@@ -8,8 +8,6 @@
 import styled from 'styled-components'
 import { Form as form } from 'element-react'
 
-
-
 const Form = styled(form)`
 .el-form-item {
   margin-bottom: 30px;
@@ -23,7 +21,7 @@ const Form = styled(form)`
 }
 .el-input-group__append, .el-input-group__prepend {
   background: transparent;
-  color: ${({theme}) => theme.secondaryColor };
+  color: ${({theme}) => theme.secondaryColor};
 }
 .el-input-group__append, .el-input-group__prepend {
   border: none;
@@ -31,7 +29,7 @@ const Form = styled(form)`
 `
 const Item = styled(form.Item)`
 .el-form-item__label {
-  color: ${({theme}) => theme.secondaryColor };
+  color: ${({theme}) => theme.secondaryColor};
   font-family: "Open Sans";
   font-size: 14px;
   font-weight: 600;
@@ -60,12 +58,12 @@ ${({status}) => status === 'success' && `
 `} */
 ${({status}) => !status && `
 .el-form-item__label {
-  color: ${({theme}) => theme.secondaryColor };
+  color: ${({theme}) => theme.secondaryColor};
 }
 `}
 `
 const Error = styled.div`
-  color: ${({theme}) => theme.dangerColor };
+  color: ${({theme}) => theme.dangerColor};
   font-size: 12px;
   line-height: 1;
   padding-top: 8px;
@@ -73,7 +71,6 @@ const Error = styled.div`
   top: 100%;
   left: 5px;
 `
-
 
 Form.Item = Item
 Form.Error = Error

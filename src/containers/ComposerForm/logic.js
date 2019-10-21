@@ -10,35 +10,47 @@ import { put } from 'redux-saga/effects'
 
 import PropTypes from 'prop-types'
 import * as Check from 'validations'
-import { AddNewParameter } from './utils'
+import { AddNewParameter, STEPS } from './utils'
 
+/* Logic */
 import SDKContainerLogic from 'containers/SDKContainer/logic'
-
-
+import PageTitleOrganizationLogic from 'containers/PageTitleOrganization/logic'
 
 const DEFAULT_FORM = {
   service_name: {
-    value: null,
+    value: null
+  },
+  service_access_level: {
+    value: null
+  },
+  service_organization: {
+    value: null
   },
   service_designer: {
     value: null
   },
-  service_version:{
+  service_version: {
     value: null
   },
-  service_license_type:{
+  service_license_type: {
     value: null
   },
-  service_license_url:{
+  service_license_url: {
     value: null
   },
-  service_parameter:{
+  service_parameter: {
     array: [{value: null, valid: false}]
-  },
+  }
 }
 
 const VALIDATIONS = {
   service_name: [
+    Check.isRequired
+  ],
+  service_organization:[
+    Check.isRequired
+  ],
+  service_access_level: [
     Check.isRequired
   ],
   service_designer: [
@@ -46,18 +58,17 @@ const VALIDATIONS = {
   ],
   service_version: [
     Check.isRequired,
-    Check.isVersion,
+    Check.isVersion
   ],
   service_license_type: [
     Check.isRequired
   ],
   service_license_url: [
-    Check.isRequired,
-    Check.isValidWebsite
+    Check.isRequired
   ],
   service_parameter: [
-    Check.isRequired,
-  ],
+    Check.isRequired
+  ]
 }
 
 export default kea({
@@ -67,7 +78,12 @@ export default kea({
     actions: [
       SDKContainerLogic, [
         'changeActiveTab',
-        'changeSaveStatus',
+        'changeSaveStatus'
+      ],
+    ],
+    props: [
+      PageTitleOrganizationLogic, [
+        'organizations'
       ]
     ]
   },
@@ -85,21 +101,21 @@ export default kea({
     change: (field) => ({ field }),
     setForm: (form) => ({ form }),
     changeForm: (form) => ({ form }),
-    reset: () => ({}),
+    reset: () => ({})
   }),
 
   reducers: ({ actions }) => ({
-    form:[DEFAULT_FORM, PropTypes.object,{
+    form: [DEFAULT_FORM, PropTypes.object, {
       [actions.change]: (state, payload) => Check.setAndCheckValidation(state, payload, VALIDATIONS),
       [actions.setForm]: (state, payload) => Check.checkValidation(payload.form, VALIDATIONS).form,
 
-      [actions.setValueParameters]:(state, payload) => Check.setAndCheckValidationArray(state, payload, VALIDATIONS),
-      [actions.addParameter]: (state, payload) =>  Check.checkValidation(AddNewParameter(state), VALIDATIONS).form,
+      [actions.setValueParameters]: (state, payload) => Check.setAndCheckValidationArray(state, payload, VALIDATIONS),
+      [actions.addParameter]: (state, payload) => Check.checkValidation(AddNewParameter(state), VALIDATIONS).form,
       [actions.removeParameter]: (state, payload) => {
-        return Object.assign({}, state, state.service_parameter.array.splice(payload.index,1))
+        return Object.assign({}, state, state.service_parameter.array.splice(payload.index, 1))
       },
       [actions.changeForm]: (state, payload) => payload.form,
-      [actions.reset]: () => DEFAULT_FORM,
+      [actions.reset]: () => DEFAULT_FORM
     }],
 
     dirty: [false, PropTypes.bool, {
@@ -115,6 +131,10 @@ export default kea({
       [actions.error]: () => false,
       [actions.response]: () => false,
       [actions.reset]: () => false
+    }],
+    steps: [STEPS, PropTypes.array, {
+      // [actions.activeStep]: (state, payload) => payload.steps,
+      [actions.reset]: () => STEPS,
     }],
   }),
   start: function * () {
@@ -134,7 +154,7 @@ export default kea({
 
   takeLatest: ({ actions, workers }) => ({
     [actions.getServiceInfo]: workers.getServiceInfo,
-    [actions.submit]: workers.submit,
+    [actions.submit]: workers.submit
   }),
 
   workers: {
@@ -142,12 +162,21 @@ export default kea({
       const { changeForm } = this.actions
       const form = this.props.serviceData
       const setDefaultValues = {...DEFAULT_FORM}
+      let parametersForm = []
+      // Verify if service has parameters key
+      if (form.parameters) {
+        parametersForm = form.parameters.length <= 0 ? setDefaultValues.service_parameter.array : form.parameters
+      } else {
+        return parametersForm
+      }
       setDefaultValues.service_name.value = form.name
-      setDefaultValues.service_designer.value =  form.designer
-      setDefaultValues.service_version.value =  form.version
-      setDefaultValues.service_license_type.value =  form.license.type
-      setDefaultValues.service_license_url.value =  form.license.url
-      setDefaultValues.service_parameter.array =  form.parameters.length <= 0 ? setDefaultValues.service_parameter.array : form.parameters
+      setDefaultValues.service_organization.value = form.sliceId
+      setDefaultValues.service_access_level.value = form.accessLevel
+      setDefaultValues.service_designer.value = form.designer
+      setDefaultValues.service_version.value = form.version
+      setDefaultValues.service_license_type.value = form.license.type
+      setDefaultValues.service_license_url.value = form.license.url
+      setDefaultValues.service_parameter.array = form.parameters.length <= 0 ? setDefaultValues.service_parameter.array : form.parameters
 
       const validForm = Check.checkValidation(setDefaultValues, VALIDATIONS).form
       yield put(changeForm(validForm))
@@ -157,12 +186,13 @@ export default kea({
         error,
         setForm,
         changeActiveTab,
-        changeSaveStatus,
+        changeSaveStatus
       } = this.actions
       const service = this.props.serviceData
       const form = yield this.get('form')
       const dirty = yield this.get('dirty')
       service.name = form.service_name.value
+      service.sliceId = form.service_organization.value
       service.designer = form.service_designer.value
       service.version = form.service_version.value
       service.license.type = form.service_license_type.value
@@ -188,8 +218,7 @@ export default kea({
         yield put(changeActiveTab('composer'))
         yield put(changeSaveStatus(false))
       }
-    },
+    }
   }
 
 })
-

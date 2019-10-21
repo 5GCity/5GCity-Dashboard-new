@@ -16,19 +16,19 @@ import { CloseIcon } from 'components/Icons'
 
 class PanelErrors extends Component {
   render () {
-    const { show , messages, close} = this.props
+    const { show, messages, close } = this.props
     return (
       <PanelError
         show={show}
       >
         <CloseButton
-          outline={true}
+          outline
           type={'secondary'}
           text={'Close'}
           svg={<CloseIcon />}
           onClick={() => close()}
         />
-        {messages && messages.map( message =>
+        {messages && messages.map(message =>
           <AlertMessages
             type={message.type}
             message={message.message}
@@ -38,7 +38,7 @@ class PanelErrors extends Component {
             key={message.id}
           />
         )}
-    </PanelError>
+      </PanelError>
     )
   }
 }

@@ -8,7 +8,6 @@
 import styled from 'styled-components'
 import { Tabs } from 'element-react'
 
-
 const Tab = styled(Tabs)`
   display: flex;
   flex-direction: column;

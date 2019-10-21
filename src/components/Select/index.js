@@ -9,19 +9,36 @@ import styled from 'styled-components'
 import { Select } from 'element-react'
 import { darken, lighten } from 'polished'
 
-
-
-
 export default ({ children, ...props }) => (
-  <StyledSelect value={props.selectOption} onChange={value => props.onChange(value)}>
-    {props.options && props.options.map((el,i) =>
-      <Select.Option value={el.value} key={i} label={el.name} disabled={el.disabled}></Select.Option>
-    )}
-  </StyledSelect>
+  <Wrapper>
+    {props.label &&
+    <Label>{props.label}</Label>
+    }
+    <StyledSelect value={props.selectOption} onChange={value => props.onChange(value)}>
+      {props.options && props.options.map((el, i) =>
+        <Select.Option value={el.value} key={i} label={el.name} disabled={el.disabled} />
+      )}
+    </StyledSelect>
+  </Wrapper>
 )
 
-const StyledSelect = styled(Select)`
+const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+`
+const Label = styled.p`
+  color: ${({theme}) => theme.secondaryColor};
+  font-family: ${({theme}) => theme.fontDinExp};
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 1px;
+  line-height: 12px;
+  margin-right: 8px;
+`
 
+const StyledSelect = styled(Select)`
+width: 100%;
 display: block;
 
 input {
@@ -34,13 +51,13 @@ input {
 
 .el-input {
   font-size: 14px;
-  ${({ headerNav }) => headerNav &&`
+  ${({ headerNav }) => headerNav && `
     font-size: 12px;
     width: 110px;
   `}
 }
 
-${({type})=> type === 'default' &&`
+${({type}) => type === 'default' && `
 input {
   border: none;
 }
@@ -64,7 +81,7 @@ input {
 }
 
 .el-select-dropdown__item.selected {
-  background-color:${({theme}) => lighten(0.1,theme.bodyBackground)};
+  background-color:${({theme}) => lighten(0.1, theme.bodyBackground)};
 }
 
 .el-select-dropdown__item.hover, .el-select-dropdown__item:hover {
@@ -72,7 +89,7 @@ input {
 }
 
 .el-select-dropdown__item.is-disabled {
-  color: ${() => darken(0.4,'#fff')};
+  color: ${() => darken(0.4, '#fff')};
 }
 
 .el-select-dropdown__list {

@@ -12,7 +12,6 @@ import axios from 'axios'
 import PropTypes from 'prop-types'
 import { transformMeasurement } from './utils'
 
-
 export default kea({
   path: () => ['scenes', 'Monitoring'],
 
@@ -28,27 +27,27 @@ export default kea({
     fetchMeasurementRX: () => ({ }),
     setRX: (RX) => ({ RX }),
     setValue: (date) => ({ date }),
-    refreshAction: () => ({ }),
+    refreshAction: () => ({ })
   }),
 
   reducers: ({ actions }) => ({
-    CPU: [{max:0, data:[{value:0, date:null}]}, PropTypes.bject, {
-      [actions.setCPU]: (state, payload) => payload.CPU,
+    CPU: [{max: 0, data: [{value: 0, date: null}]}, PropTypes.bject, {
+      [actions.setCPU]: (state, payload) => payload.CPU
     }],
-    RAM: [{max:0, data:[{value:0, date:null}]}, PropTypes.object, {
-      [actions.setRAM]: (state, payload) => payload.RAM,
+    RAM: [{max: 0, data: [{value: 0, date: null}]}, PropTypes.object, {
+      [actions.setRAM]: (state, payload) => payload.RAM
     }],
-    DISK: [{max:0, data:[{value:0, date:null}]}, PropTypes.object, {
-      [actions.setDISK]: (state, payload) => payload.DISK,
+    DISK: [{max: 0, data: [{value: 0, date: null}]}, PropTypes.object, {
+      [actions.setDISK]: (state, payload) => payload.DISK
     }],
-    TX: [{max:0, data:[{value:0, date:null}]}, PropTypes.object, {
-      [actions.setTX]: (state, payload) => payload.TX,
+    TX: [{max: 0, data: [{value: 0, date: null}]}, PropTypes.object, {
+      [actions.setTX]: (state, payload) => payload.TX
     }],
-    RX: [{max:0, data:[{value:0, date:null}]}, PropTypes.object, {
-      [actions.setRX]: (state, payload) => payload.RX,
+    RX: [{max: 0, data: [{value: 0, date: null}]}, PropTypes.object, {
+      [actions.setRX]: (state, payload) => payload.RX
     }],
-    date: [ moment().startOf('day').utc().unix() , PropTypes.any, {
-      [actions.setValue]: (state, payload) => moment(payload.date).startOf('day').utc().unix(),
+    date: [ moment().startOf('day').utc().unix(), PropTypes.any, {
+      [actions.setValue]: (state, payload) => moment(payload.date).startOf('day').utc().unix()
     }]
 
   }),
@@ -58,7 +57,7 @@ export default kea({
       fetchMeasurementRAM,
       fetchMeasurementDISK,
       fetchMeasurementTX,
-      fetchMeasurementRX,
+      fetchMeasurementRX
     } = this.actions
 
     yield put(fetchMeasurementCPU())
@@ -75,11 +74,11 @@ export default kea({
       setTX,
       setRX } = this.actions
 
-    yield put(setCPU({max:0, data:[{value:0, date:null}]}))
-    yield put(setRAM({max:0, data:[{value:0, date:null}]}))
-    yield put(setDISK({max:0, data:[{value:0, date:null}]}))
-    yield put(setTX({max:0, data:[{value:0, date:null}]}))
-    yield put(setRX({max:0, data:[{value:0, date:null}]}))
+    yield put(setCPU({max: 0, data: [{value: 0, date: null}]}))
+    yield put(setRAM({max: 0, data: [{value: 0, date: null}]}))
+    yield put(setDISK({max: 0, data: [{value: 0, date: null}]}))
+    yield put(setTX({max: 0, data: [{value: 0, date: null}]}))
+    yield put(setRX({max: 0, data: [{value: 0, date: null}]}))
   },
 
   takeLatest: ({ actions, workers }) => ({
@@ -88,97 +87,96 @@ export default kea({
     [actions.fetchMeasurementDISK]: workers.fetchMeasurementDISK,
     [actions.fetchMeasurementTX]: workers.fetchMeasurementTX,
     [actions.fetchMeasurementRX]: workers.fetchMeasurementRX,
-    [actions.setValue]: [workers.fetchMeasurementCPU,workers.fetchMeasurementRAM,workers.fetchMeasurementDISK,workers.fetchMeasurementRX,workers.fetchMeasurementTX],
-    [actions.refreshAction]: [workers.fetchMeasurementCPU,workers.fetchMeasurementRAM,workers.fetchMeasurementDISK,workers.fetchMeasurementRX,workers.fetchMeasurementTX],
+    [actions.setValue]: [workers.fetchMeasurementCPU, workers.fetchMeasurementRAM, workers.fetchMeasurementDISK, workers.fetchMeasurementRX, workers.fetchMeasurementTX],
+    [actions.refreshAction]: [workers.fetchMeasurementCPU, workers.fetchMeasurementRAM, workers.fetchMeasurementDISK, workers.fetchMeasurementRX, workers.fetchMeasurementTX]
   }),
 
   workers: {
     * fetchMeasurementCPU () {
-      const dateTime = yield this.get('date') ,
-      startDate = moment(new Date(dateTime * 1000)).utc().unix() * 1000,
-      endDate = moment(new Date(dateTime * 1000)).endOf('day').utc().unix() * 1000,
-      { setCPU } = this.actions
+      const dateTime = yield this.get('date')
+      const startDate = moment(new Date(dateTime * 1000)).utc().unix() * 1000
+      const endDate = moment(new Date(dateTime * 1000)).endOf('day').utc().unix() * 1000
+      const { setCPU } = this.actions
 
-       try {
+      try {
         const id = this.props.match.params.id
         const type = this.props.match.params.type
-        const responseCPU = yield call(axios.get,`https://5gcity-dashboard.i2cat.net/monitoring/monitoring/api/measurements?start=${startDate}&end=${endDate}&metric=CPU&${type}=${id}&limit=2000`)
+        const responseCPU = yield call(axios.get, `https://5gcity-dashboard.i2cat.net/monitoring/monitoring/api/measurements?start=${startDate}&end=${endDate}&metric=CPU&${type}=${id}&limit=2000`)
         const { data } = responseCPU
 
         yield put(setCPU(transformMeasurement(data)))
-      }catch(error){
+      } catch (error) {
         console.error(`Error ${error}`)
       }
     },
     * fetchMeasurementRAM () {
-      const dateTime = yield this.get('date') ,
-      startDate = moment(new Date(dateTime * 1000)).utc().unix() * 1000,
-      endDate = moment(new Date(dateTime * 1000)).endOf('day').utc().unix() * 1000,
-      { setRAM } = this.actions
+      const dateTime = yield this.get('date')
+      const startDate = moment(new Date(dateTime * 1000)).utc().unix() * 1000
+      const endDate = moment(new Date(dateTime * 1000)).endOf('day').utc().unix() * 1000
+      const { setRAM } = this.actions
 
-       try {
+      try {
         const id = this.props.match.params.id
         const type = this.props.match.params.type
-        const responseRAM = yield call(axios.get,`https://5gcity-dashboard.i2cat.net/monitoring/monitoring/api/measurements?start=${startDate}&end=${endDate}&metric=RAM&${type}=${id}&limit=2000`)
+        const responseRAM = yield call(axios.get, `https://5gcity-dashboard.i2cat.net/monitoring/monitoring/api/measurements?start=${startDate}&end=${endDate}&metric=RAM&${type}=${id}&limit=2000`)
         const { data } = responseRAM
 
         yield put(setRAM(transformMeasurement(data)))
-      }catch(error){
+      } catch (error) {
         console.error(`Error ${error}`)
       }
     },
     * fetchMeasurementDISK () {
-      const dateTime = yield this.get('date') ,
-      startDate = moment(new Date(dateTime * 1000)).utc().unix() * 1000,
-      endDate = moment(new Date(dateTime * 1000)).endOf('day').utc().unix() * 1000,
-      { setDISK } = this.actions
+      const dateTime = yield this.get('date')
+      const startDate = moment(new Date(dateTime * 1000)).utc().unix() * 1000
+      const endDate = moment(new Date(dateTime * 1000)).endOf('day').utc().unix() * 1000
+      const { setDISK } = this.actions
 
-       try {
+      try {
         const id = this.props.match.params.id
         const type = this.props.match.params.type
-        const responseDISK = yield call(axios.get,`https://5gcity-dashboard.i2cat.net/monitoring/monitoring/api/measurements?start=${startDate}&end=${endDate}&metric=DISK&${type}=${id}&limit=2000`)
+        const responseDISK = yield call(axios.get, `https://5gcity-dashboard.i2cat.net/monitoring/monitoring/api/measurements?start=${startDate}&end=${endDate}&metric=DISK&${type}=${id}&limit=2000`)
         const { data } = responseDISK
 
         yield put(setDISK(transformMeasurement(data)))
-      }catch(error){
+      } catch (error) {
         console.error(`Error ${error}`)
       }
     },
     * fetchMeasurementTX () {
-      const dateTime = yield this.get('date') ,
-      startDate = moment(new Date(dateTime * 1000)).utc().unix() * 1000,
-      endDate = moment(new Date(dateTime * 1000)).endOf('day').utc().unix() * 1000,
-      { setTX } = this.actions
+      const dateTime = yield this.get('date')
+      const startDate = moment(new Date(dateTime * 1000)).utc().unix() * 1000
+      const endDate = moment(new Date(dateTime * 1000)).endOf('day').utc().unix() * 1000
+      const { setTX } = this.actions
 
-       try {
+      try {
         const id = this.props.match.params.id
         const type = this.props.match.params.type
-        const responseTX = yield call(axios.get,`https://5gcity-dashboard.i2cat.net/monitoring/monitoring/api/measurements?start=${startDate}&end=${endDate}&metric=TX&${type}=${id}&limit=2000`)
+        const responseTX = yield call(axios.get, `https://5gcity-dashboard.i2cat.net/monitoring/monitoring/api/measurements?start=${startDate}&end=${endDate}&metric=TX&${type}=${id}&limit=2000`)
         const { data } = responseTX
 
         yield put(setTX(transformMeasurement(data)))
-      }catch(error){
+      } catch (error) {
         console.error(`Error ${error}`)
       }
     },
     * fetchMeasurementRX () {
-      const dateTime = yield this.get('date') ,
-      startDate = moment(new Date(dateTime * 1000)).utc().unix() * 1000,
-      endDate = moment(new Date(dateTime * 1000)).endOf('day').utc().unix() * 1000,
-      { setRX } = this.actions
+      const dateTime = yield this.get('date')
+      const startDate = moment(new Date(dateTime * 1000)).utc().unix() * 1000
+      const endDate = moment(new Date(dateTime * 1000)).endOf('day').utc().unix() * 1000
+      const { setRX } = this.actions
 
-       try {
+      try {
         const id = this.props.match.params.id
         const type = this.props.match.params.type
-        const responseRX = yield call(axios.get,`https://5gcity-dashboard.i2cat.net/monitoring/monitoring/api/measurements?start=${startDate}&end=${endDate}&metric=RX&${type}=${id}&limit=2000`)
+        const responseRX = yield call(axios.get, `https://5gcity-dashboard.i2cat.net/monitoring/monitoring/api/measurements?start=${startDate}&end=${endDate}&metric=RX&${type}=${id}&limit=2000`)
         const { data } = responseRX
 
         yield put(setRX(transformMeasurement(data)))
-      }catch(error){
+      } catch (error) {
         console.error(`Error ${error}`)
       }
     }
   }
 
 })
-

@@ -25,7 +25,6 @@ class Header extends Component {
   }
 }
 
-
 export default compose(
   connect({
     props: [

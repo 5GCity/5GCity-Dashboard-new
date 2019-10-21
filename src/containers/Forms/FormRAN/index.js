@@ -20,50 +20,50 @@ class FormRAN extends Component {
     return (
       <Wrapper>
         <Title>RAN</Title>
-          <Form labelPosition={'top'} labelWidth="100">
+        <Form labelPosition={'top'} labelWidth='100'>
           <Form.Item
             label='Name'
-            required={true}
+            required
             status={!name.valid}
           >
-          <Input
-            value={name.value}
-            onChange={value => change({name: value})}
+            <Input
+              value={name.value}
+              onChange={value => change({name: value})}
           />
-          <Form.Error>{name.message}</Form.Error>
+            <Form.Error>{name.message}</Form.Error>
           </Form.Item>
           <Form.Item
             label='Controller Url'
-            required={true}
+            required
             status={!url.valid}
           >
-          <Input
-            value={url.value}
-            onChange={value => change({url: value})}
+            <Input
+              value={url.value}
+              onChange={value => change({url: value})}
           />
-          <Form.Error>{url.message}</Form.Error>
+            <Form.Error>{url.message}</Form.Error>
           </Form.Item>
           <Form.Item
             label='Username'
-            required={true}
+            required
             status={!username.valid}
           >
-          <Input
-            value={username.value}
-            onChange={value => change({username: value})}
+            <Input
+              value={username.value}
+              onChange={value => change({username: value})}
           />
-          <Form.Error>{password.message}</Form.Error>
+            <Form.Error>{password.message}</Form.Error>
           </Form.Item>
           <Form.Item
             label='Password'
-            required={true}
+            required
             status={!password.valid}
           >
-          <Input
-            value={password.value}
-            onChange={value => change({password: value})}
+            <Input
+              value={password.value}
+              onChange={value => change({password: value})}
           />
-          <Form.Error>{password.message}</Form.Error>
+            <Form.Error>{password.message}</Form.Error>
           </Form.Item>
         </Form>
       </Wrapper>

@@ -9,10 +9,10 @@ export const TITLE_LIST = [{
   id: 1,
   size: 350,
   name: 'Id',
-  propItem: 'id',
+  propItem: 'id'
 }, {
   id: 2,
   size: 400,
   name: 'Name',
-  propItem: 'name',
+  propItem: 'name'
 }]

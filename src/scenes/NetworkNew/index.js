@@ -15,9 +15,7 @@ import PageTitle from 'components/PageTitle'
 import NavBar from 'containers/Navbar'
 import ListNewNetworks from 'containers/Lists/ListNewNetworks'
 
-
 class NetworkNew extends Component {
-
   navigateToBack = () => {
     const { history } = this.props
     history.goBack()
@@ -27,15 +25,14 @@ class NetworkNew extends Component {
     return (
       <Wrapper>
         <NavBar />
-        <PageTitle 
-          title={'Add new network service'} 
+        <PageTitle
+          title={'Add new network service'}
           buttonBack={() => this.navigateToBack()} />
         <ListNewNetworks />
       </Wrapper>
     )
   }
 }
-
 
 export default Logic(NetworkNew)
 

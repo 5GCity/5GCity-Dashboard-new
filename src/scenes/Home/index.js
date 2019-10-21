@@ -23,4 +23,3 @@ class Home extends Component {
 export default Logic(Home)
 
 const Wrapper = styled.div``
-

@@ -18,13 +18,10 @@ import ListSlices from 'containers/Lists/ListSlices'
 import Navbar from 'containers/Navbar'
 
 class Slices extends Component {
-
-
   navigate = (path) => {
     const { history } = this.props
     history.push(path)
   }
-
   render () {
     return (
       <Wrapper>

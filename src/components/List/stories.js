@@ -20,27 +20,27 @@ const fakeTitle = [{
   name: 'Id',
   propItem: 'sliceId',
   filter: true
-},{
+}, {
   id: 2,
   size: 200,
   name: 'Name',
   propItem: 'name',
-  filter: true,
-},{
+  filter: true
+}, {
   id: 3,
   name: 'Acceptance Date',
   size: 200,
   propItem: 'date',
   filter: true,
   render: (date) =>
-     !date ? "N.A" : moment(date).format('DD/MM/YYYY HH:mm')
-},{
+     !date ? 'N.A' : moment(date).format('DD/MM/YYYY HH:mm')
+}, {
   id: 4,
   name: 'Status',
   size: 50,
   propItem: 'status',
   filter: true
-},{
+}, {
   id: 5,
   size: 200,
   name: 'Nº of Instantaited Services',
@@ -48,58 +48,45 @@ const fakeTitle = [{
   filter: true
 }]
 
-const fakeTitles = fakeTitle.map((obj) => {
-  obj.filter = true
-  return obj
-})
-
-const fakeData =[
+const fakeData = [
   {
     id: 1,
-    sliceId: "00028213",
-    name: "Slice name 1",
+    sliceId: '00028213',
+    name: 'Slice name 1',
     date: 1525208520000,
-    status: "Approved",
+    status: 'Approved',
     n_inst: 2
   },
   {
     id: 2,
-    sliceId: "00028218",
-    name: "Slice name 2",
+    sliceId: '00028218',
+    name: 'Slice name 2',
     date: 1525208520000,
-    status: "Approved",
+    status: 'Approved',
     n_inst: 4
   },
   {
     id: 3,
-    sliceId: "00027111",
-    name: "Slice name 3",
+    sliceId: '00027111',
+    name: 'Slice name 3',
     date: null,
-    status: "Pending",
+    status: 'Pending',
     n_inst: 0
   }
 ]
 
-const toogleFilter = item => {
-  fakeTitle.map((obj)=>{
-    obj.filter = !obj.filter
-    return obj
-  })
-  console.log(item);
-}
-
 const exmapleOne = () => (
   <List>
     <List.Header>
-    {fakeTitle.map(title =>
-          <List.Column
-            size={title.size}
-            key={title.id}
+      {fakeTitle.map(title =>
+        <List.Column
+          size={title.size}
+          key={title.id}
           >
-            {title.name}
-          </List.Column>
+          {title.name}
+        </List.Column>
         )}
-        <List.Column marginLeft></List.Column>
+      <List.Column marginLeft />
     </List.Header>
     {fakeData && fakeData.map((data, i) =>
       <List.Row key={i}>
@@ -119,27 +106,27 @@ const exmapleOne = () => (
             </List.Column>
           ]
         })}
-          <ColumnBottons key={data.id}>
+        <ColumnBottons key={data.id}>
           <ContainerButtons>
             <Button
               type={'secondary'}
-              svg={ <DeleteIcon /> }
+              svg={<DeleteIcon />}
               onClick={() => console.log(data)}
               text={'Remove'} />
             <Button
               type={'primary'}
               icon={'view'}
-              onClick={() => viewSlice(data)}
+              onClick={() => console.log(data)}
               text={'View'} />
             <Button
               type={'primary'}
               icon={'setting'}
-              onClick={() => viewSliceMonitor(data)}
+              onClick={() => console.log(data)}
               text={'Monitoring'}
             />
-            </ContainerButtons>
-          </ColumnBottons>
-          </List.Row>
+          </ContainerButtons>
+        </ColumnBottons>
+      </List.Row>
           )}
   </List>
 )

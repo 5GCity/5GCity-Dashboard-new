@@ -6,25 +6,25 @@
  */
 import React from 'react'
 import { storiesOf } from '@storybook/react'
-import { Theme } from 'globalStyles';
+import { Theme } from 'globalStyles'
 
 import Slider from './index'
 
 const bStyle = {
-  padding:'30px',
+  padding: '30px',
   backgroundColor: Theme.bodyBackground,
-  height:'100%'
-};
+  height: '100%'
+}
 
 const example = () => (
   <div style={bStyle}>
-  <Slider />
+    <Slider />
   </div>
 )
 
 const exampleMultiplePoints = () => (
   <div style={bStyle}>
-  <Slider step="10" showStops={true} />
+    <Slider step='10' showStops />
   </div>
 )
 

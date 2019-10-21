@@ -9,10 +9,10 @@ const NewChannel = {
   bandwidth: {
     value: null
   },
-  number:{
+  number: {
     value: null
   },
-  txPower:{
+  txPower: {
     value: null
   }
 }
@@ -35,4 +35,4 @@ export const AddChannel = state => {
   const array = newState.channels.concat(NewChannel)
   newState.channels = array
   return newState
-  }
+}

@@ -21,47 +21,46 @@ class ModalServiceParameters extends Component {
     const { setValue, submitForm } = this.actions
     return (
       <Modal
-      size={'small'}
-      title={title}
-      visible={status}
-      onCancel={action}
+        size={'small'}
+        title={title}
+        visible={status}
+        onCancel={action}
     >
-      <Form
-        labelPosition={'top'}
+        <Form
+          labelPosition={'top'}
       >
-      <Modal.Body>
-      {service && service.parameters.map((param, index) =>
-        <Form.Item
-          key={index}
-          label={param}
+          <Modal.Body>
+            {service && service.parameters.map((param, index) =>
+              <Form.Item
+                key={index}
+                label={param}
         >
-          <Input
-            value={form.parameters_values[index]}
-            onChange ={ value => setValue('parameters_values', value, index) }
+                <Input
+                  value={form.parameters_values[index]}
+                  onChange={value => setValue('parameters_values', value, index)}
           />
-        </Form.Item>
+              </Form.Item>
       )}
-      </Modal.Body>
-      <Modal.Footer>
-      <Button
-          text={'Yes'}
-          svg={<CheckIcon />}
-          loading={isPublishLoading}
-          type={'primary'}
-          onClick={() => submitForm(form)}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              text={'Yes'}
+              svg={<CheckIcon />}
+              loading={isPublishLoading}
+              type={'primary'}
+              onClick={() => submitForm(form)}
         />
-        <Button
-          text={'No'}
-          svg={<CloseIcon />}
-          type={'secondary'}
-          onClick={action}
+            <Button
+              text={'No'}
+              svg={<CloseIcon />}
+              type={'secondary'}
+              onClick={action}
         />
-      </Modal.Footer>
-      </Form>
-    </Modal>
+          </Modal.Footer>
+        </Form>
+      </Modal>
     )
   }
 }
 
 export default withRouter(Logic(ModalServiceParameters))
-

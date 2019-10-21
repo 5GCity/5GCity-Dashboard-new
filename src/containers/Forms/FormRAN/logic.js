@@ -11,7 +11,7 @@ import { put, call } from 'redux-saga/effects'
 import PropTypes from 'prop-types'
 import * as Check from 'validations'
 import axios from 'axios'
-import { API_BASE_URL } from 'config'
+import { API_SLICE_MANAGEMENT } from 'config'
 import mapValues from 'lodash/mapValues'
 
 /* Logic */
@@ -21,32 +21,32 @@ import AppLogic from 'containers/App/logic'
 
 const DEFAULT_FORM = {
   name: {
-    value: null,
+    value: null
   },
   url: {
-    value: null,
+    value: null
   },
   username: {
-    value: null,
+    value: null
   },
   password: {
-    value: null,
-  },
+    value: null
+  }
 }
 
 const VALIDATIONS = {
   name: [
-    Check.isRequired,
+    Check.isRequired
   ],
   url: [
-    Check.isRequired,
+    Check.isRequired
   ],
   username: [
-    Check.isRequired,
+    Check.isRequired
   ],
   password: [
-    Check.isRequired,
-  ],
+    Check.isRequired
+  ]
 }
 
 export default kea({
@@ -56,22 +56,22 @@ export default kea({
     actions: [
       AppLogic, [
         'addLoadingPage',
-        'removeLoadingPage',
+        'removeLoadingPage'
       ],
       PanelResourceLogic, [
         'submit',
         'closePanel',
-        'changeEdition',
+        'changeEdition'
       ],
       InfraManagementLogic, [
         'fetchResources',
-        'changeModalErrorStatus',
+        'changeModalErrorStatus'
       ]
     ],
     props: [
       PanelResourceLogic, [
-        'editResource',
-      ],
+        'editResource'
+      ]
     ]
   },
   actions: () => ({
@@ -81,11 +81,11 @@ export default kea({
     change: (field) => ({ field }),
     setForm: (form) => ({ form }),
     changeForm: (form) => ({ form }),
-    reset: () => ({}),
+    reset: () => ({})
   }),
 
   reducers: ({ actions }) => ({
-    form:[DEFAULT_FORM, PropTypes.object,{
+    form: [DEFAULT_FORM, PropTypes.object, {
       [actions.change]: (state, payload) => Check.setAndCheckValidation(state, payload, VALIDATIONS),
       [actions.setForm]: (state, payload) => Check.checkValidation(payload.form, VALIDATIONS).form,
       [actions.changeForm]: (state, payload) => payload.form,
@@ -95,12 +95,12 @@ export default kea({
       [actions.change]: () => true,
       [actions.response]: () => false,
       [actions.reset]: () => false
-    }],
+    }]
   }),
 
   takeLatest: ({ actions, workers }) => ({
     [actions.getForm]: workers.getForm,
-    [actions.submit]: workers.submit,
+    [actions.submit]: workers.submit
   }),
 
   start: function * () {
@@ -122,12 +122,12 @@ export default kea({
       const resource = yield this.get('editResource')
       let setDefaultValues = { ...DEFAULT_FORM }
 
-      if(resource.id !== 0) {
+      if (resource.id !== 0) {
         try {
-          const request = yield call(axios.get, `${API_BASE_URL}/ran_infrastructure/${resource.id}`)
-          const { data } = request
+          // const request = yield call(axios.get, `${API_SLICE_MANAGEMENT}/ran_infrastructure/${resource.id}`)
+          // const { data } = request
 
-          setDefaultValues = CreateForm(setDefaultValues, data)
+          // setDefaultValues = CreateForm(setDefaultValues, data)
         } catch (er) {
           console.log(er)
           if (er.response.data) {
@@ -150,7 +150,7 @@ export default kea({
         reset,
         changeModalErrorStatus,
         removeLoadingPage,
-        addLoadingPage,
+        addLoadingPage
       } = this.actions
       const form = yield this.get('form')
       const dirty = yield this.get('dirty')
@@ -164,7 +164,7 @@ export default kea({
         ranInfrastructureData: {
           controllerUrl: null,
           password: null,
-          username: null,
+          username: null
         },
         location: {...resource.location}
       }
@@ -190,7 +190,7 @@ export default kea({
         newRAN.ranInfrastructureData.username = params.username
         newRAN.ranInfrastructureData.password = params.password
         try {
-          yield call(axios.post, `${API_BASE_URL}/ran_infrastructure`, newRAN)
+          yield call(axios.post, `${API_SLICE_MANAGEMENT}/ran_infrastructure`, newRAN)
           yield put(removeLoadingPage())
           yield put(fetchResources())
           yield put(closePanel())
@@ -212,8 +212,7 @@ export default kea({
           }
         }
       }
-    },
+    }
   }
 
 })
-

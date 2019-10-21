@@ -10,18 +10,17 @@ import { Icon } from 'element-react'
 import { rgba } from 'polished'
 /* import PropTypes from 'prop-types' */
 
-
 export default ({ children, icon, text, disabled, href, onClick, width, active, ...props }) => (
-      <Wrapper
-        active={active}
-        disabled={disabled}
-        onClick={!disabled ? onClick : null}
-        width={width}
-        to={href}
+  <Wrapper
+    active={active}
+    disabled={disabled}
+    onClick={!disabled ? onClick : null}
+    width={width}
+    to={href}
       >
-        <IconItem name={icon}></IconItem>
-          <ItemLabel>{text}</ItemLabel>
-      </Wrapper>
+    <IconItem name={icon} />
+    <ItemLabel>{text}</ItemLabel>
+  </Wrapper>
     )
 
 const Wrapper = styled.div`

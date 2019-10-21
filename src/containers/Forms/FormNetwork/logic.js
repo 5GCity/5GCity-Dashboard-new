@@ -11,7 +11,7 @@ import { put, call } from 'redux-saga/effects'
 import PropTypes from 'prop-types'
 import * as Check from 'validations'
 import axios from 'axios'
-import { API_BASE_URL } from 'config'
+import { API_SLICE_MANAGEMENT } from 'config'
 import mapValues from 'lodash/mapValues'
 
 /* Logic */
@@ -21,48 +21,66 @@ import AppLogic from 'containers/App/logic'
 
 const DEFAULT_FORM = {
   name: {
+    value: null
+  },
+  cidr: {
+    value: null,
+  },
+  gwIp: {
     value: null,
   },
   bandwidth: {
     value: null
   },
-  floatingIps:{
+  bandwidthUnit: {
+    value: 'MB/s'
+  },
+  floatingIps: {
     value: null
   },
-  provisionedTags:{
+  provisionedTags: {
     array: []
   },
-  tagRangeInit:{
+  tagRangeInit: {
     value: null
   },
-  tagRangeEnd:{
+  tagRangeEnd: {
     value: null
-  },
+  }
 }
 
 const VALIDATIONS = {
   name: [
     Check.isRequired
   ],
+  cidr: [
+    Check.isRequired
+  ],
+  gwIp: [
+    Check.isRequired
+  ],
   bandwidth: [
     Check.isRequired,
-    Check.isNumber,
+    Check.isNumber
+  ],
+  bandwidthUnit: [
+
   ],
   floatingIps: [
     Check.isRequired,
-    Check.isNumber,
+    Check.isNumber
   ],
   provisionedTags: [
-    Check.isNumber,
+    Check.isNumber
   ],
   tagRangeInit: [
     Check.isRequired,
-    Check.isNumber,
+    Check.isNumber
   ],
   tagRangeEnd: [
     Check.isRequired,
-    Check.isNumber,
-  ],
+    Check.isNumber
+  ]
 }
 
 export default kea({
@@ -72,22 +90,22 @@ export default kea({
     actions: [
       AppLogic, [
         'addLoadingPage',
-        'removeLoadingPage',
+        'removeLoadingPage'
       ],
       PanelResourceLogic, [
         'submit',
         'closePanel',
-        'changeEdition',
+        'changeEdition'
       ],
       InfraManagementLogic, [
         'fetchResources',
-        'changeModalErrorStatus',
+        'changeModalErrorStatus'
       ]
     ],
     props: [
       PanelResourceLogic, [
         'editResource'
-      ],
+      ]
     ]
   },
 
@@ -99,25 +117,25 @@ export default kea({
     setForm: (form) => ({ form }),
     changeForm: (form) => ({ form }),
     addProvisionedTags: () => ({}),
-    removeProvisionedTags: (index) =>({ index }),
-    reset: () => ({}),
+    removeProvisionedTags: (index) => ({ index }),
+    reset: () => ({})
   }),
 
   reducers: ({ actions }) => ({
-    form:[DEFAULT_FORM, PropTypes.object,{
+    form: [DEFAULT_FORM, PropTypes.object, {
       [actions.change]: (state, payload) => Check.setAndCheckValidation(state, payload, VALIDATIONS),
       [actions.setForm]: (state, payload) => Check.checkValidation(payload.form, VALIDATIONS).form,
-      [actions.setValueProvisioned]:(state, payload) => Check.setAndCheckValidationArray(state, payload, VALIDATIONS),
+      [actions.setValueProvisioned]: (state, payload) => Check.setAndCheckValidationArray(state, payload, VALIDATIONS),
       [actions.addProvisionedTags]: (state, payload) => {
-        return Object.assign({}, state, state.provisionedTags.array.push({value:null, valid: false}))
+        return Object.assign({}, state, state.provisionedTags.array.push({value: null, valid: false}))
       },
-      [actions.removeProvisionedTags]: (state, payload) => Object.assign({}, state, state.provisionedTags.array.splice(payload.index,1)),
+      [actions.removeProvisionedTags]: (state, payload) => Object.assign({}, state, state.provisionedTags.array.splice(payload.index, 1)),
       [actions.changeForm]: (state, payload) => payload.form,
       [actions.reset]: () => {
         const form = { ...DEFAULT_FORM }
         form.provisionedTags.array = []
         return form
-      },
+      }
     }],
 
     dirty: [false, PropTypes.bool, {
@@ -125,7 +143,7 @@ export default kea({
       [actions.response]: () => false,
       [actions.setValueProvisioned]: () => false,
       [actions.reset]: () => false
-    }],
+    }]
   }),
 
   start: function * () {
@@ -143,7 +161,7 @@ export default kea({
 
   takeLatest: ({ actions, workers }) => ({
     [actions.getForm]: workers.getForm,
-    [actions.submit]: workers.submit,
+    [actions.submit]: workers.submit
   }),
 
   workers: {
@@ -152,22 +170,22 @@ export default kea({
       const resource = yield this.get('editResource')
       let setDefaultValues = { ...DEFAULT_FORM }
 
-      if(resource.id !== 0) {
+      if (resource.id !== 0) {
         try {
-          const request = yield call(axios.get, `${API_BASE_URL}/physical_network/${resource.id}`)
+          const request = yield call(axios.get, `${API_SLICE_MANAGEMENT}/physical_network/${resource.id}`)
           const { data } = request
           setDefaultValues.name.value = data.name
-          setDefaultValues.bandwidth.value =  data.physicalNetworkData.quota.bandwidth.total
-          setDefaultValues.floatingIps.value =  data.physicalNetworkData.quota.floatingIps.total
-          setDefaultValues.provisionedTags.array =  data.physicalNetworkData.quota.provisionedTags || []
-          setDefaultValues.tagRangeInit.value =  data.physicalNetworkData.quota.tagRange.init
-          setDefaultValues.tagRangeEnd.value =  data.physicalNetworkData.quota.tagRange.end
+          setDefaultValues.bandwidth.value = data.physicalNetworkData.quota.bandwidth.total
+          setDefaultValues.floatingIps.value = data.physicalNetworkData.quota.floatingIps.total
+          setDefaultValues.provisionedTags.array = data.physicalNetworkData.quota.provisionedTags || []
+          setDefaultValues.tagRangeInit.value = data.physicalNetworkData.quota.tagRange.init
+          setDefaultValues.tagRangeEnd.value = data.physicalNetworkData.quota.tagRange.end
         } catch (er) {
           console.log(er)
           if (er.response.data) {
             // map WS return errors to form format
             // put the errors on each field and changed them to invalid
-            yield put(changeForm(newForm))
+            yield put(changeForm())
           }
         }
       }
@@ -183,7 +201,7 @@ export default kea({
         closePanel,
         changeModalErrorStatus,
         removeLoadingPage,
-        addLoadingPage,
+        addLoadingPage
       } = this.actions
       const form = yield this.get('form')
       const dirty = yield this.get('dirty')
@@ -194,16 +212,18 @@ export default kea({
 
       const newPhysicalNetwork = {
         name: null,
-        physical_network_data:{
-          quota:{
+        cidr: null,
+        gw_ip: null,
+        physical_network_data: {
+          quota: {
             bandwidth: {
               provisioned: 0,
               total: null,
-              units:'MB/s'
+              units: 'MB/s'
             },
             floating_ips: {
               provisioned: 0,
-              total: null,
+              total: null
             },
             provisioned_tags: [],
             tag_range: {
@@ -230,7 +250,10 @@ export default kea({
         // Transform object and remove uneeded state values
         let params = mapValues(form, ({ value }) => value)
         newPhysicalNetwork.name = params.name
+        newPhysicalNetwork.cidr = params.cidr
+        newPhysicalNetwork.gw_ip = params.gwIp
         newPhysicalNetwork.physical_network_data.quota.bandwidth.total = params.bandwidth
+        newPhysicalNetwork.physical_network_data.quota.bandwidth.units = params.bandwidthUnit
         newPhysicalNetwork.physical_network_data.quota.floating_ips.total = params.floatingIps
         form.provisionedTags.array.forEach(tag =>
         newPhysicalNetwork.physical_network_data.quota.provisioned_tags.push(tag.value)
@@ -238,7 +261,7 @@ export default kea({
         newPhysicalNetwork.physical_network_data.quota.tag_range.end = params.tagRangeEnd
         newPhysicalNetwork.physical_network_data.quota.tag_range.init = params.tagRangeInit
         try {
-          yield call(axios.post, `${API_BASE_URL}/physical_network`, newPhysicalNetwork)
+          yield call(axios.post, `${API_SLICE_MANAGEMENT}/physical_network`, newPhysicalNetwork)
           yield put(removeLoadingPage())
           yield put(fetchResources())
           yield put(closePanel())
@@ -262,7 +285,6 @@ export default kea({
           yield put(reset())
         }
       }
-    },
+    }
   }
 })
-

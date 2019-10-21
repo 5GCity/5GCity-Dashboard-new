@@ -19,8 +19,7 @@ import { PlusIcon } from 'components/Icons'
 import ListNetworks from 'containers/Lists/ListNetworks'
 
 class Network extends Component {
-
-  navigate = (path) => {
+  navigate = path => {
     const { history } = this.props
     history.push(path)
   }
@@ -36,12 +35,11 @@ class Network extends Component {
           buttonFunction={() => this.navigate('/network/new')}
         />
         <NavBar />
-       <ListNetworks />
+        <ListNetworks />
       </Wrapper>
     )
   }
 }
-
 
 export default Logic(Network)
 

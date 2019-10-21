@@ -18,7 +18,6 @@ import Step from 'components/Step'
 import FormFunctionSDK from 'containers/Forms/FormFunctionSDK'
 
 class Function extends Component {
-
   navigateToBack = () => {
     const { history } = this.props
     history.push('/sdk/functions')
@@ -31,16 +30,21 @@ class Function extends Component {
         <HeaderNav
           name={'New Function'}
           buttonBack={<BackIcon />}
-          navigateBack={ () => this.navigateToBack() }
+          navigateBack={() => this.navigateToBack()}
         />
         <WrapperStep>
           <Step>
             {steps.map(step =>
-            <Step key={step.id} step={step.id} description={step.description} />
+            <Step
+              key={step.id}
+              step={step.id}
+              description={step.description}
+              active={step.active}
+            />
             )}
           </Step>
         </WrapperStep>
-          <FormFunctionSDK />
+        <FormFunctionSDK />
       </Wrapper>
     )
   }

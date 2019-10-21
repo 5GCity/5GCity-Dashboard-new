@@ -18,13 +18,10 @@ import { BackIcon } from 'components/Icons'
 import DatePicker from 'components/DatePicker'
 import Button from 'components/Button'
 
-
-
 class Monitoring extends Component {
-
   state = {
     width: this.props.containerWidth / 5,
-    height: this.props.containerHeight / 5,
+    height: this.props.containerHeight / 5
   }
 
   navigateToBack = () => {
@@ -54,22 +51,22 @@ class Monitoring extends Component {
           <DatePicker
             format={'dd-MM-yyyy'}
             value={new Date(date * 1000)}
-            placeholder="Pick a day"
-            disabledDate={time=> time.getTime() > Date.now() - 1}
-            onChange={date =>{console.log(date); setValue(date) }}
+            placeholder='Pick a day'
+            disabledDate={time => time.getTime() > Date.now() - 1}
+            onChange={date => { console.log(date); setValue(date) }}
             isShowTrigger={false}
           />
           <WrapperButton>
             <Button
               type={'primary'}
               text={'Refresh'}
-              //icon={'reload'}
+              // icon={'reload'}
               onClick={() => refreshAction()}
             />
           </WrapperButton>
         </ContainerDatePicker>
         <ContainerParentMonitor>
-        <ContainerMonitor>
+          <ContainerMonitor>
             <Monitor
               datakeyAxis={'date'}
               dataKeyArea={CPU && 'value'}
@@ -94,7 +91,7 @@ class Monitoring extends Component {
               title={type === 'slice' ? 'Average RAM' : 'RAM'}
               colorArea={'#2b7f0c'}
             />
-            </ContainerMonitor>
+          </ContainerMonitor>
           <ContainerMonitor>
             <Monitor
               datakeyAxis={'date'}
@@ -107,8 +104,8 @@ class Monitoring extends Component {
               title={type === 'slice' ? 'Average DISK' : 'DISK'}
               colorArea={'#16a399'}
             />
-        </ContainerMonitor>
-        <ContainerMonitor>
+          </ContainerMonitor>
+          <ContainerMonitor>
             <Monitor
               datakeyAxis={'date'}
               dataKeyArea={RX && 'value'}
@@ -134,12 +131,11 @@ class Monitoring extends Component {
               unit={TX && TX.unit}
             />
           </ContainerMonitor>
-          </ContainerParentMonitor>
+        </ContainerParentMonitor>
       </Wrapper>
     )
   }
 }
-
 
 export default withRouter((Logic(Monitoring)))
 

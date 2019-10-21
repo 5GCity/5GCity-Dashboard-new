@@ -18,14 +18,12 @@ import { DeleteIcon, EyeIcon, SettingIcon, CheckIcon, CloseIcon } from 'componen
 import NoData from 'components/NoData'
 import ErroPage from 'components/ErroPage'
 
-
-
 const ModalDeleteSlice = (props) => (
   <Modal
     size={'tiny'}
-    showClose={true}
+    showClose
     onCancel={() => props.actionModal()}
-    title="Confirmation"
+    title='Confirmation'
     visible={props.modalVisibled}
   >
     {props.sliceSelect && <Modal.Body>
@@ -49,69 +47,65 @@ const ModalDeleteSlice = (props) => (
       />
     </Modal.Footer>
   </Modal>
-);
-
-
+)
 
 const ListAllSlices = (props) => (
   <List>
     <List.Header>
       {props.title.map(title =>
-      <List.Column size={title.size} key={title.id}>
-        {title.name}
-      </List.Column>)}
+        <List.Column size={title.size} key={title.id}>
+          {title.name}
+        </List.Column>)}
       <List.Column marginLeft />
     </List.Header>
     {props.slices && props.slices.map((slice, i) =>
-    <List.Row key={i} row={1450}>
-      {props.title && props.title.map(({
+      <List.Row key={i} row={1450}>
+        {props.title && props.title.map(({
         size,
         propItem,
         render
       }) => {
-        return [render && slice &&
-        <List.Column key={i} size={size}>
-          {render(slice[propItem])}
-        </List.Column>, !render && slice &&
-        <List.Column key={i} size={size}>
-          {slice[propItem]}
-        </List.Column>];
-      })}
-      <ColumnBottons>
-        <ContainerButtons>
-          <Button
-            type={'secondary'}
-            svg={<DeleteIcon />}
-            onClick={() => props.sliceInfo(slice)} text={'Remove'}
+          return [render && slice &&
+          <List.Column key={i} size={size}>
+            {render(slice[propItem])}
+          </List.Column>, !render && slice &&
+          <List.Column key={i} size={size}>
+            {slice[propItem]}
+          </List.Column>]
+        })}
+        <ColumnBottons>
+          <ContainerButtons>
+            <Button
+              type={'secondary'}
+              svg={<DeleteIcon />}
+              onClick={() => props.sliceInfo(slice)} text={'Remove'}
           />
-          <Button
-            type={'primary'}
-            svg={<EyeIcon />}
-            onClick={() =>
+            <Button
+              type={'primary'}
+              svg={<EyeIcon />}
+              onClick={() =>
             props.navigate(`/slice/${slice.id}`)} text={'View'}
           />
-          <Button
-            disabled={true}
-            type={'primary'}
-            svg={<SettingIcon />}
-            onClick={() => props.navigate(`/monitor/slice/${slice.id}`)}
-            text={'Monitoring'}
+            <Button
+              disabled
+              type={'primary'}
+              svg={<SettingIcon />}
+              onClick={() => props.navigate(`/monitor/slice/${slice.id}`)}
+              text={'Monitoring'}
           />
-        </ContainerButtons>
-      </ColumnBottons>
-    </List.Row>)}
+          </ContainerButtons>
+        </ColumnBottons>
+      </List.Row>)}
   </List>
-);
-
+)
 
 class ListSlices extends Component {
-
   navigate = (path) => {
     const { history } = this.props
     history.push(path)
   }
 
-  render() {
+  render () {
     const { slices, userRole, modalVisibled, loading, sliceSelect, noData, errorFecth } = this.props
     const { deleteSlice, actionModal, sliceInfo } = this.actions
     const title = userRole === 'Inf. Owner' ? Titles : TitlesUser

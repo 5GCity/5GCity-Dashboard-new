@@ -4,7 +4,7 @@
  */
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { SENTRY_URL ,VERSION, BUILD_DATE } from 'config'
+import { SENTRY_URL, VERSION, BUILD_DATE } from 'config'
 import { Provider } from 'react-redux'
 import { Store } from './store'
 import { AppContainer } from 'react-hot-loader'
@@ -17,9 +17,7 @@ import locale from 'element-react/src/locale/lang/en'
 // Stylings
 import 'element-theme-default'
 import 'mapbox-gl/dist/mapbox-gl.css'
-import './globalStyles'
 import './font/D-DIN.css'
-
 
 // App Root
 import App from './containers/App'
@@ -39,7 +37,7 @@ if (!localIsTheLast) {
 }
 
 // User I18N
-i18n.use(locale);
+i18n.use(locale)
 
 // Sentry
 let Raven

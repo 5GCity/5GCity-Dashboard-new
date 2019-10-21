@@ -8,6 +8,7 @@ import formatNumbersPt from 'utils/formatNumbersPt'
 import getStore from 'utils/getStore'
 import catalogueUtils from 'utils/catalogueUtils'
 import wordsUtils from 'utils/wordsUtils'
+import formUtils from 'utils/formUtils'
 
 export {
   mapOnChangeToState,
@@ -20,4 +21,5 @@ export {
   getStore,
   catalogueUtils,
   wordsUtils,
+  formUtils
 }

@@ -17,16 +17,15 @@ class ModalErrorSlice extends Component {
     return (
       <Modal
         size={'tiny'}
-        showClose={true}
+        showClose
         onCancel={modalStatus}
-        title="Error"
+        title='Error'
         visible={modalError}
       >
         <Modal.Body>
           <Erro>{error}</Erro>
         </Modal.Body>
-        <Modal.Footer>
-        </Modal.Footer>
+        <Modal.Footer />
       </Modal>
     )
   }

@@ -8,18 +8,17 @@ import React from 'react'
 import styled from 'styled-components'
 import { Collapse } from 'element-react'
 
-
 export default ({ children, ...props }) => (
   <Wrapper>
     <Collapse {...props}>
-    {children && children.map((child, i) =>
-      <Collapse.Item
-        key={i}
-        title={child.props && createTitle(child.props)}
-        name={child.props && child.props.name}
+      {children && children.map((child, i) =>
+        <Collapse.Item
+          key={i}
+          title={child.props && createTitle(child.props)}
+          name={child.props && child.props.name}
       >
           {child}
-      </Collapse.Item>
+        </Collapse.Item>
     )}
     </Collapse>
   </Wrapper>
@@ -27,19 +26,20 @@ export default ({ children, ...props }) => (
 
 const createTitle = props => {
   return (
-  <React.Fragment>
-  {props.title && props.title}
-  {props.onClick &&
-    <Icon onClick={(e) =>{
-      e.stopPropagation();
-      props.onClick("AddNew")}
+    <React.Fragment>
+      {props.title && props.title}
+      {props.onClick &&
+      <Icon onClick={(e) => {
+        e.stopPropagation()
+        props.onClick('AddNew')
+      }
       } >
-      {props.icon &&
+        {props.icon &&
         props.icon
       }
-    </Icon>
+      </Icon>
   }
-  </React.Fragment>
+    </React.Fragment>
   )
 }
 
@@ -52,8 +52,8 @@ const Wrapper = styled.div`
     line-height: 32px;
     padding-left: 10px;
     background-color: #324148;
-    font-family: ${({theme}) => theme.fontFamily };
-    color: ${({theme}) => theme.secondaryColor };
+    font-family: ${({theme}) => theme.fontFamily};
+    color: ${({theme}) => theme.secondaryColor};
     cursor: pointer;
     border-bottom: none;
     font-size: 14px;

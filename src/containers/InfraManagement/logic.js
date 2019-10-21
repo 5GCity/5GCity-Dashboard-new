@@ -8,8 +8,8 @@
 import { kea } from 'kea'
 import { put, call } from 'redux-saga/effects'
 import axios from 'axios'
-import { API_BASE_URL } from 'config'
-import { AddResource, CreateAllPins } from './utils'
+import { API_SLICE_MANAGEMENT } from 'config'
+import { AddResource, CreateAllPins, CreateAllLinks } from './utils'
 
 import PropTypes from 'prop-types'
 
@@ -17,13 +17,13 @@ import PropTypes from 'prop-types'
 import AppLogic from 'containers/App/logic'
 
 const DEFAULT_RESOURCE = {
-  location:{
+  location: {
     longitude: null,
     latitude: null,
-    resources:{
-      computes:[],
-      networks:[],
-      rans:[]
+    resources: {
+      computes: [],
+      networks: [],
+      rans: []
     }
   }
 }
@@ -35,9 +35,9 @@ export default kea({
     actions: [
       AppLogic, [
         'addLoadingPage',
-        'removeLoadingPage',
+        'removeLoadingPage'
       ]
-    ],
+    ]
   },
 
   actions: () => ({
@@ -53,32 +53,36 @@ export default kea({
     reset: () => ({ }),
     submitModal: () => ({ }),
     closePanelInfo: () => ({ }),
+    setChunketeTopology: (rans) => ({ rans }),
   }),
 
   reducers: ({ actions }) => ({
     pinsResources: [null, PropTypes.array, {
       [actions.addToListResources]: (state, payload) => payload.resources,
       [actions.setListResources]: (state, payload) => CreateAllPins(payload.resources),
-      [actions.reset]: () => [],
+      [actions.reset]: () => []
     }],
     markerSelect: [DEFAULT_RESOURCE, PropTypes.object, {
       [actions.getInfoMarker]: (state, payload) => payload.marker,
-      [actions.reset]: () => DEFAULT_RESOURCE,
+      [actions.reset]: () => DEFAULT_RESOURCE
     }],
-    modalStatus:[false, PropTypes.bool, {
-      [actions.changeModalStatus]: (state,payload) => !state,
+    modalStatus: [false, PropTypes.bool, {
+      [actions.changeModalStatus]: (state, payload) => !state
     }],
     modalInfo: [null, PropTypes.object, {
-      [actions.changeModalStatus]: (state,payload) => payload.info,
+      [actions.changeModalStatus]: (state, payload) => payload.info
     }],
-    modalErrorStatus:[false, PropTypes.bool, {
-      [actions.changeModalErrorStatus]: (state,payload) => !state,
+    modalErrorStatus: [false, PropTypes.bool, {
+      [actions.changeModalErrorStatus]: (state, payload) => !state
     }],
     modalErrorData: [null, PropTypes.object, {
-      [actions.changeModalErrorStatus]: (state,payload) => payload.message,
+      [actions.changeModalErrorStatus]: (state, payload) => payload.message
     }],
     addNewMarker: [true, PropTypes.bool, {
-      [actions.getInfoMarker]: (state) => !state,
+      [actions.getInfoMarker]: (state) => !state
+    }],
+    linksResources: [null, PropTypes.array, {
+      [actions.setChunketeTopology]: (state, payload) => CreateAllLinks(payload.rans)
     }],
   }),
 
@@ -89,7 +93,7 @@ export default kea({
         pinsResources && pinsResources.map(marker => [marker.location.longitude, marker.location.latitude])
       ),
       PropTypes.array
-    ],
+    ]
   }),
 
   start: function * () {
@@ -105,38 +109,44 @@ export default kea({
   },
 
   takeLatest: ({ actions, workers }) => ({
-    [actions.fetchResources] : workers.fetchResources,
-    [actions.addResource] : workers.addResource,
+    [actions.fetchResources]: workers.fetchResources,
+    [actions.addResource]: workers.addResource
   }),
 
   workers: {
-    *fetchResources (action) {
-      const { setListResources, addLoadingPage, removeLoadingPage } = this.actions
+    * fetchResources (action) {
+      const { setListResources, addLoadingPage, removeLoadingPage, setChunketeTopology } = this.actions
       yield put(addLoadingPage())
-      try{
-        const responseComputes = yield call(axios.get , `${API_BASE_URL}/compute`)
-        const responseNetworks = yield call(axios.get , `${API_BASE_URL}/physical_network`)
-        const responseRAN = yield call(axios.get , `${API_BASE_URL}/ran_infrastructure`)
+      try {
+        const responseComputes = yield call(axios.get, `${API_SLICE_MANAGEMENT}/compute`)
+        const responseNetworks = yield call(axios.get, `${API_SLICE_MANAGEMENT}/physical_network`)
+        const responseRAN = yield call(axios.get, `${API_SLICE_MANAGEMENT}/ran_infrastructure`)
 
-        const listResources = {computes:[], networks:[], rans:[]}
+        const listResources = {computes: [], networks: [], rans: []}
 
         responseComputes && responseComputes.data.map(el => listResources.computes.push(el))
 
         responseNetworks && responseNetworks.data.map(el => listResources.networks.push(el))
 
-        responseRAN && responseRAN.data.map(el => listResources.rans.push(el))
+        if (responseRAN) {
+          for (let index = 0; index < responseRAN.data.length; index++) {
+            const elementId = responseRAN.data[index].id
+            const responseChunketeTopology = yield call(axios.get, `${API_SLICE_MANAGEMENT}/ran_infrastructure/${elementId}/chunkete_topology`)
+            responseRAN.data.map(el => listResources.rans.push({...el, chunketeTopology: responseChunketeTopology.data || null}))
+          }
+          yield (put(setChunketeTopology(listResources.rans)))
+        }
 
-        yield(put(setListResources(listResources)))
+        yield (put(setListResources(listResources)))
         yield put(removeLoadingPage())
-      }
-      catch (error) {
+      } catch (error) {
         console.log(error)
-        yield(put(setListResources(null)))
+        yield (put(setListResources(null)))
         yield put(removeLoadingPage())
       }
     },
 
-    *addResource (action) {
+    * addResource (action) {
       const { addToListResources } = this.actions
       const location = action.payload.location
       const resources = yield this.get('pinsResources')
@@ -146,4 +156,3 @@ export default kea({
   }
 
 })
-

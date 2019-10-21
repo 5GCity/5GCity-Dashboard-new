@@ -6,42 +6,41 @@
  */
 import React from 'react'
 import { storiesOf } from '@storybook/react'
-import { Theme } from 'globalStyles';
+import { Theme } from 'globalStyles'
 import Card from './index'
 
-
 const bStyle = {
-  padding:'30px',
+  padding: '30px',
   backgroundColor: Theme.bodyBackground,
-  height:'100%'
-};
+  height: '100%'
+}
 
 const example1 = () => (
   <div style={bStyle}>
     <Card>
-      <div className="text item">List item 1</div>
-      <div className="text item">List item 2</div>
-      <div className="text item">List item 3</div>
-      <div className="text item">List item 4</div>
+      <div className='text item'>List item 1</div>
+      <div className='text item'>List item 2</div>
+      <div className='text item'>List item 3</div>
+      <div className='text item'>List item 4</div>
     </Card>
   </div>
 )
 
 const example2 = () => (
   <div style={bStyle}>
-  <Card
-  header={
-    <div>
-      <span>Card Name</span>
-    </div>
+    <Card
+      header={
+        <div>
+          <span>Card Name</span>
+        </div>
   }
 >
-  <div className="text item">List item 1</div>
-  <div className="text item">List item 2</div>
-  <div className="text item">List item 3</div>
-  <div className="text item">List item 4</div>
-</Card>
-</div>
+      <div className='text item'>List item 1</div>
+      <div className='text item'>List item 2</div>
+      <div className='text item'>List item 3</div>
+      <div className='text item'>List item 4</div>
+    </Card>
+  </div>
 )
 
 storiesOf('Card', module)

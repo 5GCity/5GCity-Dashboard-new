@@ -11,14 +11,14 @@ import { Theme } from 'globalStyles'
 import RoundButton from './index'
 
 const bStyle = {
-  padding:30,
+  padding: 30,
   backgroundColor: Theme.bodyBackground,
-  height:'100%'
-};
+  height: '100%'
+}
 
 const exampleOne = () => (
   <div style={bStyle}>
-  <RoundButton color={'#fff'}/>
+    <RoundButton color={'#fff'} />
   </div>
 )
 

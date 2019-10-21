@@ -29,7 +29,6 @@ class Catalogue extends Component {
   }
 }
 
-
 export default Logic(Catalogue)
 
 const Wrapper = styled.div`

@@ -15,15 +15,15 @@ import { setForm } from './utils'
 import ComposerMainLogic from 'containers/SDKContainer/logic'
 
 const DEFAULT_FORM = {
-  mapping_expression:{
+  mapping_expression: {
     array: [ ]
-  },
+  }
 }
 
 const VALIDATIONS = {
   mapping_expression: [
     Check.isRequired
-  ],
+  ]
 }
 
 export default kea({
@@ -31,14 +31,14 @@ export default kea({
 
   connect: {
     actions: [
-      ComposerMainLogic,[
+      ComposerMainLogic, [
         'changeConfigParams',
         'changeSaveStatus',
-        'configParams',
+        'configParams'
       ]
     ],
     props: [
-      ComposerMainLogic,[
+      ComposerMainLogic, [
         'modalNodeConfigData'
       ]
     ]
@@ -47,21 +47,21 @@ export default kea({
   actions: () => ({
     getForm: () => ({ }),
     change: (key, value, index) => ({ key, value, index }),
-    setForm : ( form ) => ({ form }),
-    changeForm: ( form ) => ({ form }),
+    setForm: (form) => ({ form }),
+    changeForm: (form) => ({ form }),
 
     error: (error) => ({ error }),
     submit: () => ({}),
-    reset: () => true,
+    reset: () => true
   }),
 
   reducers: ({ actions }) => ({
-    form:[DEFAULT_FORM, PropTypes.any,{
+    form: [DEFAULT_FORM, PropTypes.any, {
       [actions.change]: (state, payload) => Check.setAndCheckValidationArray(state, payload, VALIDATIONS),
       [actions.setForm]: (state, payload) => Check.checkValidation(payload.form, VALIDATIONS).form,
 
       [actions.changeForm]: (state, payload) => payload.form,
-      [actions.reset]: () => DEFAULT_FORM,
+      [actions.reset]: () => DEFAULT_FORM
     }],
     dirty: [false, PropTypes.bool, {
       [actions.change]: () => true,
@@ -75,7 +75,7 @@ export default kea({
       [actions.error]: () => false,
       [actions.response]: () => false,
       [actions.reset]: () => false
-    }],
+    }]
   }),
 
   start: function * () {
@@ -92,7 +92,7 @@ export default kea({
 
   takeLatest: ({ actions, workers }) => ({
     [actions.getForm]: workers.getForm,
-    [actions.submit]: workers.submit,
+    [actions.submit]: workers.submit
   }),
 
   workers: {
@@ -110,7 +110,7 @@ export default kea({
         error,
         setForm,
         changeSaveStatus,
-        changeConfigParams,
+        changeConfigParams
       } = this.actions
       const form = yield this.get('form')
       const dirty = yield this.get('dirty')
@@ -142,8 +142,7 @@ export default kea({
         yield put(changeConfigParams(node))
         yield put(changeSaveStatus(false))
       }
-    },
+    }
   }
 
 })
-

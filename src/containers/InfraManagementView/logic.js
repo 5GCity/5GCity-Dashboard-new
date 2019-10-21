@@ -7,11 +7,10 @@
 
 import { kea } from 'kea'
 import axios from 'axios'
-import { put , call } from 'redux-saga/effects'
-import { API_BASE_URL } from 'config'
+import { put, call } from 'redux-saga/effects'
+import { API_SLICE_MANAGEMENT } from 'config'
 import PropTypes from 'prop-types'
 import { CreateAllPins, CreateAllLinks } from './utils'
-
 
 /* Logic */
 import AppLogic from 'containers/App/logic'
@@ -23,9 +22,9 @@ export default kea({
     actions: [
       AppLogic, [
         'addLoadingPage',
-        'removeLoadingPage',
+        'removeLoadingPage'
       ]
-    ],
+    ]
   },
 
   actions: () => ({
@@ -34,27 +33,27 @@ export default kea({
     setListResources: (resources) => ({ resources }),
     setChunketeTopology: (rans) => ({ rans }),
     infoMarker: (marker) => ({ marker }),
-    reset: () => ({ }),
+    reset: () => ({ })
   }),
 
   reducers: ({ actions }) => ({
     pinsResources: [null, PropTypes.any, {
       [actions.setListResources]: (state, payload) => CreateAllPins(payload.resources),
       [actions.addToListResources]: (state, payload) => payload.resources,
-      [actions.reset]: () => null,
+      [actions.reset]: () => null
     }],
     linksResources: [null, PropTypes.array, {
-      [actions.setChunketeTopology]: (state, payload) =>CreateAllLinks(payload.rans),
+      [actions.setChunketeTopology]: (state, payload) => CreateAllLinks(payload.rans)
     }],
-    panel: [false, PropTypes.bool,{
-      [actions.panelAction]:(state, payload) => !state,
+    panel: [false, PropTypes.bool, {
+      [actions.panelAction]: (state, payload) => !state,
       [actions.infoMarker]: (state, payload) => !state,
-      [actions.reset]: () => false,
+      [actions.reset]: () => false
     }],
     rightPanelInfo: [null, PropTypes.object, {
       [actions.infoMarker]: (state, payload) => payload.marker,
-      [actions.reset]: () => null,
-    }],
+      [actions.reset]: () => null
+    }]
   }),
 
   selectors: ({ selectors }) => ({
@@ -64,7 +63,7 @@ export default kea({
         pinsResources && pinsResources.map(marker => [marker.location.longitude, marker.location.latitude])
       ),
       PropTypes.array
-    ],
+    ]
   }),
 
   start: function * () {
@@ -81,43 +80,41 @@ export default kea({
   },
 
   takeLatest: ({ actions, workers }) => ({
-    [actions.fetchResources]: workers.getListResources,
+    [actions.fetchResources]: workers.getListResources
   }),
 
   workers: {
-    *getListResources () {
+    * getListResources () {
       const { setListResources, addLoadingPage, removeLoadingPage, setChunketeTopology } = this.actions
       yield put(addLoadingPage())
-      try{
-        const responseComputes = yield call(axios.get , `${API_BASE_URL}/compute`)
-        const responseNetworks = yield call(axios.get , `${API_BASE_URL}/physical_network`)
-        const responseRAN = yield call(axios.get , `${API_BASE_URL}/ran_infrastructure`)
+      try {
+        const responseComputes = yield call(axios.get, `${API_SLICE_MANAGEMENT}/compute`)
+        const responseNetworks = yield call(axios.get, `${API_SLICE_MANAGEMENT}/physical_network`)
+        const responseRAN = yield call(axios.get, `${API_SLICE_MANAGEMENT}/ran_infrastructure`)
 
-        const listResources = {computes:[], networks:[], rans:[]}
+        const listResources = {computes: [], networks: [], rans: []}
 
-        if(responseComputes) {
+        if (responseComputes) {
           responseComputes.data.map(el => listResources.computes.push(el))
         }
-        if(responseNetworks) {
+        if (responseNetworks) {
           responseNetworks.data.map(el => listResources.networks.push(el))
         }
-        if(responseRAN) {
+        if (responseRAN) {
           for (let index = 0; index < responseRAN.data.length; index++) {
-            const elementId = responseRAN.data[index].id;
-            const responseChunketeTopology = yield call(axios.get, `${API_BASE_URL}/ran_infrastructure/${elementId}/chunkete_topology`)
-            responseRAN.data.map(el => listResources.rans.push({...el, chunketeTopology: responseChunketeTopology.data || null }))
+            const elementId = responseRAN.data[index].id
+            const responseChunketeTopology = yield call(axios.get, `${API_SLICE_MANAGEMENT}/ran_infrastructure/${elementId}/chunkete_topology`)
+            responseRAN.data.map(el => listResources.rans.push({...el, chunketeTopology: responseChunketeTopology.data || null}))
           }
-          yield(put(setChunketeTopology(listResources.rans)))
+          yield (put(setChunketeTopology(listResources.rans)))
         }
-        yield(put(setListResources(listResources)))
+        yield (put(setListResources(listResources)))
         yield put(removeLoadingPage())
-      }
-      catch (error) {
+      } catch (error) {
         console.log(error)
-        yield(put(setListResources(null)))
+        yield (put(setListResources(null)))
         yield put(removeLoadingPage())
       }
-    },
+    }
   }
 })
-

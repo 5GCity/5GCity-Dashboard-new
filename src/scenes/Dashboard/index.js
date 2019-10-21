@@ -9,25 +9,24 @@ import Logic from './logic'
 import styled from 'styled-components'
 
 // Containers
-import SlicesStatus from 'containers/SlicesStatus';
+import SlicesStatus from 'containers/SlicesStatus'
 import Navbar from 'containers/Navbar'
 
 // Components
-import PageTitle from 'components/PageTitle';
-import Tabs from 'components/Tabs';
+import PageTitle from 'components/PageTitle'
+import Tabs from 'components/Tabs'
 
 class Dashboard extends Component {
-
   componentDidMount () {
-      const { history } = this.props
-      history.push('/slices')
+    const { history } = this.props
+    history.push('/slices')
   }
 
   render () {
     return (
       <Wrapper>
-      <Navbar />
-      <PageTitle title={'dashboard'}/>
+        <Navbar />
+        <PageTitle title={'dashboard'} />
         <Tabs
           activeName='2'
           onTabClick={(tab) => console.log(tab.props.name)}
@@ -50,7 +49,6 @@ class Dashboard extends Component {
   }
 }
 
-
 export default Logic(Dashboard)
 
 const Wrapper = styled.div`
@@ -59,4 +57,3 @@ const Wrapper = styled.div`
 `
 const Container = styled.div`
 `
-

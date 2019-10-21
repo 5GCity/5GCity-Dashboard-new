@@ -12,8 +12,8 @@ import DatePicker from './index'
 const State1 = () => (
   <DatePicker
     value={Date.now()}
-    placeholder="Pick a day"
-    disabledDate={time=>time.getTime() > Date.now() - 8.64e7}
+    placeholder='Pick a day'
+    disabledDate={time => time.getTime() > Date.now() - 8.64e7}
   />
 )
 

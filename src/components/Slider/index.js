@@ -6,8 +6,8 @@
  */
 
 import styled from 'styled-components'
-import { Slider } from 'element-react';
-import { lighten } from 'polished';
+import { Slider } from 'element-react'
+import { lighten } from 'polished'
 
 export default styled(Slider)`
 
@@ -42,15 +42,15 @@ export default styled(Slider)`
 }
 
 .el-tooltip__popper.is-dark {
-    background: ${lighten(0.1,'#89979F')};
+    background: ${lighten(0.1, '#89979F')};
     color:#fff;
 }
 
 .el-tooltip__popper[x-placement^=bottom] .popper__arrow {
-    border-bottom-color: ${lighten(0.1,'#89979F')};
+    border-bottom-color: ${lighten(0.1, '#89979F')};
 
 }
 .el-tooltip__popper[x-placement^=bottom] .popper__arrow::after {
-    border-bottom-color: ${lighten(0.1,'#89979F')};
+    border-bottom-color: ${lighten(0.1, '#89979F')};
 }
 `

@@ -18,3 +18,8 @@ export const AddNewParameter = state => {
   newState.service_parameter.array = array
   return newState
 }
+
+
+export const STEPS = [
+  {id: 1, description:'General info', active: true, validation: null}
+]

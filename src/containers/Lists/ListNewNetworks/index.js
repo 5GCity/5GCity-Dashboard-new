@@ -20,8 +20,6 @@ import ErroPage from 'components/ErroPage'
 /* Containers */
 import NewNetworkForm from 'containers/Forms/NewNetworkForm'
 
-
-
 /**
  *  Modal to Show error
  * @param {*} props
@@ -29,13 +27,15 @@ import NewNetworkForm from 'containers/Forms/NewNetworkForm'
 const ModalError = props => (
   <Modal
     size={'tiny'}
-    showClose={true}
+    showClose
     onCancel={props.actionModalError}
     visible={props.modalError}
-    title="Error"
+    title='Error'
   >
     <Modal.Body>
-      <Error>  {props.message || 'Error to create new instance' } </Error>
+      <Error>
+        {props.message || 'Error to create new instance' }
+      </Error>
     </Modal.Body>
     <Modal.Footer>
       <Button
@@ -48,7 +48,6 @@ const ModalError = props => (
   </Modal>
 )
 
-
 /**
  *  Modal to Create new Instance
  * @param {*} props
@@ -56,10 +55,10 @@ const ModalError = props => (
 const ModalNewInstance = (props) => (
   <Modal
     size={'tiny'}
-    showClose={true}
+    showClose
     onCancel={props.actionModal}
     visible={props.modalVisibled}
-    title="Confirmation"
+    title='Confirmation'
   >
     <Modal.Body>
       <NewNetworkForm />
@@ -83,52 +82,50 @@ const ModalNewInstance = (props) => (
   </Modal>
 )
 
-
 const ListNetworkServices = (props) => (
   <List>
     <List.Header>
       {TITLE_LIST.map(title =>
-      <List.Column size={title.size} key={title.id}>
-        {title.name}
-      </List.Column>)}
+        <List.Column size={title.size} key={title.id}>
+          {title.name}
+        </List.Column>)}
       <List.Column marginLeft />
     </List.Header>
     {props.networkServices && props.networkServices.map((networkService, i) =>
-    <List.Row key={i}>
-      {TITLE_LIST && TITLE_LIST.map(({
+      <List.Row key={i}>
+        {TITLE_LIST && TITLE_LIST.map(({
         size,
         propItem,
         render
       }) => {
-        return [render && networkService &&
-        <List.Column key={i} size={size}>
-          {render(networkService[propItem])}
-        </List.Column>, !render && networkService &&
-        <List.Column key={i} size={size}>
-          {networkService[propItem]}
-        </List.Column>];
-      })}
-      <ColumnBottons>
-        <ContainerButtons>
-          <Button
-            type={'primary'}
-            onClick={() => props.setSelectNetwork(networkService)}
-            text={'Instantiate'}
-            svg={<PlayIcon />}
+          return [render && networkService &&
+          <List.Column key={i} size={size}>
+            {render(networkService[propItem])}
+          </List.Column>, !render && networkService &&
+          <List.Column key={i} size={size}>
+            {networkService[propItem]}
+          </List.Column>]
+        })}
+        <ColumnBottons>
+          <ContainerButtons>
+            <Button
+              type={'primary'}
+              onClick={() => props.setSelectNetwork(networkService)}
+              text={'Instantiate'}
+              svg={<PlayIcon />}
           />
-        </ContainerButtons>
-      </ColumnBottons>
-    </List.Row>)}
+          </ContainerButtons>
+        </ColumnBottons>
+      </List.Row>)}
   </List>
-);
-
+)
 
 class ListNewNetworks extends Component {
-
-  render() {
-    const {
-      networkServices, modalError, modalVisibled, isSubmitting, loading, noData, errorFecth } = this.props,
-      { actionModalError, actionModal, setSelectNetwork, submit } = this.actions
+  render () {
+    const {networkServices, modalError, modalVisibled,
+      isSubmitting, loading, noData, errorFecth } = this.props
+    const { actionModalError, actionModal, setSelectNetwork,
+       submit } = this.actions
 
     return (
       <Wrapper>

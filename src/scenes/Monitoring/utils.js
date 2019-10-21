@@ -9,39 +9,40 @@ import moment from 'moment'
 export const transformMeasurement = (measurement) => {
   const measurementObject = {}
   measurementObject.data = []
-  let keyUnit = null, unitSelect = null
+  let keyUnit = null
+  let unitSelect = null
 
   for (const key in measurement.maximum) {
-    keyUnit= key
+    keyUnit = key
     measurementObject.max = measurement.maximum[key]
   }
 
   switch (keyUnit) {
     case 'cPU':
       unitSelect = '%'
-      break;
-      case 'rAM':
+      break
+    case 'rAM':
       unitSelect = '%'
-      break;
-      case 'dISK':
+      break
+    case 'dISK':
       unitSelect = '%'
-      break;
-      case 'tX':
+      break
+    case 'tX':
       unitSelect = 'KB'
-      break;
-      case 'rX':
+      break
+    case 'rX':
       unitSelect = 'KB'
-      break;
-      default:
+      break
+    default:
       unitSelect = null
-      break;
+      break
   }
   measurementObject.unit = unitSelect
-  measurement.measurements && measurement.measurements.forEach(measurement =>{
+  measurement.measurements && measurement.measurements.forEach(measurement => {
     measurementObject.data.push({
       date: moment(measurement.timestamp).format('HH:mm'),
-      value: measurement.value,
+      value: measurement.value
     })
   })
-  return measurementObject;
+  return measurementObject
 }

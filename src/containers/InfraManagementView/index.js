@@ -18,7 +18,6 @@ import HeaderNav from 'components/HeaderNav'
 import { BackIcon } from 'components/Icons'
 
 class InfraManagementView extends Component {
-
   navigateToBack = () => {
     const { history } = this.props
     history.goBack()
@@ -26,7 +25,7 @@ class InfraManagementView extends Component {
 
   render () {
     const { panelAction, infoMarker } = this.actions
-    const { pinsResources, panel, rightPanelInfo, locations, linksResources} = this.props
+    const { pinsResources, panel, rightPanelInfo, locations, linksResources } = this.props
     return (
       <Wrapper>
         <HeaderNav
@@ -45,14 +44,12 @@ class InfraManagementView extends Component {
             markers={pinsResources}
             markerColor={'#1e90ff'}
             markerClick={(marker) => infoMarker(marker.location.resources) }
-            linkClick={(link) => console.log(link)}
             links={linksResources}
           />
         }
       </Wrapper>
     )
   }
-
 }
 
 export default withRouter(Logic(InfraManagementView))

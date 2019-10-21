@@ -20,15 +20,14 @@ const ENDPOINT = ``
 const DEFAULT_VALUES = {
   fieldName: {
     value: ''
-  },
+  }
 }
 
 const VALIDATIONS = {
   fieldName: [
     Check.isRequired
-  ],
+  ]
 }
-
 
 export default kea({
   path: () => ['scenes', 'infraManagementResource'],
@@ -56,7 +55,7 @@ export default kea({
     error: (error) => ({ error }),
     setForm: (form) => ({ form }),
     changeForm: (form) => ({ form }),
-    reset: () => true,
+    reset: () => true
 
   }),
 
@@ -91,8 +90,7 @@ export default kea({
     error: [null, PropTypes.any, {
       [actions.error]: (state, payload) => payload.error,
       [actions.reset]: () => null
-    }],
-
+    }]
 
   }),
 
@@ -102,10 +100,9 @@ export default kea({
 
   takeLatest: ({ actions, workers }) => ({
 
-    [actions.submit]: workers.submit,
+    [actions.submit]: workers.submit
 
   }),
-
 
   workers: {
 
@@ -154,16 +151,13 @@ export default kea({
         if (er.response.data) {
           // map WS return errors to form format
           // put the errors on each field and changed them to invalid
-          yield put(changeForm(newForm))
-          // try to scroll to first form field error
-          scrollToFirstFormError(newForm)
+          yield put(changeForm())
         }
 
         yield put(error([]))
       }
-    },
+    }
 
   }
 
 })
-

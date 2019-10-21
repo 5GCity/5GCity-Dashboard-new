@@ -10,89 +10,87 @@ import styled from 'styled-components'
 
 /* Component */
 import Button from 'components/Button'
-import { CirclePlusIcon, DeleteIcon } from 'components/Icons' //EditIcon
+import { CirclePlusIcon, DeleteIcon } from 'components/Icons' // EditIcon
 
 class PanelResourceInfo extends Component {
   render () {
-    const { deleteItem, addNewItem, data } = this.props //editItem
+    const { deleteItem, addNewItem, data } = this.props // editItem
     return (
-    <Panel>
-      <Title>Computing</Title>
+      <Panel>
+        <Title>Computing</Title>
         {data.location.resources.computes && data.location.resources.computes.map(compute =>
-        <Item key={compute.id}>
-          <Name>{compute.name}</Name>
-          <ContainerIcons>
-            <Delete onClick={() => deleteItem({type:'compute', id: compute.id, name: compute.name, })} />
-            {/* <Separator />
-            <Edit onClick={() => editItem({ type:'compute', id: compute.id ,location: {latitude: data.location.latitude , longitude: data.location.longitude } })} /> */}
-          </ContainerIcons>
-        </Item>
+          <Item key={compute.id}>
+            <Name>{compute.name}</Name>
+            <ContainerIcons>
+              <Delete onClick={() => deleteItem({ type: 'compute', id: compute.id, name: compute.name })} />
+            </ContainerIcons>
+          </Item>
         )}
         {!data.location.resources.computes &&
-          <Info>Add your first compute</Info>
+        <Info>Add your first compute</Info>
         }
         <AddNewBtn
-          outline={true}
+          outline
           type={'primary'}
           text={'Add new'}
           width={236}
           height={48}
-          onClick={() => addNewItem({type: 'compute', id:0, location: {latitude: data.location.latitude , longitude: data.location.longitude }})}
+          onClick={() => addNewItem({ type: 'compute', id: 0, location: { latitude: data.location.latitude, longitude: data.location.longitude } })}
           svg={<CirclePlusIcon fill={'#8CC14E'} />}
         />
-      <Title>Physical network</Title>
+        <Title>Physical network</Title>
         {data.location.resources.networks && data.location.resources.networks.map(network =>
           <Item key={network.id}>
             <Name>{network.name}</Name>
             <ContainerIcons>
-              <Delete onClick={() => deleteItem({ type:'network', id: network.id, name: network.name, })} />
-              {/* <Separator />
-               <Edit onClick={() => editItem({ type:'network', id: network.id })} /> */}
+              <Delete onClick={() => deleteItem({ type: 'network', id: network.id, name: network.name })} />
             </ContainerIcons>
           </Item>
         )}
-         {!data.location.resources.networks &&
-          <Info>Add your first physical network</Info>
-         }
+        {!data.location.resources.networks && data.location.resources.computes &&
+        <Info>Add your first physical network</Info>
+        }
+        {!data.location.resources.networks && !data.location.resources.computes &&
+        <Info>First need Compute</Info>
+        }
+        {data.location.resources.computes && !data.location.resources.networks &&
         <AddNewBtn
-          outline={true}
+          outline
           type={'primary'}
           text={'Add new'}
           width={236}
           height={48}
-          onClick={() => addNewItem({type: 'network', id: 0, location: {latitude: data.location.latitude , longitude: data.location.longitude }})}
+          onClick={() => addNewItem({ type: 'network', id: 0, location: { latitude: data.location.latitude, longitude: data.location.longitude } })}
           svg={<CirclePlusIcon fill={'#8CC14E'} />}
         />
-      <Title>RAN Controller</Title>
+        }
+        <Title>RAN Controller</Title>
         {data.location.resources.rans && data.location.resources.rans.map(ran =>
           <Item key={ran.id}>
             <Name>{ran.name}</Name>
             <ContainerIcons>
-              <Delete onClick={() => deleteItem({ type:'ran', id: ran.id, name:ran.name, })} />
-              {/* <Separator />
-              <Edit onClick={() => editItem({ type:'ran', id: wifi.id })} /> */}
+              <Delete onClick={() => deleteItem({ type: 'ran', id: ran.id, name: ran.name })} />
             </ContainerIcons>
           </Item>
         )}
         {!data.location.resources.rans &&
-          <Info>Add your first RAN Controller</Info>
+        <Info>Add your first RAN Controller</Info>
         }
-         <AddNewBtn
-          outline={true}
+        <AddNewBtn
+          outline
           type={'primary'}
           text={'Add new'}
           width={236}
           height={48}
-          onClick={() => addNewItem({type: 'ran', id: 0, location: {latitude: data.location.latitude , longitude: data.location.longitude }})}
+          onClick={() => addNewItem({ type: 'ran', id: 0, location: { latitude: data.location.latitude, longitude: data.location.longitude } })}
           svg={<CirclePlusIcon fill={'#8CC14E'} />}
         />
-    </Panel>
+      </Panel>
     )
   }
 }
 
 export default Logic(PanelResourceInfo)
-
 
 const AddNewBtn = styled(Button)`
   margin-top: 8px;

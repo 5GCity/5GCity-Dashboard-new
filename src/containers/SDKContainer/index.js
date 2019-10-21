@@ -11,7 +11,7 @@ import { withRouter } from 'react-router'
 
 /* Component */
 import HeaderNav from 'components/HeaderNav'
-import Tabs  from 'components/Tabs'
+import Tabs from 'components/Tabs'
 import { BackIcon, PublishIcon, SaveIcon } from 'components/Icons'
 import Button from 'components/Button'
 
@@ -22,17 +22,15 @@ import ComposerMenu from 'containers/ComposerMenu'
 import ModalServiceParameters from 'containers/Modals/ModalServiceParameters'
 import PanelErrors from 'containers/PanelErrors'
 
-
 class SDKContainer extends Component {
-
   navigateToBack = () => {
     const { history } = this.props
     history.push('/sdk/services')
   }
 
-  componentDidMount() {
-    const { setSerivce } = this.actions
-    setSerivce(Number(this.props.match.params.id))
+  componentDidMount () {
+    const { setService } = this.actions
+    setService(Number(this.props.match.params.id))
   }
 
   render () {
@@ -41,7 +39,6 @@ class SDKContainer extends Component {
       modalData,
       modalStatus,
       d3Data,
-      catalogueMenu,
       serviceInfo,
       modalConfigStatus,
       modalNodeConfigData,
@@ -64,50 +61,50 @@ class SDKContainer extends Component {
       configParams,
       publishComposer,
       actionModalPublish,
-      changeStatusPanel,
+      changeStatusPanel
     } = this.actions
 
     return (
       <Container>
-      <PanelErrors
-        show={panelError}
-        messages={errorsMessages}
-        close={changeStatusPanel}
+        <PanelErrors
+          show={panelError}
+          messages={errorsMessages}
+          close={changeStatusPanel}
       />
-      <Wrapper>
-        {modalPublishStatus &&
-        <ModalServiceParameters
-          title={'Configure Parameters'}
-          action={actionModalPublish}
-          status={modalPublishStatus}
-          service={serviceInfo}
+        <Wrapper>
+          {modalPublishStatus &&
+          <ModalServiceParameters
+            title={'Configure Parameters'}
+            action={actionModalPublish}
+            status={modalPublishStatus}
+            service={serviceInfo}
         />
         }
-        <HeaderNav
-          name={'New Service'}
-          buttonBack={<BackIcon />}
-          navigateBack={ () => this.navigateToBack() }
+          <HeaderNav
+            name={'New Service'}
+            buttonBack={<BackIcon />}
+            navigateBack={() => this.navigateToBack()}
         >
-          <HeaderNav.Left>
-            <Button
-              key={1}
-              type={isSaved ? 'primary': 'secondary'}
-              text={isSaved ? 'Saved Draft': 'Unsaved Draft'}
-              svg={<SaveIcon />}
-              loading={isSaveLoading}
-              disabled={isSaved}
-              onClick={() => saveComposer()}
+            <HeaderNav.Left>
+              <Button
+                key={1}
+                type={isSaved ? 'primary' : 'secondary'}
+                text={isSaved ? 'Saved Draft' : 'Unsaved Draft'}
+                svg={<SaveIcon />}
+                loading={isSaveLoading}
+                disabled={isSaved}
+                onClick={() => saveComposer()}
             />
-            <Button
-              key={2}
-              type={isPublish ? 'primary': 'secondary'}
-              text={isPublish ? 'Publish': 'Unpublish'}
-              loading={isPublishLoading}
-              svg={<PublishIcon />}
-              onClick={() => publishComposer()}
+              <Button
+                key={2}
+                type={isPublish ? 'primary' : 'secondary'}
+                text={isPublish ? 'Publish' : 'Unpublish'}
+                loading={isPublishLoading}
+                svg={<PublishIcon />}
+                onClick={() => publishComposer()}
             />
-          </HeaderNav.Left>
-        </HeaderNav>
+            </HeaderNav.Left>
+          </HeaderNav>
           <Tabs activeName={activeTab} onTabClick={value => setActiveTab(value)}>
             <Tabs.Pane
               key={1}
@@ -117,7 +114,6 @@ class SDKContainer extends Component {
             >
               <Wrapper>
                 <ComposerMenu
-                  catalogue={catalogueMenu}
                   createNode={createNode}
                 />
                 <Composer
@@ -144,9 +140,9 @@ class SDKContainer extends Component {
               <ComposerForm serviceData={serviceInfo} />
             </Tabs.Pane>
           </Tabs>
-      </Wrapper>
+        </Wrapper>
       </Container>
-      )
+    )
   }
 }
 

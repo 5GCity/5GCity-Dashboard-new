@@ -28,7 +28,6 @@
 * [Standardjs](https://standardjs.com/)
 * [Hygen](http://www.hygen.io/)
 
-
 # Installation/Instantiation
 
 The presented solution use Docker.

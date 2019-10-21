@@ -10,7 +10,6 @@ import styled from 'styled-components'
 /* Components */
 import { BackIcon } from 'components/Icons'
 
-
 export const HeaderNav = ({ children, buttonBack, leftContent, navigateBack, ...props }) => (
   <Wrapper {...props}>
     <Right>
@@ -32,10 +31,10 @@ const Wrapper = styled.div`
   display:flex;
   justify-content: space-between;
 
-  ${({ type }) => type === 'transparent' ?`
+  ${({ type }) => type === 'transparent' ? `
     height: 56px;
     background-color: rgba(34,46,52,0.8);
-  `:`
+  ` : `
     height: 80px;
     background-color: #404F57;
     box-shadow: inset 0 1px 0 0 rgba(137,151,159,0.2), inset 0 -1px 0 0 rgba(137,151,159,0.2), 0 -5px 20px 0 rgba(0,0,0,0.5);

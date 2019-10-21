@@ -10,10 +10,10 @@ import { Switch } from 'element-react'
 
 export default ({ children, title, ...props }) => (
   <Wrapper >
-  {Title &&
-  <Title>{title}</Title>
+    {Title &&
+    <Title>{title}</Title>
   }
-  <SwitchContainer {...props} />
+    <SwitchContainer {...props} />
   </Wrapper>
 )
 

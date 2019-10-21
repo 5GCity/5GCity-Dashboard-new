@@ -6,7 +6,6 @@
  */
 import styled from 'styled-components'
 
-
 const SideBar = styled.nav`
   position: absolute;
   margin:0;
@@ -36,7 +35,7 @@ const Menu = styled.li`
   &:hover {
     border-right: 3px solid ${({ theme }) => theme.primaryColor};
   }
-  ${({active, theme }) => active && `
+  ${({ active, theme }) => active && `
     border-right: 3px solid ${theme.primaryColor};
   `}
   ${({disabled}) => disabled && `
@@ -57,14 +56,14 @@ const SubMenu = styled.ul`
   flex-direction:column;
   width: 100%;
   background-color: rgba(0,0,0,0.1);
-  ${({show}) => !show &&`
+  ${({show}) => !show && `
     visibility: hidden;
     opacity: 0;
     left: 0;
     transition: opacity 0.5s ease;
     height: 0px;
   `}
-  ${({show}) => show &&`
+  ${({show}) => show && `
   visibility: visible;
   opacity: 1;
   transition: opacity 0.5s ease;
@@ -77,7 +76,7 @@ const SubMenu = styled.ul`
   cursor: not-allowed;
   color: rgba(255,255,255,0.3);
 `}
-${({active, theme }) => active && `
+${({active, theme}) => active && `
   border-right: 3px solid ${theme.primaryColor};
 `}
 `

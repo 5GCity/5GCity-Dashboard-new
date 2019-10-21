@@ -9,9 +9,9 @@ import { kea } from 'kea'
 import { put, call } from 'redux-saga/effects'
 import PropTypes from 'prop-types'
 import axios from 'axios'
-import { API_BASE_URL } from 'config'
+import { API_SLICE_MANAGEMENT } from 'config'
 
-/*Logic*/
+/* Logic */
 import AppLogic from 'containers/App/logic'
 
 export default kea({
@@ -21,10 +21,10 @@ export default kea({
     actions: [
       AppLogic, [
         'addLoadingPage',
-        'removeLoadingPage',
-      ],
+        'removeLoadingPage'
+      ]
     ],
-    props:[
+    props: [
       AppLogic, [
         'keycloak'
       ]
@@ -40,37 +40,37 @@ export default kea({
     actionModalError: () => ({ }),
     loading: () => ({ }),
     setErroFecth: () => ({ }),
-    setNoData: () =>({ }),
-    removeNoData: () =>({ }),
-    submit: () => ({ }),
+    setNoData: () => ({ }),
+    removeNoData: () => ({ }),
+    submit: () => ({ })
   }),
 
   reducers: ({ actions }) => ({
     loading: [false, PropTypes.bool, {
-      [actions.loading]: (state, payload) => !state,
+      [actions.loading]: (state, payload) => !state
     }],
-    modalVisibled: [false, PropTypes.bool,{
+    modalVisibled: [false, PropTypes.bool, {
       [actions.actionModal]: (state, payload) => !state,
-      [actions.setSelectNetwork]: (state, payload) => true,
+      [actions.setSelectNetwork]: (state, payload) => true
     }],
-    modalError: [false, PropTypes.bool,{
-      [actions.actionModalError]: (state, payload) => !state,
+    modalError: [false, PropTypes.bool, {
+      [actions.actionModalError]: (state, payload) => !state
     }],
-    selectNetwork: [null, PropTypes.any,{
-      [actions.setSelectNetwork]: (state, payload) => payload.network,
+    selectNetwork: [null, PropTypes.any, {
+      [actions.setSelectNetwork]: (state, payload) => payload.network
     }],
-    networkServices: [null, PropTypes.array,{
+    networkServices: [null, PropTypes.array, {
       [actions.fetchNetworksServices]: (state, payload) => null,
       [actions.setNetworksServices]: (state, payload) => payload.networkService
     }],
     noData: [false, PropTypes.bol, {
       [actions.setNoData]: () => true,
-      [actions.removeNoData]: () => false,
+      [actions.removeNoData]: () => false
     }],
     errorFecth: [false, PropTypes.bol, {
       [actions.setErroFecth]: () => true,
-      [actions.reset]: () => false,
-    }],
+      [actions.reset]: () => false
+    }]
   }),
 
   start: function * () {
@@ -86,7 +86,7 @@ export default kea({
   },
 
   takeLatest: ({ actions, workers }) => ({
-    [actions.fetchNetworksServices]: workers.fetchNetworksServicesWorker,
+    [actions.fetchNetworksServices]: workers.fetchNetworksServicesWorker
   }),
 
   workers: {
@@ -94,17 +94,16 @@ export default kea({
       const { setNetworksServices, addLoadingPage, removeLoadingPage, setErroFecth, setNoData } = this.actions
       yield put(addLoadingPage())
       try {
-        let responseResult = yield call(axios.get,`${API_BASE_URL}/network_service`)
+        let responseResult = yield call(axios.get, `${API_SLICE_MANAGEMENT}/network_service`)
         const { data } = responseResult
 
-        if(data.length > 0){
+        if (data.length > 0) {
           yield put(setNetworksServices(data))
         } else {
           yield put(setNoData())
         }
         yield put(removeLoadingPage())
-
-      } catch(error){
+      } catch (error) {
         if (error.response) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
@@ -126,8 +125,7 @@ export default kea({
         }
         yield put(removeLoadingPage())
       }
-    },
+    }
   }
 
 })
-

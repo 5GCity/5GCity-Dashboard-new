@@ -22,35 +22,35 @@ export default kea({
   actions: () => ({
     checkLoggedUser: () => ({}),
     decreaseLoading: () => ({}),
-    setKeycloak: (keycloak)=> ({ keycloak}),
+    setKeycloak: (keycloak) => ({ keycloak }),
     addLoadingPage: () => ({}),
-    removeLoadingPage: () => ({}),
+    removeLoadingPage: () => ({})
   }),
 
   reducers: ({ actions }) => ({
-    loading: [NUM_LOADING, PropTypes.number,{
+    loading: [NUM_LOADING, PropTypes.number, {
       [actions.decreaseLoading]: (state, payload) => state > 0 ? state - 1 : 0
     }],
-    keycloak: [null, PropTypes.any,{
+    keycloak: [null, PropTypes.any, {
       [actions.setKeycloak]: (state, payload) => payload.keycloak
     }],
-    loadingPage:[false, PropTypes.bool,{
+    loadingPage: [false, PropTypes.bool, {
       [actions.addLoadingPage]: () => true,
-      [actions.removeLoadingPage]: () => false,
-    }],
+      [actions.removeLoadingPage]: () => false
+    }]
   }),
 
   selectors: ({ selectors }) => ({
     userName: [
       () => [selectors.keycloak],
-      (keycloak) =>keycloak && keycloak.tokenParsed.name,
+      (keycloak) => keycloak && keycloak.tokenParsed.name,
       PropTypes.string
     ],
     userRole: [
       () => [selectors.keycloak],
-      (keycloak) =>keycloak && giveUserRole(keycloak.tokenParsed.realm_access),
+      (keycloak) => keycloak && giveUserRole(keycloak.tokenParsed.realm_access),
       PropTypes.any
-    ],
+    ]
   }),
 
   start: function * () {
@@ -58,11 +58,11 @@ export default kea({
 
     const { checkLoggedUser } = this.actions
 
-    yield(put(checkLoggedUser()))
+    yield (put(checkLoggedUser()))
   },
 
   takeEvery: ({ actions, workers }) => ({
-    [actions.checkLoggedUser]: workers.checkLoggedUser,
+    [actions.checkLoggedUser]: workers.checkLoggedUser
   }),
 
   takeLatest: ({ actions, workers }) => ({
@@ -79,13 +79,13 @@ export default kea({
         return new Promise((resolve, reject) => {
           const keycloak = Keycloak('/keycloak.json')
           keycloak.init({onLoad: 'login-required'})
-            .success(function(authenticated) {
+            .success(function (authenticated) {
               authenticated && localStorage.setItem('keycloak', JSON.stringify(keycloak))
               !authenticated && keycloak.login()
               resolve(keycloak)
             })
-            .error(function(error) {
-                reject(error)
+            .error(function (error) {
+              reject(error)
             })
         })
       }
@@ -95,6 +95,6 @@ export default kea({
       yield put(setKeycloak(keycloak))
       yield call(setAuthorizationInterceptor, keycloak.token)
       yield put(decreaseLoading())
-    },
-  },
+    }
+  }
 })

@@ -10,7 +10,7 @@ import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
 
 /* Containers */
-import MapAdd from 'containers/MapAdd'
+import SliceMap from 'containers/SliceMap'
 
 /* Component */
 import HeaderNav from 'components/HeaderNav'
@@ -21,7 +21,6 @@ import Button from 'components/Button'
 /* Container */
 import PanelResource from 'containers/Panel/PanelResource'
 
-
 const ModalDeleteResource = (props) => (
   <Modal
     size={'small'}
@@ -29,13 +28,13 @@ const ModalDeleteResource = (props) => (
     visible={props.modalStatus}
     onCancel={() => props.changeModalStatus(null)}
     closeOnClickModal={false}
-    >
+  >
     {props.modalInfo &&
-    <Modal.Body>
-      <Message>
-        Are you sure you want to delete resource {props.modalInfo.type} with name {props.modalInfo.name} ?
+      <Modal.Body>
+        <Message>
+          Are you sure you want to delete resource {props.modalInfo.type} with name {props.modalInfo.name} ?
       </Message>
-    </Modal.Body>
+      </Modal.Body>
     }
     <Modal.Footer>
       <Button text={'Yes'}
@@ -53,17 +52,15 @@ const ModalDeleteResource = (props) => (
   </Modal>
 )
 
-
 class InfraManagement extends Component {
-
   navigateToBack = () => {
     const { history } = this.props
     history.goBack()
   }
 
-  render() {
-    const {  getInfoMarker, changeModalStatus, submitModal, changeModalErrorStatus ,addResource } = this.actions
-    const { pinsResources, locations, modalStatus, modalInfo, modalErrorStatus, modalErrorData } = this.props
+  render () {
+    const { getInfoMarker, changeModalStatus, submitModal, changeModalErrorStatus, addResource } = this.actions
+    const { pinsResources, locations, modalStatus, modalInfo, modalErrorStatus, modalErrorData, linksResources } = this.props
     let statusMarker = true
     return (
       <Wrapper>
@@ -80,34 +77,35 @@ class InfraManagement extends Component {
           onCancel={() => changeModalErrorStatus(null)}
           closeOnClickModal={false}
         >
-        <Modal.Body>
-          <Message>
-            {modalErrorData && modalErrorData.message}
-          </Message>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            text={'ok'}
-            svg={<CheckIcon />}
-            type={'primary'}
-            onClick={() => changeModalErrorStatus(null)}
+          <Modal.Body>
+            <Message>
+              {modalErrorData && modalErrorData.message}
+            </Message>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              text={'ok'}
+              svg={<CheckIcon />}
+              type={'primary'}
+              onClick={() => changeModalErrorStatus(null)}
           />
-        </Modal.Footer>
+          </Modal.Footer>
         </Modal>
-          <HeaderNav
-            buttonBack={<BackIcon />}
-            navigateBack={() => this.navigateToBack()}
-            name={'Infrastructure Management'}
+        <HeaderNav
+          buttonBack={<BackIcon />}
+          navigateBack={() => this.navigateToBack()}
+          name={'Infrastructure Management'}
+        />
+        <PanelResource />
+        {pinsResources &&
+          <SliceMap
+            location={locations}
+            markers={pinsResources}
+            mapClick={({ lngLat }) => statusMarker && addResource(lngLat)}
+            markerClick={(marker) => getInfoMarker(marker)}
+            links={linksResources}
           />
-          <PanelResource />
-          {pinsResources &&
-            <MapAdd
-              location={locations}
-              markers={pinsResources}
-              mapClick={({lngLat}) => statusMarker && addResource(lngLat) }
-              markerClick={(marker) => getInfoMarker(marker)}
-            />
-          }
+        }
       </Wrapper>
     )
   }

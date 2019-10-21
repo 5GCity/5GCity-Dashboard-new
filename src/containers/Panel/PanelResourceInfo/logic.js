@@ -6,8 +6,7 @@
  */
 
 import { kea } from 'kea'
-//import { put,call } from 'redux-saga/effects'
-
+// import { put,call } from 'redux-saga/effects'
 
 export default kea({
   path: () => ['scenes', 'containers', 'PanelResourceInfo'],
@@ -33,4 +32,3 @@ export default kea({
   }
 
 })
-

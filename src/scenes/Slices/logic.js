@@ -11,11 +11,10 @@ export default kea({
   path: () => ['scenes', 'Slices'],
 
   actions: () => ({
-    
+
   }),
 
   reducers: ({ actions }) => ({
-    
 
   }),
 
@@ -23,13 +22,11 @@ export default kea({
   },
 
   takeLatest: ({ actions, workers }) => ({
-    
+
   }),
 
-
   workers: {
-    
+
   }
 
 })
-

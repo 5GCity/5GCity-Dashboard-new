@@ -12,12 +12,13 @@ import styled from 'styled-components'
 import FormCompute from 'containers/Forms/FormCompute'
 import FormNetwork from 'containers/Forms/FormNetwork'
 import FormRAN from 'containers/Forms/FormRAN'
+import FormLTE from 'containers/Forms/FormLTE'
+import FormWifi from 'containers/Forms/FormWifi'
 
 class PanelResourceEdition extends Component {
   render () {
-    const { data }= this.props
+    const { data } = this.props
     const { type } = data
-
     return (
       <Panel>
         {type === 'compute' &&
@@ -28,6 +29,12 @@ class PanelResourceEdition extends Component {
         }
         {type === 'ran' &&
           <FormRAN />
+        }
+        {type === 'LTE' &&
+          <FormLTE />
+        }
+        {type === 'wifi' &&
+          <FormWifi />
         }
       </Panel>
     )

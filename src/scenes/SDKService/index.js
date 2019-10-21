@@ -12,13 +12,12 @@ import { withRouter } from 'react-router-dom'
 /* Containers */
 import NavBar from 'containers/Navbar'
 import ListSDKServices from 'containers/Lists/ListSDKServices'
+import PageTitleOrganization from 'containers/PageTitleOrganization'
 
 /* Components */
-import PageTitle from 'components/PageTitle'
 import { PlusIcon } from 'components/Icons'
 
 class SDKService extends Component {
-
   navigate = path => {
     const { history } = this.props
     history.push(path)
@@ -27,12 +26,12 @@ class SDKService extends Component {
   render () {
     return (
       <Wrapper>
-        <PageTitle
+        <PageTitleOrganization
           title={'My Repository - Services'}
           buttonTitle={'Add new service'}
           type={'primary'}
-          svg={<PlusIcon />}
-          buttonFunction={() => this.navigate('/sdk/composer/0')}
+          icon={<PlusIcon />}
+          onClick={() => this.navigate('/sdk/composer/0')}
         />
         <NavBar />
         <ListSDKServices />
@@ -40,7 +39,6 @@ class SDKService extends Component {
     )
   }
 }
-
 
 export default withRouter(Logic(SDKService))
 

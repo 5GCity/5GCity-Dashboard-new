@@ -8,15 +8,17 @@
 import { kea } from 'kea'
 import { call, put } from 'redux-saga/effects'
 import axios from 'axios'
-import { API_BASE_SDK } from 'config'
+import { API_SDK } from 'config'
 import { getResult, changeName } from './utils'
 
 import PropTypes from 'prop-types'
-//import * as Check from 'validations'
+// import * as Check from 'validations'
 
-/*Logic*/
+
+
+/* Logic */
 import AppLogic from 'containers/App/logic'
-
+import PageTitleOrganizationLogic from 'containers/PageTitleOrganization/logic'
 
 export default kea({
   path: () => ['scenes', 'containers', 'ListSDKServices'],
@@ -25,12 +27,19 @@ export default kea({
     actions: [
       AppLogic, [
         'addLoadingPage',
-        'removeLoadingPage',
-      ]
+        'removeLoadingPage'
+      ],
+      PageTitleOrganizationLogic, [
+        'changeOrganization',
+        'setOrganizations',
+      ],
     ],
     props: [
       AppLogic, [
         'keycloak',
+      ],
+      PageTitleOrganizationLogic, [
+        'selectOrganization'
       ]
     ]
   },
@@ -46,50 +55,46 @@ export default kea({
     selectService: (service, type) => ({ service, type }),
     setNoData: () => ({}),
     removeNoData: () => ({}),
-    setErroFecth: () =>({}),
+    setErroFecth: () => ({}),
     setMessageError: (error) => ({error}),
-    actionModalError: () =>({}),
+    actionModalError: () => ({})
   }),
 
   reducers: ({ actions }) => ({
-    services:[[], PropTypes.array, {
+    services: [null, PropTypes.array, {
       [actions.fetchServices]: (state, payload) => null,
       [actions.setServices]: (state, payload) => payload.services,
-      [actions.reset]: () => [],
+      [actions.reset]: () => []
     }],
     modalVisibledDelete: [false, PropTypes.bool, {
       [actions.actionModalDelete]: (state, payload) => !state,
-      [actions.selectService] : (state, payload) => payload.type === 'delete' && !state,
+      [actions.selectService]: (state, payload) => payload.type === 'delete' && !state
     }],
     modalVisibledClone: [false, PropTypes.bool, {
       [actions.actionModalClone]: (state, payload) => !state,
-      [actions.selectService] : (state, payload) => payload.type === 'clone' && !state,
+      [actions.selectService]: (state, payload) => payload.type === 'clone' && !state
     }],
     service: [null, PropTypes.object, {
-      [actions.selectService]: (state, payload) => payload.service,
+      [actions.selectService]: (state, payload) => payload.service
     }],
     noData: [false, PropTypes.bol, {
       [actions.setNoData]: () => true,
+      [actions.setServices]: () => false,
       [actions.removeNoData]: () => false,
+      [actions.reset]: () => false
     }],
     errorFecth: [false, PropTypes.bol, {
       [actions.setErroFecth]: () => true,
-      [actions.reset]: () => false,
+      [actions.reset]: () => false
     }],
-    modalErrorVisibled: [ false, PropTypes.bool ,{
-      [actions.actionModalError]: (state, payload) => !state,
+    modalErrorVisibled: [ false, PropTypes.bool, {
+      [actions.actionModalError]: (state, payload) => !state
     }],
-    modalErrorMessage: [null, PropTypes.string ,{
+    modalErrorMessage: [null, PropTypes.string, {
       [actions.setMessageError]: (state, payload) => payload.error,
-      [actions.reset]: () => null,
+      [actions.reset]: () => null
     }]
   }),
-
-  start: function * () {
-    const { fetchServices } = this.actions
-
-    yield put(fetchServices())
-  },
 
   stop: function * () {
     const { reset, removeNoData, removeLoadingPage } = this.actions
@@ -100,9 +105,12 @@ export default kea({
   },
 
   takeLatest: ({ actions, workers }) => ({
-    [actions.fetchServices]: workers.fetchServices,
+    [actions.changeOrganization]: workers.fetchServices,
+    [actions.setOrganizations]: workers.fetchServices,
     [actions.deleteService]: workers.deleteService,
     [actions.cloneService]: workers.cloneService,
+    [actions.fetchServices]: workers.fetchServices,
+
   }),
 
   selectors: ({ selectors }) => ({
@@ -112,25 +120,24 @@ export default kea({
         getResult(services)
       ),
       PropTypes.array
-    ],
+    ]
   }),
 
   workers: {
     * fetchServices () {
       const { setServices, addLoadingPage, removeLoadingPage, setNoData, setErroFecth } = this.actions
-
-      //
+      const selectOrganization = yield this.get('selectOrganization')
       yield put(addLoadingPage())
       try {
-        let responseResult = yield call(axios.get,`${API_BASE_SDK}/sdk/services/`)
+        let responseResult = yield call(axios.get, `${API_SDK}/sdk/services/?sliceId=${selectOrganization}`)
         const { data } = responseResult
-        if(data.length > 0){
+        if (data.length > 0) {
           yield put(setServices(data))
         } else {
           yield put(setNoData())
         }
         yield put(removeLoadingPage())
-      } catch(error){
+      } catch (error) {
         if (error.response) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
@@ -158,21 +165,20 @@ export default kea({
       const { fetchServices, actionModalDelete, setMessageError, actionModalError } = this.actions
       const id = action.payload.service
       try {
-        yield call(axios.delete,`${API_BASE_SDK}/sdk/services/${id}`)
-
+        yield call(axios.delete, `${API_SDK}/sdk/services/${id}`)
         yield put(actionModalDelete())
         yield put(fetchServices())
-      } catch(error){
+      } catch (error) {
         switch (error.response.status) {
           case 400:
             yield put(setMessageError(error.response.data))
-          break;
+            break
           case 403:
             yield put(setMessageError(error.response.data))
-          break;
+            break
           default:
             yield put(setMessageError('Error'))
-          break;
+            break
         }
         yield put(actionModalDelete())
         yield put(actionModalError())
@@ -181,23 +187,22 @@ export default kea({
 
     * cloneService (action) {
       const service = action.payload.service
-      const { actionModalClone,fetchServices, actionModalError, setMessageError } = this.actions
+      const { actionModalClone, fetchServices, actionModalError, setMessageError } = this.actions
       const services = yield this.get('services')
       try {
-        const copyService = changeName(service,services)
-        yield call(axios.post,`${API_BASE_SDK}/sdk/services/`, copyService)
+        const copyService = changeName(service, services)
+        yield call(axios.post, `${API_SDK}/sdk/services/`, copyService)
         yield put(fetchServices())
-      } catch(error){
-        if(error.response.data){
+      } catch (error) {
+        if (error.response.data) {
           yield put(setMessageError(error.response.data))
-        }else {
+        } else {
           yield put(setMessageError('Error to clone Service'))
         }
         yield put(actionModalError())
       }
       yield put(actionModalClone())
-    },
+    }
   }
 
 })
-

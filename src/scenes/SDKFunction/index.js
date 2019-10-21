@@ -21,7 +21,6 @@ class SDKFunction extends Component {
   }
 }
 
-
 export default Logic(SDKFunction)
 
 const Wrapper = styled.div`

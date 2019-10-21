@@ -9,8 +9,8 @@ import styled from 'styled-components'
 
 export default ({ children, ...props }) => (
   <Wrapper {...props}>
-  <Title>{props.title}</Title>
-  <Border />
+    <Title>{props.title}</Title>
+    <Border />
   </Wrapper>
 )
 
@@ -20,7 +20,7 @@ const Wrapper = styled.div`
 const Title = styled.p`
   margin-left: 8px;
   color: #EFF2F7;
-  font-family: ${({ theme }) => theme.fontDin };
+  font-family: ${({ theme }) => theme.fontDin};
   text-transform: uppercase;
   font-size: 20px;
   letter-spacing: 0.5px;

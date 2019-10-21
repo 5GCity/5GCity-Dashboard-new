@@ -7,38 +7,30 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
 import { action } from '@storybook/addon-actions'
-import  Select from './index'
-
-const examples = [{
-  label: 'Example 1',
-  value: 1
-}];
+import Select from './index'
 
 const fakeOptions = [{
- id: 1,
- name: "One",
- value: "wazaaaaaaa"
-},{
- id: 2,
- name: "Two",
- value: "aaaaaaaaaaa"
-},{
- id: 3,
- name: "Three",
- value: "up",
- disabled: true
+  id: 1,
+  name: 'One',
+  value: 'wazaaaaaaa'
+}, {
+  id: 2,
+  name: 'Two',
+  value: 'aaaaaaaaaaa'
+}, {
+  id: 3,
+  name: 'Three',
+  value: 'up',
+  disabled: true
 }]
 
 const selectTestOne = () => (
-      <Select placeholder={'wazaaaa'} options={fakeOptions}  onChange={action('Change Value')}/>
+  <Select placeholder={'wazaaaa'} options={fakeOptions} onChange={action('Change Value')} />
 )
 const selectTestTwo = () => (
-  <React.Fragment>
-    <Select placeholder={'change type'} title={'Nº of Instantiated services'} type={'default'} options={fakeOptions} onChange={(e) => action(e)} />
-    <Select placeholder={'change type'} uppercase title={'Uppercase'} type={'default'} options={fakeOptions} />
-    <Select placeholder={'change type'} uppercase title={'Uppercase'} type={'default'} options={fakeOptions} />
-  </React.Fragment>
+    <Select placeholder={'change type'} label={'Nº of Instantiated services'} type={'default'} options={fakeOptions} onChange={(e) => action(e)} />
 )
 
 storiesOf('Select', module)
   .add('primary', selectTestOne)
+  .add('Label', selectTestTwo)

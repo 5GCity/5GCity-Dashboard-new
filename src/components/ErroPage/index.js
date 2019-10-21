@@ -10,7 +10,7 @@ import { ErrorIcon } from 'components/Icons'
 
 export default ({ children, ...props }) => (
   <Wrapper {...props}>
-    <SVG><ErrorIcon/></SVG>
+    <SVG><ErrorIcon /></SVG>
     <Title>Sorry, an error occurred</Title>
     <Message>We couldn't retrieve data at the moment. Please refresh and try again...</Message>
   </Wrapper>

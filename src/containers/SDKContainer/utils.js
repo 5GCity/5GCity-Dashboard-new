@@ -9,9 +9,9 @@ import {
   newBridgeNode,
   newExtrenalNode,
   newVNFNode,
-  newVirtualSwtichNode
+  newVirtualSwitchNode
 } from '../SDKContainer/config_d3'
-import { reject, filter } from 'lodash'
+import { reject, filter, cloneDeep } from 'lodash'
 
 export const NEW_SERVICE = {
   name: null,
@@ -29,7 +29,29 @@ export const NEW_SERVICE = {
   metadata: { },
   intMonitoringParameters: [],
   extMonitoringParameters: [],
-  groupId: "UBI",
+  accessLevel: 0,
+  actions: [],
+  actionRules: [],
+  visibility: "PUBLIC",
+  ownerId: "ubiwhere",
+}
+
+export const NEW_SERVICE_FORM = {
+  name: null,
+  version: null,
+  designer: null,
+  parameters: [],
+  license: {
+      type: null,
+      url: null,
+  },
+  link: [],
+  component: [],
+  connectionPoints: [],
+  l3Connectivity: [ ],
+  metadata: { },
+  intMonitoringParameters: [],
+  extMonitoringParameters: [],
   accessLevel: 0,
   actions: [],
   actionRules: [],
@@ -46,111 +68,120 @@ let idError = 0
  * @param {service} service
  * @return {object} D3 Format
  **/
-export const findLinkById = (d3Data, service, catalogue) => {
-  const changeD3Data = {d3Data:{...d3Data}, newCatalogue :catalogue}
-  const {links, nodes} = changeD3Data.d3Data
+export const findLinkById = (nodes, service) => {
+  // 1º Por cada service verificar verificar os links
+  const links = []
+  const arrayNodes = cloneDeep(nodes)
   service.link.forEach(link => {
     let source = false
     let lastId = null
     const linkLength = link.connectionPointNames.length
     const link_name = link.name
+    let linkIsCreate = false
     switch (linkLength) {
-      case 2:
-        link.connectionPointNames.forEach(name => {
-          const findConnection = service.connectionPoints.find(connection_point_service => connection_point_service.name  === name)
-          if(findConnection && findConnection.cpType === 'INTERNAL') {
-            nodes && nodes.forEach(node => {
-              if (node.type === 'vnf') {
-              const findConnectionPointNode = node.connection_point.find(point => point.id === findConnection.internalCpId)
-              if(findConnectionPointNode) {
-                findConnectionPointNode.isUsed = true
-                if(!source) {
-                  const newIdLink = addNewLink()
-                  links.push({
-                    id: newIdLink,
-                    source: node,
-                    target: null,
-                    sourcePosition: randomPosition(node),
-                    confirm: true,
-                    connection_point_source_selected: findConnectionPointNode.requiredPort,
-                    link_name: link_name,
-                    connection_name_source: name,
-                  })
-                  findConnectionPointNode.link_id = newIdLink
-                  lastId = newIdLink
-                  source = true
-                } else {
-                  const linkTarget = links.find(link => link.id === lastId)
-                  if (linkTarget) {
-                    linkTarget.target = node
-                    linkTarget.targetPosition = randomPosition(node)
-                    linkTarget.connection_point_target_selected = findConnectionPointNode.requiredPort
-                    linkTarget.source[linkTarget.sourcePosition].isLink = true
-                    linkTarget.target[linkTarget.targetPosition].isLink = true
-                    linkTarget.connection_name_target = name
-                    source = false
-                    const changeNode = nodes.find(
-                      node => node.id === linkTarget.source.id || node.id === linkTarget.target.id
-                    )
-                    if (changeNode) {
-                      changeNode[linkTarget.targetPosition].isLink = true
+    case 2:
+      link.connectionPointNames.forEach(name => {
+        let findNode = false
+        const findConnection = service.connectionPoints.find(connection_point_service => connection_point_service.name  === name)
+        if(findConnection && findConnection.cpType === 'INTERNAL') {
+          if (!findNode) {
+            arrayNodes && arrayNodes.forEach(node => {
+              if (node.type === 'vnf' && node.extra_info.componentIndex === findConnection.componentIndex) {
+                const arrayofConnectionPoints = node.connection_point
+                const findConnectionPointNode = arrayofConnectionPoints.find(point => point.id === findConnection.internalCpId)
+                if(findConnectionPointNode  && !linkIsCreate && node.connections < node.initial_connections) {
+                  node.connections++
+                  findConnectionPointNode.isUsed = true
+                  if(!source) {
+                    const newIdLink = addNewLink()
+                    links.push({
+                      id: newIdLink,
+                      source: node,
+                      target: null,
+                      sourcePosition: randomPosition(node),
+                      confirm: true,
+                      connection_point_source_selected: findConnectionPointNode.requiredPort,
+                      link_name: link_name,
+                      connection_name_source: name,
+                    })
+                    findConnectionPointNode.link_id = newIdLink
+                    lastId = newIdLink
+                    source = true
+                    findNode = true
+                  } else {
+                    const linkTarget = links.find(link => link.id === lastId)
+                    if (linkTarget) {
+                      linkTarget.target = node
+                      linkTarget.targetPosition = randomPosition(node)
+                      linkTarget.connection_point_target_selected = findConnectionPointNode.requiredPort
+                      linkTarget.source[linkTarget.sourcePosition].isLink = true
+                      linkTarget.target[linkTarget.targetPosition].isLink = true
+                      linkTarget.connection_name_target = name
+                      source = false
+                      const changeNode = nodes.find(
+                        node => node.id === linkTarget.source.id || node.id === linkTarget.target.id
+                      )
+                      if (changeNode) {
+                        changeNode[linkTarget.targetPosition].isLink = true
+                      }
+                      findConnectionPointNode.link_id = linkTarget.id
+                      linkIsCreate = true
+                      findNode = true
                     }
-                    findConnectionPointNode.link_id = linkTarget.id
                   }
                 }
               }
-            }
             })
-          } else if (findConnection && findConnection.cpType === 'EXTERNAL') {
-            const externalNode = newExtrenalNode()
-            if(!source) {
-              const newIdLink = addNewLink()
-              links.push({
-                id: newIdLink,
-                source: externalNode,
-                target: null,
-                sourcePosition: 'left',
-                targetPosition: null,
-                confirm: true,
-                connection_point_source_selected: null,
-                link_name: link_name,
-                connection_name_source: name,
-                required_ports: findConnection.requiredPort,
-              })
-
-              lastId = newIdLink
-              source = true
-            } else {
-              const findlink = links.find( link => link.id === lastId)
-              findlink.target = externalNode
-              findlink.targetPosition = 'left'
-              findlink.link_name = link_name
-              findlink.connection_name_target = name
-              findlink.required_ports = findConnection.requiredPort
-              findlink.connection_point_target_selected = null
-              findlink.source[findlink.sourcePosition].isLink = true
-              findlink.target[findlink.targetPosition].isLink = true
-
-              const changeNode = nodes.find(
-                node => node.id === findlink.source.id || node.id === findlink.target.id
-              )
-              if (changeNode) {
-                changeNode[findlink.sourcePosition].isLink = true
-              }
-              source = false
-            }
-            nodes.push(externalNode)
-          } else {
-            console.error('Error')
-            return {error: false, message: `Can't no find connection point to ${name}`}
           }
-        })
+        } else if (findConnection && findConnection.cpType === 'EXTERNAL') {
+          const externalNode = newExtrenalNode()
+          if(!source) {
+            const newIdLink = addNewLink()
+            links.push({
+              id: newIdLink,
+              source: externalNode,
+              target: null,
+              sourcePosition: 'left',
+              targetPosition: null,
+              confirm: true,
+              connection_point_source_selected: null,
+              link_name: link_name,
+              connection_name_source: name,
+              required_ports: findConnection.requiredPort,
+            })
+            lastId = newIdLink
+            source = true
+          } else {
+            const findlink = links.find( link => link.id === lastId)
+            findlink.target = externalNode
+            findlink.targetPosition = 'left'
+            findlink.link_name = link_name
+            findlink.connection_name_target = name
+            findlink.required_ports = findConnection.requiredPort
+            findlink.connection_point_target_selected = null
+            findlink.source[findlink.sourcePosition].isLink = true
+            findlink.target[findlink.targetPosition].isLink = true
+
+            const changeNode = nodes.find(
+              node => node.id === findlink.source.id || node.id === findlink.target.id
+            )
+            if (changeNode) {
+              changeNode[findlink.sourcePosition].isLink = true
+            }
+            source = false
+          }
+          arrayNodes.push(externalNode)
+        } else {
+          console.error('Error')
+          return {error: false, message: `Can not no find connection point to ${name}`}
+        }
+      })
     break;
     case 1:
-    link.connectionPointNames.forEach(name => {
+      link.connectionPointNames.forEach(name => {
       const findConnection =service.connectionPoints.find(connection_point_service => connection_point_service.name  === name)
       if(findConnection) {
-        nodes && nodes.forEach(node => {
+        arrayNodes && arrayNodes.forEach(node => {
           if (node.type === 'vnf') {
             const findConnectionPointNode = node.connection_point.find(point => point.id === findConnection.internalCpId)
             if (findConnectionPointNode) {
@@ -180,7 +211,7 @@ export const findLinkById = (d3Data, service, catalogue) => {
               if (changeNode) {
                 changeNode[linkTarget.sourcePosition].isLink = true
               }
-              nodes.push(bridgeNode)
+              arrayNodes.push(bridgeNode)
               source = false
               findConnectionPointNode.link_id = linkTarget.id
           }
@@ -190,13 +221,13 @@ export const findLinkById = (d3Data, service, catalogue) => {
     })
     break;
     default:
-    const newVirtualSwtich = newVirtualSwtichNode(link_name)
+      const newVirtualSwitch = newVirtualSwitchNode(link_name)
       link.connectionPointNames.forEach(name => {
         const findConnection = service.connectionPoints.find(
           connection_point_service => connection_point_service.name  === name
         )
         if ( findConnection && findConnection.cpType === 'INTERNAL') {
-          nodes && nodes.forEach(node => {
+          arrayNodes && arrayNodes.forEach(node => {
             if (node.type === 'vnf') {
             const findConnectionPointNode = node.connection_point.find(point =>
               point.id === findConnection.internalCpId)
@@ -206,7 +237,7 @@ export const findLinkById = (d3Data, service, catalogue) => {
                   links.push({
                     id: newIdLink,
                     source: node,
-                    target: newVirtualSwtich,
+                    target: newVirtualSwitch,
                     sourcePosition: randomPosition(node),
                     connection_point_source_selected: findConnectionPointNode.requiredPort,
                     confirm: true,
@@ -229,7 +260,7 @@ export const findLinkById = (d3Data, service, catalogue) => {
             links.push({
               id: newIdLink,
               source: externalNode,
-              target: newVirtualSwtich,
+              target: newVirtualSwitch,
               sourcePosition: 'left',
               targetPosition: 'right',
               confirm: true,
@@ -240,32 +271,30 @@ export const findLinkById = (d3Data, service, catalogue) => {
             node[findLink.sourcePosition].isLink = true
         }
       })
-      nodes.push(newVirtualSwtich)
+      arrayNodes.push(newVirtualSwitch)
     break;
     }
   })
-  return changeD3Data
+  return {nodes: arrayNodes, links: links}
 }
+
 
 /**
  * Add New Node
- * @param {string} type_node
+ * @param {object} node
  * @return {object} New d3 Node
  */
-export const addNode = (node, catalogue) => {
-  const infoNode = Object.assign({}, node)
-  const newCatalogue = [ ...catalogue ]
+export const addNode = node => {
+  const infoNode = cloneDeep(node)
   switch(infoNode.type) {
     case 'bridge':
-      return { node: newBridgeNode(), newCatalogue: newCatalogue }
+      return newBridgeNode()
     case 'external':
-      return { node: newExtrenalNode(), newCatalogue: newCatalogue }
+      return newExtrenalNode()
     case 'vs':
-      return { node: newVirtualSwtichNode(null), newCatalogue: newCatalogue }
+      return newVirtualSwitchNode(null)
     default:
-      const findCatalogue = newCatalogue.find(catalogueItem => catalogueItem.id === node.id)
-      findCatalogue.disabled = true
-      return  { node: newVNFNode(infoNode), newCatalogue: newCatalogue }
+      return newVNFNode(infoNode)
   }
 }
 
@@ -275,21 +304,22 @@ export const addNode = (node, catalogue) => {
  * @return {object} New d3 Node
  */
 export const transformToD3Object = (service, catalogue) => {
-  let created3Object = {links:[], nodes:[]}
-  let existCatalogue = [...catalogue]
-  service.component.forEach( dataItem => {
-   const match = existCatalogue.find(catalogueItem => catalogueItem.id === dataItem.componentId)
+  let createNodeD3 = []
+  let existCatalogue = catalogue
+  service.component.forEach( dataService => {
+   const match = existCatalogue.find(catalogueItem => catalogueItem.id === dataService.componentId)
    if (match) {
     if (match.vnfdId) {
-      match.disabled = true
-      const mapping_expression = dataItem.mappingExpressions
-      created3Object.nodes.push(newVNFNode(match, mapping_expression))
+      const mapping_expression = dataService.mappingExpressions
+      const componentIndex = dataService.componentIndex
+      const initialServiceConnections = service.connectionPoints.filter(point => point.componentIndex === componentIndex).length
+      createNodeD3.push(cloneDeep(newVNFNode(match, mapping_expression, componentIndex, initialServiceConnections)))
     } else {
-      created3Object.nodes.push({...match, type:'vnf'})
+      createNodeD3.push({...match, type:'vnf'})
     }
    }
   })
-  return findLinkById(created3Object, service, existCatalogue)
+  return findLinkById(createNodeD3, service)
 }
 
 /**
@@ -307,6 +337,7 @@ export const randomPosition = node => {
       return 'top'
   }
 }
+
 /**
  * Returns a random number between min (inclusive) and max (exclusive)
  */
@@ -496,11 +527,12 @@ export const transformToJSON = (service, d3Data) => {
   const link = [], component = [], connection_point = []
   const {nodes, links} = d3Data
   nodes.forEach(node => {
-    if(node.type === 'vnf'){
+    if (node.type === 'vnf') {
+      const map_exp = node.mapping_expression[0] === undefined ? [] : node.mapping_expression
       component.push({
         componentId: node.extra_info.id,
         componentType: "SDK_FUNCTION",
-        mappingExpressions: node.mapping_expression,
+        mappingExpressions: map_exp,
         componentIndex: nodeId(node)
       })
       verifyMappingExpression(node, object)
@@ -617,9 +649,10 @@ export const changeNode = (nodeSelect, d3Data) => {
 
 
 const verifyMappingExpression = (node, object) => {
+  if(node.extra_info.parameter)
   if (node.extra_info.parameter.length > 0) {
-    node.mapping_expression.forEach(mapping_expression => {
-      if(typeof(mapping_expression) !== 'string'){
+    node.mapping_expression.forEach(mapping => {
+      if(typeof(mapping) !== 'string'){
         object.invalid = true
         object.errors.push({
           id: idError++,
@@ -777,4 +810,12 @@ const verifyComposer = (composer, object) => {
       description: 'Please input url'
     })
   }
+}
+
+export const Organizations = value => {
+  const array = []
+  value && value.forEach(organization => {
+   array.push({ id:organization.id, value: organization.sliceId, name: organization.sliceId})
+  })
+  return array
 }

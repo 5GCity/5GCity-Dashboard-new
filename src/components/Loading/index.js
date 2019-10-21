@@ -12,23 +12,23 @@ export default ({ children, ...props }) => (
   <Wrapper {...props}>
     <Spinner>
       <circle
-        className="path"
-        cx="25"
-        cy="25"
-        r="20"
-        fill="none"
-        strokeWidth="4"
+        className='path'
+        cx='25'
+        cy='25'
+        r='20'
+        fill='none'
+        strokeWidth='4'
       />
     </Spinner>
   </Wrapper>
 )
 
 const Wrapper = styled.div`
- ${({ loading }) => loading ? `display:flex;` : 'display:none;' }
+ ${({ loading }) => loading ? `display:flex;` : 'display:none;'}
   position: absolute;
   width: 100%;
   height: 100%;
-  background-color: ${({ theme }) => rgba('#89979F', 0.15) }; //theme.secondaryColor
+  background-color: ${({ theme }) => rgba('#89979F', 0.15)}; //theme.secondaryColor
   justify-content: center;
   align-items: center;
   z-index:999;
@@ -39,7 +39,7 @@ const Spinner = styled.svg`
   height: 50px;
 
   & .path {
-    stroke: ${({ theme }) => theme.primaryColor };
+    stroke: ${({ theme }) => theme.primaryColor};
     stroke-linecap: round;
     animation: dash 1.5s ease-in-out infinite;
   }

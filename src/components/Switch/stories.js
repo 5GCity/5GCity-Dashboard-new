@@ -6,20 +6,20 @@
  */
 import React from 'react'
 import { storiesOf } from '@storybook/react'
-import { Theme } from 'globalStyles';
+import { Theme } from 'globalStyles'
 
 import Switch from './index'
 
 const bStyle = {
-  padding:'30px',
+  padding: '30px',
   backgroundColor: Theme.bodyBackground,
-  height:'100%'
-};
+  height: '100%'
+}
 
 const example = () => (
   <div style={bStyle}>
-  <Switch title={'Show bandwidth'} name="test switch" onText="" offText="" onColor="#8CC14E" offColor="#89979F"/>
-  <Switch name="test switch" onText="" offText="" onColor="#8CC14E" offColor="#89979F"/>
+    <Switch title={'Show bandwidth'} name='test switch' onText='' offText='' onColor='#8CC14E' offColor='#89979F' />
+    <Switch name='test switch' onText='' offText='' onColor='#8CC14E' offColor='#89979F' />
   </div>
 )
 

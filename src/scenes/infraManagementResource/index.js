@@ -21,7 +21,6 @@ class infraManagementResource extends Component {
   }
 }
 
-
 export default Logic(infraManagementResource)
 
 const Wrapper = styled.div`

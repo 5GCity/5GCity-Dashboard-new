@@ -9,16 +9,15 @@ import { storiesOf } from '@storybook/react'
 
 import Input from './index'
 
-
 const example = () => (
   <Input />
 )
 
 const exampleMoreIcon = () => (
-  <Input icon={'edit'}/>
+  <Input icon={'edit'} />
 )
 
-const exampleSearch  = () => (
+const exampleSearch = () => (
   <Input icon={'search'} placeholder={'Start typing to search...'} />
 )
 

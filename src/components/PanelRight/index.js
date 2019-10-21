@@ -8,34 +8,33 @@ import React from 'react'
 import styled from 'styled-components'
 import { rgba } from 'polished'
 
-
 export default ({ children, ...props }) => (
-<Wrapper {...props}>
-  <RightNav>
-    {props.close &&
-    <CloseContainer onClick={() => props.close()}>&times;</CloseContainer>
+  <Wrapper {...props}>
+    <RightNav>
+      {props.close &&
+      <CloseContainer onClick={() => props.close()}>&times;</CloseContainer>
     }
-    {children}
- </RightNav>
-</Wrapper>
+      {children}
+    </RightNav>
+  </Wrapper>
 )
 
 const Wrapper = styled.div`
   position: fixed;
-	height: 100%;
+  height: 100%;
   z-index: 5;
   width: 100%;
   display: ${(props) => props.show ? 'initial' : 'none'};
-  background-color: ${({ backgroundColor }) => backgroundColor ? backgroundColor : rgba('#37474F', 0.7) }; //theme.bodyBackground
+  background-color: ${({ backgroundColor }) => backgroundColor || rgba('#37474F', 0.7)}; //theme.bodyBackground
 `
 
 const RightNav = styled.div`
   display: flex;
   flex-direction: column;
   flex: auto;
-	height: 100%;
+  height: 100%;
   width: 268px;
-	background: ${() => rgba('#37474F', 0.98) }; //theme.bodyBackground
+  background: ${() => rgba('#37474F', 0.98)}; //theme.bodyBackground
   position: fixed;
   right: 0px;
 `

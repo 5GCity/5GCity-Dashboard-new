@@ -19,28 +19,26 @@ import ModalCreateLinkComposer from 'containers/Modals/ModalCreateLinkComposer'
 import ModalConfigParameters from 'containers/Modals/ModalConfigParameters'
 
 class Composer extends Component {
-
   state = {
     width: this.props.containerWidth - 240,
-    height: this.props.containerHeight,
+    height: this.props.containerHeight
   }
   /**
    * @param {object} selectNode
    */
-  removeNode(selectNode) {
+  removeNode (selectNode) {
     const { removeNode } = this.props
     removeNode(selectNode)
   }
   /**
    * @param {object} selectLink
    */
-  removeLink(selectLink) {
+  removeLink (selectLink) {
     const { removeLink } = this.props
     removeLink(selectLink)
   }
 
-
-  configParams(node) {
+  configParams (node) {
     const { configParams } = this.props
     configParams(node)
   }
@@ -61,31 +59,31 @@ class Composer extends Component {
    * @param {object} target
    *
    */
-  createLink(source, target) {
+  createLink (source, target) {
     event.stopPropagation()
     const { createLink } = this.props
     createLink(source, target)
   }
 
-  componentDidMount() {
-      this.props.d3Data &&
+  componentDidMount () {
+    this.props.d3Data &&
       this.drawD3()
   }
 
-  drawD3() {
+  drawD3 () {
     // mouse event vars
-    let selectedNode = null,
-    mousedownLink = null,
-    mousedownNode = null,
-    mouseupNode = null,
-    svgMousePosition = { x: 0, y: 0 },
-    selectLink = null,
-    zoomPosition = { x: 240, y: 136, k: 1 },
-    nodesVNF = [],
-    optionSelect_Draw = null,
-    isMouseUpConfig = false,
-    d3Data = this.props.d3Data,
-    {nodes, links} = d3Data
+    let selectedNode = null
+    let mousedownLink = null
+    let mousedownNode = null
+    let mouseupNode = null
+    let svgMousePosition = { x: 0, y: 0 }
+    let selectLink = null
+    let zoomPosition = { x: 240, y: 136, k: 1 }
+    let nodesVNF = []
+    let optionSelectDraw = null
+    let isMouseUpConfig = false
+    let d3Data = this.props.d3Data
+    let {nodes, links} = d3Data
 
     var zoomD3 = zoom()
     .scaleExtent([d3Config.zoom.min_zoom, d3Config.zoom.max_zoom])
@@ -98,7 +96,6 @@ class Composer extends Component {
     .attr('oncontextmenu', 'return false;')
     .call(zoomD3)
 
-
     const svgZoom =
     svg
       .append('g')
@@ -106,7 +103,7 @@ class Composer extends Component {
         'transform',
         `translate(${d3Config.margin.left},${d3Config.margin.right})`
       )
-      .attr('cursor','move')
+      .attr('cursor', 'move')
 
     // ADD new rect to zoom
     svgZoom
@@ -114,16 +111,16 @@ class Composer extends Component {
     .attr('width', this.state.width)
     .attr('height', this.state.height)
     .style('fill', 'none')
-    .style('pointer-events', 'all');
+    .style('pointer-events', 'all')
 
-    const gZoom = svgZoom.append('g');
+    const gZoom = svgZoom.append('g')
 
     // handles to link and node element groups
-    let path = gZoom.append('svg:g').attr('id','path').selectAll('path')
-    let groupBridge = gZoom.append('svg:g').attr('id','bridge').selectAll('g .group_bridge')
-    let groupExternal = gZoom.append('svg:g').attr('id','external').selectAll('g .group_external')
-    let groupVNF = gZoom.append('svg:g').attr('id','vnf').selectAll('g .group_vnf')
-    let groupVirtualSwitch = gZoom.append('svg:g').attr('id','vs').selectAll('g .group_vs')
+    let path = gZoom.append('svg:g').attr('id', 'path').selectAll('path')
+    let groupBridge = gZoom.append('svg:g').attr('id', 'bridge').selectAll('g .group_bridge')
+    let groupExternal = gZoom.append('svg:g').attr('id', 'external').selectAll('g .group_external')
+    let groupVNF = gZoom.append('svg:g').attr('id', 'vnf').selectAll('g .group_vnf')
+    let groupVirtualSwitch = gZoom.append('svg:g').attr('id', 'vs').selectAll('g .group_vs')
 
     // line displayed when dragging new nodes
     const gOption = gZoom.append('g').attr('id', 'option_link')
@@ -135,7 +132,7 @@ class Composer extends Component {
     .attr('height', 80)
     .attr('x', 0)
     .attr('y', 0)
-    .attr('rx', 10);
+    .attr('rx', 10)
     // Settigns
     gOption
     .append('svg:rect')
@@ -159,9 +156,9 @@ class Composer extends Component {
     .attr('font-family', 'sans-serif')
     .attr('font-size', '12px')
     .attr('font-weight', 'bold')
-    .attr('fill', '#fff');
+    .attr('fill', '#fff')
     // OPEN New TAB
-    /*gOption
+    /* gOption
     .append('svg:text')
     .attr('class', 'menu_otpions visibility')
     .attr('x', 40)
@@ -203,36 +200,36 @@ class Composer extends Component {
     .attr('font-family', 'sans-serif')
     .attr('font-size', '12px')
     .attr('font-weight', 'bold')
-    .attr('fill', '#fff');
+    .attr('fill', '#fff')
 
     // Drag and drop
     const dragger =
     drag()
     .on('start', d => {
-      select(`#${d.id}`).classed('active', false);
+      select(`#${d.id}`).classed('active', false)
     })
     .on('drag', d => {
-      d.x = event.x;
-      d.y = event.y;
-      tick();
+      d.x = event.x
+      d.y = event.y
+      tick()
     })
     .on('end', d => {
-      select(`#${d.id}`).classed('active', false);
-    });
+      select(`#${d.id}`).classed('active', false)
+    })
 
-    function tick() {
+    function tick () {
       // draw directed edges
       path
-        .attr("x1", d => {
+        .attr('x1', d => {
           return d.source.x + d.source[d.sourcePosition].x
         })
-        .attr("y1", d => {
+        .attr('y1', d => {
           return d.source.y + d.source[d.sourcePosition].y
         })
-        .attr("x2", d => {
+        .attr('x2', d => {
           return d.target.x + d.target[d.targetPosition].x
         })
-        .attr("y2", d => {
+        .attr('y2', d => {
           return d.target.y + d.target[d.targetPosition].y
         })
 
@@ -246,8 +243,8 @@ class Composer extends Component {
     }
     // Simulation
     const simulation = forceSimulation()
-  .force("charge", forceManyBody())
-   .force('collision', forceCollide().radius( d =>
+  .force('charge', forceManyBody())
+   .force('collision', forceCollide().radius(d =>
       d.w
     ))
 
@@ -297,7 +294,7 @@ class Composer extends Component {
       groupExternal
       .attr('id', d => d.id)
       .attr('class', d => {
-        if(d.left.isLink) {
+        if (d.left.isLink) {
           select(`g #${d.id} .option_external`).classed('hidden', false)
         } else {
           select(`g #${d.id} .option_external`).classed('hidden', true)
@@ -314,16 +311,16 @@ class Composer extends Component {
       selectAll('g .group_vs_menu').lower()
 
         // Simulation link
-        simulation.force("link",
+      simulation.force('link',
         forceLink()
         .id(d => d.id))
         // Simulation Node
-        simulation
+      simulation
         .nodes(nodes)
-        .on("tick", () =>  tick(path, groupBridge, groupExternal, groupVNF, groupVirtualSwitch))
+        .on('tick', () => tick(path, groupBridge, groupExternal, groupVNF, groupVirtualSwitch))
     }
     const restart = () => {
-      /**LINKS**/
+      /** LINKS**/
       path = path.data(links)
 
       // Remove old links
@@ -342,7 +339,7 @@ class Composer extends Component {
         selectedNode = null
         restart()
       })
-      .on("contextmenu", d  => {
+      .on('contextmenu', d => {
         confirmLink(d)
       })
       .merge(path)
@@ -351,7 +348,6 @@ class Composer extends Component {
 
       groupVNF = groupVNF.data(nodesVNF, d => d.id)
 
-
       // remove old VNF
       groupVNF.exit().remove()
 
@@ -359,12 +355,12 @@ class Composer extends Component {
       const gVNF = groupVNF
         .enter()
         .append('svg:g')
-        .attr('class','vnf')
+        .attr('class', 'vnf')
         .attr('id', d => d.id)
         .attr('transform', d => `translate(${d.x || 0}, ${d.y || 0})`)
         .attr('y', d => d.y)
         .on('mouseover', d => {
-          set_focus(d)
+          setFocus(d)
           d.array_link.forEach(option => {
             if (!d[option].isLink) {
               return selectAll(`g #${d.id} .option_VNF_${option}`)
@@ -373,7 +369,7 @@ class Composer extends Component {
           })
         })
         .on('mouseout', d => {
-          unset_focus(d)
+          unsetFocus(d)
           d.array_link.forEach(option => {
             if (!d[option].isLink) {
               return selectAll(`g #${d.id} .option_VNF_${option}`)
@@ -381,7 +377,7 @@ class Composer extends Component {
             }
           })
         })
-        .on("contextmenu", d  => {
+        .on('contextmenu', d => {
           showTooltip(d)
         })
       // Create RECT GRoup
@@ -401,7 +397,7 @@ class Composer extends Component {
         .attr('r', d => 24)
         .attr('cx', d => d.w / 2)
         .attr('cy', d => 40)
-        .attr('fill', d => d.circle_color )
+        .attr('fill', d => d.circle_color)
         .on('mousedown', d => onMouseDown(d, null))
       gVNF
         .append('svg:text')
@@ -422,7 +418,7 @@ class Composer extends Component {
         .attr('y', d => d.h - 30)
         .text(d => {
           const name = wordsUtils(d.extra_info.name)
-            return name[0]
+          return name[0]
         })
         .on('mousedown', d => onMouseDown(d, null))
       // SUBNAME
@@ -458,12 +454,12 @@ class Composer extends Component {
         .attr('cx', d => d.w)
         .attr('cy', d => d.h / 2)
         .on('mousedown', d => {
-          optionSelect_Draw = {node: d, position: 'right'}
+          optionSelectDraw = {node: d, position: 'right'}
           onMouseDown(d, 'right')
         })
-        .on('mouseup', d =>{
+        .on('mouseup', d => {
           mouseUpConfig(d, 'right')
-        });
+        })
 
       // Options Left
       gVNF
@@ -481,13 +477,13 @@ class Composer extends Component {
         .attr('r', CONFIG_NODE.r)
         .attr('cx', 0)
         .attr('cy', d => d.h / 2)
-        .on('mousedown', d =>{
-          optionSelect_Draw = {node: d, position: 'left'}
+        .on('mousedown', d => {
+          optionSelectDraw = {node: d, position: 'left'}
           onMouseDown(d, 'left')
         })
         .on('mouseup', d => {
-          mouseUpConfig(d, 'left');
-        });
+          mouseUpConfig(d, 'left')
+        })
       // Options Bottom
       gVNF
         .append('svg:circle')
@@ -505,12 +501,12 @@ class Composer extends Component {
         .attr('cx', d => d.w / 2)
         .attr('cy', d => d.h)
         .on('mousedown', d => {
-          optionSelect_Draw = {node: d, position: 'bottom'}
+          optionSelectDraw = {node: d, position: 'bottom'}
           onMouseDown(d, 'bottom')
         })
         .on('mouseup', d => {
           mouseUpConfig(d, 'bottom')
-        });
+        })
 
       // Options Top
       gVNF
@@ -530,7 +526,7 @@ class Composer extends Component {
         .attr('cy', 0)
         .attr('r', 5)
         .on('mousedown', d => {
-          optionSelect_Draw = {node: d, position: 'top'}
+          optionSelectDraw = {node: d, position: 'top'}
           onMouseDown(d, 'top')
         })
         .on('mouseup', d => {
@@ -549,7 +545,7 @@ class Composer extends Component {
         .attr('x', 105)
         .attr('y', 0)
         .on('click', d => showTooltip(d))
-        groupVNFMenu
+      groupVNFMenu
         .append('svg:rect')
         .attr('class', 'menu_otpions visibility')
         .attr('fill', '#404F57')
@@ -558,11 +554,11 @@ class Composer extends Component {
         .attr('rx', 5)
         .attr('x', 122)
         .attr('y', 0)
-        .on('click', () => {
-          confParams(d)
+        .on('click', d => {
+          if (d.extra_info.parameter) { confParams(d) }
         })
       // Settigns
-        groupVNFMenu
+      groupVNFMenu
         .append('svg:rect')
         .attr('class', 'menu_otpions visibility')
         .attr('fill', 'transparent')
@@ -572,20 +568,32 @@ class Composer extends Component {
         .attr('x', 122)
         .attr('y', 0)
         .on('click', d => {
-          confParams(d)
+          if (d.extra_info.parameter) { confParams(d) }
         })
       groupVNFMenu
         .append('svg:text')
         .attr('class', 'menu_otpions visibility')
         .attr('x', 150)
         .attr('y', 22)
-        .text('Configure Parameters')
+        .text(d => {
+          if (d.extra_info.parameter) {
+            return 'Configure Parameters'
+          } else {
+            return 'No configurations required'
+          }
+        })
         .attr('font-family', 'sans-serif')
         .attr('font-size', '12px')
         .attr('font-weight', 'bold')
-        .attr('fill', '#fff')
+        .attr('fill', d => {
+          if (d.extra_info.parameter) {
+            return '#fff'
+          } else {
+            return '#89979F'
+          }
+        })
         .on('click', d => {
-          confParams(d)
+          if (d.extra_info.parameter) { confParams(d) }
         })
         /*
       // Open in new tab
@@ -610,7 +618,7 @@ class Composer extends Component {
         .attr('font-family', 'sans-serif')
         .attr('font-size', '12px')
         .attr('font-weight', 'bold')
-        .attr('fill', '#fff')*/
+        .attr('fill', '#fff') */
       // Remover
       groupVNFMenu
         .append('svg:rect')
@@ -620,7 +628,7 @@ class Composer extends Component {
         .attr('height', 35)
         .attr('rx', 5)
         .attr('x', 122)
-        .attr('y', 35) //80
+        .attr('y', 35) // 80
         .on('click', () => {
           deleteNodes()
         })
@@ -688,7 +696,7 @@ class Composer extends Component {
             select(`g #${d.id} .option_bridge`).classed('hidden', true)
           }
         })
-        .on("contextmenu", d  =>
+        .on('contextmenu', d =>
           showTooltipAndOptions(d)
         )
 
@@ -735,7 +743,7 @@ class Composer extends Component {
         .attr('cy', d => d.h / 2)
         .on('mousedown', d => {
           onMouseDown(d, 'groupBridge')
-        });
+        })
 
       // Create Triangle
       const triangle =
@@ -859,7 +867,7 @@ class Composer extends Component {
             }
           })
         })
-        .on("contextmenu", d  => {
+        .on('contextmenu', d => {
           showTooltipAndOptions(d)
         })
 
@@ -893,10 +901,10 @@ class Composer extends Component {
         .attr('cx', d => d.w)
         .attr('cy', d => d.h / 2)
         .on('mousedown', d => {
-          optionSelect_Draw = {node: d, position: 'right'}
+          optionSelectDraw = {node: d, position: 'right'}
           onMouseDown(d, 'right')
         })
-        .on('mouseup', d =>{
+        .on('mouseup', d => {
           mouseUpConfig(d, 'right')
         })
       /* // Options Left
@@ -916,7 +924,7 @@ class Composer extends Component {
         .attr('cx', 0)
         .attr('cy', d => d.h / 2)
         .on('mousedown', d =>{
-          optionSelect_Draw = {node: d, position: 'left'}
+          optionSelectDraw = {node: d, position: 'left'}
           onMouseDown(d, 'left')
         })
         .on('mouseup', d => {
@@ -939,7 +947,7 @@ class Composer extends Component {
         .attr('cx', d => d.w / 2)
         .attr('cy', d => d.h)
         .on('mousedown', d => {
-          optionSelect_Draw = {node: d, position: 'bottom'}
+          optionSelectDraw = {node: d, position: 'bottom'}
           onMouseDown(d, 'bottom')
         })
         .on('mouseup', d => {
@@ -964,14 +972,14 @@ class Composer extends Component {
         .attr('cy', 0)
         .attr('r', 5)
         .on('mousedown', d => {
-          optionSelect_Draw = {node: d, position: 'top'}
+          optionSelectDraw = {node: d, position: 'top'}
           onMouseDown(d, 'top')
         })
         .on('mouseup', d => {
           mouseUpConfig(d, 'top')
         }) */
     // Create Y element
-    const wye =
+      const wye =
       symbol()
       .type(symbolWye)
       .size(GLOBAL_VALUES.VS.icon_size)
@@ -1053,18 +1061,16 @@ class Composer extends Component {
         .attr('cx', 34)
         .attr('cy', 16)
 
-
       groupVirtualSwitch = gVirtualSwitch.merge(groupVirtualSwitch)
 
       const nodesExternal = nodes.filter(node => node.type === 'external')
 
       groupExternal = groupExternal.data(nodesExternal, d => d.id)
 
-
       // remove old External
       groupExternal.exit().remove()
 
-      //Add new options
+      // Add new options
       const gStop = groupExternal
         .enter()
         .append('svg:g')
@@ -1081,7 +1087,7 @@ class Composer extends Component {
             select(`g #${d.id} .option_external`).classed('hidden', true)
           }
         })
-        .on("contextmenu", d  => {
+        .on('contextmenu', d => {
           showTooltipAndOptions(d)
         })
 
@@ -1123,8 +1129,8 @@ class Composer extends Component {
         .attr('class', d => 'stop')
         .on('mousedown', d => onMouseDown(d, 'groupExternal'))
 
-        const gStopMenu = gStop.append('svg:g').attr('class', 'group_external_menu')
-        gStopMenu
+      const gStopMenu = gStop.append('svg:g').attr('class', 'group_external_menu')
+      gStopMenu
         .append('svg:rect')
         .attr('class', 'menu')
         .attr('fill', 'transparent')
@@ -1134,7 +1140,7 @@ class Composer extends Component {
         .attr('ry', '100%')
         .attr('x', 20)
         .attr('y', -8)
-        gStopMenu
+      gStopMenu
         .append('svg:rect')
         .attr('class', 'menu_otpions visibility')
         .attr('fill', '#404F57')
@@ -1146,7 +1152,7 @@ class Composer extends Component {
         .on('click', () => {
           // console.info('Settings')
         })
-        gStopMenu
+      gStopMenu
           .append('svg:rect')
           .attr('class', 'menu_otpions visibility')
           .attr('fill', 'transparent')
@@ -1158,7 +1164,7 @@ class Composer extends Component {
           .on('click', () => {
             deleteNodes()
           })
-        gStopMenu
+      gStopMenu
           .append('svg:text')
           .attr('class', 'menu_otpions visibility')
           .attr('x', 50)
@@ -1172,7 +1178,7 @@ class Composer extends Component {
             deleteNodes()
           })
         // MENU
-        gStopMenu
+      gStopMenu
           .append('svg:circle')
           .attr('class', 'option_menu hidden')
           .attr('r', 2)
@@ -1180,7 +1186,7 @@ class Composer extends Component {
           .attr('cx', 28)
           .attr('cy', 4)
         // MENU
-        gStopMenu
+      gStopMenu
           .append('svg:circle')
           .attr('class', 'option_menu hidden')
           .attr('r', 2)
@@ -1188,7 +1194,7 @@ class Composer extends Component {
           .attr('cx', 28)
           .attr('cy', 10)
         // MENU
-        gStopMenu
+      gStopMenu
           .append('svg:circle')
           .attr('class', 'option_menu hidden')
           .attr('r', 2)
@@ -1201,38 +1207,38 @@ class Composer extends Component {
       groupExternal.exit().remove()
 
       tick()
-    };
+    }
 
     const onMouseDown = (node, position) => {
       switch (position) {
         case 'right':
           event.stopPropagation()
           mouseDownConfig(node, position)
-          break;
+          break
         case 'left':
           event.stopPropagation()
           mouseDownConfig(node, position)
-          break;
+          break
         case 'top':
           event.stopPropagation()
           mouseDownConfig(node, position)
-          break;
+          break
         case 'bottom':
           event.stopPropagation()
           mouseDownConfig(node, position)
-          break;
+          break
         case 'groupBridge':
           groupBridge.call(dragger)
-          break;
+          break
         case 'groupExternal':
           groupExternal.call(dragger)
-          break;
+          break
         case 'groupVirtualSwitch':
           groupVirtualSwitch.call(dragger)
-          break;
+          break
         default:
           groupVNF.call(dragger)
-          break;
+          break
       }
     }
 
@@ -1248,7 +1254,7 @@ class Composer extends Component {
         mousedownNode = node
         selectedNode = mousedownNode === selectedNode ? null : mousedownNode
         node.optionSelect = position
-        if(node.type !== 'vs') {
+        if (node.type !== 'vs') {
           node[position].isLink = true
         }
         // reposition drag line
@@ -1260,23 +1266,22 @@ class Composer extends Component {
     }
 
     const mouseUpConfig = (node, position) => {
-      if (!mousedownNode) return;
+      if (!mousedownNode) return
       // hidden drag line
       dragLine.classed('hidden', true)
 
       // check for drag-to-self
-      mouseupNode = node;
+      mouseupNode = node
       if (mouseupNode === mousedownNode) {
         resetMouseVars()
         return
       }
       // check if is linked
-      let nodeSelect = node[position].isLink;
+      let nodeSelect = node[position].isLink
       if (nodeSelect) {
-        const nodeFind = nodes.find(node => node.id === mousedownNode.id);
-        nodeFind[mousedownNode.optionSelect].isLink = false;
+        const nodeFind = nodes.find(node => node.id === mousedownNode.id)
+        nodeFind[mousedownNode.optionSelect].isLink = false
         removeCircleOption(mousedownNode, mousedownNode.optionSelect)
-        alert('is linked')
         resetMouseVars()
         return
       }
@@ -1289,9 +1294,7 @@ class Composer extends Component {
         createLink()
       } else {
         removeCircleOption(mousedownNode, mousedownNode.optionSelect)
-        alert('cant link')
         resetMouseVars()
-        return
       }
     }
 
@@ -1307,7 +1310,7 @@ class Composer extends Component {
       if (mousedownNode.type === 'vs') {
         this.createLink(target, source)
       } else {
-        this.createLink(source,target)
+        this.createLink(source, target)
       }
       source.optionSelect = null
       target.optionSelect = null
@@ -1318,14 +1321,14 @@ class Composer extends Component {
       restart()
     }
 
-    const set_focus = d => {
+    const setFocus = d => {
       if (!d.isOpen) {
         selectAll(`g #${d.id} .option_menu`).classed('hidden', false)
         select(`g #${d.id} rect`).style('filter', 'url(#shadow)')
       }
     }
 
-    const unset_focus = d => {
+    const unsetFocus = d => {
       if (!d.isOpen) {
         selectAll(`g #${d.id} .option_menu`).classed('hidden', true)
       }
@@ -1342,7 +1345,7 @@ class Composer extends Component {
         )
         selectAll(`g #${node.id} .menu_otpions`).classed('visibility', false)
         select(`g #${node.id} rect`).style('filter', '')
-        selectedNode = node;
+        selectedNode = node
       } else {
         selectAll(`g #${node.id} .group_${node.type}_menu rect.menu`).attr(
           'fill',
@@ -1355,11 +1358,11 @@ class Composer extends Component {
     // Close Tooltip
     const closeTooltip = node => {
       node.isOpen = false
-        selectAll(`g #${node.id} .group_${node.type}_menu rect.menu`).attr(
+      selectAll(`g #${node.id} .group_${node.type}_menu rect.menu`).attr(
           'fill',
           'transparent'
         )
-        selectAll(`g #${node.id} .menu_otpions`).classed('visibility', true)
+      selectAll(`g #${node.id} .menu_otpions`).classed('visibility', true)
     }
 
     // Use in Bidge External and VS
@@ -1367,33 +1370,32 @@ class Composer extends Component {
       node.isOpen = !node.isOpen
       if (node.isOpen) {
         selectAll(`g #${node.id} .group_${node.type}_menu rect.menu`)
-        .attr('fill','#404F57')
+        .attr('fill', '#404F57')
         selectAll(`g #${node.id} .menu_otpions`).classed('visibility', false)
         select(`g #${node.id} rect`).style('filter', '')
         selectAll(`g #${node.id} .group_${node.type}_menu`).raise()
-        //Options
+        // Options
         selectAll(`g #${node.id} .option_menu`).classed('hidden', false)
         selectedNode = node
-
       } else {
         selectAll(`g #${node.id} .group_${node.type}_menu rect.menu`)
-        .attr('fill','transparent')
+        .attr('fill', 'transparent')
         selectAll(`g #${node.id} .group_${node.type}_menu`).lower()
         selectAll(`g #${node.id} .menu_otpions`).classed('visibility', true)
-        //Options
+        // Options
         selectAll(`g #${node.id} .option_menu`).classed('hidden', true)
       }
     }
 
     const confirmLink = link => {
-    selectLink = link;
-    selectAll('#option_link').attr(
+      selectLink = link
+      selectAll('#option_link').attr(
       'transform',
       `translate(${(svgMousePosition.x - zoomPosition.x) /
         zoomPosition.k},${(svgMousePosition.y - zoomPosition.y) /
         zoomPosition.k}) `
-    );
-    selectAll('#option_link .menu_otpions').classed('visibility', false);
+    )
+      selectAll('#option_link .menu_otpions').classed('visibility', false)
     }
 
     const deleteNodes = () => {
@@ -1415,7 +1417,7 @@ class Composer extends Component {
           node[position].isLink = false
           select(`g #${node.id} .option_external`).classed('hidden', true)
           break
-          case 'vs':
+        case 'vs':
           node.optionSelect = null
           node[position].isLink = null
           select(`g #${node.id} .option_virtual_switch_${position}`).classed('hidden', true)
@@ -1426,8 +1428,8 @@ class Composer extends Component {
     }
 
     // Zoom
-    function zoomed() {
-      zoomPosition ={
+    function zoomed () {
+      zoomPosition = {
         x: event.transform.x + 240,
         y: event.transform.y + 136,
         k: event.transform.k
@@ -1482,7 +1484,6 @@ class Composer extends Component {
     .attr('operator', 'in')
     .attr('result', 'offsetBlur')
 
-
     // overlay original SourceGraphic over translated blurred opacity by using
     // feMerge filter. Order of specifying inputs is important!
     var feMerge = shadow.append('feMerge')
@@ -1491,61 +1492,61 @@ class Composer extends Component {
     feMerge.append('feMergeNode').attr('in', 'SourceGraphic')
 
       // app starts here
-    function mousemove() {
-    svgMousePosition.x = event.pageX;
-    svgMousePosition.y = event.pageY;
-    if (!mousedownNode) return;
+    function mousemove () {
+      svgMousePosition.x = event.pageX
+      svgMousePosition.y = event.pageY
+      if (!mousedownNode) return
     // update drag line
-    dragLine.attr('d', () => {
-      switch (mousedownNode.optionSelect) {
-        case 'left':
-          return `M${mousedownNode.x},${mousedownNode.y +
+      dragLine.attr('d', () => {
+        switch (mousedownNode.optionSelect) {
+          case 'left':
+            return `M${mousedownNode.x},${mousedownNode.y +
             mousedownNode.h / 2}L${(svgMousePosition.x - zoomPosition.x) /
             zoomPosition.k},${(svgMousePosition.y - zoomPosition.y) /
             zoomPosition.k}`
-        case 'right':
-          return `M${mousedownNode.x + mousedownNode.w},${mousedownNode.y +
+          case 'right':
+            return `M${mousedownNode.x + mousedownNode.w},${mousedownNode.y +
             mousedownNode.h / 2}L${(svgMousePosition.x - zoomPosition.x) /
             zoomPosition.k},${(svgMousePosition.y - zoomPosition.y) /
             zoomPosition.k}`
-        case 'top':
-          return `M${mousedownNode.x + mousedownNode.w / 2},${
+          case 'top':
+            return `M${mousedownNode.x + mousedownNode.w / 2},${
             mousedownNode.y
           }L${(svgMousePosition.x - zoomPosition.x) /
             zoomPosition.k},${(svgMousePosition.y - zoomPosition.y) /
             zoomPosition.k}`
-        case 'bottom':
-          return `M${mousedownNode.x + mousedownNode.w / 2},${mousedownNode.y +
+          case 'bottom':
+            return `M${mousedownNode.x + mousedownNode.w / 2},${mousedownNode.y +
             mousedownNode.h}L${(svgMousePosition.x - zoomPosition.x) /
             zoomPosition.k},${(svgMousePosition.y - zoomPosition.y) /
             zoomPosition.k}`
-        default:
-          return `M${mousedownNode.x},${mousedownNode.y}L${svgMousePosition.x},${
+          default:
+            return `M${mousedownNode.x},${mousedownNode.y}L${svgMousePosition.x},${
             svgMousePosition.y}`
-      }
-    })
+        }
+      })
       restart()
     }
 
-    function mouseup() {
-    if (!mouseupNode && !isMouseUpConfig) {
-      if(mousedownNode){
-        const findNode = nodes.find(node => node.id === mousedownNode.id);
-        findNode[findNode.optionSelect].isLink = false;
-        removeCircleOption(findNode, findNode.optionSelect);
-      }
-      if(optionSelect_Draw){
-        removeCircleOption(optionSelect_Draw.node, optionSelect_Draw.position)
-        const findNodeMouseUp = nodes.find(node => node.id === optionSelect_Draw.node.id)
-        if(findNodeMouseUp){
-          findNodeMouseUp[optionSelect_Draw.position].isLink = false
+    function mouseup () {
+      if (!mouseupNode && !isMouseUpConfig) {
+        if (mousedownNode) {
+          const findNode = nodes.find(node => node.id === mousedownNode.id)
+          findNode[findNode.optionSelect].isLink = false
+          removeCircleOption(findNode, findNode.optionSelect)
+        }
+        if (optionSelectDraw) {
+          removeCircleOption(optionSelectDraw.node, optionSelectDraw.position)
+          const findNodeMouseUp = nodes.find(node => node.id === optionSelectDraw.node.id)
+          if (findNodeMouseUp) {
+            findNodeMouseUp[optionSelectDraw.position].isLink = false
+          }
         }
       }
-    }
-    dragLine.classed('hidden', true);
-    isMouseUpConfig = false
+      dragLine.classed('hidden', true)
+      isMouseUpConfig = false
     // clear mouse event vars
-    resetMouseVars();
+      resetMouseVars()
     }
 
     const confParams = node => {
@@ -1553,29 +1554,29 @@ class Composer extends Component {
       closeTooltip(node)
     }
 
-    function mousedown() {
-    if (mousedownNode || mousedownLink) return
-    restart()
+    function mousedown () {
+      if (mousedownNode || mousedownLink) return
+      restart()
     }
 
     svg
     .on('mousedown', mousedown)
     .on('mousemove', mousemove)
-    .on('mouseup', mouseup);
+    .on('mouseup', mouseup)
 
-    restart();
+    restart()
   }
 
   componentDidUpdate () {
     const { d3Data } = this.props
-    if(d3Data) {
+    if (d3Data) {
       this.updateData(d3Data)
     }
   }
 
-  render() {
+  render () {
     const { modalStatus, modalData, modalAction, modalConfigStatus, modalNodeConfigData } = this.props
-    return(
+    return (
       <React.Fragment>
         <D3>
           <svg

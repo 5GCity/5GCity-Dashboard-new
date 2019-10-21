@@ -17,45 +17,45 @@ import ComposerMainLogic from 'containers/SDKContainer/logic'
 
 export const DEFAULT_FORM = {
   link_name: {
-    value: null,
+    value: null
   },
   name_connection_source: {
     value: null
   },
-  options_select_source:{
+  options_select_source: {
     value: null
   },
-  name_connection_target:{
+  name_connection_target: {
     value: null
   },
-  options_select_target:{
+  options_select_target: {
     value: null
   },
-  required_ports:{
+  required_ports: {
     array: []
-  },
+  }
 }
 
 const VALIDATIONS = {
   link_name: [
-    Check.isRequired,
+    Check.isRequired
   ],
   name_connection_source: [
-    Check.isRequired,
+    Check.isRequired
   ],
   options_select_source: [
-    Check.isRequired,
+    Check.isRequired
   ],
   name_connection_target: [
-    Check.isRequired,
+    Check.isRequired
   ],
   options_select_target: [
-    Check.isRequired,
+    Check.isRequired
   ],
   required_ports: [
     Check.isRequired,
-    Check.isNumber,
-  ],
+    Check.isNumber
+  ]
 }
 
 export default kea({
@@ -63,17 +63,17 @@ export default kea({
 
   connect: {
     actions: [
-      ComposerMainLogic,[
+      ComposerMainLogic, [
         'createLink',
         'setData',
         'modalAction',
-        'changeSaveStatus',
+        'changeSaveStatus'
       ]
     ],
     props: [
-      ComposerMainLogic,[
+      ComposerMainLogic, [
         'modalData',
-        'd3Data',
+        'd3Data'
       ]
     ]
   },
@@ -85,18 +85,18 @@ export default kea({
     removePort: (index) => ({ index }),
     createLink: (form) => ({ form }),
     getForm: () => ({ }),
-    setForm : (form) => ({ form }),
+    setForm: (form) => ({ form }),
     changeForm: (form) => ({ form }),
 
     submit: () => ({ }),
     error: (error) => ({ error }),
-    reset: () => true,
+    reset: () => true
   }),
 
   reducers: ({ actions }) => ({
-    form:[DEFAULT_FORM, PropTypes.any,{
+    form: [DEFAULT_FORM, PropTypes.any, {
       [actions.change]: (state, payload) => Check.setAndCheckValidation(state, payload, VALIDATIONS),
-      [actions.setValuePorts]:(state, payload) => Check.setAndCheckValidationArray(state, payload, VALIDATIONS),
+      [actions.setValuePorts]: (state, payload) => Check.setAndCheckValidationArray(state, payload, VALIDATIONS),
       [actions.addPort]: (state, payload) => {
         return Object.assign({}, state, state.required_ports.array.push({value: null, valid: false}))
       },
@@ -111,14 +111,14 @@ export default kea({
     dirty: [false, PropTypes.bool, {
       [actions.change]: () => true,
       [actions.error]: () => true,
-      [actions.reset]: () => false,
+      [actions.reset]: () => false
     }],
 
     submiting: [false, PropTypes.bool, {
       [actions.submit]: () => true,
       [actions.error]: () => false,
-      [actions.reset]: () => false,
-    }],
+      [actions.reset]: () => false
+    }]
   }),
 
   selectors: ({ selectors }) => ({
@@ -126,9 +126,9 @@ export default kea({
       () => [selectors.modalData],
       (modalData) => {
         const newService = {}
-         if(modalData) {
+        if (modalData) {
           const { source, target } = modalData
-          if(source && target) {
+          if (source && target) {
             newService.source = createFormFunction(modalData, 'source')
             newService.target = createFormFunction(modalData, 'target')
           }
@@ -137,7 +137,7 @@ export default kea({
         return newService
       },
       PropTypes.object
-    ],
+    ]
   }),
 
   start: function * () {
@@ -173,7 +173,7 @@ export default kea({
         setData,
         modalAction,
         changeSaveStatus,
-        reset,
+        reset
       } = this.actions
       const getForm = yield this.get('form')
       const dirty = yield this.get('dirty')
@@ -200,8 +200,7 @@ export default kea({
         yield put(modalAction(null))
         yield put(reset())
       }
-    },
+    }
   }
 
 })
-

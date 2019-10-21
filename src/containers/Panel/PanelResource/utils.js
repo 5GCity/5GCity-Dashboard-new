@@ -7,7 +7,6 @@
 
 const NewInfra = { value: null, valid: false }
 
-
 export const AddNewInfra = state => {
   const newState = { ...state }
   const array = newState.controller.array.concat(NewInfra)

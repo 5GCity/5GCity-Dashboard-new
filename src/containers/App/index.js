@@ -15,7 +15,6 @@ import { Switch, Route, withRouter } from 'react-router'
 import Loading from 'components/Loading'
 
 class App extends Component {
-
   render () {
     const { loading, loadingPage } = this.props
 
@@ -25,19 +24,19 @@ class App extends Component {
 
     return (
       <Main>
-        <Loading fullscreen={true} loading={loadingPage} />
-          <RouteContainer>
-            <Switch>
-              {Routes.map((route) =>
-                <Route
-                  exact
-                  key={route.key}
-                  path={route.path}
-                  component={route.component}
+        <Loading fullscreen loading={loadingPage} />
+        <RouteContainer>
+          <Switch>
+            {Routes.map((route) =>
+              <Route
+                exact
+                key={route.key}
+                path={route.path}
+                component={route.component}
                 />
               )}
-            </Switch>
-          </RouteContainer>
+          </Switch>
+        </RouteContainer>
       </Main>
     )
   }

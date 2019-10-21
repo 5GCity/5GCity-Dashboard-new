@@ -18,12 +18,11 @@ const Wrapper = styled.div`
   border-radius: 6px;
   background-color: #89979F;
 
-${({small})=> small ? `
+${({small}) => small ? `
   height: 32px;
   width: 32px;`
-  :`
+  : `
   height: 44px;
   width: 44px;`
 }
 `
-

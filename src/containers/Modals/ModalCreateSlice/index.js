@@ -8,6 +8,7 @@ import React, { Component } from 'react'
 import Logic from './logic'
 import styled from 'styled-components'
 
+/* Component */
 import Modal from 'components/Modal'
 import Button from 'components/Button'
 import Input from 'components/Input'
@@ -15,9 +16,8 @@ import { CheckIcon } from 'components/Icons'
 import Form from 'components/Form'
 
 class ModalCreateSlice extends Component {
-
-  handleKeyPress(target) {
-    if(target.charCode === 13){
+  handleKeyPress (target) {
+    if (target.charCode === 13) {
       target.preventDefault()
     }
   }
@@ -33,18 +33,18 @@ class ModalCreateSlice extends Component {
     return (
       <Modal
         size={'tiny'}
-        showClose={true}
+        showClose
         onCancel={modalNewSliceStatus}
         visible={modalNewSlice}
-        title="Confirmation"
+        title='Confirmation'
       >
         <Form
           model={formSlice}>
           <Modal.Body>
             <Form.Item
-              label="Slice name"
+              label='Slice name'
               labelPosition={'top'}
-              required={true}
+              required
               status={!formSlice.nameSlice.valid}
             >
               <Input
@@ -74,7 +74,6 @@ class ModalCreateSlice extends Component {
 }
 
 export default Logic(ModalCreateSlice)
-
 
 export const ContainerButton = styled.div`
 `

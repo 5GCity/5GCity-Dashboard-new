@@ -17,16 +17,16 @@ export default ({ children, ...props }) => (
     <Container>
       <Title>{props.title}</Title>
     </Container>
-      {props.location &&
+    {props.location &&
       <Container>
         <SubTitle>Location:</SubTitle>
         <Location>{props.location}</Location>
       </Container>
       }
-      <Container>
-        <SubTitle>Description:</SubTitle>
-        <Description>{props.description}</Description>
-      </Container>
+    <Container>
+      <SubTitle>Description:</SubTitle>
+      <Description>{props.description}</Description>
+    </Container>
   </Wrapper>
 )
 
@@ -52,7 +52,7 @@ const Circle = styled.div`
 const Title = styled.p`
   margin: 4px 0;
   font-size: 14px;
-  font-family: ${({ theme }) => theme.fontDin };
+  font-family: ${({ theme }) => theme.fontDin};
   letter-spacing: 0.5px;
   line-height: 20px;
   color: #D84F4F;
@@ -63,7 +63,7 @@ const Location = styled.span`
   font-weight: 600;
   width: 184px;
   line-height: 16px;
-  font-family: ${({ theme }) => theme.fontFamily };
+  font-family: ${({ theme }) => theme.fontFamily};
 `
 const Description = styled.div`
   display: inline-flex;
@@ -72,7 +72,7 @@ const Description = styled.div`
   height: 32px;
   width: 184px;
   line-height: 16px;
-  font-family: ${({ theme }) => theme.fontFamily };
+  font-family: ${({ theme }) => theme.fontFamily};
 `
 /* const Close = styled.div`
   position: relative;
@@ -94,7 +94,7 @@ const Container = styled.div`
   margin-left: 40px;
 `
 const SubTitle = styled.p`
-  font-family: ${({ theme }) => theme.fontFamily };
+  font-family: ${({ theme }) => theme.fontFamily};
   font-weight: bold;
   font-size: 12px;
   line-height: 16px;

@@ -23,13 +23,13 @@ const ButtonStyled = styled(Button)`
   border-radius: 24px;
   border: transparent;
   line-height: 15px;
-  font-family: ${({ theme }) => theme.fontDin };
+  font-family: ${({ theme }) => theme.fontDin};
   font-weight: bold;
   font-size: 14px;
   float: ${({float}) => float};
 
 
-  ${({ type, theme }) => type === 'primary' &&`
+  ${({ type, theme }) => type === 'primary' && `
     background-color: ${theme.primaryColor};
 
     &:hover {
@@ -47,7 +47,7 @@ const ButtonStyled = styled(Button)`
     }
   `}
 
-  ${({ type, theme, outline }) => type === 'secondary' && !outline &&`
+  ${({ type, theme, outline }) => type === 'secondary' && !outline && `
     background-color: ${theme.secondaryColor};
     color: #fff;
 
@@ -69,7 +69,7 @@ const ButtonStyled = styled(Button)`
       }
   `}
 
-  ${({ type, theme, outline }) => type === 'secondary' && outline &&`
+  ${({ type, theme, outline }) => type === 'secondary' && outline && `
     background-color: transparent;
     border: 1px solid ${theme.secondaryColor};
     color: ${theme.secondaryColor};
@@ -87,37 +87,37 @@ const ButtonStyled = styled(Button)`
       border: 1px solid ${darken(0.1, theme.secondaryColor)};
       }
     &:disabled {
-      background-color: ${lighten(0.1,theme.secondaryColor)};
+      background-color: ${lighten(0.1, theme.secondaryColor)};
     }
 `}
 
 
-${({ type, theme, outline }) => type === 'primary' && outline &&`
+${({ type, theme, outline }) => type === 'primary' && outline && `
   background-color: transparent;
   border: 1px solid ${theme.primaryColor};
   color: ${theme.primaryColor};
 
   &:hover {
-    background-color: transparent;
-    color: ${darken(0.1, theme.primaryColor)};
+    background-color: #628A34;
+    color: white;
     border: 1px solid ${darken(0.1, theme.primaryColor)};
   }
   &:active {
     background-color: transparent;
-    color: ${darken(0.1, theme.primaryColor)};
+    color: white;
     border: 1px solid ${darken(0.1, theme.primaryColor)};
     }
   &:focus {
-    background-color: transparent;
-    color: ${darken(0.1, theme.primaryColor)};
+    background-color: #628A34;
+    color: white;
     border: 1px solid ${darken(0.1, theme.primaryColor)};
     }
   &:disabled {
-    background-color: ${lighten(0.1,theme.primaryColor)};
+    background-color: #485F4F;
   }
 `}
 
-${({ type, theme, outline }) => type === 'primary' && !outline &&`
+${({ type, theme, outline }) => type === 'primary' && !outline && `
 background-color: ${theme.primaryColor};
 color: #fff;
 
@@ -139,7 +139,7 @@ color: #fff;
   }
 `}
 
-  ${({ type, theme }) => type === 'danger' &&`
+  ${({ type, theme }) => type === 'danger' && `
   background-color: ${theme.dangerColor};
   color: #fff;
 
@@ -177,7 +177,6 @@ color: #fff;
      font-size: 16px;
   `}
 `
-
 
 const SvgContent = styled.i`
   display: inline-flex;

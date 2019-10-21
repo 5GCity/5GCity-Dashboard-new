@@ -12,19 +12,19 @@ import Input from 'components/Input'
 import Form from './index'
 
 const exampleOne = () => (
-  <Form labelPosition={'top'} labelWidth="100">
-    <Form.Item label="Name" required={true} status={'warning'}>
-      <Input value={''} ></Input>
+  <Form labelPosition={'top'} labelWidth='100'>
+    <Form.Item label='Name' required status={'warning'}>
+      <Input value={''} />
     </Form.Item>
-    <Form.Item label="Activity zone" required={true} status={'danger'}>
+    <Form.Item label='Activity zone' required status={'danger'}>
       <Input
-        placeholder="Placeholder Input"
+        placeholder='Placeholder Input'
         append={"MB's"}
       />
       <Form.Error>Oops! Error message.</Form.Error>
     </Form.Item>
-    <Form.Item label="Activity form" required={true} >
-      <Input disabled={true} value={'Another Test'}></Input>
+    <Form.Item label='Activity form' required >
+      <Input disabled value={'Another Test'} />
     </Form.Item>
   </Form>
 )

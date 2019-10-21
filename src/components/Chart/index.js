@@ -9,10 +9,8 @@ import styled from 'styled-components'
 import { ComposedChart } from 'recharts'
 
 export default ({ children, ...props }) => (
-  <Wrapper {...props}>
-  </Wrapper>
+  <Wrapper {...props} />
 )
 
 const Wrapper = styled(ComposedChart)`
 `
-

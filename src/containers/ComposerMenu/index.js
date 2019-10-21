@@ -7,26 +7,29 @@
 import React, { Component } from 'react'
 import Logic from './logic'
 import styled from 'styled-components'
+
 // Components
-import Input from 'components/Input'
-import Button from 'components/Button'
 import Collapse from 'components/Collapse'
 import Catalogue from 'components/Catalogue'
-import { PlusIcon } from 'components/Icons'
-
+import Select from 'components/Select'
 
 class ComposerMenu extends Component {
-
   render () {
-    const { catalogue, createNode } = this.props
-
+    const { functions, createNode, selectOrganization, organizationsList
+     } = this.props
+    const { changeOrganization }= this.actions
     return (
       <Wrapper>
         <WrapperInput>
-          <Input icon={'search'} placeholder={'Start typing to search...'} />
+          <Select
+            type={'default'}
+            options={organizationsList}
+            selectOption={selectOrganization}
+            onChange={value => changeOrganization(value)}
+          />
         </WrapperInput>
         <WrapperContent>
-          <Collapse value={['catalogue','default']}>
+          <Collapse value={['catalogue', 'default']}>
             <WrapperCatalogue title={'General'} name={'default'} key={1}>
               <Catalogue
                 name={'Bridge'}
@@ -41,14 +44,14 @@ class ComposerMenu extends Component {
                 onClick={(node) => createNode(node)}
               />
               <Catalogue
-                name={'Virtual Switch'}
+                name={'VS'}
                 key={'9999'}
                 type={'vs'}
                 onClick={(node) => createNode(node)}
               />
             </WrapperCatalogue>
-            <WrapperCatalogue title={'My catalogue'} name={'catalogue'} key={2}>
-            {catalogue && catalogue.map((item, i) =>
+            <WrapperCatalogue title={selectOrganization} name={'catalogue'} key={2}>
+            {functions && functions.map((item, i) =>
               <Catalogue
                 key={i}
                 version={item.version}
@@ -57,30 +60,11 @@ class ComposerMenu extends Component {
                 circlefill='#A8D0CE'
                 name={item.name}
                 onClick={() => createNode(item)}
-                disabled={item.disabled}
               />
             )}
             </WrapperCatalogue>
-{/*             <WrapperCatalogue title={'Favorites'} name={'favorite'} onClick={(data) => console.log(data)}>
-            <Catalogue
-              version={'3.0.1'}
-              type={'VNF'}
-              colortext='blue'
-              circlefill='yellow'
-              name={'Function D'}
-              onClick={(node) => createNode(node)}
-            />
-            </WrapperCatalogue> */}
           </Collapse>
         </WrapperContent>
-        <WrapperButton>
-          <Button
-            type={'secondary'}
-            text={'Add from public repository'}
-            svg={<PlusIcon />}
-            dsiabled={true}
-          />
-        </WrapperButton>
       </Wrapper>
     )
   }
@@ -89,7 +73,7 @@ class ComposerMenu extends Component {
 export default Logic(ComposerMenu)
 
 const Wrapper = styled.div`
-  background-color: ${({theme}) => theme.bodyBackground };
+  background-color: ${({theme}) => theme.bodyBackground};
   position: absolute;
   left: 0;
   min-height: 768px;
@@ -97,26 +81,17 @@ const Wrapper = styled.div`
 `
 const WrapperInput = styled.div`
   max-height: 72px;
-  background-color: ${({theme}) => theme.bodyBackground };
+  background-color: ${({theme}) => theme.bodyBackground};
   padding: 20px 8px;
   box-shadow: 0 0 15px 0 rgba(0,0,0,0.2);
 `
 const WrapperContent = styled.div`
-  height: 700px;
+  height: 100vh;
   overflow-y:scroll;
   max-width: 240px;
   box-shadow: 0 0 15px 0 rgba(0,0,0,0.2);
 `
 
-const WrapperButton = styled.div`
-  position: fixed;
-  bottom: 0;
-  max-height: 72px;
-  width: 240px;
-  background-color: ${({theme}) => theme.bodyBackground };
-  padding: 20px 20px;
-  box-shadow: 0 0 15px 0 rgba(0,0,0,0.2);
-`
 const WrapperCatalogue = styled.div`
   text-align:center;
 `

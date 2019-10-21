@@ -7,7 +7,6 @@
 
 import { kea } from 'kea'
 
-
 export default kea({
   path: () => ['scenes', 'containers', 'Composer'],
 
@@ -17,7 +16,6 @@ export default kea({
 
   reducers: ({ actions }) => ({
   }),
-
 
   start: function * () {
   },
@@ -30,5 +28,3 @@ export default kea({
 
   }
 })
-
-

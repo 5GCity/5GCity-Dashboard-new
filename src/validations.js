@@ -9,8 +9,8 @@ export const checkValidation = (form, validations) => {
     if (clone.hasOwnProperty(key)) {
       const element = clone[key]
       if ('value' in element) {
-      const validationList = validations[key]
-      element.valid = true
+        const validationList = validations[key]
+        element.valid = true
         if (validationList && validationList.length) {
           for (let index = 0; index < validationList.length; index++) {
             const check = validationList[index]
@@ -38,9 +38,9 @@ export const checkValidation = (form, validations) => {
         const validationList = validations[key]
         fieldNameArray.push(key)
         for (let element of fieldName.array) {
-          const type = typeof(element)
-          if(type === 'object'){
-          element.valid = true
+          const type = typeof (element)
+          if (type === 'object') {
+            element.valid = true
             if (validationList && validationList.length) {
               for (let index = 0; index < validationList.length; index++) {
                 const check = validationList[index]
@@ -91,7 +91,7 @@ export const checkValidation = (form, validations) => {
       }
     }
   }
-  if(newArray.length > 0) {
+  if (newArray.length > 0) {
     fieldNameArray.forEach(fieldName => {
       clone[fieldName].array = newArray
     })
@@ -137,38 +137,38 @@ export const setAndCheckValidation = (state, payload, validations) => {
 // Checks the validation of a field array
 export const setAndCheckValidationArray = (state, payload, validations) => {
   let newStateChanges = {}
-  if(!payload.parent) {
-    const { key, value , index } = payload
-  state[key].array.forEach(() => {
-    const field = value
-    const validationList = validations[key]
+  if (!payload.parent) {
+    const { key, value, index } = payload
+    state[key].array.forEach(() => {
+      const field = value
+      const validationList = validations[key]
 
-    let settedField = {
-      value: field,
-      valid: true
-    }
+      let settedField = {
+        value: field,
+        valid: true
+      }
 
-    if (validationList) {
-      for (let index = 0; index < validationList.length; index++) {
-        const check = validationList[index]
-        const response = check(field, state)
+      if (validationList) {
+        for (let index = 0; index < validationList.length; index++) {
+          const check = validationList[index]
+          const response = check(field, state)
 
-        if (response.result === 'end') {
-          break
-        }
+          if (response.result === 'end') {
+            break
+          }
 
-        if (!response.result) {
-          settedField.valid = false
-          settedField.message = response.message
-          break
+          if (!response.result) {
+            settedField.valid = false
+            settedField.message = response.message
+            break
+          }
         }
       }
-    }
-    newStateChanges = {...state}
-    newStateChanges[key].array[index] = settedField
-  })
+      newStateChanges = {...state}
+      newStateChanges[key].array[index] = settedField
+    })
   } else {
-    const { parent, key, value , index } = payload
+    const { parent, key, value, index } = payload
 
     const field = value
     const validationList = validations[key]
@@ -263,7 +263,7 @@ export const isVersion = (value, state) => {
 }
 
 export const isNumber = (value, state) => {
-  const message ='Insert only numbers'
+  const message = 'Insert only numbers'
   const regex = /^[0-9]*$/
   if (!regex.test(value)) {
     return { result: false, message }

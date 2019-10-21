@@ -8,7 +8,8 @@ import React, { Component } from 'react'
 import Logic from './logic'
 import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
-import { Checkbox } from 'element-react'
+import { Checkbox, Layout } from 'element-react'
+import { UNITS, UNITS_SECONDS } from './utils'
 
 /* Containers */
 import SliceMap from 'containers/SliceMap'
@@ -19,16 +20,15 @@ import Button from 'components/Button'
 import Input from 'components/Input'
 import PanelRight from 'components/PanelRight'
 import { BackIcon, CheckIcon } from 'components/Icons'
-import Select from 'components/Select'
 import Form from 'components/Form'
+import Select from 'components/Select'
 
 /* Containers */
 import ModalCreateSlice from 'containers/Modals/ModalCreateSlice'
 import ModalErrorSlice from 'containers/Modals/ModalErrorSlice'
+import ModalChunketeSlice from 'containers/Modals/ModalChunketeSlice'
 
 class SliceNew extends Component {
-
-
   navigateToBack = () => {
     const { history } = this.props
     history.goBack()
@@ -36,11 +36,11 @@ class SliceNew extends Component {
 
   infoMarkerContainer = () => {
     const { selectSlice, selectPin } = this.props
-    const { changeNetwork, changeComputes, changeBoxes, changeRAN } = this.actions
-    const { computes, networks, rans } = selectSlice
+    const { changeNetwork, changeComputes, changeWifi } = this.actions
+    const { computes, networks } = selectSlice
     return (
       <Form
-        labelWidth="120"
+        labelWidth='120'
         labelPosition={'top'}
       >
         <Form.Item>
@@ -51,7 +51,7 @@ class SliceNew extends Component {
             <React.Fragment key={i}>
               <Checkbox.Group
                 value={compute.ischecked === false ? [] : [compute.name]}
-                onChange={(value) => changeComputes(selectPin, i, 'ischecked', value.length > 0 ? true : false)}>
+                onChange={(value) => changeComputes(selectPin, i, 'ischecked', value.length > 0)}>
                 <Checkbox
                   key={compute.id}
                   label={compute.name}
@@ -62,45 +62,75 @@ class SliceNew extends Component {
               </Checkbox.Group>
               {compute.ischecked &&
                 <FormContainer key={i}>
-                  <Form.Item label="Name">
+                  <Form.Item label='Name'>
                     <Input
-                      type="text"
+                      type='text'
                       value={compute.computeName}
                       onChange={(value) => changeComputes(selectPin, i, 'computeName', value)}
                     />
                   </Form.Item>
-                  <Form.Item label="Description">
+                  <Form.Item label='Description'>
                     <Input
-                      type="text"
+                      type='text'
                       value={compute.computeDescription}
                       onChange={(value) => changeComputes(selectPin, i, 'computeDescription', value)}
                     />
                   </Form.Item>
-                  <Form.Item label="CPUs">
+                  <Form.Item label='CPUs'>
                     <Input
-                      type="text"
+                      type='text'
                       value={compute.cpus}
                       onChange={(value) => changeComputes(selectPin, i, 'cpus', value)}
                     />
                   </Form.Item>
                   <Id>CPU Total: {compute.computeData.cpus.total} cores </Id>
                   <Id>CPU Provisioned: {compute.computeData.cpus.provisioned} cores </Id>
-                  <Form.Item label="RAM">
-                    <Input
-                      type="text"
-                      value={compute.ram}
-                      onChange={(value) => changeComputes(selectPin, i, 'ram', value)}
-                    />
-                  </Form.Item>
+                  <Layout.Row gutter="4">
+                    <Layout.Col span="16">
+                    <Form.Item label='RAM'>
+                      <Input
+                        type='text'
+                        value={compute.ram}
+                        onChange={(value) => changeComputes(selectPin, i, 'ram', value)}
+                      />
+                    </Form.Item>
+                    </Layout.Col>
+                    <Layout.Col span="8">
+                      <Form.Item label={'Unit'}>
+                        <Select
+                          type={'default'}
+                          placeholder="unit"
+                          options={UNITS}
+                          onChange={(value) => changeComputes(selectPin, i, 'ramUnits', value)}
+                          selectOption={compute.computeData.ram.units || 'MB'}
+                        />
+                      </Form.Item>
+                    </Layout.Col>
+                  </Layout.Row>
                   <Id>RAM Total: {compute.computeData.ram.total} {compute.computeData.ram.units} </Id>
                   <Id>RAM Provisioned: {compute.computeData.ram.provisioned} {compute.computeData.ram.units} </Id>
-                  <Form.Item label="Storage">
-                    <Input
-                      type="text"
-                      value={compute.storage}
-                      onChange={(value) => changeComputes(selectPin, i, 'storage', value)}
-                    />
-                  </Form.Item>
+                  <Layout.Row gutter="4">
+                    <Layout.Col span="16">
+                      <Form.Item label='Storage'>
+                        <Input
+                          type='text'
+                          value={compute.storage}
+                          onChange={(value) => changeComputes(selectPin, i, 'storage', value)}
+                        />
+                      </Form.Item>
+                    </Layout.Col>
+                    <Layout.Col span="8">
+                      <Form.Item label={'Unit'}>
+                        <Select
+                          type={'default'}
+                          placeholder="unit"
+                          options={UNITS}
+                          onChange={(value) => changeComputes(selectPin, i, 'sotargeUnits', value)}
+                          selectOption={compute.computeData.storage.units || 'GB'}
+                        />
+                      </Form.Item>
+                    </Layout.Col>
+                  </Layout.Row>
                   <Id>Storage Total: {compute.computeData.storage.total} {compute.computeData.storage.units} </Id>
                   <Id>Storage Provisioned: {compute.computeData.storage.provisioned} {compute.computeData.storage.units} </Id>
                 </FormContainer>
@@ -118,7 +148,7 @@ class SliceNew extends Component {
               <Form.Item >
                 <Checkbox.Group
                   value={network.ischecked === false ? [] : [network.name]}
-                  onChange={(value) => changeNetwork(selectPin, i, 'ischecked', value.length > 0 ? true : false)}>
+                  onChange={(value) => changeNetwork(selectPin, i, 'ischecked', value.length > 0)}>
                   <Checkbox
                     key={network.id}
                     label={network.name}
@@ -130,122 +160,89 @@ class SliceNew extends Component {
               </Form.Item>
               {network.ischecked &&
                 <FormContainer key={i}>
-                  <Form.Item label="Name">
+                  <Form.Item label='Name'>
                     <Input
-                      type="text"
+                      type='text'
                       value={network.networkName}
                       onChange={(value) => changeNetwork(selectPin, i, 'networkName', value)}
                     />
                   </Form.Item>
-                  <Form.Item label="INIT CIDR">
-                    <Input
-                      type="text"
-                      value={network.int_cidr}
-                      onChange={(value) => changeNetwork(selectPin, i, 'int_cidr', value)}
-                    />
-                  </Form.Item>
-                  <Form.Item label="CIDR">
-                    <Input
-                      type="text"
-                      value={network.cidr}
-                      onChange={(value) => changeNetwork(selectPin, i, 'cidr', value)}
-                    />
-                  </Form.Item>
-                  <Form.Item label="Bandwidth">
-                    <Input
-                      type="text"
-                      value={network.bandwidth}
-                      onChange={(value) => changeNetwork(selectPin, i, 'bandwidth', value)}
-                    />
-                  </Form.Item>
-                  <Id>Bandwidth Total: {network.networkData.quota.bandwidth.total} {network.networkData.quota.bandwidth.units}</Id>
-                  <Id>Bandwidth Provisioned: {network.networkData.quota.bandwidth.provisioned} {network.networkData.quota.bandwidth.units}</Id>
-                  <Form.Item label="Floating IP's">
-                    <Input
-                      type="text"
-                      value={network.floatingIps}
-                      onChange={(value) => changeNetwork(selectPin, i, 'floatingIps', value)}
-                    />
-                  </Form.Item>
-                  <Id>Floating IP's Total: {network.networkData.quota.floatingIps.total} {network.networkData.quota.floatingIps.units}</Id>
-                  <Id>Floating IP's Provisioned: {network.networkData.quota.floatingIps.provisioned} {network.networkData.quota.floatingIps.units}</Id>
-                  <Form.Item label="Tag">
-                    <Input
-                      type="text"
-                      value={network.tag}
-                      onChange={(value) => changeNetwork(selectPin, i, 'tag', value)}
-                    />
-                  </Form.Item>
-                  <Id>
-                    Tag Range: {network.networkData.quota.tagRange.init} - {network.networkData.quota.tagRange.end}
-                  </Id>
-                  {network.networkData.quota.provisionedTags &&
-                    <Id>
-                      Provisioned Tags: {network.networkData.quota.provisionedTags.map((tag, i) =>
-                        <Tag key={i}>
-                          {tag} {i < network.networkData.quota.provisionedTags.length - 1 ? ',' : ''}
-                        </Tag>
-                      )
-                      }
-                    </Id>
-                  }
-
+                  <Layout.Row gutter="4">
+                    <Layout.Col span="14">
+                      <Form.Item label='Bandwidth'>
+                        <Input
+                          type='text'
+                          value={network.bandwidth}
+                          onChange={(value) => changeNetwork(selectPin, i, 'bandwidth', value)}
+                        />
+                      </Form.Item>
+                    </Layout.Col>
+                    <Layout.Col span="10">
+                      <Form.Item label={'Unit'}>
+                        <Select
+                          type={'default'}
+                          placeholder="unit"
+                          options={UNITS_SECONDS}
+                          onChange={(value) => changeComputes(selectPin, i, 'bandwidthUnits', value)}
+                          selectOption={network.networkData.bandwidth.units || 'MB/s'}
+                        />
+                      </Form.Item>
+                    </Layout.Col>
+                  </Layout.Row>
+                  <Id>Bandwidth Total: {network.networkData.bandwidth.total} {network.networkData.bandwidth.units}</Id>
+                  <Id>Bandwidth Provisioned: {network.networkData.bandwidth.provisioned} {network.networkData.bandwidth.units}</Id>
                 </FormContainer>
               }
             </React.Fragment>
           )}
-          {rans &&
-            <TitlePanel>Physical Networks</TitlePanel>
+          {selectSlice.wifi &&
+            <TitlePanel>Wifi</TitlePanel>
           }
-          {rans && rans.map((ran, ranIndex) =>
-            <React.Fragment key={ran.id}>
-              <Name>{ran.name}</Name>
-              {ran.chunketeTopology.boxes && ran.chunketeTopology.boxes.map((box, boxIndex) =>
-              <React.Fragment key={box.id}>
-                <Name>{box.name}</Name>
-                <Id>{box.id}</Id>
-                {box.phys && box.phys.map((phy, physIndex)=>
-                <React.Fragment key={phy.id}>
-                  <Form.Item key={phy.id}>
-                    <Checkbox.Group
-                      value={phy.ischecked === false ? [] : [phy.name]}
-                      onChange={(value) => changeBoxes(selectPin, ranIndex, boxIndex, physIndex, 'ischecked', value.length > 0 ? true : false)}>
-                      <Checkbox
-                        key={phy.id}
-                        label={phy.name}
-                      >
-                      </Checkbox>
-                    </Checkbox.Group>
-                  </Form.Item>
-                  <Id>{phy.type}</Id>
-                </React.Fragment>
-                )}
+          {selectSlice.wifi && selectSlice.wifi.map((phy, physIndex) =>
+            <React.Fragment key={phy.id}>
+              <Form.Item key={phy.id}>
+                <Checkbox.Group
+                  value={phy.ischecked === false ? [] : [phy.name]}
+                  onChange={(value) => changeWifi(selectPin, physIndex, 'ischecked', value.length > 0)}>
+                  <Checkbox
+                    key={phy.id}
+                    label={phy.name}
+                  >
+                    <Name>{phy.name}</Name>
+                    <Id>{phy.id}</Id>
+                  </Checkbox>
+                </Checkbox.Group>
+                <BoxType>{phy.type}</BoxType>
+              </Form.Item>
+            </React.Fragment>
+            )}
+            {selectSlice.lte &&
+            <TitlePanel>LTE</TitlePanel>
+            }
+            {selectSlice.lte && selectSlice.lte.map((phy, physIndex) =>
+              <React.Fragment key={phy.id}>
+                <Form.Item key={phy.id}>
+                  <Checkbox.Group
+                    value={phy.ischecked === false ? [] : [phy.name]}
+                    onChange={(value) => changeLTE(selectPin, physIndex, 'ischecked', value.length > 0)}>
+                    <Checkbox
+                      key={phy.id}
+                      label={phy.name}
+                    >
+                      <Name>{phy.name}</Name>
+                      <Id>{phy.id}</Id>
+                    </Checkbox>
+                  </Checkbox.Group>
+                  <BoxType>{phy.type}</BoxType>
+                </Form.Item>
               </React.Fragment>
               )}
-              <FormContainer key={ranIndex}>
-                <Form.Item label="Assigned Quota">
-                  <Input
-                    type="text"
-                    value={ran.assignedQuota}
-                    onChange={(value) => changeRAN(selectPin, ranIndex, 'assignedQuota', value)}
-                  />
-                </Form.Item>
-                <Form.Item label="Name">
-                  <Input
-                    type="text"
-                    value={ran.chunketeName}
-                    onChange={(value) => changeRAN(selectPin, ranIndex, 'chunketeName', value)}
-                  />
-                </Form.Item>
-              </FormContainer>
-            </React.Fragment>
-          )}
         </React.Fragment>
       </Form>
     )
   }
 
-  render() {
+  render () {
     const { pinsResources,
       modalNewSlice,
       visiblePanel,
@@ -254,15 +251,21 @@ class SliceNew extends Component {
       loading,
       formSlice,
       locations,
+      modalChunkete,
+      formChunkete
     } = this.props
     const {
       updateMarker,
       modalNewSliceStatus,
+      modalChunketeStatus,
       modalStatus,
       actionPanel,
       createSlice,
+      setChunkete,
       setValue,
       selectLocation,
+      changeValue,
+      verifySlice
     } = this.actions
     return (
       <Wrapper>
@@ -273,7 +276,7 @@ class SliceNew extends Component {
         >
           <HeaderNav.Left>
             <ButtonShop
-              onClick={() => modalNewSliceStatus()}
+              onClick={() => verifySlice()}
               svg={<CheckIcon />}
             />
           </HeaderNav.Left>
@@ -311,6 +314,15 @@ class SliceNew extends Component {
           createSlice={createSlice}
           setValue={setValue}
         />
+        {/* Modal Chunkete */}
+        <ModalChunketeSlice
+          modalStatus={modalChunketeStatus}
+          status={modalChunkete}
+          loading={loading}
+          setChunkete={setChunkete}
+          chunketes={formChunkete}
+          change={changeValue}
+        />
         {/* Modal Error */}
         <ModalErrorSlice
           modalError={modalError}
@@ -326,6 +338,9 @@ export default withRouter(Logic(SliceNew))
 
 const Wrapper = styled.div`
   height: calc(100% - 80px) !important;
+  .el-checkbox__label{
+    font-size: 16px;
+  }
 `
 
 const TitlePanel = styled.h5`
@@ -342,6 +357,21 @@ const Name = styled.p`
   line-height: 12px;
   font-weight: bold;
   color: #EFF2F7;
+  font-family: ${({ theme }) => theme.fontFamily};
+`
+const RANName = styled.p`
+  margin: 12px 0;
+  font-size: 14px;
+  line-height: 14px;
+  font-weight: bold;
+  color: #EFF2F7;
+  font-family: ${({ theme }) => theme.fontFamily};
+`
+
+const BoxType = styled.span`
+  margin-left: 20px;
+  color: #89979F;
+  font-size: 14px;
   font-family: ${({ theme }) => theme.fontFamily};
 `
 

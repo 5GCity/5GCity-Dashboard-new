@@ -5,7 +5,7 @@
  * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
 import styled from 'styled-components'
-import { Card } from 'element-react';
+import { Card } from 'element-react'
 
 export default styled(Card)`
     border-radius: 6px;

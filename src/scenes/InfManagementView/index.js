@@ -21,7 +21,6 @@ class InfManagementView extends Component {
   }
 }
 
-
 export default Logic(InfManagementView)
 
 const Wrapper = styled.div`

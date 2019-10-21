@@ -3,7 +3,7 @@
  * Add new routes here
  */
 
-//@flow
+// @flow
 import toArray from 'lodash/toArray'
 
 // Import page components bellow here
@@ -25,106 +25,99 @@ import SDK from 'scenes/SDK'
 import SDKService from 'scenes/SDKService'
 import SDKFunctions from 'scenes/SDKFunctions'
 import SDKFunction from 'scenes/SDKFunction'
+import SDKOrganisation from 'scenes/SDKOrganisation'
+import SDKDescription from 'scenes/SDKDescription'
 
 // Define routes here
 export const Routes = {
-    Dashboard: {
-        key: 'Dashboard',
-        name: 'Dashboard',
-        path: '/',
-        navbar:true,
-        component: Dashboard,
-        crumb: ['Slices'],
-        exact:true
-    },
+  Dashboard: {
+    key: 'Dashboard',
+    name: 'Dashboard',
+    path: '/',
+    navbar: true,
+    component: Dashboard,
+    crumb: ['Slices'],
+    exact: true
+  },
 
-
-    Slices: {
-        key: 'Slices',
-        name: 'Slices',
-        path: '/slices',
-        component: Slices,
-        crumb: ['Slice']
-    },
-
+  Slices: {
+    key: 'Slices',
+    name: 'Slices',
+    path: '/slices',
+    component: Slices,
+    crumb: ['Slice']
+  },
 
   SliceDetail: {
-      key: 'SliceDetail',
-      name: 'SliceDetail',
-      path: '/slice/:id',
-      component: SliceDetail,
-      crumb: ['Slices']
+    key: 'SliceDetail',
+    name: 'SliceDetail',
+    path: '/slice/:id',
+    component: SliceDetail,
+    crumb: ['Slices']
   },
-
 
   SliceNew: {
-      key: 'SliceNew',
-      name: 'SliceNew',
-      path: '/slices/new',
-      component: SliceNew,
-      crumb: ['Slices']
+    key: 'SliceNew',
+    name: 'SliceNew',
+    path: '/slices/new',
+    component: SliceNew,
+    crumb: ['Slices']
   },
-
 
   Network: {
-      key: 'Network',
-      name: 'Network',
-      path: '/network',
-      component: Network,
-      crumb: ['Slices']
+    key: 'Network',
+    name: 'Network',
+    path: '/network',
+    component: Network,
+    crumb: ['Slices']
   },
-
 
   NetworkNew: {
-      key: 'NetworkNew',
-      name: 'NetworkNew',
-      path: '/network/new',
-      component: NetworkNew,
-      crumb: ['Slices']
+    key: 'NetworkNew',
+    name: 'NetworkNew',
+    path: '/network/new',
+    component: NetworkNew,
+    crumb: ['Slices']
   },
-
 
   Catalogue: {
-      key: 'Catalogue',
-      name: 'Catalogue',
-      path: '/catalogue',
-      component: Catalogue,
-      crumb: ['Slices']
+    key: 'Catalogue',
+    name: 'Catalogue',
+    path: '/catalogue',
+    component: Catalogue,
+    crumb: ['Slices']
   },
-
 
   InfManagementView: {
-      key: 'InfManagementView',
-      name: 'InfManagementView',
-      path: '/infManagementView',
-      component: InfManagementView,
-      crumb: ['Slice']
+    key: 'InfManagementView',
+    name: 'InfManagementView',
+    path: '/infManagementView',
+    component: InfManagementView,
+    crumb: ['Slice']
   },
-
 
   Monitoring: {
-      key: 'Monitoring',
-      name: 'Monitoring',
-      path: '/monitor/:type/:id',
-      component: Monitoring,
-      crumb: ['inicio']
+    key: 'Monitoring',
+    name: 'Monitoring',
+    path: '/monitor/:type/:id',
+    component: Monitoring,
+    crumb: ['inicio']
   },
 
-
   SDK: {
-      key: 'SDK',
-      name: 'SDK',
-      path: '/sdk/composer/:id',
-      component: SDK,
-      crumb: ['Slice']
+    key: 'SDK',
+    name: 'SDK',
+    path: '/sdk/composer/:id',
+    component: SDK,
+    crumb: ['Slice']
   },
 
   SDKService: {
-      key: 'SDKService',
-      name: 'SDKService',
-      path: '/sdk/services',
-      component: SDKService,
-      crumb: ['Slice']
+    key: 'SDKService',
+    name: 'SDKService',
+    path: '/sdk/services',
+    component: SDKService,
+    crumb: ['Slice']
   },
 
   SDKFunctions: {
@@ -133,7 +126,7 @@ export const Routes = {
     path: '/sdk/functions',
     component: SDKFunctions,
     crumb: ['Slice']
-},
+  },
 
   SDKFunction: {
     key: 'SDKFunction',
@@ -144,11 +137,29 @@ export const Routes = {
   },
 
   infraManagementResource: {
-      key: 'infraManagementResource',
-      name: 'infraManagementResource',
-      path: '/infManagement',
-      component: infraManagementResource,
-      crumb: ['Slice']
+    key: 'infraManagementResource',
+    name: 'infraManagementResource',
+    path: '/infManagement',
+    component: infraManagementResource,
+    crumb: ['Slice']
+  },
+
+
+  SDKManagement: {
+      key: 'SDKOrganisation',
+      name: 'SDKOrganisation',
+      path: '/sdk/organisation',
+      component: SDKOrganisation,
+      crumb: ['Slices']
+  },
+
+
+  SDKDescription: {
+      key: 'SDKDescription',
+      name: 'SDKDescription',
+      path: '/sdk/descriptions',
+      component: SDKDescription,
+      crumb: ['Slices']
   },
 
   notfound: {
@@ -162,4 +173,3 @@ export const Routes = {
 
 // Maps don't work on object convert it to an array
 export default toArray(Routes)
-

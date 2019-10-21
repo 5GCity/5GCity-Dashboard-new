@@ -9,18 +9,18 @@ import { kea } from 'kea'
 import { put, call } from 'redux-saga/effects'
 import { Message } from 'element-react'
 import axios from 'axios'
-import { API_BASE_SDK } from 'config'
+import { API_SDK } from 'config'
 import PropTypes from 'prop-types'
 
 /* Logic */
 import SDKContainerLogic from 'containers/SDKContainer/logic'
 
 const DEFAULT_FORM = {
-  parameters_values: [],
+  parameters_values: []
 }
 
 const propTypes = {
-  parameters_values: PropTypes.arrayOf(PropTypes.string),
+  parameters_values: PropTypes.arrayOf(PropTypes.string)
 }
 
 export default kea({
@@ -28,39 +28,39 @@ export default kea({
 
   connect: {
     actions: [
-      SDKContainerLogic , [
-        'activeLoadingPublish',
+      SDKContainerLogic, [
+        'activeLoadingPublish'
       ]
     ],
     props: [
       SDKContainerLogic, [
         'serviceInfo',
         'isPublishLoading',
-        'idService',
+        'idService'
       ]
-    ],
+    ]
   },
 
   actions: () => ({
     getForm: () => ({ }),
-    setForm : ( form ) => ({ form }),
+    setForm: (form) => ({ form }),
     setValue: (key, value, index) => ({ key, value, index }),
     setValues: (values) => ({ values }),
     submitForm: (form) => ({ form }),
     submitSuccess: () => ({ }),
 
-    reset: () => ({ }),
+    reset: () => ({ })
   }),
 
   reducers: ({ actions }) => ({
-    form:[DEFAULT_FORM, propTypes ,{
+    form: [DEFAULT_FORM, propTypes, {
       [actions.setValue]: (state, payload) => {
-        return Object.assign({}, state, state.parameters_values[payload.index]= payload.value)
+        return Object.assign({}, state, state.parameters_values[payload.index] = payload.value)
       },
       [actions.setForm]: (state, payload) => payload.form,
-      [actions.submitSuccess]: () =>DEFAULT_FORM,
-      [actions.reset]: () => DEFAULT_FORM,
-    }],
+      [actions.submitSuccess]: () => DEFAULT_FORM,
+      [actions.reset]: () => DEFAULT_FORM
+    }]
   }),
 
   start: function * () {
@@ -77,60 +77,67 @@ export default kea({
 
   takeLatest: ({ actions, workers }) => ({
     [actions.getForm]: workers.getForm,
-    [actions.submitForm]: workers.publishComposer,
+    [actions.submitForm]: workers.publishComposer
   }),
 
   workers: {
     * getForm () {
       const { setForm } = this.actions
-      yield put(setForm({parameters_values:[]}))
+      yield put(setForm({parameters_values: []}))
     },
 
-    *publishComposer() {
+    * publishComposer () {
       const { activeLoadingPublish } = this.actions
-      //Loading
+      // Loading
       yield put(activeLoadingPublish())
-      try{
+      try {
         const parameters = yield this.get('form')
-        const service = yield this.get('serviceInfo')
         const idService = yield this.get('idService')
         const body = {parameterValues: parameters.parameters_values}
-        const postPublish = yield call(axios.post,`${API_BASE_SDK}/sdk/services/service/${idService}/publish`,body)
+        const postPublish = yield call(axios.post, `${API_SDK}/sdk/services/service/${idService}/publish`, body)
         const { status } = postPublish
-        if(status === 202){
-            Message({
-              showClose: false,
-              message: 'Service Publish',
-              type: 'success'
-            })
-            yield put(activeLoadingPublish())
-            yield call(this.props.history.push, '/sdk/services')
-            yield call(this.props.action)
+        if (status === 202) {
+          Message({
+            showClose: false,
+            message: 'Service Publish',
+            type: 'success'
+          })
+          yield put(activeLoadingPublish())
+          yield call(this.props.history.push, '/sdk/services')
+          yield call(this.props.action)
         }
-      }catch (error) {
+      } catch (error) {
         console.log(error)
         switch (error.response.status) {
           case 400:
+            const message = error.response.data.error || error.response.data
+            Message({
+              showClose: false,
+              message: message,
+              type: 'error'
+            })
+            break
+          case 403:
+            Message({
+              showClose: false,
+              message: error.response.data,
+              type: 'error'
+            })
+            break
+          case 500:
               Message({
                 showClose: false,
-                message: error.response.data,
+                message: error.response.data.message,
                 type: 'error'
               })
-            break;
-            case 403:
-                Message({
-                  showClose: false,
-                  message: error.response.data,
-                  type: 'error'
-                })
-              break;
+          break
           default:
-              Message({
-                showClose: false,
-                message: 'Error',
-                type: 'error'
-              })
-            break;
+            Message({
+              showClose: false,
+              message: 'Error',
+              type: 'error'
+            })
+            break
         }
         yield put(activeLoadingPublish())
         yield call(this.props.action)
@@ -138,4 +145,3 @@ export default kea({
     }
   }
 })
-

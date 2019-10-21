@@ -21,7 +21,7 @@ import ErroPage from 'components/ErroPage'
 const ModalError = props => (
   <Modal
     size={'tiny'}
-    showClose={true}
+    showClose
     onCancel={() => props.actionModalError()}
     title={'Error'}
     visible={props.modalErrorVisibled}
@@ -40,9 +40,8 @@ const ModalError = props => (
   </Modal>
 )
 
-
 const ModalDelete = (props) => (
-  <Modal size={'tiny'} showClose={true} onCancel={() => props.actionModalDelete()} title={'Delete'} visible={props.modalVisibledDelete}>
+  <Modal size={'tiny'} showClose onCancel={() => props.actionModalDelete()} title={'Delete'} visible={props.modalVisibledDelete}>
     <Modal.Body>
       {props.functionSelect && <Title>Are you sure you want to delete function {props.functionSelect.name} ?</Title>}
     </Modal.Body>
@@ -51,12 +50,10 @@ const ModalDelete = (props) => (
       <Button text={'No'} svg={<CloseIcon />} type={'secondary'} onClick={() => props.actionModalDelete()} />
     </Modal.Footer>
   </Modal>
-);
-
-
+)
 
 const ModalPublish = (props) => (
-  <Modal size={'tiny'} showClose={true} onCancel={() => props.actionModalPublish()} title={'Delete'} visible={props.modalVisibledPublish}>
+  <Modal size={'tiny'} showClose onCancel={() => props.actionModalPublish()} title={'Delete'} visible={props.modalVisibledPublish}>
     <Modal.Body>
       {props.functionSelect && <Title>Are you sure you want to publish function {props.functionSelect.name} ?</Title>}
     </Modal.Body>
@@ -65,17 +62,15 @@ const ModalPublish = (props) => (
       <Button text={'No'} svg={<CloseIcon />} type={'secondary'} onClick={() => props.actionModalPublish()} />
     </Modal.Footer>
   </Modal>
-);
-
+)
 
 class ListSDKFunctions extends Component {
-
   navigate = (path) => {
     const { history } = this.props
     history.push(path)
   }
 
-  render() {
+  render () {
     const {
       functions,
       functionSelect,
@@ -84,7 +79,7 @@ class ListSDKFunctions extends Component {
       modalVisibledDelete,
       modalVisibledPublish,
       modalErrorVisibled,
-      modalErrorMessage,
+      modalErrorMessage
     } = this.props
     const {
       actionModalDelete,
@@ -92,7 +87,7 @@ class ListSDKFunctions extends Component {
       deleteFunction,
       selectFunc,
       actionModalError,
-      publishFunction,
+      publishFunction
     } = this.actions
     return (
       <Wrapper>
@@ -108,6 +103,7 @@ class ListSDKFunctions extends Component {
           actionModalPublish={actionModalPublish}
           publishFunction={publishFunction}
         />
+        {functions && !noData &&
         <List>
           <List.Header>
             {Titles && Titles.map(title =>
@@ -133,6 +129,14 @@ class ListSDKFunctions extends Component {
               })}
               <ColumnBottons>
                 <ContainerButtons>
+                  {func.status !== 'COMMITTED'
+                  ? <Button
+                    type={'primary'}
+                    svg={<PublishIcon />}
+                    onClick={() => selectFunc(func, 'publish')}
+                    text={'Publish'}
+                  />
+                  : null}
                   <Button
                     type={'secondary'}
                     svg={<DeleteIcon />}
@@ -145,19 +149,12 @@ class ListSDKFunctions extends Component {
                     onClick={() => this.navigate(`/sdk/function/${func.id}`)}
                     text={'Edit'}
                   />
-                  {func.status !== 'COMMITTED' ?
-                  <Button
-                    type={'primary'}
-                    svg={<PublishIcon />}
-                    onClick={() => selectFunc(func, 'publish')}
-                    text={'Publish'}
-                  />
-                  : null}
                 </ContainerButtons>
               </ColumnBottons>
             </List.Row>
           )}
         </List>
+        }
         {noData &&
           <NoData
             title={'You don’t have any functions yet...'}

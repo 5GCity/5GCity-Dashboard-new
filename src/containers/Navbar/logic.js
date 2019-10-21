@@ -21,30 +21,30 @@ export default kea({
       AppLogic, [
         'keycloak',
         'userName',
-        'userRole',
+        'userRole'
       ]
-    ],
+    ]
   },
 
   actions: () => ({
-    modalChangeStatus:() => ({ }),
+    modalChangeStatus: () => ({ }),
     logout: () => ({ }),
     changeLink: (menu) => ({ menu }),
     setlinks: (links) => ({ links }),
     changeLastLink: (path) => ({ path }),
     getLocation: () => ({}),
 
-    reset: () => ({}),
+    reset: () => ({})
   }),
 
   reducers: ({ actions }) => ({
-    modalStatus: [false, PropTypes.boolean,{
+    modalStatus: [false, PropTypes.boolean, {
       [actions.modalChangeStatus]: (state, payload) => !state,
-      [actions.reset]: () => false,
+      [actions.reset]: () => false
     }],
-    allLinks: [LINKS, PropTypes.array,{
-      [actions.setlinks]: (state, payload) => payload.links,
-    }],
+    allLinks: [LINKS, PropTypes.array, {
+      [actions.setlinks]: (state, payload) => payload.links
+    }]
   }),
 
   selectors: ({ selectors }) => ({
@@ -52,7 +52,7 @@ export default kea({
       () => [selectors.allLinks, selectors.userRole],
       (allLink, userRole) => allLink.filter(link => link.show.find(user => user === userRole)),
       PropTypes.array
-    ],
+    ]
   }),
 
   start: function * () {
@@ -68,14 +68,14 @@ export default kea({
   },
 
   takeLatest: ({ actions, workers }) => ({
-    [actions.logout]:workers.logout,
+    [actions.logout]: workers.logout,
     [actions.changeLink]: workers.changeLink,
-    [actions.getLocation]: workers.getLocation,
+    [actions.getLocation]: workers.getLocation
   }),
 
   workers: {
-    *getLocation() {
-      const { setlinks }= this.actions
+    * getLocation () {
+      const { setlinks } = this.actions
       const path = this.props.location.pathname
       const links = yield this.get('links')
       let menu = null
@@ -102,25 +102,19 @@ export default kea({
       }
     },
 
-    * logout(){
+    * logout () {
       const { modalChangeStatus } = this.actions
       yield put(modalChangeStatus())
       const keycloak = yield this.get('keycloak')
       keycloak.logout()
     },
 
-    * changeLink(action) {
-      const { setlinks }= this.actions
+    * changeLink (action) {
+      const { setlinks } = this.actions
       const menu = action.payload.menu
-
-      if(menu.path === undefined && menu.children){
         const newLinks = ChangeLink(menu)
         yield put(setlinks(newLinks))
         yield call(this.props.history.push, menu.path)
-      } else if(menu.path && !menu.disabled){
-        yield call(this.props.history.push, menu.path)
-      }
     }
   }
 })
-

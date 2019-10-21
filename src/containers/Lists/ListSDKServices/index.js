@@ -19,6 +19,8 @@ import NoData from 'components/NoData'
 import ErroPage from 'components/ErroPage'
 
 const ListSDKService = props => (
+  <React.Fragment>
+  { props.services &&
   <List>
     <List.Header>
       {Titles && Titles.map(title => <List.Column size={title.size} key={title.id}>
@@ -26,7 +28,7 @@ const ListSDKService = props => (
       </List.Column>)}
       <List.Column marginLeft />
     </List.Header>
-    {props.services && props.services.map((service, i) => <List.Row key={i}>
+    {props.services.map((service, i) => <List.Row key={i}>
       {Titles && Titles.map(({
         size,
         propItem,
@@ -36,7 +38,7 @@ const ListSDKService = props => (
           {render(service[propItem])}
         </List.Column>, !render && service && <List.Column key={i} size={size}>
           {service[propItem]}
-        </List.Column>];
+        </List.Column>]
       })}
       <ColumnBottons>
         <ContainerButtons>
@@ -62,12 +64,14 @@ const ListSDKService = props => (
       </ColumnBottons>
     </List.Row>)}
   </List>
+  }
+  </React.Fragment>
 )
 
 const ModalSDKServiceDelete = props => (
   <Modal
     size={'tiny'}
-    showClose={true}
+    showClose
     onCancel={() => props.actionModal()}
     title={'Delete'}
     visible={props.modalVisibled}
@@ -95,7 +99,7 @@ const ModalSDKServiceDelete = props => (
 const ModalSDKServiceClone = props => (
   <Modal
     size={'tiny'}
-    showClose={true}
+    showClose
     onCancel={() => props.actionModal()}
     title={'Clone'}
     visible={props.modalVisibled}
@@ -120,11 +124,10 @@ const ModalSDKServiceClone = props => (
   </Modal>
 )
 
-
 const ModalError = props => (
   <Modal
     size={'tiny'}
-    showClose={true}
+    showClose
     onCancel={() => props.actionModalError()}
     title={'Error'}
     visible={props.modalErrorVisibled}
@@ -134,24 +137,22 @@ const ModalError = props => (
     </Modal.Body>
     <Modal.Footer>
       <Button
-      text={'Ok'}
-      svg={<CheckIcon />}
-      type={'primary'}
-      onClick={() => props.actionModalError()}
+        text={'Ok'}
+        svg={<CheckIcon />}
+        type={'primary'}
+        onClick={() => props.actionModalError()}
     />
     </Modal.Footer>
   </Modal>
 )
 
-
 class ListSDKServices extends Component {
-
   navigate = (path) => {
     const { history } = this.props
     history.push(path)
   }
 
-  render() {
+  render () {
     const {
       serviceList,
       modalVisibledDelete,
@@ -160,7 +161,7 @@ class ListSDKServices extends Component {
       noData,
       errorFecth,
       modalErrorVisibled,
-      modalErrorMessage,
+      modalErrorMessage
     } = this.props
 
     const {
@@ -169,7 +170,7 @@ class ListSDKServices extends Component {
       actionModalDelete,
       actionModalClone,
       selectService,
-      actionModalError,
+      actionModalError
     } = this.actions
 
     return (
@@ -187,7 +188,7 @@ class ListSDKServices extends Component {
           service={service}
           cloneService={cloneService}
         />
-        {serviceList &&
+        {serviceList && !noData &&
           <ListSDKService
             navigate={this.navigate}
             services={serviceList}

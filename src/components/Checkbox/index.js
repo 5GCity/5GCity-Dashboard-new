@@ -7,7 +7,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Checkbox } from 'element-react'
-import { rgba } from 'polished'
 
 export default ({ children, ...props }) => (
   <CheckboxContainer {...props}>
@@ -15,4 +14,6 @@ export default ({ children, ...props }) => (
   </CheckboxContainer>
 )
 
+const CheckboxContainer = styled(Checkbox)`
 
+`

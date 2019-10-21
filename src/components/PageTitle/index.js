@@ -9,9 +9,9 @@ import styled from 'styled-components'
 import Button from 'components/Button'
 import { BackIcon } from 'components/Icons'
 
-
 export default ({ children, ...props }) => (
-  <Wrapper {...props}>
+  <Wrapper>
+  <Container {...props}>
     { props.buttonBack &&
     <RightContainer>
       <BackButton onClick={() => props.buttonBack()} />
@@ -24,17 +24,22 @@ export default ({ children, ...props }) => (
     { props.buttonTitle &&
       <ButtonPage {...props} onClick={props.buttonFunction} text={props.buttonTitle} />
     }
+    </Container>
+    {children}
   </Wrapper>
 )
 
-
 const Wrapper = styled.div`
-  display:flex;
   min-width: 1200px;
+`
+
+const Container = styled.div`
+  display:flex;
   justify-content: space-between;
   border-bottom : 1px solid rgba(137,151,159,0.2);
   padding:48px 0px 16px 0px;
 `
+
 const RightContainer = styled.div`
   display: flex;
   align-items: center;

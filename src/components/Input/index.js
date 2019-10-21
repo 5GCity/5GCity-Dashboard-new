@@ -9,8 +9,6 @@ import styled from 'styled-components'
 import { Input } from 'element-react'
 import { lighten } from 'polished'
 
-
-
 export default styled(Input)`
   witdh:100%;
 
@@ -33,7 +31,7 @@ export default styled(Input)`
     border-color: #5A666D;
   }
 
-  ${({icon}) => icon === 'search' &&`
+  ${({icon}) => icon === 'search' && `
   .el-input__icon {
     left:0;
     right:none;
@@ -46,7 +44,7 @@ export default styled(Input)`
 
   ${({ theme }) => theme && `
     .el-input__inner:focus {
-      border-color: ${({theme})=> lighten(0.5,theme.bodyBackground)};
+      border-color: ${({theme}) => lighten(0.5, theme.bodyBackground)};
     }
     `
   }

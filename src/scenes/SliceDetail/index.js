@@ -20,7 +20,6 @@ import SliceMap from 'containers/SliceMap'
 import PanelChunkDetail from 'containers/Panel/PanelChunkDetail'
 
 class SliceDetail extends Component {
-
   navigateToBack = () => {
     const { history } = this.props
     history.goBack()
@@ -28,34 +27,33 @@ class SliceDetail extends Component {
 
   render () {
     const { slice, rightPanelInfo, panel, location } = this.props
-    const { panelAction , infoMarker } = this.actions
+    const { panelAction, infoMarker } = this.actions
     return (
       <Wrapper>
-      {slice &&
-      <React.Fragment>
-        <HeaderNav
-          buttonBack={<BackIcon />}
-          navigateBack={() => this.navigateToBack()}
-          name={slice.name}
+        {slice &&
+        <React.Fragment>
+          <HeaderNav
+            buttonBack={<BackIcon />}
+            navigateBack={() => this.navigateToBack()}
+            name={slice.name}
         />
-        <PanelChunkDetail
-          show={panel}
-          data={rightPanelInfo && rightPanelInfo}
-          close={panelAction}
+          <PanelChunkDetail
+            show={panel}
+            data={rightPanelInfo && rightPanelInfo}
+            close={panelAction}
         />
-        <SliceMap
-          location={location}
-          markers={slice.markers}
-          markerColor={Theme.primaryColor}
-          markerClick={(marker) => infoMarker(marker)}
+          <SliceMap
+            location={location}
+            markers={slice.markers}
+            markerColor={Theme.primaryColor}
+            markerClick={(marker) => infoMarker(marker)}
         />
-      </React.Fragment>
+        </React.Fragment>
       }
       </Wrapper>
     )
   }
 }
-
 
 export default withRouter(Logic(SliceDetail))
 

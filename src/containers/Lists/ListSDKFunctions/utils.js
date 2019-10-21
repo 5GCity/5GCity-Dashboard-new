@@ -9,33 +9,33 @@ export const Titles = [{
   id: 1,
   size: 200,
   name: 'Id',
-  propItem: 'id',
+  propItem: 'id'
 }, {
   id: 2,
   size: 200,
   name: 'Name',
-  propItem: 'name',
-},{
+  propItem: 'name'
+}, {
   id: 3,
   size: 120,
   name: 'Version',
   propItem: 'version',
   render: (vendor) =>
-    !vendor ? "N.A" : vendor
-},{
+    !vendor ? 'N.A' : vendor
+}, {
   id: 4,
   size: 120,
   name: 'Visibility',
   propItem: 'visibility',
   render: (vendor) =>
-    !vendor ? "N.A" : vendor
-},{
+    !vendor ? 'N.A' : vendor
+}, {
   id: 5,
   size: 120,
   name: 'Status',
   propItem: 'status',
   render: (vendor) =>
-    !vendor ? "N.A" : vendor
+    !vendor ? 'N.A' : vendor
 },
 {
   id: 6,
@@ -43,6 +43,24 @@ export const Titles = [{
   name: 'Owner',
   propItem: 'ownerId',
   render: (vendor) =>
-    !vendor ? "N.A" : vendor
+    !vendor ? 'N.A' : vendor
+},
+{
+  id: 7,
+  size: 120,
+  name: 'Access Level',
+  propItem: 'accessLevel',
+  render: (vendor) => {
+    switch (vendor) {
+      case 1:
+      return 'Gold'
+      case 2:
+      return 'Silver'
+      case 3:
+      return 'Bronze'
+      default:
+      return 'Platinum'
+    }
+  }
 }
 ]

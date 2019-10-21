@@ -6,7 +6,6 @@
  */
 import React from 'react'
 import { storiesOf, action } from '@storybook/react'
-import styled from 'styled-components'
 
 /* Components */
 import Button from 'components/Button'
@@ -17,15 +16,15 @@ const exampleOne = () => (
   <Modal
     title='Atributtion'
     size='tiny'
-    visible={true}
+    visible
     onCancel={action('Close Modal')}
   >
     <Modal.Body>
       <h1>test</h1>
     </Modal.Body>
     <Modal.Footer>
-    <Button text={'No'} icon={'close'} type={'secondary'}/>
-    <Button text={'Yes'} icon={'check'} type={'primary'}/>
+      <Button text={'No'} icon={'close'} type={'secondary'} />
+      <Button text={'Yes'} icon={'check'} type={'primary'} />
     </Modal.Footer>
   </Modal>
 )

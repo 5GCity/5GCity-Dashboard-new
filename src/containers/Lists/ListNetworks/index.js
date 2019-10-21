@@ -17,13 +17,12 @@ import NoData from 'components/NoData'
 import { DeleteIcon, EyeIcon, SettingIcon, CheckIcon, CloseIcon } from 'components/Icons'
 import ErroPage from 'components/ErroPage'
 
-
 const ModalInfo = (props) => (
   <Modal
     size={'tiny'}
     visible={props.modalInfo}
     onCancel={props.actionModal}
-    title="Network Information"
+    title='Network Information'
   >
     {props.networkSelect &&
       <Modal.Body>
@@ -34,7 +33,7 @@ const ModalInfo = (props) => (
         <Field><FieldTitle>Floating IP: </FieldTitle>
           {props.networkSelect.floatingIps.map((ip, i) =>
             <span key={i}>
-               {ip} {i < props.networkSelect.floatingIps.length - 1 ? ',' : ''}
+              {ip} {i < props.networkSelect.floatingIps.length - 1 ? ',' : ''}
             </span>
           )}
         </Field>
@@ -48,7 +47,7 @@ const ModalInfo = (props) => (
         <Field><FieldTitle>Port: </FieldTitle>
           {props.networkSelect.ports.map((port, i) =>
             <span key={i}>
-               {port} {i < props.networkSelect.ports.length - 1 ? ',' : ''}
+              {port} {i < props.networkSelect.ports.length - 1 ? ',' : ''}
             </span>
           )}
         </Field>
@@ -99,7 +98,6 @@ const ModalDelete = props => {
   )
 }
 
-
 const ListNetwork = (props) => (
   <List>
     <List.Header>
@@ -109,58 +107,56 @@ const ListNetwork = (props) => (
       <List.Column marginLeft />
     </List.Header>
     {props.networkServicesInstance.map(network =>
-    <List.Row key={network.id}>
-      {TITLE_LIST && TITLE_LIST.map(({
+      <List.Row key={network.id}>
+        {TITLE_LIST && TITLE_LIST.map(({
         size,
         propItem,
         render
       }) => {
-        return [
-        render && network &&
-        <List.Column key={network.id} size={size}>
-          {render(network[propItem])}
-        </List.Column>, !render && network &&
-        <List.Column key={network.id} size={size}>
-          {network[propItem]}
-        </List.Column>
-        ];
-      })}
-      <ColumnBottons>
-        <ContainerButtons>
-          <Button
-            type={'secondary'}
-            svg={<DeleteIcon />}
-            onClick={() => props.actionModalDelete(network)}
-            text={'Remove'}
+          return [
+            render && network &&
+            <List.Column key={network.id} size={size}>
+              {render(network[propItem])}
+            </List.Column>, !render && network &&
+            <List.Column key={network.id} size={size}>
+              {network[propItem]}
+            </List.Column>
+          ]
+        })}
+        <ColumnBottons>
+          <ContainerButtons>
+            <Button
+              type={'secondary'}
+              svg={<DeleteIcon />}
+              onClick={() => props.actionModalDelete(network)}
+              text={'Remove'}
             />
-          <Button
-            type={'primary'}
-            svg={<EyeIcon />}
-            onClick={() => props.actionModal(network)}
-            text={'View'}
+            <Button
+              type={'primary'}
+              svg={<EyeIcon />}
+              onClick={() => props.actionModal(network)}
+              text={'View'}
             />
-          <Button
-            type={'primary'}
-            svg={<SettingIcon />}
-            onClick={() => props.navigate(`/monitor/ns_id/${network.id}`)}
-            text={'Monitoring'}
-            disabled={true}
+            <Button
+              type={'primary'}
+              svg={<SettingIcon />}
+              onClick={() => props.navigate(`/monitor/ns_id/${network.id}`)}
+              text={'Monitoring'}
+              disabled
           />
-        </ContainerButtons>
-      </ColumnBottons>
-    </List.Row>)}
+          </ContainerButtons>
+        </ColumnBottons>
+      </List.Row>)}
   </List>
-);
-
+)
 
 class ListNetworks extends Component {
-
   navigate = (path) => {
     const { history } = this.props
     history.push(path)
   }
 
-  render() {
+  render () {
     const { networkServicesInstance,
       modalInfo,
       networkSelect,
@@ -173,8 +169,7 @@ class ListNetworks extends Component {
           modalInfo={modalInfo}
           networkSelect={networkSelect}
           actionModal={actionModal}
-        >
-        </ModalInfo>
+         />
         <ModalDelete
           networkSelect={networkSelect}
           modalDelete={modalDelete}

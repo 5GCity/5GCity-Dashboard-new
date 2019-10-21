@@ -20,7 +20,6 @@ COPY . /code
 
 WORKDIR /code
 
-RUN replace "<AUTH_SERVER_URL>" "${AUTH_SERVER_URL}" ./public/keycloak.json
 RUN yarn install && \
     yarn build:docker && \
     mkdir /www && \

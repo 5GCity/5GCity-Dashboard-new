@@ -12,13 +12,12 @@ import { withRouter } from 'react-router-dom'
 /* Containers */
 import NavBar from 'containers/Navbar'
 import ListSDKFunctions from 'containers/Lists/ListSDKFunctions'
+import PageTitleOrganization from 'containers/PageTitleOrganization'
 
 /* Components */
-import PageTitle from 'components/PageTitle'
 import { PlusIcon } from 'components/Icons'
 
 class SDKFunctions extends Component {
-
   navigate = path => {
     const { history } = this.props
     history.push(path)
@@ -27,12 +26,12 @@ class SDKFunctions extends Component {
   render () {
     return (
       <Wrapper>
-        <PageTitle
+        <PageTitleOrganization
           title={'My Repository - Functions'}
           buttonTitle={'Add new function'}
           type={'primary'}
-          svg={<PlusIcon />}
-          buttonFunction={() => this.navigate('/sdk/function/0')}
+          icon={<PlusIcon />}
+          onClick={() => this.navigate('/sdk/function/0')}
         />
         <NavBar />
         <ListSDKFunctions />
@@ -40,7 +39,6 @@ class SDKFunctions extends Component {
     )
   }
 }
-
 
 export default withRouter(Logic(SDKFunctions))
 

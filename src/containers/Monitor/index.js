@@ -16,27 +16,25 @@ import {
   Legend } from 'recharts'
 import styled from 'styled-components'
 
-
 const CustomTickX = (props) => {
-    const { x, y, payload } = props;
+  const { x, y, payload } = props
 
-    return (
-      <text x={x} y={y + 10} fill="#fff" fontSize={12} textAnchor="middle" dominantBaseline="hanging">
-        {payload.value}
-      </text>
-    );
+  return (
+    <text x={x} y={y + 10} fill='#fff' fontSize={12} textAnchor='middle' dominantBaseline='hanging'>
+      {payload.value}
+    </text>
+  )
 }
 
 const CustomTickY = (props) => {
-  const { x, y, payload ,unitData } = props;
+  const { x, y, payload, unitData } = props
 
   return (
-    <text x={x - 25} y={y -10} fill="#fff" fontSize={12} textAnchor="middle" dominantBaseline="hanging">
+    <text x={x - 25} y={y - 10} fill='#fff' fontSize={12} textAnchor='middle' dominantBaseline='hanging'>
       {payload.value} {unitData}
     </text>
-  );
+  )
 }
-
 
 class Monitor extends Component {
   render () {
@@ -49,25 +47,23 @@ class Monitor extends Component {
         margin={{ top: 5, right: 5, bottom: 12, left: 5 }}
       >
         <Legend
-          verticalAlign="top"
+          verticalAlign='top'
           content={
-          <div>
-            <Title color={colorArea}>{title}</Title>
-          </div>}
+            <div>
+              <Title color={colorArea}>{title}</Title>
+            </div>}
         />
         <XAxis
           padding={{left: 0, right: 0}}
           orientation={'bottom'}
           dataKey={datakeyAxis}
           tick={<CustomTickX />}
-        >
-        </XAxis>
+         />
         <YAxis
           tick={<CustomTickY unitData={unit} />}
           domain={[0, max]}
-        >
-          </YAxis>
-        <Tooltip/>
+         />
+        <Tooltip />
         <Area
           type='monotone'
           dataKey={dataKeyArea}
@@ -78,9 +74,9 @@ class Monitor extends Component {
         />
         <ReferenceLine
           y={max}
-          stroke="#DD6C6C"
-          strokeWidth="2"
-          strokeDasharray="3 3"
+          stroke='#DD6C6C'
+          strokeWidth='2'
+          strokeDasharray='3 3'
         />
       </ComposedChart>
     )
@@ -90,5 +86,5 @@ class Monitor extends Component {
 export default Logic(Monitor)
 
 const Title = styled.h3`
-  color: ${({color}) => color || '#fff' };
+  color: ${({color}) => color || '#fff'};
 `
