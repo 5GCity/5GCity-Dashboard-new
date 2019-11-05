@@ -7,7 +7,7 @@
 
 import { kea } from 'kea'
 
-import { put, call } from 'redux-saga/effects'
+//import { put } from 'redux-saga/effects'
 //import { delay } from 'redux-saga'
 //import { } from 'config'
 //import { } from 'utils'

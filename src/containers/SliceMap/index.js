@@ -175,14 +175,14 @@ class SliceMap extends Component {
             {marker.location.resources.wifi &&
             <NodeWifiIcon
               key={marker.id}
-              color={marker.color || markerColor}
+              fill={marker.color || markerColor}
               onClick={() => markerClick(marker)}
             />
             }
             {marker.location.resources.LTE &&
             <NodeBoxLTE
               key={marker.id}
-              color={marker.color || markerColor}
+              fill={marker.color || markerColor}
               onClick={() => markerClick(marker)}
             />
             }

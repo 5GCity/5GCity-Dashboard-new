@@ -6,9 +6,7 @@
  */
 import React, { Component } from 'react'
 import Logic from './logic'
-import styled from 'styled-components'
 import Select from 'react-select'
-
 
 const colourStyles = {
   control: (styles, state) => {
@@ -139,6 +137,3 @@ class SelectAutoComplete extends Component {
 
 export default Logic(SelectAutoComplete)
 
-const Wrapper = styled.div`
-
-`

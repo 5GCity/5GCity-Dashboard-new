@@ -13,7 +13,7 @@ import * as Check from 'validations'
 import axios from 'axios'
 import { API_SLICE_MANAGEMENT } from 'config'
 import { formUtils } from 'utils'
-import { mapValues } from 'lodash'
+import { mapValues, cloneDeep } from 'lodash'
 
 /* Logic */
 import PanelResourceLogic from 'containers/Panel/PanelResource/logic'
@@ -100,13 +100,13 @@ export default kea({
 
   start: function * () {
     const { getForm } = this.actions
-
+    
     yield put(getForm())
   },
 
   stop: function * () {
     const { reset, removeLoadingPage } = this.actions
-
+    console.log('reset')
     yield put(removeLoadingPage())
     yield put(reset())
   },
@@ -115,9 +115,10 @@ export default kea({
     * getForm () {
       const { changeForm } = this.actions
       const resource = yield this.get('editResource')
-      let setDefaultValues = { ...DEFAULT_FORM }
+      let setDefaultValues = cloneDeep(DEFAULT_FORM)
+      console.log(setDefaultValues)
       // fill form with values from api
-      const fillForm = formUtils(setDefaultValues, resource.phy.config)
+      const fillForm = resource.phy.config ? formUtils(setDefaultValues, resource.phy.config) : setDefaultValues
       const validForm = Check.checkValidation(fillForm, VALIDATIONS).form
       yield put(changeForm(validForm))
     },

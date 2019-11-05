@@ -8,20 +8,6 @@ import React, { Component } from 'react'
 import styled from 'styled-components'
 import { Theme } from 'globalStyles'
 
-
-/**
-cellIdentity: 256
-earfcndl: 41690
-phyCellId: 5
-prachrootseqindex: 100
-primaryMMEAddress: "10.10.201.59"
-primaryMMEPort: 3333
-primaryPlmnId: "00103"
-refSignalPower: -40
-reservedForOperatorUse: "not-reserved"
-trackingAreaCode: 67
- */
-
 export default class PanelLTEsView extends Component {
   render () {
     const { ltes }= this.props

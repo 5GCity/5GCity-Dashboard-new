@@ -5,8 +5,6 @@
  * @author Your Name <youremail@ubiwhere.com>
  */
 
- import React from 'react'
-
 export const Titles = [
   {
     id: 1,

@@ -42,28 +42,37 @@ export default kea({
     // Slices actions
     fetchSlices: () => ({}),
     setSlices: (slices) => ({slices}),
-    sliceInfo: (slice) => ({slice}),
+    sliceInfo: (slice) => ({ slice }),
+    sliceConfig: (slice) => ({ slice }),
     deleteSlice: () => ({ }),
     isLoading: () => ({ }),
     actionModal: () => ({ }),
-    reset: () => ({ }),
     setErroFecth: () => ({}),
     setNoData: () => ({}),
-    removeNoData: () => ({})
+    removeNoData: () => ({}),
+    closeModalAction: () => ({ }),
+    setErrorMessage: (messageError) => ({ messageError }),
+    configAction: () => ({ }),
+
+    reset: () => ({ }),
   }),
 
   reducers: ({ actions }) => ({
     slices: [[], PropTypes.array, {
       [actions.fetchSlices]: (state, payload) => null,
       [actions.setSlices]: (state, payload) => payload.slices,
+
       [actions.reset]: () => []
     }],
     loading: [false, PropTypes.boolean, {
       [actions.isLoading]: (state, payload) => !state,
+
       [actions.reset]: () => false
     }],
     sliceSelect: [null, PropTypes.object, {
       [actions.sliceInfo]: (state, payload) => payload.slice,
+      [actions.sliceConfig]: (state, payload) => payload.slice,
+
       [actions.reset]: () => null
     }],
     modalVisibled: [false, PropTypes.bool, {
@@ -77,6 +86,23 @@ export default kea({
     }],
     errorFecth: [false, PropTypes.bol, {
       [actions.setErroFecth]: () => true,
+
+      [actions.reset]: () => false
+    }],
+    modalErrorStatus: [ false, PropTypes.bool, {
+      [actions.closeModalAction]: (state, payload) => !state,
+      [actions.setErrorMessage]: (state, payload) => !state,
+
+      [actions.reset]: () => false
+    }],
+    errorMessage: [ null, PropTypes.string, {
+      [actions.setErrorMessage]: (state, payload) => payload.messageError,
+
+      [actions.reset]: () => false
+    }],
+    loadingConfig: [false, PropTypes.bool, {
+      [actions.configAction]: (state, payload) => !state,
+
       [actions.reset]: () => false
     }]
   }),
@@ -98,7 +124,7 @@ export default kea({
 
   takeLatest: ({ actions, workers }) => ({
     [actions.fetchSlices]: workers.fetchSlices,
-    [actions.deleteSlice]: workers.deleteSlice
+    [actions.deleteSlice]: workers.deleteSlice,
   }),
 
   workers: {
@@ -127,14 +153,11 @@ export default kea({
           } else if (error.response.status === 404) {
             console.log(404)
             yield put(setErroFecth())
+          }else {
+            yield put(setErroFecth())
           }
-        } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-          yield put(setErroFecth())
         } else {
-        // Something happened in setting up the request that triggered an Error
+          // Something happened in setting up the request that triggered an Error
           yield put(setErroFecth())
         }
         yield put(removeLoadingPage())
@@ -142,35 +165,32 @@ export default kea({
     },
 
     * deleteSlice () {
-      const { fetchSlices, isLoading, actionModal } = this.actions
+      const { fetchSlices, isLoading, actionModal, setErrorMessage } = this.actions
       const sliceSelect = yield this.get('sliceSelect')
-      try {
+       try {
         yield put(isLoading())
         yield call(axios.delete, `${API_SLICE_MANAGEMENT}/slic3/${sliceSelect.id}`)
-        if (sliceSelect.chunks.virtualWifiAccessPoints.length > 0) {
-          for (const virtualWifi of sliceSelect.chunks.virtualWifiAccessPoints) {
-            console.log('delete virtual_Wifi')
-            yield call(axios.delete, `${API_SLICE_MANAGEMENT}/virtual_wifi_access_point/${virtualWifi.id}`)
+        if (sliceSelect.chunks.chunketeChunks.length > 0) {
+          for (const chunkete of sliceSelect.chunks.chunketeChunks) {
+            yield call(axios.delete, `${API_SLICE_MANAGEMENT}/ran_infrastructure/${chunkete.ranInfrastructureId}/chunkete_chunk/${chunkete.ranControllerId}`)
           }
         }
         if (sliceSelect.chunks.openstackVlans.length > 0) {
           for (const vlan of sliceSelect.chunks.openstackVlans) {
-            console.log('delete openstack_vlan')
             yield call(axios.delete, `${API_SLICE_MANAGEMENT}/openstack_vlan/${vlan.id}`)
           }
         }
         for (const openstack of sliceSelect.chunks.openstackProjects) {
-          console.log('delete openstack_project')
           yield call(axios.delete, `${API_SLICE_MANAGEMENT}/openstack_project/${openstack.id}`)
         }
 
         yield put(fetchSlices())
       } catch (error) {
-        console.error(error.response.status)
+       yield put(setErrorMessage(error.response.data.message || 'Internal error'))
       }
       yield put(isLoading())
       yield put(actionModal())
-    }
+    },
   }
 
 })

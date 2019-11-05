@@ -7,12 +7,12 @@
 
 export const Titles = [{
   id: 1,
-  size: 300,
+  size: 200,
   name: 'Id',
   propItem: 'id'
 }, {
   id: 2,
-  size: 350,
+  size: 200,
   name: 'Name',
   propItem: 'name'
 }, {
@@ -24,9 +24,15 @@ export const Titles = [{
      !status ? '...' : status
 }, {
   id: 5,
-  size: 350,
+  size: 200,
   name: 'Slice User',
   propItem: 'tenantName'
+},
+{
+  id: 6,
+  size: 200,
+  name: 'Activation status',
+  propItem: 'activationStatus'
 }]
 
 export const TitlesUser = [{
@@ -46,4 +52,9 @@ export const TitlesUser = [{
   propItem: 'status',
   render: (status) =>
      !status ? '...' : status
+},{
+  id: 5,
+  size: 200,
+  name: 'Activation status',
+  propItem: 'activationStatus'
 }]

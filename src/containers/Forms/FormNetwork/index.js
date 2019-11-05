@@ -8,7 +8,7 @@ import React, { Component } from 'react'
 import Logic from './logic'
 import styled from 'styled-components'
 import { Layout } from 'element-react'
-import { NAMES, UNITS } from './utils'
+import { UNITS } from './utils'
 
 /* Component */
 import Form from 'components/Form'

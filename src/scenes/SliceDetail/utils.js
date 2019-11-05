@@ -26,6 +26,18 @@ export const createSlice = resources => {
     }
   })
 
+/*   resources.chunks.chunketeChunks.forEach((radioPhys) => {
+    if (network.physicalNetwork) {
+      radioPhys.push({
+        cidr: network.cidr,
+        tag: network.tag,
+        ...network.physicalNetwork
+      })
+    }
+  }) */
+
+
+
   const compareComputes = () => {
     computeLocation.forEach((compute) => {
       const { latitude, longitude } = compute.compute.location
@@ -141,10 +153,10 @@ export const CreateSliceChunk = list => {
             boxId: box.id,
             boxInfo: box.location.info,
             phys: [{
-              phyId: find.id,
-              phyName: find.name,
-              phyType: find.type,
-              phyConfig: find.config
+              id: find.id,
+              name: find.name,
+              type: find.type,
+              config: find.config
             }]
           })
         }
@@ -159,22 +171,11 @@ export const CreateSliceChunk = list => {
         marker.location.latitude === latitude &&
         marker.location.longitude === longitude
       )
-
+      debugger
+    const typePhy = box.phys[0].type === 'SUB6_ACCESS' ? 'wifi' : 'LTE'
     if (locationExistsOnMarkers) {
-      if (locationExistsOnMarkers.location.resources.boxes) {
-        locationExistsOnMarkers.location.resources.boxes.push({
-          id: box.boxId,
-          name: box.boxName,
-          info: box.boxInfo,
-          physical: [...box.phys]
-        })
-      } else {
-        locationExistsOnMarkers.location.resources.boxes = [{
-          id: box.boxId,
-          name: box.boxName,
-          info: box.boxInfo,
-          physical: [...box.phys]
-        }]
+      if (locationExistsOnMarkers.location.resources[typePhy]) {
+        locationExistsOnMarkers.location.resources[typePhy].physical.push(...box.phys)
       }
     } else {
       markerObject.markers.push({
@@ -182,12 +183,12 @@ export const CreateSliceChunk = list => {
           latitude: box.location.latitude,
           longitude: box.location.longitude,
           resources: {
-            boxes: [{
+            [typePhy]: {
               info: box.boxInfo,
               id: box.boxId,
               name: box.boxName,
               physical: [...box.phys]
-            }]
+            }
           }
         }
       })

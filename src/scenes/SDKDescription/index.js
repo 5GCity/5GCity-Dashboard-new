@@ -13,9 +13,6 @@ import ListSDKDescriptions from 'containers/Lists/ListSDKDescriptions'
 import PageTitleOrganization from 'containers/PageTitleOrganization'
 import NavBar from 'containers/Navbar'
 
-/* Components */
-import { PlusIcon } from 'components/Icons'
-
 class SDKDescription extends Component {
   render () {
     return (

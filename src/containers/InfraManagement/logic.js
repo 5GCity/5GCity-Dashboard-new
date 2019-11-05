@@ -115,7 +115,7 @@ export default kea({
 
   workers: {
     * fetchResources (action) {
-      const { setListResources, addLoadingPage, removeLoadingPage, setChunketeTopology } = this.actions
+      const { setListResources, addLoadingPage, removeLoadingPage, setChunketeTopology, changeModalErrorStatus } = this.actions
       yield put(addLoadingPage())
       try {
         const responseComputes = yield call(axios.get, `${API_SLICE_MANAGEMENT}/compute`)
@@ -136,13 +136,14 @@ export default kea({
           }
           yield (put(setChunketeTopology(listResources.rans)))
         }
-
+        console.log(listResources)
         yield (put(setListResources(listResources)))
         yield put(removeLoadingPage())
       } catch (error) {
         console.log(error)
         yield (put(setListResources(null)))
         yield put(removeLoadingPage())
+        yield put(changeModalErrorStatus({message: 'Internal server Error'}))
       }
     },
 

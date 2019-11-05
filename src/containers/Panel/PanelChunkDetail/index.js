@@ -5,14 +5,17 @@
  * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
 import React, { Component } from 'react'
-import Logic from './logic'
 import styled from 'styled-components'
 import { Theme } from 'globalStyles'
 
 /* Components */
 import PanelRight from 'components/PanelRight'
 
-class PanelChunkDetail extends Component {
+/* Containers */
+import PanelLTEsView from 'containers/Panel/PanelLTEsView'
+import PanelWifisView from 'containers/Panel/PanelWifisView'
+
+export default class PanelChunkDetail extends Component {
   render () {
     const { show, data, close } = this.props
     return (
@@ -50,32 +53,12 @@ class PanelChunkDetail extends Component {
                 <Id>CIDR: {network.cidr}</Id>
               </TypeMarker>
             )}
-            {console.log(data)}
-            {data.boxes &&
-              <Title>Access Networks</Title>
+            {data.wifi &&
+              <PanelWifisView wifis={data.wifi} />
             }
-            {data.boxes && data.boxes.map((box, i) =>
-              <TypeMarker
-                className={i === data.boxes.length - 1 && 'noBorder'}
-                key={i}>
-                <Name>{box.name}</Name>
-                <Id>{box.info}</Id>
-                {box.physical && box.physical.map((phys, i) =>
-                  <Channel key={i}>
-                    <SubTitle>Name: {phys.phyName}</SubTitle>
-                    <Id>Id: {phys.phyId}</Id>
-                    <Id>Type: {phys.phyType}</Id>
-                    {phys.phyConfig &&
-                    <React.Fragment>
-                      <Id>Bandwidth: {phys.phyConfig.channelBandwidth}</Id>
-                      <Id>Number: {phys.phyConfig.channelNumber}</Id>
-                      <Id>Tx Power: {phys.phyConfig.txPower}</Id>
-                    </React.Fragment>
-                  }
-                  </Channel>
-                )}
-              </TypeMarker>
-            )}
+            {data.LTE &&
+              <PanelLTEsView ltes={data.LTE} />
+            }
           </PanelInfo>
         }
         </Container>
@@ -83,8 +66,6 @@ class PanelChunkDetail extends Component {
     )
   }
 }
-
-export default Logic(PanelChunkDetail)
 
 const PanelInfo = styled.div`
 .noBorder {
@@ -123,12 +104,3 @@ const Container = styled.div`
   margin: 0 0 0 20px;
   height: calc(100% - 90px) !important;
   `
-
-const SubTitle = styled.h6`
-  font-weight: bold;
-  color: #EFF2F7;
-`
-const Channel = styled.div`
-  margin-top: 20px;
-  margin-left: 10px;
-`

@@ -31,6 +31,7 @@ export default kea({
     fetchResources: () => ({ }),
     panelAction: () => ({ }),
     setListResources: (resources) => ({ resources }),
+    changeModalErrorStatus: (message) => ({ message }),
     setChunketeTopology: (rans) => ({ rans }),
     infoMarker: (marker) => ({ marker }),
     reset: () => ({ })
@@ -53,7 +54,13 @@ export default kea({
     rightPanelInfo: [null, PropTypes.object, {
       [actions.infoMarker]: (state, payload) => payload.marker,
       [actions.reset]: () => null
-    }]
+    }],
+    modalErrorStatus: [false, PropTypes.bool, {
+      [actions.changeModalErrorStatus]: (state, payload) => !state
+    }],
+    modalErrorData: [null, PropTypes.object, {
+      [actions.changeModalErrorStatus]: (state, payload) => payload.message
+    }],
   }),
 
   selectors: ({ selectors }) => ({
@@ -114,6 +121,7 @@ export default kea({
         console.log(error)
         yield (put(setListResources(null)))
         yield put(removeLoadingPage())
+        yield put(changeModalErrorStatus({message: 'Internal server Error'}))
       }
     }
   }

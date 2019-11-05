@@ -11,7 +11,7 @@ import axios from 'axios'
 import PropTypes from 'prop-types'
 import { API_SLICE_MANAGEMENT } from 'config'
 import { CreateAllPins, GetSelectComputes,
-  GetSelectNetworks, GetSelectRadioPhys, GETAllChunkIds } from './utils'
+  GetSelectNetworks, GetSelectRadioPhys, GETAllChunkIds, VerifyNetwork } from './utils'
 import * as Check from 'validations'
 
 /* Logic */
@@ -23,14 +23,6 @@ const FORM_SLICE = {
   }
 }
 
-const FORM_CHUNK = {
-  assignedQuota: {
-    value: null
-  },
-  name: {
-    value: null
-  }
-}
 const VALIDATIONS = {
   nameSlice: [
     Check.isRequired
@@ -72,6 +64,7 @@ export default kea({
     changeNetwork: (selectPin, networkSelectIndex, field, value) => ({ selectPin, networkSelectIndex, field, value }),
     changeComputes: (selectPin, computeSelectIndex, field, value) => ({ selectPin, computeSelectIndex, field, value }),
     changeWifi: (selectPin, physIndex, field, value) => ({ selectPin, physIndex, field, value }),
+    changeLTE: (selectPin, physIndex, field, value) => ({ selectPin, physIndex, field, value }),
     updateMarker: () => ({ }),
     change: (value) => ({ value }),
     resetSliceName: () => ({ }),
@@ -81,11 +74,12 @@ export default kea({
     setForm: (form) => ({ form }),
     setSelectSlice: (slice) => ({ slice }),
 
-    setFormChunk: (boxes) => ({ boxes }),
+    setFormChunk: (phys) => ({ phys }),
     modalChunketeStatus: () => ({}),
-    changeValue: (field) => ({ field }),
-    setBoxesInfo: (boxes) => ({ boxes }),
+    changeChunkete: (key, value, index) => ({ key, value, index }),
+    setRadioPhysInfo: (phys) => ({ phys }),
     setChunketes: (form) => ({ form }),
+    setChunketesInfo: (info) => ({ info }),
     setChunkete: (chunkete) => ({ chunkete }),
     verifySlice: () => ({})
   }),
@@ -127,7 +121,7 @@ export default kea({
       [actions.changeLTE]: (state, payload) => {
         const { selectPin, physIndex, field, value } = payload
         const clone = [...state]
-        clone[selectPin].location.resources.lte[physIndex][field] = value
+        clone[selectPin].location.resources.LTE[physIndex][field] = value
         return clone
       },
     }],
@@ -152,10 +146,16 @@ export default kea({
       [actions.setForm]: (state, payload) => Check.checkValidation(payload.form, VALIDATIONS).form,
       [actions.reset]: () => FORM_SLICE
     }],
-    formChunkete: [FORM_CHUNK, PropTypes.object, {
-      [actions.changeValue]: (state, payload) => Check.setAndCheckValidation(state, payload, VALIDATIONS),
+    formChunkete: [null, PropTypes.object, {
+      [actions.changeChunkete]: (state, payload) => Check.setAndCheckValidationArray(state, payload, VALIDATIONS),
       [actions.setChunketes]: (state, payload) => Check.checkValidation(payload.form, VALIDATIONS).form,
-      [actions.reset]: () => FORM_CHUNK
+
+      [actions.reset]: () => null
+    }],
+    infoChunkete: [null, PropTypes.array, {
+      [actions.setChunketesInfo]: (state, payload) => payload.info,
+
+      [actions.reset]: () => null
     }],
     showErrors: [false, PropTypes.bool, {
       [actions.submit]: () => true,
@@ -169,7 +169,7 @@ export default kea({
       [actions.reset]: (state, payload) => false
     }],
     boxes: [[], PropTypes.any, {
-      [actions.setBoxesInfo]: (state, payload) => payload.boxes
+      [actions.setRadioPhysInfo]: (state, payload) => payload.phys,
     }]
   }),
 
@@ -236,13 +236,19 @@ export default kea({
         resources.networksCount++
       }
 
-      if (!found && resources.boxes) {
-        resources.boxes.forEach(box => {
-          box.phys.forEach(phy => {
-            if (phy.ischecked) {
-              found = true
-            }
-          })
+      if (!found && resources.wifi) {
+        resources.wifi.forEach(phy => {
+          if (phy.ischecked) {
+            found = true
+          }
+        })
+      }
+
+      if (!found && resources.LTE) {
+        resources.LTE.forEach(phy => {
+          if (phy.ischecked) {
+            found = true
+          }
         })
       }
 
@@ -281,30 +287,36 @@ export default kea({
 
     * verifySlice () {
       const pinsResources = yield this.get('pinsResources')
-      const { modalStatus, showError, setBoxesInfo,
-        setFormChunk, modalNewSliceStatus } = this.actions
+      const { modalStatus, showError, setRadioPhysInfo, modalNewSliceStatus, setFormChunk } = this.actions
 
       const findSlice = pinsResources.find(pin => pin.color === '#1e90ff')
 
       // All Computes Select
       const selectComputes = GetSelectComputes(pinsResources)
-      // All Boxes
-      const selectBoxes = GetSelectRadioPhys(pinsResources)
+      // All Networks Select
+      const selectNetworks = GetSelectNetworks(pinsResources)
+      // All Radio Phys
+      const selectRadioPhys = GetSelectRadioPhys(pinsResources)
 
+      const verification = VerifyNetwork(pinsResources, selectNetworks)
+      //Verify has computes
       if (!findSlice || !selectComputes) {
         yield put(modalStatus())
-        yield put(showError('Select a Compute'))
-      } else if (selectBoxes) {
-        yield put(setBoxesInfo(selectBoxes))
-        yield put(setFormChunk(selectBoxes))
+        yield put(showError('Select a compute'))
+      } else if (selectNetworks && !verification) {
+        yield put(modalStatus())
+        yield put(showError('There is at lease one physical network added without a correspondent compute at the same location. Please review this before proceeding'))
+      } else if (selectRadioPhys.wifi.length > 0 || selectRadioPhys.lte.length > 0) {
+        yield put(setRadioPhysInfo(selectRadioPhys))
+        yield put(setFormChunk(selectRadioPhys))
       } else {
         yield put(modalNewSliceStatus())
       }
     },
 
     * setFormChunk (action) {
-      const boxes = action.payload.boxes
-      const { setChunketes, modalChunketeStatus } = this.actions
+      const phys = action.payload.phys
+      const { setChunketes, modalChunketeStatus, setChunketesInfo } = this.actions
       yield put(modalChunketeStatus())
       const formChunk = {
         assignedQuota: {
@@ -314,12 +326,38 @@ export default kea({
           array: []
         }
       }
-      const newValue = {value: null}
-      boxes.forEach(box => {
-        formChunk.assignedQuota.array.push(newValue)
-        formChunk.name.array.push(newValue)
+      const infoChunk = []
+      const ransIds = []
+      phys.wifi && phys.wifi.forEach(wifi => {
+        const findRan = ransIds.find(ranId => ranId === wifi.ranId)
+        if(!findRan) {
+          formChunk.assignedQuota.array.push({value: null, valid: false})
+          formChunk.name.array.push({value: null, valid: false})
+          ransIds.push(wifi.ranId)
+          infoChunk.push({physName: [wifi.name], ranId: wifi.ranId, type: 'wifi', typeConfig: wifi.type, config: [{...wifi.config}], physIds: [wifi.id]})
+        } else {
+          const findChunk = infoChunk.find(chunk => chunk.ranId === findRan)
+          findChunk.physName.push(wifi.name)
+          findChunk.config.push(wifi.config)
+          findChunk.physIds.push(wifi.id)
+        }
       })
-      yield put(setChunketes(formChunk))
+      phys.lte && phys.lte.forEach( lte => {
+        const findRan = ransIds.find(ranId => ranId === lte.ranId)
+        if(!findRan) {
+          formChunk.assignedQuota.array.push({value: null, valid: false})
+          formChunk.name.array.push({value: null, valid: false})
+          ransIds.push(lte.ranId)
+          infoChunk.push({physName: [lte.name], ranId: lte.ranId, type: 'LTE', typeConfig: lte.type, config: [{...lte.config}], physIds: [lte.id]})
+        }else {
+          const findChunk = infoChunk.find(chunk => chunk.ranId === findRan)
+          findChunk.physName.push(lte.name)
+          findChunk.config.push(lte.config)
+          findChunk.physIds.push(lte.id)
+        }
+      })
+        yield put(setChunketesInfo(infoChunk))
+        yield put(setChunketes(formChunk))
     },
 
     * createSlice () {
@@ -329,6 +367,7 @@ export default kea({
           getListResources } = this.actions
       const formSlice = yield this.get('formSlice')
       const formChunk = yield this.get('formChunkete')
+      const infoChunkete = yield this.get('infoChunkete')
       const resourcesLocations = []
 
       const validation = Check.checkValidation(formSlice, VALIDATIONS)
@@ -342,8 +381,8 @@ export default kea({
       const selectComputes = GetSelectComputes(pinsResources)
       // All Networks Select
       const selectNetworks = GetSelectNetworks(pinsResources)
-      // All Boxes
-      const selectBoxes = GetSelectRadioPhys(pinsResources)
+      // All RadioPhys
+      const selectRadioPhys = infoChunkete
          /*
          * 1º Create OpenStack
          * 2º Create Vlan
@@ -353,7 +392,7 @@ export default kea({
       try {
         yield put(loading())
         let createSlice = false
-        if (selectComputes) {
+         if (selectComputes) {
           for (let compute of selectComputes) {
             let indexCompute = 0
                 // 1º Open stack
@@ -391,7 +430,6 @@ export default kea({
         if (selectNetworks) {
           for (let network of selectNetworks) {
             const openStackLocation = resourcesLocations.find(resource => resource.location.latitude === network.location.latitude && resource.location.longitude === network.location.longitude )
-            console.log(openStackLocation, network)
             // 2º vlans
             const dataNetwork = {
               cidr: network.cidr,
@@ -407,33 +445,30 @@ export default kea({
               },
             }
             const { data } = yield call(axios.post, `${API_SLICE_MANAGEMENT}/openstack_vlan`, dataNetwork)
-            openStackLocation.chunkIds.push(data.id)
-            vlansIds.push(data.id)
+            resourcesLocations.push({location: null, chunkIds: [{idChunk: data.id, nameChunk: data.name}]})
             createSlice = true
           }
         }
-        if (selectBoxes) {
-          let ran = null
-          const ids = []
-          for (let boxes of selectBoxes) {
-            ran = boxes.ranId
-            boxes.boxes.forEach(box =>
-                  ids.push({id: box.id})
-                )
-          }
-          const newChunkete = {
-            assignedQuota: formChunk.assignedQuota.value,
-            name: formChunk.name.value,
-            topology: {
-              linkList: [],
-              physicalInterfaceList: ids
+        if (selectRadioPhys) {
+          for (let index = 0; index < selectRadioPhys.length; index++) {
+            const phy = selectRadioPhys[index]
+            // 3º Create Chunkete Chunk
+            const newChunkete = {
+              assignedQuota: formChunk.assignedQuota.array[index].value,
+              name: formChunk.name.array[index].value,
+              topology: {
+                physicalInterfaceList: []
+              }
             }
-          }
 
-              // 3º Create Chunkete Chunk
-          const response = yield call(axios.post, `${API_SLICE_MANAGEMENT}/ran_infrastructure/${ran}/chunkete_chunk`, newChunkete)
-          chunkIds.push(response.data.id)
-          createSlice = true
+            for (let index = 0; index < phy.config.length; index++) {
+              newChunkete.topology.physicalInterfaceList.push({config: phy.config[index], id: phy.physIds[index], name: phy.physName[index], type: phy.typeConfig})
+            }
+
+            const { data } = yield call(axios.post, `${API_SLICE_MANAGEMENT}/ran_infrastructure/${phy.ranId}/chunkete_chunk`, newChunkete)
+            resourcesLocations.push({location: null, chunkIds: [{idChunk: data.id, nameChunk: data.name}]})
+            createSlice = true
+          }
         }
         if (createSlice) {
           const chunkIds = GETAllChunkIds(resourcesLocations)
@@ -456,7 +491,7 @@ export default kea({
         yield put(modalNewSliceStatus())
         yield put(modalStatus())
         yield put(errorfetch())
-        yield put(showError(error.response.data.message))
+        yield put(showError(error.response.data.message || 'Internal Error'))
         yield put(getListResources())
       }
     },

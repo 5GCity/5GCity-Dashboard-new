@@ -6,7 +6,6 @@
  */
 import React, { Component } from 'react'
 import Logic from './logic'
-import styled from 'styled-components'
 
 /* Components */
 import { CheckIcon, CloseIcon } from 'components/Icons'

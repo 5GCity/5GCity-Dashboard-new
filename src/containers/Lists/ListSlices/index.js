@@ -10,44 +10,17 @@ import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
 import { Titles, TitlesUser } from './utils'
 
+/* Containers */
+import ModalSliceList from 'containers/Modals/ModalSliceList'
+import ModalConfigurationSliceList from 'containers/Modals/ModalConfigurationSliceList'
+import ModalErrorSlice from 'containers/Modals/ModalErrorSlice'
+
 /* Components */
 import List from 'components/List'
-import Modal from 'components/Modal'
 import Button from 'components/Button'
-import { DeleteIcon, EyeIcon, SettingIcon, CheckIcon, CloseIcon } from 'components/Icons'
+import { DeleteIcon, EyeIcon, SettingIcon, CheckIcon } from 'components/Icons'
 import NoData from 'components/NoData'
 import ErroPage from 'components/ErroPage'
-
-const ModalDeleteSlice = (props) => (
-  <Modal
-    size={'tiny'}
-    showClose
-    onCancel={() => props.actionModal()}
-    title='Confirmation'
-    visible={props.modalVisibled}
-  >
-    {props.sliceSelect && <Modal.Body>
-      <Title>
-        Are you sure you want to delete slice {props.sliceSelect.name} ?
-          </Title>
-    </Modal.Body>}
-    <Modal.Footer>
-      <Button
-        text={'Yes'}
-        svg={<CheckIcon />}
-        type={'primary'}
-        loading={props.loading}
-        onClick={() => props.deleteSlice()}
-      />
-      <Button
-        text={'No'}
-        svg={<CloseIcon />}
-        type={'secondary'}
-        onClick={() => props.actionModal()}
-      />
-    </Modal.Footer>
-  </Modal>
-)
 
 const ListAllSlices = (props) => (
   <List>
@@ -75,24 +48,36 @@ const ListAllSlices = (props) => (
         })}
         <ColumnBottons>
           <ContainerButtons>
+            { slice &&
+              slice.chunks.chunketeChunks.length > 0 &&
+              slice.activationStatus === 'pending' &&
+            <Button
+              type={'primary'}
+              loading={props.loadingConfig}
+              svg={<CheckIcon />}
+              onClick={() => props.sliceConfig(slice)}
+              text={'Configuration'}
+            />
+            }
             <Button
               type={'secondary'}
               svg={<DeleteIcon />}
-              onClick={() => props.sliceInfo(slice)} text={'Remove'}
-          />
+              onClick={() => props.sliceInfo(slice)}
+              text={'Remove'}
+            />
             <Button
               type={'primary'}
               svg={<EyeIcon />}
               onClick={() =>
-            props.navigate(`/slice/${slice.id}`)} text={'View'}
-          />
+              props.navigate(`/slice/${slice.id}`)} text={'View'}
+            />
             <Button
               disabled
               type={'primary'}
               svg={<SettingIcon />}
               onClick={() => props.navigate(`/monitor/slice/${slice.id}`)}
               text={'Monitoring'}
-          />
+            />
           </ContainerButtons>
         </ColumnBottons>
       </List.Row>)}
@@ -106,24 +91,32 @@ class ListSlices extends Component {
   }
 
   render () {
-    const { slices, userRole, modalVisibled, loading, sliceSelect, noData, errorFecth } = this.props
-    const { deleteSlice, actionModal, sliceInfo } = this.actions
+    const { slices, userRole, modalVisibled, loading, sliceSelect, noData, errorFecth, modalErrorStatus, errorMessage, loadingConfig } = this.props
+    const { deleteSlice, actionModal, sliceInfo, sliceConfig, closeModalAction } = this.actions
     const title = userRole === 'Inf. Owner' ? Titles : TitlesUser
     return (
       <Wrapper>
-        <ModalDeleteSlice
-          modalVisibled={modalVisibled}
-          loading={loading}
-          sliceSelect={sliceSelect}
-          deleteSlice={deleteSlice}
-          actionModal={actionModal}
+        <ModalErrorSlice
+          modalStatus={closeModalAction}
+          modalError={modalErrorStatus}
+          error={errorMessage}
         />
+        <ModalSliceList
+          status={modalVisibled}
+          slice={sliceSelect}
+          actionModal={actionModal}
+          loading={loading}
+          deleteSlice={deleteSlice}
+        />
+        <ModalConfigurationSliceList />
         {slices &&
         <ListAllSlices
           navigate={this.navigate}
           slices={slices}
           sliceInfo={sliceInfo}
           title={title}
+          sliceConfig={sliceConfig}
+          loadingConfig={loadingConfig}
         />
         }
         {noData &&
@@ -143,13 +136,6 @@ class ListSlices extends Component {
 export default withRouter(Logic(ListSlices))
 
 const Wrapper = styled.div`
-`
-
-const Title = styled.h5`
-  text-align: center;
-  color: #EFF2F7;
-  font-size: 16px;
-  font-family: ${({ theme }) => theme.fontFamily};
 `
 
 const ContainerButtons = styled.div`

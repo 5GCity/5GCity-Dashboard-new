@@ -20,8 +20,9 @@ export default class PanelWifisView extends Component {
         <Name>Box name: {wifis.name}</Name>
         {wifis && wifis.physical.map((wifi, i) =>
         <TypeMarker
+          key={i}
           className={i === wifis.physical.length - 1 && 'noBorder'}
-          key={wifi.id}>
+        >
           <Name>Name: {wifi.name}</Name>
           <Id>{wifi.id}</Id>
           <Id>Channel Bandwidth: {wifi.config.channelBandwidth}</Id>

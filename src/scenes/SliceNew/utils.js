@@ -186,17 +186,16 @@ export const GetSelectNetworks = locations => {
 }
 
 export const GetSelectRadioPhys = locations => {
-  debugger
   const arrayOfRadioPhys = {wifi: [], lte: []}
   locations.forEach(item => {
-    item.location.resources.wifi && item.location.resources.wifi.forEach(box => {
-      if (box.ischecked) {
-        arrayOfRadioPhys.wifi.push({...box})
+    item.location.resources.wifi && item.location.resources.wifi.forEach(wifi => {
+      if (wifi.ischecked) {
+        arrayOfRadioPhys.wifi.push({...wifi, location:{ latitude: item.location.latitude, longitude: item.location.longitude }, type: "SUB6_ACCESS"})
       }
     })
-    item.location.resources.lte && item.location.resources.lte.forEach(box => {
-      if (box.ischecked) {
-        arrayOfRadioPhys.lte.push({...box})
+    item.location.resources.LTE && item.location.resources.LTE.forEach(lte => {
+      if (lte.ischecked) {
+        arrayOfRadioPhys.lte.push({...lte, location:{ latitude: item.location.latitude, longitude: item.location.longitude}, type: "LTE_PRIMARY_PLMN"})
       }
     })
   })
@@ -234,8 +233,6 @@ export const UNITS_SECONDS =[{
   name: 'GB/s'
 }]
 
-
-
 export const FindLocationCompute = (computeId, data) => {
   console.log(computeId, data)
   data.forEach( location => {
@@ -258,3 +255,61 @@ export const GETAllChunkIds = resources => {
   return array
 }
 
+export const VerifyNetwork = (resources, networks) => {
+  let result = false
+  networks && networks.forEach(network => {
+    const getLocation = resources.find(resource => resource.location.latitude === network.location.latitude && resource.location.longitude === network.location.longitude)
+    if(getLocation) {
+      getLocation.location.resources.computes && getLocation.location.resources.computes.forEach(compute => {
+        if(compute.ischecked)
+          result = true
+      })
+    } else {
+      result = false
+    }
+  })
+  return result
+}
+
+
+
+export const FAKERADIOPHYS =[
+    {
+      "id": "93187da8-358b-4078-8add-e6cd43ebc57c",
+      "name": "primaryPLMN",
+      "type": "LTE_PRIMARY_PLMN",
+      "config": {
+        "prachrootseqindex": 100,
+        "earfcndl": 41690,
+        "phyCellId": 5,
+        "refSignalPower": -40,
+        "cellIdentity": 256,
+        "trackingAreaCode": 67,
+        "primaryPlmnId": "00103",
+        "reservedForOperatorUse": "not-reserved",
+        "primaryMMEAddress": "10.10.201.59",
+        "primaryMMEPort": 3333
+      },
+      "location": {
+        "longitude": 4.656732,
+        "latitude": 51.284905,
+        "info": "Trappisten Abdij Westmalle"
+      },
+      "ranId": "5d9372ccb7f26251f27d51ba"
+    },
+    {
+      "config": {
+        "channelBandWidth": 20,
+        "channelNumber": 36,
+        "txPower": 200
+      },
+      "id": "8df4901b-1232-4349-917b-dddc2fe6e18e",
+      "location": {
+        "latitude": 4.346732,
+        "longitude": 51.584905
+      },
+      "name": "FAKE phy1",
+      "ranId": "5b63089158f568073093f70d",
+      "type": "SUB6_ACCESS"
+   }
+]

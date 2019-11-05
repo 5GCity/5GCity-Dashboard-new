@@ -5,7 +5,6 @@
  * @author Your Name <youremail@ubiwhere.com>
  */
 import React, { Component } from 'react'
-import Logic from './logic'
 import styled from 'styled-components'
 
 /* Component */
@@ -15,13 +14,15 @@ import Input from 'components/Input'
 import { CheckIcon } from 'components/Icons'
 import Form from 'components/Form'
 
-class ModalChunketeSlice extends Component {
+
+export default class ModalChunketeSlice extends Component {
   render () {
     const {
       modalStatus,
       status,
       loading,
       setChunkete,
+      chunkForm,
       chunketes,
       change
      } = this.props
@@ -33,30 +34,39 @@ class ModalChunketeSlice extends Component {
         visible={status}
         title='Confirmation'
       >
+        {chunketes &&
         <Form>
           <Modal.Body>
+            {chunketes.map((chunk, index) =>
+            <React.Fragment key={index}>
+            <Title>{chunk.physName}</Title>
             <Form.Item
               label={'Assigned Quota'}
               required
-              status={!chunketes.assignedQuota.valid}
+              status={!chunkForm.assignedQuota.array[index].valid}
           >
               <Input
-                value={chunketes.assignedQuota.value}
-                onChange={value => change({assignedQuota: value})}
+                value={chunkForm.assignedQuota.array[index].value}
+                onChange={value => change('assignedQuota', value, index)}
             />
-              <Form.Error>{chunketes.assignedQuota.message}</Form.Error>
+              <Form.Error>{chunkForm.assignedQuota.array[index].message}</Form.Error>
             </Form.Item>
             <Form.Item
               label={'Name'}
               required
-              status={!chunketes.name.valid}
+              status={!chunkForm.name.array[index].valid}
           >
               <Input
-                value={chunketes.name.value}
-                onChange={value => change({name: value})}
+                value={chunkForm.name.array[index].value}
+                onChange={value => change('name', value, index)}
             />
-              <Form.Error>{chunketes.name.message}</Form.Error>
+              <Form.Error>{chunkForm.name.array[index].message}</Form.Error>
             </Form.Item>
+            {chunketes.length -1 !== index &&
+            <Border />
+            }
+            </React.Fragment>
+            )}
           </Modal.Body>
           <Modal.Footer>
             <ContainerButton>
@@ -70,12 +80,26 @@ class ModalChunketeSlice extends Component {
             </ContainerButton>
           </Modal.Footer>
         </Form>
+        }
       </Modal>
     )
   }
 }
 
-export default Logic(ModalChunketeSlice)
-
 export const ContainerButton = styled.div`
+
+`
+
+export const Title = styled.p`
+  margin: 12px 0;
+  font-size: 12px;
+  line-height: 12px;
+  font-weight: bold;
+  color: #EFF2F7;
+  font-family: ${({ theme }) => theme.fontFamily};
+`
+
+
+const Border = styled.div`
+  border-bottom: 1px solid rgba(239,242,247,0.1);
 `

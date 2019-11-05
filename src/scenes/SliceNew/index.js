@@ -36,7 +36,7 @@ class SliceNew extends Component {
 
   infoMarkerContainer = () => {
     const { selectSlice, selectPin } = this.props
-    const { changeNetwork, changeComputes, changeWifi } = this.actions
+    const { changeNetwork, changeComputes, changeWifi, changeLTE } = this.actions
     const { computes, networks } = selectSlice
     return (
       <Form
@@ -85,7 +85,7 @@ class SliceNew extends Component {
                   </Form.Item>
                   <Id>CPU Total: {compute.computeData.cpus.total} cores </Id>
                   <Id>CPU Provisioned: {compute.computeData.cpus.provisioned} cores </Id>
-                  <Layout.Row gutter="4">
+                  <Layout.Row gutter="0">
                     <Layout.Col span="16">
                     <Form.Item label='RAM'>
                       <Input
@@ -109,7 +109,7 @@ class SliceNew extends Component {
                   </Layout.Row>
                   <Id>RAM Total: {compute.computeData.ram.total} {compute.computeData.ram.units} </Id>
                   <Id>RAM Provisioned: {compute.computeData.ram.provisioned} {compute.computeData.ram.units} </Id>
-                  <Layout.Row gutter="4">
+                  <Layout.Row gutter="0">
                     <Layout.Col span="16">
                       <Form.Item label='Storage'>
                         <Input
@@ -167,7 +167,7 @@ class SliceNew extends Component {
                       onChange={(value) => changeNetwork(selectPin, i, 'networkName', value)}
                     />
                   </Form.Item>
-                  <Layout.Row gutter="4">
+                  <Layout.Row gutter="0">
                     <Layout.Col span="14">
                       <Form.Item label='Bandwidth'>
                         <Input
@@ -183,7 +183,7 @@ class SliceNew extends Component {
                           type={'default'}
                           placeholder="unit"
                           options={UNITS_SECONDS}
-                          onChange={(value) => changeComputes(selectPin, i, 'bandwidthUnits', value)}
+                          onChange={(value) => changeNetwork(selectPin, i, 'bandwidthUnits', value)}
                           selectOption={network.networkData.bandwidth.units || 'MB/s'}
                         />
                       </Form.Item>
@@ -216,10 +216,10 @@ class SliceNew extends Component {
               </Form.Item>
             </React.Fragment>
             )}
-            {selectSlice.lte &&
+            {selectSlice.LTE &&
             <TitlePanel>LTE</TitlePanel>
             }
-            {selectSlice.lte && selectSlice.lte.map((phy, physIndex) =>
+            {selectSlice.LTE && selectSlice.LTE.map((phy, physIndex) =>
               <React.Fragment key={phy.id}>
                 <Form.Item key={phy.id}>
                   <Checkbox.Group
@@ -252,7 +252,8 @@ class SliceNew extends Component {
       formSlice,
       locations,
       modalChunkete,
-      formChunkete
+      formChunkete,
+      infoChunkete,
     } = this.props
     const {
       updateMarker,
@@ -264,7 +265,7 @@ class SliceNew extends Component {
       setChunkete,
       setValue,
       selectLocation,
-      changeValue,
+      changeChunkete,
       verifySlice
     } = this.actions
     return (
@@ -320,8 +321,9 @@ class SliceNew extends Component {
           status={modalChunkete}
           loading={loading}
           setChunkete={setChunkete}
-          chunketes={formChunkete}
-          change={changeValue}
+          chunketes={infoChunkete}
+          chunkForm={formChunkete}
+          change={changeChunkete}
         />
         {/* Modal Error */}
         <ModalErrorSlice
@@ -359,14 +361,6 @@ const Name = styled.p`
   color: #EFF2F7;
   font-family: ${({ theme }) => theme.fontFamily};
 `
-const RANName = styled.p`
-  margin: 12px 0;
-  font-size: 14px;
-  line-height: 14px;
-  font-weight: bold;
-  color: #EFF2F7;
-  font-family: ${({ theme }) => theme.fontFamily};
-`
 
 const BoxType = styled.span`
   margin-left: 20px;
@@ -381,6 +375,10 @@ const Id = styled.p`
   line-height: 14px;
   font-family: ${({ theme }) => theme.fontFamily};
   color: #89979F;
+  width: 248px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 const FormContainer = styled.div`
@@ -406,9 +404,7 @@ const BottomContainer = styled.div`
   justify-content: center;
   height: 100%;
 `
-const Tag = styled.span`
 
-`
 const ButtonShop = styled(Button)`
   border: 0px;
   background: transparent;

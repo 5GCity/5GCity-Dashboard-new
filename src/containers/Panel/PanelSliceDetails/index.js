@@ -7,7 +7,6 @@
 import React, { Component } from 'react'
 import Logic from './logic'
 import styled from 'styled-components'
-import { Theme } from 'globalStyles'
 
 /* Components */
 import PanelRight from 'components/PanelRight'
