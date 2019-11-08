@@ -7,7 +7,7 @@
 
 import { kea } from 'kea'
 import axios from 'axios'
-import { put, call } from 'redux-saga/effects'
+import { put, call, all } from 'redux-saga/effects'
 import { API_SLICE_MANAGEMENT } from 'config'
 import PropTypes from 'prop-types'
 import { CreateAllPins, CreateAllLinks } from './utils'
@@ -39,7 +39,7 @@ export default kea({
 
   reducers: ({ actions }) => ({
     pinsResources: [null, PropTypes.any, {
-      [actions.setListResources]: (state, payload) => CreateAllPins(payload.resources),
+      [actions.setListResources]: (state, payload) => payload.resources,
       [actions.addToListResources]: (state, payload) => payload.resources,
       [actions.reset]: () => null
     }],
@@ -92,14 +92,17 @@ export default kea({
 
   workers: {
     * getListResources () {
-      const { setListResources, addLoadingPage, removeLoadingPage, setChunketeTopology } = this.actions
+      const { setListResources, addLoadingPage, removeLoadingPage, setChunketeTopology, changeModalErrorStatus } = this.actions
       yield put(addLoadingPage())
       try {
-        const responseComputes = yield call(axios.get, `${API_SLICE_MANAGEMENT}/compute`)
-        const responseNetworks = yield call(axios.get, `${API_SLICE_MANAGEMENT}/physical_network`)
-        const responseRAN = yield call(axios.get, `${API_SLICE_MANAGEMENT}/ran_infrastructure`)
-
         const listResources = {computes: [], networks: [], rans: []}
+
+        const [responseComputes, responseNetworks, responseRAN] =
+        yield all([
+          call(axios.get, `${API_SLICE_MANAGEMENT}/compute`),
+          call(axios.get, `${API_SLICE_MANAGEMENT}/physical_network`),
+          call(axios.get, `${API_SLICE_MANAGEMENT}/ran_infrastructure`)
+        ])
 
         if (responseComputes) {
           responseComputes.data.map(el => listResources.computes.push(el))
@@ -114,8 +117,9 @@ export default kea({
             responseRAN.data.map(el => listResources.rans.push({...el, chunketeTopology: responseChunketeTopology.data || null}))
           }
           yield (put(setChunketeTopology(listResources.rans)))
+          const result = CreateAllPins(listResources)
+          yield (put(setListResources(result)))
         }
-        yield (put(setListResources(listResources)))
         yield put(removeLoadingPage())
       } catch (error) {
         console.log(error)

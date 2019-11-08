@@ -40,19 +40,17 @@ export default class PanelChunkDetail extends Component {
                 <Id>DISK: {compute.computeData.storage.required} {compute.computeData.storage.units} </Id>
               </TypeMarker>
             )}
-            {data.networks &&
-            <Title>Network</Title>
+            {data.network &&
+            <React.Fragment>
+              <Title>Network</Title>
+                <TypeMarker
+                  className={'noBorder'}
+                >
+                  <Name>{data.network.name}</Name>
+                  <Id>Id: {data.network.id}</Id>
+                </TypeMarker>
+              </React.Fragment>
             }
-            {data.networks && data.networks.map((network, i) =>
-              <TypeMarker
-                className={i === data.networks.length - 1 && 'noBorder'}
-                key={network.id}>
-                <Name>{network.name}</Name>
-                <Id>Id: {network.id}</Id>
-                <Id>Tag: {network.tag}</Id>
-                <Id>CIDR: {network.cidr}</Id>
-              </TypeMarker>
-            )}
             {data.wifi &&
               <PanelWifisView wifis={data.wifi} />
             }

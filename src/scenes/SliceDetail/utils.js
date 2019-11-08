@@ -19,24 +19,10 @@ export const createSlice = resources => {
   resources.chunks.openstackVlans.forEach((network) => {
     if (network.physicalNetwork) {
       networkLocation.push({
-        cidr: network.cidr,
-        tag: network.tag,
-        ...network.physicalNetwork
+        ...network.physicalNetwork,
       })
     }
   })
-
-/*   resources.chunks.chunketeChunks.forEach((radioPhys) => {
-    if (network.physicalNetwork) {
-      radioPhys.push({
-        cidr: network.cidr,
-        tag: network.tag,
-        ...network.physicalNetwork
-      })
-    }
-  }) */
-
-
 
   const compareComputes = () => {
     computeLocation.forEach((compute) => {
@@ -47,14 +33,23 @@ export const createSlice = resources => {
         marker.location.longitude === longitude
       )
 
-      if (locationExistsOnMarkers) {
+      const findNetwork = networkLocation[0]
+
+      if (findNetwork && locationExistsOnMarkers) {
         locationExistsOnMarkers.location.resources.computes.push({
           id: compute.compute.id,
           name: compute.compute.name,
           computeData: {...compute.requirements},
           ischecked: false
         })
-      } else {
+      }else if(!findNetwork && locationExistsOnMarkers) {
+        locationExistsOnMarkers.location.resources.computes.push({
+          id: compute.compute.id,
+          name: compute.compute.name,
+          computeData: {...compute.requirements},
+          ischecked: false
+        })
+      }else if(findNetwork && !locationExistsOnMarkers) {
         markers.push({
           location: {
             latitude: latitude,
@@ -65,63 +60,36 @@ export const createSlice = resources => {
                 name: compute.compute.name,
                 computeData: {...compute.requirements},
                 ischecked: false
-              }]
+              }],
+              network: {
+                id: findNetwork.id,
+                name: findNetwork.name,
+                networkData: { ...findNetwork.physicalNetworkData }
+              }
             }
           }
         })
-      }
-    })
-  }
-
-  const compareNetworks = () => {
-    networkLocation.forEach((network) => {
-      const { latitude, longitude } = network.location
-
-      const locationExistsOnMarkers = markers.find((marker) =>
-        marker.location.latitude === latitude &&
-        marker.location.longitude === longitude
-      )
-
-      if (locationExistsOnMarkers) {
-        if (locationExistsOnMarkers.location.resources.networks) {
-          locationExistsOnMarkers.location.resources.networks.push({
-            id: network.id,
-            name: network.name,
-            ischecked: false,
-            cidr: network.cidr,
-            tag: network.tag
-          })
-        } else {
-          locationExistsOnMarkers.location.resources.networks = [{
-            id: network.id,
-            name: network.name,
-            ischecked: false,
-            cidr: network.cidr,
-            tag: network.tag
-          }]
-        }
-      } else {
+      }else if(!findNetwork && !locationExistsOnMarkers) {
         markers.push({
           location: {
-            latitude: network.location.latitude,
-            longitude: network.location.longitude,
+            latitude: latitude,
+            longitude: longitude,
             resources: {
-              networks: [{
-                id: network.id,
-                name: network.name,
-                ischecked: false,
-                cidr: network.cidr,
-                tag: network.tag
-              }]
+              computes: [{
+                id: compute.compute.id,
+                name: compute.compute.name,
+                computeData: {...compute.requirements},
+                ischecked: false
+              }],
             }
           }
         })
       }
+
     })
   }
 
   compareComputes()
-  compareNetworks()
 
   return ({
     'name': resources.name,

@@ -65,7 +65,6 @@ class InfraManagementView extends Component {
           <SliceMap
             location={locations}
             markers={pinsResources}
-            markerColor={'#1e90ff'}
             markerClick={(marker) => infoMarker(marker.location.resources) }
             links={linksResources}
           />

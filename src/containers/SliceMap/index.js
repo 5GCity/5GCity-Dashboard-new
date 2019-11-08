@@ -161,28 +161,28 @@ class SliceMap extends Component {
              !marker.location.resources.LTE &&
             <NodeMarkerIcon
               key={marker.id}
-              color={marker.color || markerColor}
+              color={marker.location.color || markerColor}
               onClick={() => markerClick(marker)}
             />
             }
             {marker.location.resources.rans &&
             <NodeRAN
               key={marker.id}
-              color={marker.color || markerColor}
+              color={marker.location.color || markerColor}
               onClick={() => markerClick(marker)}
             />
             }
             {marker.location.resources.wifi &&
             <NodeWifiIcon
               key={marker.id}
-              fill={marker.color || markerColor}
+              fill={marker.location.color || markerColor}
               onClick={() => markerClick(marker)}
             />
             }
             {marker.location.resources.LTE &&
             <NodeBoxLTE
               key={marker.id}
-              fill={marker.color || markerColor}
+              fill={marker.location.color || markerColor}
               onClick={() => markerClick(marker)}
             />
             }

@@ -4,36 +4,43 @@
  *
  * @author Your Name <youremail@ubiwhere.com>
  */
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import styled from 'styled-components'
 import { Theme } from 'globalStyles'
 
 export default class PanelLTEsView extends Component {
   render () {
     const { ltes }= this.props
+    console.log(ltes)
     return (
       <Wrapper>
-        {ltes &&
-        <Title>LTE</Title>
-        }
-        <Name>Box name: {ltes.name}</Name>
-        {ltes && ltes.physical.map((lte, i) =>
-        <TypeMarker
-          className={i === ltes.physical.length - 1 && 'noBorder'}
-          key={lte.id}>
-          <Name>Name: {lte.name}</Name>
-          <Id>{lte.id}</Id>
-          <Id>cellIdentity: {lte.config.cellIdentity}</Id>
-          <Id>earfcndl: {lte.config.earfcndl}</Id>
-          <Id>phyCellId: {lte.config.phyCellId}</Id>
-          <Id>prachrootseqindex: {lte.config.prachrootseqindex}</Id>
-          <Id>primaryMMEAddress: {lte.config.primaryMMEAddress}</Id>
-          <Id>primaryMMEPort: {lte.config.primaryMMEPort}</Id>
-          <Id>primaryPlmnId: {lte.config.primaryPlmnId}</Id>
-          <Id>refSignalPower: {lte.config.refSignalPower}</Id>
-          <Id>reservedForOperatorUse: {lte.config.reservedForOperatorUse}</Id>
-          <Id>trackingAreaCode: {lte.config.trackingAreaCode}</Id>
-        </TypeMarker>
+        {ltes && ltes.map((lte, i) =>
+        <Fragment key={lte.id}>
+          <Title>LTE</Title>
+          <Name>Box name: {lte.name}</Name>
+          {lte.physical && lte.physical.map(physical  =>
+          <TypeMarker
+            className={i === lte.physical.length - 1 && 'noBorder'}
+            key={physical.id}>
+            <Name>Name: {physical.name}</Name>
+            <Id>{physical.id}</Id>
+            {physical.config &&
+              <Fragment>
+                <Id>cellIdentity: {physical.config.cellIdentity}</Id>
+                <Id>earfcndl: {physical.config.earfcndl}</Id>
+                <Id>phyCellId: {physical.config.phyCellId}</Id>
+                <Id>prachrootseqindex: {physical.config.prachrootseqindex}</Id>
+                <Id>primaryMMEAddress: {physical.config.primaryMMEAddress}</Id>
+                <Id>primaryMMEPort: {physical.config.primaryMMEPort}</Id>
+                <Id>primaryPlmnId: {physical.config.primaryPlmnId}</Id>
+                <Id>refSignalPower: {physical.config.refSignalPower}</Id>
+                <Id>reservedForOperatorUse: {physical.config.reservedForOperatorUse}</Id>
+                <Id>trackingAreaCode: {physical.config.trackingAreaCode}</Id>
+              </Fragment>
+            }
+          </TypeMarker>
+          )}
+        </Fragment>
         )}
       </Wrapper>
     )

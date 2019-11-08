@@ -129,14 +129,17 @@ export default kea({
       const selectOrganization = yield this.get('selectOrganization')
       yield put(addLoadingPage())
       try {
-        let responseResult = yield call(axios.get, `${API_SDK}/sdk/services/?sliceId=${selectOrganization}`)
-        const { data } = responseResult
-        if (data.length > 0) {
-          yield put(setServices(data))
-        } else {
-          yield put(setNoData())
+        if(selectOrganization){
+          let responseResult = yield call(axios.get, `${API_SDK}/sdk/services/?sliceId=${selectOrganization}`)
+          const { data } = responseResult
+          if (data.length > 0) {
+            yield put(setServices(data))
+          } else {
+            yield put(setNoData())
+          }
         }
         yield put(removeLoadingPage())
+        yield put(setNoData())
       } catch (error) {
         if (error.response) {
           // The request was made and the server responded with a status code

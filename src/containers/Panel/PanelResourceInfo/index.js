@@ -21,6 +21,7 @@ class PanelResourceInfo extends Component {
         {data.location.resources.computes && data.location.resources.computes.map(compute =>
           <Item key={compute.id}>
             <Name>{compute.name}</Name>
+            <StatusColor color={data.location.color} />
             <ContainerIcons>
               <Delete onClick={() => deleteItem({ type: 'compute', id: compute.id, name: compute.name })} />
             </ContainerIcons>
@@ -39,21 +40,21 @@ class PanelResourceInfo extends Component {
           svg={<CirclePlusIcon fill={'#8CC14E'} />}
         />
         <Title>Physical network</Title>
-        {data.location.resources.networks && data.location.resources.networks.map(network =>
-          <Item key={network.id}>
-            <Name>{network.name}</Name>
+        {data.location.resources.network &&
+          <Item key={data.location.resources.network}>
+            <Name>{data.location.resources.network.name}</Name>
             <ContainerIcons>
-              <Delete onClick={() => deleteItem({ type: 'network', id: network.id, name: network.name })} />
+              <Delete onClick={() => deleteItem({ type: 'network', id: data.location.resources.network.id, name: data.location.resources.network.name })} />
             </ContainerIcons>
           </Item>
-        )}
-        {!data.location.resources.networks && data.location.resources.computes &&
+        }
+        {!data.location.resources.network && data.location.resources.computes &&
         <Info>Add your first physical network</Info>
         }
-        {!data.location.resources.networks && !data.location.resources.computes &&
+        {!data.location.resources.network && !data.location.resources.computes &&
         <Info>First need Compute</Info>
         }
-        {data.location.resources.computes && !data.location.resources.networks &&
+        {data.location.resources.computes && !data.location.resources.network &&
         <AddNewBtn
           outline
           type={'primary'}
@@ -123,6 +124,7 @@ const Item = styled.div`
   width: 100%;
   border-bottom: 1px solid #47565E;
   display: inline-flex;
+  align-items: center;
 `
 const ContainerIcons = styled.div`
   display: flex;
@@ -152,4 +154,10 @@ const Info = styled.p`
   margin-top: 16px;
   margin-bottom: 12px;
   text-align: center;
+`
+const StatusColor = styled.div`
+  background-color: ${({color}) => color || 'transparent'};
+  height: 24px;
+  width: 24px;
+  border-radius: 12px;
 `

@@ -149,8 +149,8 @@ class ListSDKDescriptions extends Component {
         }
         {noData &&
           <NoData
-            title={'You don’t have any functions yet...'}
-            message={'Click on the “Add new function" button to add your first function!'}
+            title={'You don’t have any descriptions yet...'}
+            message={''}
           />
         }
         {errorFecth &&

@@ -28,16 +28,10 @@ import ModalCreateSlice from 'containers/Modals/ModalCreateSlice'
 import ModalErrorSlice from 'containers/Modals/ModalErrorSlice'
 import ModalChunketeSlice from 'containers/Modals/ModalChunketeSlice'
 
-class SliceNew extends Component {
-  navigateToBack = () => {
-    const { history } = this.props
-    history.goBack()
-  }
-
-  infoMarkerContainer = () => {
-    const { selectSlice, selectPin } = this.props
-    const { changeNetwork, changeComputes, changeWifi, changeLTE } = this.actions
-    const { computes, networks } = selectSlice
+const InfoMarkerContainer = props => {
+  const { selectSlice, selectPin, network, changeNetwork, changeComputes, changeWifi, changeLTE } = props
+  if(selectSlice) {
+    const { computes } = selectSlice
     return (
       <Form
         labelWidth='120'
@@ -138,17 +132,14 @@ class SliceNew extends Component {
             </React.Fragment>
           )}
         </Form.Item>
-
         <React.Fragment>
-          {networks &&
+          {computes && network && network.id === computes[0].availablePhyNet &&
+            <React.Fragment>
             <TitlePanel>Network</TitlePanel>
-          }
-          {networks && networks.map((network, i) =>
-            <React.Fragment key={i}>
               <Form.Item >
                 <Checkbox.Group
                   value={network.ischecked === false ? [] : [network.name]}
-                  onChange={(value) => changeNetwork(selectPin, i, 'ischecked', value.length > 0)}>
+                  onChange={(value) => changeNetwork('ischecked', value.length > 0)}>
                   <Checkbox
                     key={network.id}
                     label={network.name}
@@ -159,12 +150,12 @@ class SliceNew extends Component {
                 </Checkbox.Group>
               </Form.Item>
               {network.ischecked &&
-                <FormContainer key={i}>
+                <FormContainer>
                   <Form.Item label='Name'>
                     <Input
                       type='text'
-                      value={network.networkName}
-                      onChange={(value) => changeNetwork(selectPin, i, 'networkName', value)}
+                      value={network.nameNetwork}
+                      onChange={(value) => changeNetwork('nameNetwork', value)}
                     />
                   </Form.Item>
                   <Layout.Row gutter="0">
@@ -173,7 +164,7 @@ class SliceNew extends Component {
                         <Input
                           type='text'
                           value={network.bandwidth}
-                          onChange={(value) => changeNetwork(selectPin, i, 'bandwidth', value)}
+                          onChange={(value) => changeNetwork('bandwidth', value)}
                         />
                       </Form.Item>
                     </Layout.Col>
@@ -183,18 +174,18 @@ class SliceNew extends Component {
                           type={'default'}
                           placeholder="unit"
                           options={UNITS_SECONDS}
-                          onChange={(value) => changeNetwork(selectPin, i, 'bandwidthUnits', value)}
-                          selectOption={network.networkData.bandwidth.units || 'MB/s'}
+                          onChange={(value) => changeNetwork('bandwidthUnits', value)}
+                          selectOption={network.bandwidthUnits || 'MB/s'}
                         />
                       </Form.Item>
                     </Layout.Col>
                   </Layout.Row>
-                  <Id>Bandwidth Total: {network.networkData.bandwidth.total} {network.networkData.bandwidth.units}</Id>
-                  <Id>Bandwidth Provisioned: {network.networkData.bandwidth.provisioned} {network.networkData.bandwidth.units}</Id>
+                  <Id>Bandwidth Total: {network.bandwidthTotal} {network.units}</Id>
+                  <Id>Bandwidth Provisioned: {network.bandwidthProvisioned} {network.units}</Id>
                 </FormContainer>
               }
             </React.Fragment>
-          )}
+          }
           {selectSlice.wifi &&
             <TitlePanel>Wifi</TitlePanel>
           }
@@ -240,6 +231,15 @@ class SliceNew extends Component {
         </React.Fragment>
       </Form>
     )
+  } else {
+    return null
+  }
+}
+
+class SliceNew extends Component {
+  navigateToBack = () => {
+    const { history } = this.props
+    history.goBack()
   }
 
   render () {
@@ -254,6 +254,9 @@ class SliceNew extends Component {
       modalChunkete,
       formChunkete,
       infoChunkete,
+      selectSlice,
+      selectPin,
+      network,
     } = this.props
     const {
       updateMarker,
@@ -266,7 +269,11 @@ class SliceNew extends Component {
       setValue,
       selectLocation,
       changeChunkete,
-      verifySlice
+      verifySlice,
+      changeNetwork,
+      changeComputes,
+      changeWifi,
+      changeLTE
     } = this.actions
     return (
       <Wrapper>
@@ -287,7 +294,17 @@ class SliceNew extends Component {
           close={actionPanel}
         >
           <Container>
-            {pinsResources && this.infoMarkerContainer()}
+            {pinsResources &&
+              <InfoMarkerContainer
+                selectSlice={selectSlice}
+                selectPin={selectPin}
+                network={network}
+                changeNetwork={changeNetwork}
+                changeComputes={changeComputes}
+                changeWifi={changeWifi}
+                changeLTE={changeLTE}
+              />
+            }
           </Container>
           <Bottom>
             <BottomContainer>

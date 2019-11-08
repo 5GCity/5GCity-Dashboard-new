@@ -4,7 +4,7 @@
  *
  * @author Your Name <youremail@ubiwhere.com>
  */
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import styled from 'styled-components'
 import { Theme } from 'globalStyles'
 
@@ -18,16 +18,37 @@ export default class PanelComputesView extends Component {
         }
         {computes && computes.map((compute, i) =>
           <TypeMarker
+          key={compute.id}
             className={i === computes.length - 1 && 'noBorder'}
-            key={compute.id}>
+          >
             <Name>{compute.name}</Name>
             <Id>{compute.id}</Id>
-            <Id>CPU Total: {compute.computeData.cpus.total} cores </Id>
-            <Id>CPU Provisioned: {compute.computeData.cpus.provisioned} cores </Id>
-            <Id>RAM Total: {compute.computeData.ram.total} {compute.computeData.ram.units} </Id>
-            <Id>RAM Provisioned: {compute.computeData.ram.provisioned} {compute.computeData.ram.units} </Id>
-            <Id>DISK Total: {compute.computeData.storage.total} {compute.computeData.storage.units} </Id>
-            <Id>DISK Provisioned: {compute.computeData.storage.provisioned} {compute.computeData.storage.units} </Id>
+            <Id>Status: {compute.status}</Id>
+            {compute.computeData &&
+              <Fragment>
+                <Container>
+                  <div>
+                    <Id>CPU Provisioned: {compute.computeData.cpus.provisioned} cores </Id>
+                    <Id>CPU Total: {compute.computeData.cpus.total} cores </Id>
+                  </div>
+                  <StatusColor color={compute.computeData.cpus.color} />
+                </Container>
+                <Container>
+                  <div>
+                    <Id>RAM Total: {compute.computeData.ram.total} {compute.computeData.ram.units} </Id>
+                    <Id>RAM Provisioned: {compute.computeData.ram.provisioned} {compute.computeData.ram.units} </Id>
+                  </div>
+                    <StatusColor color={compute.computeData.ram.color} />
+                </Container>
+                <Container>
+                  <div>
+                    <Id>DISK Total: {compute.computeData.storage.total} {compute.computeData.storage.units} </Id>
+                    <Id>DISK Provisioned: {compute.computeData.storage.provisioned} {compute.computeData.storage.units} </Id>
+                  </div>
+                    <StatusColor color={compute.computeData.storage.color} />
+                </Container>
+              </Fragment>
+            }
           </TypeMarker>
         )}
       </Wrapper>
@@ -66,3 +87,18 @@ const Id = styled.p`
   font-family: ${Theme.fontFamily};
   color: #89979F;
 `
+
+const StatusColor = styled.div`
+  background-color: ${({color}) => color || 'transparent'};
+  height: 24px;
+  width: 24px;
+  border-radius: 12px;
+  margin-right: 20px;
+`
+
+const Container = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
+

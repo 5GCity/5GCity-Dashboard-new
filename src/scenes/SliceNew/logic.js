@@ -6,12 +6,11 @@
  */
 
 import { kea } from 'kea'
-import { put, call } from 'redux-saga/effects'
+import { put, call, all } from 'redux-saga/effects'
 import axios from 'axios'
 import PropTypes from 'prop-types'
 import { API_SLICE_MANAGEMENT } from 'config'
-import { CreateAllPins, GetSelectComputes,
-  GetSelectNetworks, GetSelectRadioPhys, GETAllChunkIds, VerifyNetwork } from './utils'
+import { CreateAllPins, GetSelectComputes, GetSelectRadioPhys, GETAllChunkIds, GetNetwork } from './utils'
 import * as Check from 'validations'
 
 /* Logic */
@@ -61,7 +60,7 @@ export default kea({
 
     selectLocation: (resources) => ({ resources }),
     setSelectPin: (pin) => ({ pin }),
-    changeNetwork: (selectPin, networkSelectIndex, field, value) => ({ selectPin, networkSelectIndex, field, value }),
+    changeNetwork: (field, value) => ({ field, value }),
     changeComputes: (selectPin, computeSelectIndex, field, value) => ({ selectPin, computeSelectIndex, field, value }),
     changeWifi: (selectPin, physIndex, field, value) => ({ selectPin, physIndex, field, value }),
     changeLTE: (selectPin, physIndex, field, value) => ({ selectPin, physIndex, field, value }),
@@ -69,7 +68,6 @@ export default kea({
     change: (value) => ({ value }),
     resetSliceName: () => ({ }),
     showError: (error) => ({ error }),
-    reset: () => ({ }),
     setValue: (field) => ({ field }),
     setForm: (form) => ({ form }),
     setSelectSlice: (slice) => ({ slice }),
@@ -81,7 +79,10 @@ export default kea({
     setChunketes: (form) => ({ form }),
     setChunketesInfo: (info) => ({ info }),
     setChunkete: (chunkete) => ({ chunkete }),
-    verifySlice: () => ({})
+    setNetwork: (network) => ({ network }),
+    verifySlice: () => ({}),
+
+    reset: () => ({})
   }),
 
   reducers: ({ actions }) => ({
@@ -100,12 +101,6 @@ export default kea({
     }],
     pinsResources: [null, PropTypes.any, {
       [actions.setListResources]: (state, payload) => CreateAllPins(payload.resources),
-      [actions.changeNetwork]: (state, payload) => {
-        const { selectPin, networkSelectIndex, field, value } = payload
-        const clone = [...state]
-        clone[selectPin].location.resources.networks[networkSelectIndex][field] = value
-        return clone
-      },
       [actions.changeComputes]: (state, payload) => {
         const { selectPin, computeSelectIndex, field, value } = payload
         const clone = [...state]
@@ -161,7 +156,7 @@ export default kea({
       [actions.submit]: () => true,
       [actions.submitSuccess]: () => false
     }],
-    selectSlice: [{ computes: [], networks: [], radioPhys:[] }, PropTypes.object, {
+    selectSlice: [null, PropTypes.object, {
       [actions.setSelectSlice]: (state, payload) => payload.slice
     }],
     modalChunkete: [false, PropTypes.boolean, {
@@ -170,6 +165,16 @@ export default kea({
     }],
     boxes: [[], PropTypes.any, {
       [actions.setRadioPhysInfo]: (state, payload) => payload.phys,
+    }],
+    network: [null, PropTypes.object, {
+      [actions.setNetwork]: (state, payload) => payload.network,
+      [actions.changeNetwork]: (state, payload) => {
+        const { field, value } = payload
+        const clone = Object.assign({}, state)
+        clone[field] = value
+        return clone
+      },
+      [actions.reset]: (state, payload) => null
     }]
   }),
 
@@ -261,51 +266,53 @@ export default kea({
     },
 
     * getListResources () {
-      const { setListResources, addLoadingPage, removeLoadingPage } = this.actions
+      const { setListResources, addLoadingPage, removeLoadingPage, setNetwork } = this.actions
 
       // add Loading
       yield put(addLoadingPage())
       try {
-        const responseComputes = yield call(axios.get, `${API_SLICE_MANAGEMENT}/compute`)
-        const responseNetworks = yield call(axios.get, `${API_SLICE_MANAGEMENT}/physical_network`)
-        const responseRadioPhys = yield call(axios.get, `${API_SLICE_MANAGEMENT}/ran_infrastructure/configuredRadioPhys`)
+        const [responseComputes, responseNetworks, responseRadioPhys] = yield all([
+          call(axios.get, `${API_SLICE_MANAGEMENT}/compute`),
+          call(axios.get, `${API_SLICE_MANAGEMENT}/physical_network`),
+          call(axios.get, `${API_SLICE_MANAGEMENT}/ran_infrastructure/configuredRadioPhys`)
+        ])
 
-        const listResources = {computes: [], networks: [], radioPhys: [] }
+        const listResources = {computes: [], radioPhys: [] }
+
 
         responseComputes && responseComputes.data.map(el => listResources.computes.push(el))
 
-        responseNetworks && responseNetworks.data.map(el => listResources.networks.push(el))
-
         responseRadioPhys && responseRadioPhys.data[0].map(el => listResources.radioPhys.push(el))
-
-        yield put(removeLoadingPage())
+        const network = GetNetwork(responseNetworks.data[0])
+        yield (put(setNetwork(network)))
         yield (put(setListResources(listResources)))
+        yield put(removeLoadingPage())
       } catch (error) {
+        console.log(error)
         yield put(removeLoadingPage())
       }
     },
 
     * verifySlice () {
       const pinsResources = yield this.get('pinsResources')
+      const network = yield this.get('network')
       const { modalStatus, showError, setRadioPhysInfo, modalNewSliceStatus, setFormChunk } = this.actions
 
       const findSlice = pinsResources.find(pin => pin.color === '#1e90ff')
 
       // All Computes Select
       const selectComputes = GetSelectComputes(pinsResources)
-      // All Networks Select
-      const selectNetworks = GetSelectNetworks(pinsResources)
+      // Network Select
+      const selectNetworks = network.ischecked
       // All Radio Phys
       const selectRadioPhys = GetSelectRadioPhys(pinsResources)
 
-      const verification = VerifyNetwork(pinsResources, selectNetworks)
-      //Verify has computes
       if (!findSlice || !selectComputes) {
         yield put(modalStatus())
         yield put(showError('Select a compute'))
-      } else if (selectNetworks && !verification) {
+      } else if (!selectNetworks) {
         yield put(modalStatus())
-        yield put(showError('There is at lease one physical network added without a correspondent compute at the same location. Please review this before proceeding'))
+        yield put(showError('Need one physical network selected'))
       } else if (selectRadioPhys.wifi.length > 0 || selectRadioPhys.lte.length > 0) {
         yield put(setRadioPhysInfo(selectRadioPhys))
         yield put(setFormChunk(selectRadioPhys))
@@ -362,13 +369,14 @@ export default kea({
 
     * createSlice () {
       const pinsResources = yield this.get('pinsResources')
+      const network = yield this.get('network')
       const { modalStatus, loading, errorfetch, reset,
           modalNewSliceStatus, showError,
           getListResources } = this.actions
       const formSlice = yield this.get('formSlice')
       const formChunk = yield this.get('formChunkete')
       const infoChunkete = yield this.get('infoChunkete')
-      const resourcesLocations = []
+      const openstackProjects = []
 
       const validation = Check.checkValidation(formSlice, VALIDATIONS)
 
@@ -380,7 +388,7 @@ export default kea({
       // All Computes Select
       const selectComputes = GetSelectComputes(pinsResources)
       // All Networks Select
-      const selectNetworks = GetSelectNetworks(pinsResources)
+      const selectNetworks = network
       // All RadioPhys
       const selectRadioPhys = infoChunkete
          /*
@@ -394,7 +402,6 @@ export default kea({
         let createSlice = false
          if (selectComputes) {
           for (let compute of selectComputes) {
-            let indexCompute = 0
                 // 1º Open stack
             let currentDate = new Date()
             const dataCompute = {
@@ -418,36 +425,27 @@ export default kea({
               }
             }
             const { data } = yield call(axios.post, `${API_SLICE_MANAGEMENT}/openstack_project`, dataCompute)
-            const findLocation = resourcesLocations.find(location => location === compute.location)
-            if(findLocation) {
-              findLocation.chunkIds.push({index: indexCompute++, idChunk: data.id, nameChunk: data.name})
-            } else {
-              resourcesLocations.push({location: {...compute.location},  chunkIds: [{index: indexCompute++, idChunk: data.id, nameChunk: data.name}]})
-            }
+            openstackProjects.push({ idChunk: data.id, nameChunk: data.name })
+
             createSlice = true
           }
         }
         if (selectNetworks) {
-          for (let network of selectNetworks) {
-            const openStackLocation = resourcesLocations.find(resource => resource.location.latitude === network.location.latitude && resource.location.longitude === network.location.longitude )
             // 2º vlans
             const dataNetwork = {
-              cidr: network.cidr,
-              int_cidr: network.int_cidr,
-              openstack_project_id: openStackLocation.chunkIds[0].idChunk,
+              name: network.nameNetwork,
+              openstack_project_id: openstackProjects[0].idChunk,
               physical_network_id: network.id,
-              name: network.networkName,
               requirements: {
                 bandwidth: {
                   required: network.bandwidth,
-                  units: network.bandwidthUnits || network.networkData.bandwidth.units
+                  units: network.bandwidthUnits || network.units
                 }
               },
             }
             const { data } = yield call(axios.post, `${API_SLICE_MANAGEMENT}/openstack_vlan`, dataNetwork)
-            resourcesLocations.push({location: null, chunkIds: [{idChunk: data.id, nameChunk: data.name}]})
+            openstackProjects.push({ idChunk: data.id, nameChunk: data.name })
             createSlice = true
-          }
         }
         if (selectRadioPhys) {
           for (let index = 0; index < selectRadioPhys.length; index++) {
@@ -466,12 +464,12 @@ export default kea({
             }
 
             const { data } = yield call(axios.post, `${API_SLICE_MANAGEMENT}/ran_infrastructure/${phy.ranId}/chunkete_chunk`, newChunkete)
-            resourcesLocations.push({location: null, chunkIds: [{idChunk: data.id, nameChunk: data.name}]})
+            openstackProjects.push({ idChunk: data.id, nameChunk: data.name })
             createSlice = true
           }
         }
         if (createSlice) {
-          const chunkIds = GETAllChunkIds(resourcesLocations)
+          const chunkIds = GETAllChunkIds(openstackProjects)
           const dataChunk = {
             chunkIds: chunkIds,
             name: formSlice.nameSlice.value

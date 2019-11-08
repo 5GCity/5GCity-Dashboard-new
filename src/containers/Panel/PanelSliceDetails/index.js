@@ -31,7 +31,7 @@ class PanelSliceDetails extends Component {
           {data &&
           <PanelInfo>
             <PanelComputesView computes={data.computes} />
-            <PanelNetworksView networks={data.networks} />
+            <PanelNetworksView network={data.network} />
             <PanelRANsView rans={data.rans} />
             {data.wifi &&
             <PanelWifisView wifis={data.wifi} />

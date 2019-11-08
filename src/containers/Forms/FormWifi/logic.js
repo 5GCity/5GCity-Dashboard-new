@@ -100,13 +100,12 @@ export default kea({
 
   start: function * () {
     const { getForm } = this.actions
-    
+
     yield put(getForm())
   },
 
   stop: function * () {
     const { reset, removeLoadingPage } = this.actions
-    console.log('reset')
     yield put(removeLoadingPage())
     yield put(reset())
   },
@@ -116,7 +115,6 @@ export default kea({
       const { changeForm } = this.actions
       const resource = yield this.get('editResource')
       let setDefaultValues = cloneDeep(DEFAULT_FORM)
-      console.log(setDefaultValues)
       // fill form with values from api
       const fillForm = resource.phy.config ? formUtils(setDefaultValues, resource.phy.config) : setDefaultValues
       const validForm = Check.checkValidation(fillForm, VALIDATIONS).form

@@ -10,15 +10,15 @@ import { Theme } from 'globalStyles'
 
 export default class PanelNetworksView extends Component {
   render () {
-    const { networks }= this.props
+    const { network }= this.props
     return (
       <Wrapper>
-        {networks &&
+        {network &&
         <Title>Network</Title>
         }
-        {networks && networks.map((network, i) =>
+        {network &&
           <TypeMarker
-            className={i === networks.length - 1 && 'noBorder'}
+            className={'noBorder'}
             key={network.id}>
             <Name>{network.name}</Name>
             <Id>{network.id}</Id>
@@ -26,7 +26,7 @@ export default class PanelNetworksView extends Component {
             <Id>Bandwith Provisioned: {network.networkData.quota.bandwidth.provisioned} {network.networkData.quota.bandwidth.units}</Id>
             <Id>Tag Range: {network.networkData.quota.tagRange.init}-{network.networkData.quota.tagRange.end}</Id>
           </TypeMarker>
-        )}
+        }
       </Wrapper>
     )
   }

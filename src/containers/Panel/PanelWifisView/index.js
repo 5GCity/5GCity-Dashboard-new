@@ -4,31 +4,34 @@
  *
  * @author Your Name <youremail@ubiwhere.com>
  */
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import styled from 'styled-components'
 import { Theme } from 'globalStyles'
 
 export default class PanelWifisView extends Component {
   render () {
     const { wifis }= this.props
-    console.log(wifis)
     return (
      <Wrapper>
-        {wifis &&
-        <Title>Wifi</Title>
-        }
-        <Name>Box name: {wifis.name}</Name>
-        {wifis && wifis.physical.map((wifi, i) =>
-        <TypeMarker
-          key={i}
-          className={i === wifis.physical.length - 1 && 'noBorder'}
-        >
-          <Name>Name: {wifi.name}</Name>
-          <Id>{wifi.id}</Id>
-          <Id>Channel Bandwidth: {wifi.config.channelBandwidth}</Id>
-          <Id>Channel number: {wifi.config.channelNumber}</Id>
-          <Id>Tx Power: {wifi.config.txPower}</Id>
-        </TypeMarker>
+       {wifis && wifis.map((wifi, i) =>
+        <Fragment>
+          <Title>Wifi</Title>
+          <Name>Box name: {wifi.name}</Name>
+          <TypeMarker
+            key={i}
+            className={i === wifis.length - 1 && 'noBorder'}
+          >
+            <Id>{wifi.id}</Id>
+            {wifi.physical.map(physical =>
+            <Fragment>
+              <Name>Name: {physical.name}</Name>
+                <Id>Channel Bandwidth: {physical.config.channelBandwidth}</Id>
+                <Id>Channel number: {physical.config.channelNumber}</Id>
+                <Id>Tx Power: {physical.config.txPower}</Id>
+            </Fragment>
+            )}
+          </TypeMarker>
+        </Fragment>
         )}
       </Wrapper>
     )

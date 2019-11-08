@@ -23,19 +23,22 @@ const DEFAULT_FORM = {
   name: {
     value: null
   },
-  cidr: {
+  /* cidr: {
     value: null,
   },
   gwIp: {
     value: null,
-  },
+  }, */
   bandwidth: {
     value: null
   },
   bandwidthUnit: {
     value: 'MB/s'
   },
-  floatingIps: {
+  /* floatingIps: {
+    value: null
+  }, */
+  neutronPhyNetName: {
     value: null
   },
   provisionedTags: {
@@ -53,23 +56,26 @@ const VALIDATIONS = {
   name: [
     Check.isRequired
   ],
-  cidr: [
+  /* cidr: [
     Check.isRequired
   ],
   gwIp: [
     Check.isRequired
-  ],
+  ], */
   bandwidth: [
     Check.isRequired,
     Check.isNumber
   ],
+  neutronPhyNetName: [
+    Check.isRequired,
+  ],
   bandwidthUnit: [
 
   ],
-  floatingIps: [
+  /* floatingIps: [
     Check.isRequired,
     Check.isNumber
-  ],
+  ], */
   provisionedTags: [
     Check.isNumber
   ],
@@ -175,8 +181,9 @@ export default kea({
           const request = yield call(axios.get, `${API_SLICE_MANAGEMENT}/physical_network/${resource.id}`)
           const { data } = request
           setDefaultValues.name.value = data.name
+          setDefaultValues.neutronPhyNetName.value = data.neutronPhyNetName
           setDefaultValues.bandwidth.value = data.physicalNetworkData.quota.bandwidth.total
-          setDefaultValues.floatingIps.value = data.physicalNetworkData.quota.floatingIps.total
+          /* setDefaultValues.floatingIps.value = data.physicalNetworkData.quota.floatingIps.total */
           setDefaultValues.provisionedTags.array = data.physicalNetworkData.quota.provisionedTags || []
           setDefaultValues.tagRangeInit.value = data.physicalNetworkData.quota.tagRange.init
           setDefaultValues.tagRangeEnd.value = data.physicalNetworkData.quota.tagRange.end
@@ -212,19 +219,20 @@ export default kea({
 
       const newPhysicalNetwork = {
         name: null,
-        cidr: null,
-        gw_ip: null,
+        /* cidr: null,
+        gw_ip: null, */
         physical_network_data: {
+          neutron_phy_net_name: null,
           quota: {
             bandwidth: {
               provisioned: 0,
               total: null,
               units: 'MB/s'
             },
-            floating_ips: {
+            /* floating_ips: {
               provisioned: 0,
               total: null
-            },
+            }, */
             provisioned_tags: [],
             tag_range: {
               end: null,
@@ -250,11 +258,12 @@ export default kea({
         // Transform object and remove uneeded state values
         let params = mapValues(form, ({ value }) => value)
         newPhysicalNetwork.name = params.name
-        newPhysicalNetwork.cidr = params.cidr
-        newPhysicalNetwork.gw_ip = params.gwIp
+        newPhysicalNetwork.physical_network_data.neutron_phy_net_name = params.neutronPhyNetName
+        /* newPhysicalNetwork.cidr = params.cidr
+        newPhysicalNetwork.gw_ip = params.gwIp */
         newPhysicalNetwork.physical_network_data.quota.bandwidth.total = params.bandwidth
         newPhysicalNetwork.physical_network_data.quota.bandwidth.units = params.bandwidthUnit
-        newPhysicalNetwork.physical_network_data.quota.floating_ips.total = params.floatingIps
+        /* newPhysicalNetwork.physical_network_data.quota.floating_ips.total = params.floatingIps */
         form.provisionedTags.array.forEach(tag =>
         newPhysicalNetwork.physical_network_data.quota.provisioned_tags.push(tag.value)
         )
