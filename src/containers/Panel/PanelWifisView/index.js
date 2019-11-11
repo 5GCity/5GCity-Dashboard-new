@@ -14,7 +14,7 @@ export default class PanelWifisView extends Component {
     return (
      <Wrapper>
        {wifis && wifis.map((wifi, i) =>
-        <Fragment>
+        <Fragment key={wifi.id}>
           <Title>Wifi</Title>
           <Name>Box name: {wifi.name}</Name>
           <TypeMarker
@@ -23,7 +23,7 @@ export default class PanelWifisView extends Component {
           >
             <Id>{wifi.id}</Id>
             {wifi.physical.map(physical =>
-            <Fragment>
+            <Fragment key={physical.id}>
               <Name>Name: {physical.name}</Name>
                 <Id>Channel Bandwidth: {physical.config.channelBandwidth}</Id>
                 <Id>Channel number: {physical.config.channelNumber}</Id>

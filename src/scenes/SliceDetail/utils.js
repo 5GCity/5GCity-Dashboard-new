@@ -139,7 +139,6 @@ export const CreateSliceChunk = list => {
         marker.location.latitude === latitude &&
         marker.location.longitude === longitude
       )
-      debugger
     const typePhy = box.phys[0].type === 'SUB6_ACCESS' ? 'wifi' : 'LTE'
     if (locationExistsOnMarkers) {
       if (locationExistsOnMarkers.location.resources[typePhy]) {
@@ -151,12 +150,12 @@ export const CreateSliceChunk = list => {
           latitude: box.location.latitude,
           longitude: box.location.longitude,
           resources: {
-            [typePhy]: {
+            [typePhy]: [{
               info: box.boxInfo,
               id: box.boxId,
               name: box.boxName,
               physical: [...box.phys]
-            }
+            }]
           }
         }
       })
