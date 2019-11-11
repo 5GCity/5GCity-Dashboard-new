@@ -19,7 +19,7 @@ export const createSlice = resources => {
   resources.chunks.openstackVlans.forEach((network) => {
     if (network.physicalNetwork) {
       networkLocation.push({
-        ...network.physicalNetwork,
+        ...network,
       })
     }
   })
@@ -27,25 +27,23 @@ export const createSlice = resources => {
   const compareComputes = () => {
     computeLocation.forEach((compute) => {
       const { latitude, longitude } = compute.compute.location
-
       const locationExistsOnMarkers = markers.find((marker) =>
         marker.location.latitude === latitude &&
         marker.location.longitude === longitude
       )
 
       const findNetwork = networkLocation[0]
-
       if (findNetwork && locationExistsOnMarkers) {
         locationExistsOnMarkers.location.resources.computes.push({
-          id: compute.compute.id,
-          name: compute.compute.name,
+          id: compute.id,
+          name: compute.name,
           computeData: {...compute.requirements},
           ischecked: false
         })
       }else if(!findNetwork && locationExistsOnMarkers) {
         locationExistsOnMarkers.location.resources.computes.push({
-          id: compute.compute.id,
-          name: compute.compute.name,
+          id: compute.id,
+          name: compute.name,
           computeData: {...compute.requirements},
           ischecked: false
         })
@@ -56,8 +54,8 @@ export const createSlice = resources => {
             longitude: longitude,
             resources: {
               computes: [{
-                id: compute.compute.id,
-                name: compute.compute.name,
+                id: compute.id,
+                name: compute.name,
                 computeData: {...compute.requirements},
                 ischecked: false
               }],
@@ -76,8 +74,8 @@ export const createSlice = resources => {
             longitude: longitude,
             resources: {
               computes: [{
-                id: compute.compute.id,
-                name: compute.compute.name,
+                id: compute.id,
+                name: compute.name,
                 computeData: {...compute.requirements},
                 ischecked: false
               }],

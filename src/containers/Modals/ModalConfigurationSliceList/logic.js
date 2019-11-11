@@ -11,6 +11,7 @@ import { call, put } from 'redux-saga/effects'
 import { API_SLICE_MANAGEMENT } from 'config'
 import PropTypes from 'prop-types'
 import * as Check from 'validations'
+import cloneDeep from 'lodash/cloneDeep'
 
 /* Logic */
 import ListSlicesLogic from 'containers/Lists/ListSlices/logic'
@@ -75,9 +76,9 @@ export default kea({
     form: [null, PropTypes.any, {
       [actions.setForm]: (state, payload) => Check.checkValidation(payload.form, VALIDATIONS).form,
       [actions.change]: (state, payload) => Check.setAndCheckValidationArray(state, payload, VALIDATIONS),
-      [actions.submitSuccess]: () => DEFAULT_FORM,
+      [actions.submitSuccess]: () => cloneDeep(DEFAULT_FORM),
 
-      [actions.reset]: () => DEFAULT_FORM
+      [actions.reset]: () => cloneDeep(DEFAULT_FORM)
     }],
     chunkInfo: [null, PropTypes.array, {
       [actions.setChunkInfo]: (state, payload) => payload.info,
@@ -87,9 +88,11 @@ export default kea({
     }],
     modalStatus: [false, PropTypes.bool, {
       [actions.actionModal]: (state, payload) => !state,
+      [actions.reset]: () => false,
     }],
     loading: [false, PropTypes.bool, {
       [actions.isLoading]: (state, payload) => !state,
+      [actions.reset]: () => false,
     }]
   }),
 
@@ -112,7 +115,7 @@ export default kea({
       const array = []
       yield put(configAction())
       console.log(sliceSelect)
-      const newForm = Object.assign({}, DEFAULT_FORM)
+      const newForm = cloneDeep(DEFAULT_FORM)
         for (let index = 0; index < sliceSelect.chunks.chunketeChunks.length; index++) {
           const chunk = sliceSelect.chunks.chunketeChunks[index]
           array.push({chunketeName: chunk.name, ranInfrastructureId: chunk.ranInfrastructureId, chunkId: chunk.id, sliceId : sliceSelect.id})

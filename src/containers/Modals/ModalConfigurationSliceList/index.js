@@ -20,7 +20,6 @@ class ModalConfigurationSliceList extends Component {
   render () {
     const { chunkInfo, loading, modalStatus, form  }= this.props
     const { actionModal, submit, change }= this.actions
-
     return (
     <Modal
       size={'tiny'}
