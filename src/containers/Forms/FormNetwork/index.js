@@ -30,7 +30,6 @@ class FormNetwork extends Component {
       /* cidr,
       gwIp, */
       bandwidthUnit,
-      neutronPhyNetName
     } = form;
     const {
       addProvisionedTags,
@@ -48,17 +47,6 @@ class FormNetwork extends Component {
               onChange={value => change({ name: value })}
             />
             <Form.Error>{name.message}</Form.Error>
-          </Form.Item>
-          <Form.Item
-            label={"Neutron Phy Net Name"}
-            required
-            status={!neutronPhyNetName.valid}
-          >
-            <Input
-              value={neutronPhyNetName.value}
-              onChange={value => change({ neutronPhyNetName: value })}
-            />
-            <Form.Error>{neutronPhyNetName.message}</Form.Error>
           </Form.Item>
           {/* <Form.Item label={"CIDR"} required status={!cidr.valid}>
             <Input

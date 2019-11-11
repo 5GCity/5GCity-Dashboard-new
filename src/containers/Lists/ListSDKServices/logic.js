@@ -139,7 +139,6 @@ export default kea({
           }
         }
         yield put(removeLoadingPage())
-        yield put(setNoData())
       } catch (error) {
         if (error.response) {
           // The request was made and the server responded with a status code

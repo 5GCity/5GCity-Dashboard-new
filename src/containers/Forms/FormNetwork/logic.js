@@ -38,9 +38,6 @@ const DEFAULT_FORM = {
   /* floatingIps: {
     value: null
   }, */
-  neutronPhyNetName: {
-    value: null
-  },
   provisionedTags: {
     array: []
   },
@@ -181,7 +178,6 @@ export default kea({
           const request = yield call(axios.get, `${API_SLICE_MANAGEMENT}/physical_network/${resource.id}`)
           const { data } = request
           setDefaultValues.name.value = data.name
-          setDefaultValues.neutronPhyNetName.value = data.neutronPhyNetName
           setDefaultValues.bandwidth.value = data.physicalNetworkData.quota.bandwidth.total
           /* setDefaultValues.floatingIps.value = data.physicalNetworkData.quota.floatingIps.total */
           setDefaultValues.provisionedTags.array = data.physicalNetworkData.quota.provisionedTags || []
@@ -222,7 +218,6 @@ export default kea({
         /* cidr: null,
         gw_ip: null, */
         physical_network_data: {
-          neutron_phy_net_name: null,
           quota: {
             bandwidth: {
               provisioned: 0,
@@ -258,7 +253,6 @@ export default kea({
         // Transform object and remove uneeded state values
         let params = mapValues(form, ({ value }) => value)
         newPhysicalNetwork.name = params.name
-        newPhysicalNetwork.physical_network_data.neutron_phy_net_name = params.neutronPhyNetName
         /* newPhysicalNetwork.cidr = params.cidr
         newPhysicalNetwork.gw_ip = params.gwIp */
         newPhysicalNetwork.physical_network_data.quota.bandwidth.total = params.bandwidth

@@ -8,7 +8,7 @@
 import { kea } from 'kea'
 import { put, call } from 'redux-saga/effects'
 import axios from 'axios'
-import { API_SDK, API_BASE_URL } from 'config'
+import { API_SDK } from 'config'
 import { FindUsers } from './utils'
 
 import PropTypes from 'prop-types'
@@ -125,20 +125,18 @@ export default kea({
   }),
 
   start: function * () {
-    const { fetchSlices, fetchUsers, setNewUsers } = this.actions
+    const { fetchSlices, setNewUsers } = this.actions
 
     const userName = yield this.get('userName')
     const userLogin = userName.toLowerCase() === 'admin admin' ? 'admin' : userName.toLowerCase()
 
     yield put(fetchSlices())
-    yield put(fetchUsers())
     yield put(setNewUsers([userLogin]))
 
   },
 
   takeLatest: ({ actions, workers }) => ({
     [actions.fetchSlices]: workers.fetchSlices,
-    [actions.fetchUsers]: workers.fetchUsers,
     [actions.deleteSlice]: workers.deleteSlice,
     [actions.actionUsers]: workers.actionUsers,
     [actions.addNewUsers]: workers.addNewUsers,
@@ -181,21 +179,6 @@ export default kea({
           yield put(setErroFecth())
         }
         yield put(removeLoadingPage())
-      }
-    },
-
-    * fetchUsers () {
-      const { setUsers } = this.actions
-      try {
-        let responseResult = yield call(axios.get, `${API_BASE_URL}/auth/admin/realms/5gcity/users`)
-        const { data } = responseResult
-        if (data.length > 0) {
-          yield put(setUsers(data))
-        } else {
-          yield put(setUsers([]))
-        }
-      } catch (error) {
-        yield put(setUsers([]))
       }
     },
 
