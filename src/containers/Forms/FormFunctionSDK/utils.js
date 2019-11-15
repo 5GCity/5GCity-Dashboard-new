@@ -46,9 +46,11 @@ export const PLACEHOLDER_SWIMAGE = `{
 }`
 export const PLACEHOLDER_MONITPARAMS = `[
   {
-    "id": "string",
-    "name": "string",
-    "parameterType": "AGGREGATED"
+      "metricName": "string",
+      "metricType": "string",
+      "parameterType": "string",
+      "name": "string",
+      "id": "string"
   }
 ]`
 
@@ -66,6 +68,7 @@ export const AddParameter = state => {
 }
 
 export const GetJsonFunction = (params, form) => {
+  try {
   const JSONResult = { ...newFunctionJSON }
   const newParameters = []
   if (params.functionConnectPoints) { JSONResult.connectionPoints = JSON.parse(params.functionConnectPoints) }
@@ -91,6 +94,9 @@ export const GetJsonFunction = (params, form) => {
   })
   JSONResult.parameters = newParameters
   return JSONResult
+}catch (e) {
+  return 'error'
+}
 }
 
 const newFunctionJSON = {
@@ -163,7 +169,7 @@ export const TransformInForm = data => {
   form.functionParameters.array = array
   form.functionMaxInst.value = data.maxInstancesCount
   form.functionMinInst.value = data.minInstancesCount
-  form.functionAccessLevel.value = data.accessLevel
+  form.functionAccessLevel.value = `${data.accessLevel}`
   form.functionMonitParams.value = JSON.stringify(data.monitoringParameters)
   form.functionMetaData.value = JSON.stringify(data.metadata)
   form.functionvisibility.value = data.visibility
@@ -309,18 +315,18 @@ export const ACCESS_LEVEL = [
   {
     id: 0,
     name: 'Platinum',
-    value: 0
+    value: '0'
   },{
     id: 1,
     name: 'Gold',
-    value: 1
+    value: '1'
   },{
     id: 2,
     name: 'Silver',
-    value: 2
+    value: '2'
   },{
     id: 3,
     name: 'Bronze',
-    value: 3
+    value: '3'
   }
 ]

@@ -25,7 +25,8 @@ export default kea({
         'getInfoMarker',
         'fetchResources',
         'changeModalStatus',
-        'submitModal'
+        'submitModal',
+        'changeModalErrorStatus',
       ],
       AppLogic, [
         'addLoadingPage',
@@ -82,7 +83,7 @@ export default kea({
 
   workers: {
     * deleteResource () {
-      const { fetchResources, reset, changeModalStatus } = this.actions
+      const { fetchResources, reset, changeModalStatus, changeModalErrorStatus } = this.actions
       const { type, id } = yield this.get('modalInfo')
       try {
         switch (type) {
@@ -109,8 +110,9 @@ export default kea({
         }
 
       } catch (error) {
-        console.log(error)
-        yield (put(changeModalStatus({message: error.response.data.message || 'Internal Error'})))
+        const message = error.response.data.message || 'Internal Error'
+        yield put(changeModalStatus(null))
+        yield put(changeModalErrorStatus({message: message}))
       }
     }
   }

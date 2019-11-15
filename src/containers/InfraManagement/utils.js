@@ -234,8 +234,7 @@ export const CreateAllPins = resources => {
           marker =>
             marker.location.latitude === latitude &&
             marker.location.longitude === longitude
-        );
-
+        )
         if (locationExistsOnMarkers) {
           locationExistsOnMarkers.location.isRAN = true;
           if (locationExistsOnMarkers.location.resources.rans) {
@@ -282,8 +281,8 @@ export const CreateAllPins = resources => {
 
   const compareChunketeTopology = () => {
     resources.rans.length > 0 &&
-      resources.rans.forEach(ran => {
-        ran.chunketeTopology &&
+    resources.rans.forEach(ran => {
+      ran.chunketeTopology &&
           ran.chunketeTopology.boxes.length > 0 &&
           ran.chunketeTopology.boxes.forEach(box => {
             const { latitude, longitude } = box.location;
@@ -301,7 +300,8 @@ export const CreateAllPins = resources => {
                   name: box.name,
                   physical: [...box.phys],
                   info: box.location.info,
-                  ranId: ran.id
+                  ranId: ran.id,
+                  ranName: ran.name
                 });
               } else {
                 locationExistsOnMarkers.location.resources[typeBox] = [
@@ -310,7 +310,8 @@ export const CreateAllPins = resources => {
                     name: box.name,
                     physical: [...box.phys],
                     info: box.location.info,
-                    ranId: ran.id
+                    ranId: ran.id,
+                    ranName: ran.name
                   }
                 ];
               }
@@ -326,7 +327,8 @@ export const CreateAllPins = resources => {
                         name: box.name,
                         physical: [...box.phys],
                         info: box.location.info,
-                        ranId: ran.id
+                        ranId: ran.id,
+                        ranName: ran.name
                       }
                     ]
                   },

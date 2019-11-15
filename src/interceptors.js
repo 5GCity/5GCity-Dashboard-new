@@ -29,14 +29,6 @@ export const removeAuthorizationInterceptor = () => {
 // Converts all responses for CamelCase
 axios.interceptors.response.use((response) => {
   response.data = camelizeKeys(response.data)
-/*   const data = Object.assign({}, response)
-  console.log(response)
-  const findSchema = REQUEST_SCHEMA.find(url => response.config.url.includes(url))
-  if(findSchema && data.config.method === 'get'){
-    console.log(data.data)
-    data.data = objectMapper(response.data, service())
-    console.log(data.data)
-  } */
   return response
 }, (error) => {
   return Promise.reject(error)

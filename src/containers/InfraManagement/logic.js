@@ -172,17 +172,15 @@ export default kea({
 
         if (responseRAN) {
           for (let index = 0; index < responseRAN.data.length; index++) {
-            const elementId = responseRAN.data[index].id;
+            const element = responseRAN.data[index];
             const responseChunketeTopology = yield call(
               axios.get,
-              `${API_SLICE_MANAGEMENT}/ran_infrastructure/${elementId}/chunkete_topology`
+              `${API_SLICE_MANAGEMENT}/ran_infrastructure/${element.id}/chunkete_topology`
             );
-            responseRAN.data.map(el =>
               listResources.rans.push({
-                ...el,
+                ...element,
                 chunketeTopology: responseChunketeTopology.data || null
               })
-            );
           }
           yield put(setChunketeTopology(listResources.rans));
         }

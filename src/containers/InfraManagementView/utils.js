@@ -24,8 +24,7 @@ export const CreateAllPins = resources => {
         );
         const findNetwork = resources.networks.find(
           network => network.id === compute.availablePhyNet
-        );
-
+        )
         if (locationExistsOnMarkers && !findNetwork) {
           locationExistsOnMarkers.location.isCompute = true;
           const { computeData } = compute;
@@ -221,8 +220,7 @@ export const CreateAllPins = resources => {
           marker =>
             marker.location.latitude === latitude &&
             marker.location.longitude === longitude
-        );
-
+        )
         if (locationExistsOnMarkers) {
           locationExistsOnMarkers.location.isRAN = true;
           if (locationExistsOnMarkers.location.resources.rans) {
@@ -232,7 +230,7 @@ export const CreateAllPins = resources => {
               controller_url: ran.ranInfrastructureData.controllerUrl,
               username: ran.ranInfrastructureData.username,
               password: ran.ranInfrastructureData.password
-            });
+            })
           } else {
             locationExistsOnMarkers.location.resources.rans = [
               {
@@ -262,10 +260,10 @@ export const CreateAllPins = resources => {
               },
               isRAN: true
             }
-          });
+          })
         }
-      });
-  };
+      })
+  }
 
   const compareChunketeTopology = () => {
     resources.rans.length > 0 &&
@@ -288,7 +286,8 @@ export const CreateAllPins = resources => {
                   name: box.name,
                   physical: [...box.phys],
                   info: box.location.info,
-                  ranId: ran.id
+                  ranId: ran.id,
+                  ranName: ran.name
                 });
               } else {
                 locationExistsOnMarkers.location.resources[typeBox] = {
@@ -296,7 +295,8 @@ export const CreateAllPins = resources => {
                   name: box.name,
                   physical: [...box.phys],
                   info: box.location.info,
-                  ranId: ran.id
+                  ranId: ran.id,
+                  ranName: ran.name
                 };
               }
             } else {
@@ -311,7 +311,8 @@ export const CreateAllPins = resources => {
                         name: box.name,
                         physical: [...box.phys],
                         info: box.location.info,
-                        ranId: ran.id
+                        ranId: ran.id,
+                        ranName: ran.name
                       }
                     ]
                   },

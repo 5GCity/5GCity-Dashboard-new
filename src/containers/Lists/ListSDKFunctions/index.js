@@ -4,7 +4,7 @@
  *
  * @author Your Name <youremail@ubiwhere.com>
  */
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import Logic from './logic'
 import styled from 'styled-components'
 import { Titles } from './utils'
@@ -79,7 +79,8 @@ class ListSDKFunctions extends Component {
       modalVisibledDelete,
       modalVisibledPublish,
       modalErrorVisibled,
-      modalErrorMessage
+      modalErrorMessage,
+      usersView
     } = this.props
     const {
       actionModalDelete,
@@ -127,6 +128,7 @@ class ListSDKFunctions extends Component {
                   </List.Column>
                 ]
               })}
+
               <ColumnBottons>
                 <ContainerButtons>
                   {func.status !== 'COMMITTED'
@@ -137,6 +139,8 @@ class ListSDKFunctions extends Component {
                     text={'Publish'}
                   />
                   : null}
+                  {usersView &&
+                  <Fragment>
                   <Button
                     type={'secondary'}
                     svg={<DeleteIcon />}
@@ -149,8 +153,11 @@ class ListSDKFunctions extends Component {
                     onClick={() => this.navigate(`/sdk/function/${func.id}`)}
                     text={'Edit'}
                   />
+                  </Fragment>
+                }
                 </ContainerButtons>
               </ColumnBottons>
+
             </List.Row>
           )}
         </List>

@@ -24,13 +24,13 @@ class ModalCreateOrganisation extends Component {
       size={'tiny'}
       showClose
       onCancel={() => modalClose()}
-      title={'Add new organisation'}
+      title={'Add new repository'}
       visible={modalStatusOrganisation}
     >
       <Form labelPosition={'top'}>
       <Modal.Body>
       <Form.Item
-              label={'Organisation name'}
+              label={'Repository name'}
               required
               status={!sliceId.valid}
             >
@@ -41,7 +41,7 @@ class ModalCreateOrganisation extends Component {
               <Form.Error>{sliceId.message}</Form.Error>
             </Form.Item>
             <Form.Item
-              label={'Organisation description'}
+              label={'Repository description'}
               required
               status={!sliceDescription.valid}
             >

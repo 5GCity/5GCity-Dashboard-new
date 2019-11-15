@@ -62,7 +62,6 @@ export default kea({
   workers: {
     * getResourcesLocation () {
       let id = 0
-      console.log(this.props)
       const { setResources } = this.actions
       const selectSlice = this.props.selectSlice
       selectSlice.location.resources.sdnWifi.forEach(wifi => {
@@ -76,7 +75,6 @@ export default kea({
       )
         wifi.channelOptions = channelsOptions
       })
-      console.log(selectSlice.location.resources)
       yield put(setResources(selectSlice.location.resources))
     }
   }

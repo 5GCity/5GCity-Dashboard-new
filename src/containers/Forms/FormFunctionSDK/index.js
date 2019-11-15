@@ -27,10 +27,10 @@ const GeneralInfoOne = props => (
       <Input value={props.functionName.value} onChange={value => props.change({functionName: value})} />
       <Form.Error>{props.functionName.message}</Form.Error>
     </Form.Item>
-    <Form.Item label={'Organization name'} required status={!props.functionSliceId.valid}>
+    <Form.Item label={'Repository name'} required status={!props.functionSliceId.valid}>
       <Select
         type={'default'}
-        placeholder="Organization"
+        placeholder="Repository"
         options={props.organizations}
         onChange={value => props.change({functionSliceId: value})}
         selectOption={props.functionSliceId.value}

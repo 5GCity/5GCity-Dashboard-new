@@ -12,7 +12,7 @@ export const Titles = [{
   propItem: 'id'
 }, {
   id: 2,
-  size: 200,
+  size: 400,
   name: 'Short Name',
   propItem: 'name'
 }, {

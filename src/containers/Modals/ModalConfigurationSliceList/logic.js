@@ -114,7 +114,6 @@ export default kea({
       const sliceSelect = yield this.get('sliceSelect')
       const array = []
       yield put(configAction())
-      console.log(sliceSelect)
       const newForm = cloneDeep(DEFAULT_FORM)
         for (let index = 0; index < sliceSelect.chunks.chunketeChunks.length; index++) {
           const chunk = sliceSelect.chunks.chunketeChunks[index]

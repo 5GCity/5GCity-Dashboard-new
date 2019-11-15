@@ -14,5 +14,11 @@ export const TITLE_LIST = [{
   id: 2,
   size: 400,
   name: 'Name',
-  propItem: 'name'
+  propItem: 'nsdName'
+},
+{
+  id: 3,
+  size: 150,
+  name: 'Version',
+  propItem: 'nsdVersion'
 }]

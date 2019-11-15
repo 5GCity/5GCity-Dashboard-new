@@ -37,6 +37,7 @@ export default kea({
     props: [
       AppLogic, [
         'keycloak',
+        'userName'
       ],
       PageTitleOrganizationLogic, [
         'selectOrganization'
@@ -120,7 +121,12 @@ export default kea({
         getResult(services)
       ),
       PropTypes.array
-    ]
+    ],
+      usersView : [
+        () => [selectors.userName],
+        (userName) => userName.toLowerCase() === 'admin admin' ? true : false,
+        PropTypes.bool
+      ]
   }),
 
   workers: {
@@ -137,6 +143,8 @@ export default kea({
           } else {
             yield put(setNoData())
           }
+        }else {
+          yield put(setNoData())
         }
         yield put(removeLoadingPage())
       } catch (error) {

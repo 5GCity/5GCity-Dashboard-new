@@ -22,7 +22,7 @@ export const LINKS = [
     children: [
       {
         path: '/sdk/organisation',
-        name: 'Organisation',
+        name: 'Repositories',
         disabled: false,
         active: false
       },

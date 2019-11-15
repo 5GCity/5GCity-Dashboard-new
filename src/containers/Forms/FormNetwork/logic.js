@@ -271,7 +271,6 @@ export default kea({
           yield put(reset())
         } catch (error) {
           yield put(removeLoadingPage())
-          console.error(error.request.status)
           if (error.request.status === 500) {
             yield put(changeModalErrorStatus({message: 'Internal Error'}))
             yield put(closePanel())

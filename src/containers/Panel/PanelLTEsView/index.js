@@ -11,7 +11,6 @@ import { Theme } from 'globalStyles'
 export default class PanelLTEsView extends Component {
   render () {
     const { ltes }= this.props
-    console.log(ltes)
     return (
       <Wrapper>
         {ltes && ltes.map((lte, i) =>

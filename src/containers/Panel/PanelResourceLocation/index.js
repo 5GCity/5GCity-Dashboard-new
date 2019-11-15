@@ -18,7 +18,6 @@ import { BackIcon } from 'components/Icons'
 class PanelResourceLocation extends Component {
   render () {
     const { show, close, update, resources }= this.props
-    console.log(resources)
     return (
         <PanelRight
           show={show}

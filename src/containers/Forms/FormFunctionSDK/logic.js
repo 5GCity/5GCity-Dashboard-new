@@ -164,13 +164,11 @@ export default kea({
       const form = yield this.get('form')
       const dirty = yield this.get('dirty')
       const idFunction = Number(this.props.match.params.id)
-
       // Add loading page
       yield put(addLoadingPage())
 
       // Check validations
       const validation = Check.checkValidation(form, VALIDATIONS)
-
       if (dirty && validation.invalid) {
         yield put(removeLoadingPage())
         return false

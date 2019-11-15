@@ -30,7 +30,7 @@ class PageTitleOrganization extends Component {
       >
         <ContainerFilters>
           <Select
-            label={'organization'}
+            label={'Repositories'}
             type={'default'}
             loading={loading}
             options={organizations}

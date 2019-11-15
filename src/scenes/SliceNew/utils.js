@@ -282,13 +282,10 @@ export const UNITS_SECONDS = [
 ];
 
 export const FindLocationCompute = (computeId, data) => {
-  console.log(computeId, data);
   data.forEach(location => {
-    console.log(location);
     let findLocation =
       location.resources.computes &&
       location.resources.computes.find(compute => compute.id === computeId);
-    console.log(findLocation);
     if (findLocation) {
       return findLocation;
     }

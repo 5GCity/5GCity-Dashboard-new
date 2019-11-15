@@ -23,12 +23,12 @@ const ModalDeleteSlice = props => (
     size={'tiny'}
     showClose
     onCancel={() => props.modalDeleteClose()}
-    title={'Delete organisation'}
+    title={'Delete repository'}
     visible={props.modalDeleteStatus}
   >
     <Modal.Body>
     {props.slice &&
-    <Message>Are you sure you want to delete organisation {props.slice.sliceId} ?</Message>
+    <Message>Are you sure you want to delete repository {props.slice.sliceId} ?</Message>
     }
     </Modal.Body>
     <Modal.Footer>
@@ -56,15 +56,15 @@ const ModalInfoSlice = props => {
       size={'tiny'}
       showClose
       onCancel={() => props.modalInfoClose()}
-      title={'Edit organisation'}
+      title={'Edit repository'}
       visible={props.modalInfoStatus}
     >
       <Modal.Body>
       {props.slice &&
       <React.Fragment>
-        <Title>Organisation name</Title>
+        <Title>Repository name</Title>
           <Item>{props.slice.sliceId}</Item>
-        <Title>Organisation description</Title>
+        <Title>Repository description</Title>
           <Item>{props.slice.sliceDescription}</Item>
         <Title>Users</Title>
         <SelectAutoComplete
@@ -97,7 +97,7 @@ class ListSDKOrganisation extends Component {
   render () {
     const {
       noData, errorFecth, selectSlice, modalDeleteStatus, modalInfoStatus,
-      slices, users, usersSelect } = this.props
+      slices, users, usersSelect, usersView } = this.props
     const { modalDeleteOpen, modalDeleteClose, modalInfoClose,
       modalInfoOpen, actionUsers, setNewUsers, deleteSlice }= this.actions
     return (
@@ -141,6 +141,7 @@ class ListSDKOrganisation extends Component {
                   </List.Column>
                 ]
               })}
+              {usersView &&
               <ColumnBottons>
                 <ContainerButtons>
                   <Button
@@ -157,14 +158,15 @@ class ListSDKOrganisation extends Component {
                   />
                 </ContainerButtons>
               </ColumnBottons>
+              }
             </List.Row>
           )}
         </List>
         }
       {noData &&
         <NoData
-          title={'You don’t have any organisation yet...'}
-          message={'Click on the “Add new organisation" button to add your first organisation!'}
+          title={'You don’t have any repository yet...'}
+          message={'Please contact Administration to be added to one or mode repositories'}
         />
       }
       {errorFecth &&

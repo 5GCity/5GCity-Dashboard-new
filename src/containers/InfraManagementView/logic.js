@@ -112,9 +112,12 @@ export default kea({
         }
         if (responseRAN) {
           for (let index = 0; index < responseRAN.data.length; index++) {
-            const elementId = responseRAN.data[index].id
-            const responseChunketeTopology = yield call(axios.get, `${API_SLICE_MANAGEMENT}/ran_infrastructure/${elementId}/chunkete_topology`)
-            responseRAN.data.map(el => listResources.rans.push({...el, chunketeTopology: responseChunketeTopology.data || null}))
+            const element = responseRAN.data[index]
+            const responseChunketeTopology = yield call(axios.get, `${API_SLICE_MANAGEMENT}/ran_infrastructure/${element.id}/chunkete_topology`)
+            listResources.rans.push({
+              ...element,
+              chunketeTopology: responseChunketeTopology.data || null
+            })
           }
           yield (put(setChunketeTopology(listResources.rans)))
           const result = CreateAllPins(listResources)

@@ -4,7 +4,7 @@
  *
  * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import Logic from './logic'
 import styled from 'styled-components'
 import { Titles } from './utils'
@@ -40,6 +40,7 @@ const ListSDKService = props => (
           {service[propItem]}
         </List.Column>]
       })}
+
       <ColumnBottons>
         <ContainerButtons>
           <Button
@@ -48,6 +49,8 @@ const ListSDKService = props => (
             onClick={() => props.selectService(service, 'clone')}
             text={'Clone'}
           />
+          {props.usersView &&
+          <Fragment>
           <Button
             type={'secondary'}
             svg={<DeleteIcon />}
@@ -60,6 +63,8 @@ const ListSDKService = props => (
             onClick={() => props.navigate(`/sdk/composer/${service.id}`)}
             text={'Edit'}
           />
+          </Fragment>
+        }
         </ContainerButtons>
       </ColumnBottons>
     </List.Row>)}
@@ -161,7 +166,8 @@ class ListSDKServices extends Component {
       noData,
       errorFecth,
       modalErrorVisibled,
-      modalErrorMessage
+      modalErrorMessage,
+      usersView
     } = this.props
 
     const {
@@ -194,6 +200,7 @@ class ListSDKServices extends Component {
             services={serviceList}
             selectService={selectService}
             cloneService={cloneService}
+            usersView={usersView}
           />
         }
         {noData &&

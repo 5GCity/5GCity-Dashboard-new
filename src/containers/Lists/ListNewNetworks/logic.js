@@ -9,10 +9,12 @@ import { kea } from 'kea'
 import { put, call } from 'redux-saga/effects'
 import PropTypes from 'prop-types'
 import axios from 'axios'
-import { API_SLICE_MANAGEMENT } from 'config'
+import { API_BASE_URL } from 'config'
 
 /* Logic */
 import AppLogic from 'containers/App/logic'
+import NetworkServiceLogic from 'scenes/NetworkNew/logic'
+import CatalogueLogic from 'scenes/Catalogue/logic'
 
 export default kea({
   path: () => ['scenes', 'containers', 'ListNewNetworks'],
@@ -21,18 +23,31 @@ export default kea({
     actions: [
       AppLogic, [
         'addLoadingPage',
-        'removeLoadingPage'
+        'removeLoadingPage',
+      ],
+      NetworkServiceLogic, [
+        'changeOrganization',
+        'setOrganizations'
+      ],
+      CatalogueLogic, [
+        'changeCatalogueOrganization',
+        'setCatalogueOrganizations'
       ]
     ],
     props: [
       AppLogic, [
         'keycloak'
+      ],
+      NetworkServiceLogic, [
+        'selectOrganization'
+      ],
+      CatalogueLogic, [
+        'selectCatalogueOrganization'
       ]
     ]
   },
 
   actions: () => ({
-    fetchNetworksServices: () => ({ }),
     setNetworksServices: (networkService) => ({ networkService }),
     setSelectNetwork: (network) => ({ network }),
     runInstance: () => ({ }),
@@ -74,8 +89,9 @@ export default kea({
   }),
 
   start: function * () {
-    const { fetchNetworksServices } = this.actions
-    yield put(fetchNetworksServices())
+    const { setOrganizations } = this.actions
+
+    yield put(setOrganizations())
   },
 
   stop: function * () {
@@ -86,23 +102,80 @@ export default kea({
   },
 
   takeLatest: ({ actions, workers }) => ({
-    [actions.fetchNetworksServices]: workers.fetchNetworksServicesWorker
+    [actions.setOrganizations]: workers.fetchNetworksServicesWorker,
+    [actions.changeOrganization]: workers.fetchNetworksServicesWorker,
+    [actions.changeCatalogueOrganization]: workers.fetchNetworksServices,
+    [actions.setCatalogueOrganizations]: workers.fetchNetworksServices
   }),
 
   workers: {
     * fetchNetworksServicesWorker () {
-      const { setNetworksServices, addLoadingPage, removeLoadingPage, setErroFecth, setNoData } = this.actions
+      const { setNetworksServices, addLoadingPage, removeLoadingPage, setErroFecth, setNoData, removeNoData } = this.actions
+      const organization = yield this.get('selectOrganization')
       yield put(addLoadingPage())
+      yield put(removeNoData())
       try {
-        let responseResult = yield call(axios.get, `${API_SLICE_MANAGEMENT}/network_service`)
+        if(organization === 'all'){
+            let responseResult = yield call(axios.get, `${API_BASE_URL}/gw/appcat/nsd/v1/ns_descriptors`)
+            const { data } = responseResult
+          yield put(setNetworksServices(data))
+        } else {
+        let responseResult = yield call(axios.get, `${API_BASE_URL}/gw/appcat/nsd/v1/ns_descriptors?project=${organization}`)
         const { data } = responseResult
 
         if (data.length > 0) {
           yield put(setNetworksServices(data))
         } else {
+          yield put(setNetworksServices(null))
           yield put(setNoData())
         }
+      }
+      yield put(removeLoadingPage())
+      } catch (error) {
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          if (error.response.status === 401) {
+            const keycloak = yield this.get('keycloak')
+            keycloak.logout()
+          } else if (error.response.status === 404) {
+            console.log(404)
+            yield put(setErroFecth())
+          }
+        } else if (error.request) {
+          // The request was made but no response was received
+          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+          // http.ClientRequest in node.js
+          yield put(setErroFecth())
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          yield put(setErroFecth())
+        }
         yield put(removeLoadingPage())
+      }
+    },
+    * fetchNetworksServices () {
+      const { setNetworksServices, addLoadingPage, removeLoadingPage, setErroFecth, setNoData, removeNoData } = this.actions
+      const organization = yield this.get('selectCatalogueOrganization')
+      yield put(addLoadingPage())
+      yield put(removeNoData())
+      try {
+        if(organization === 'all'){
+            let responseResult = yield call(axios.get, `${API_BASE_URL}/gw/appcat/nsd/v1/ns_descriptors`)
+            const { data } = responseResult
+          yield put(setNetworksServices(data))
+        } else {
+        let responseResult = yield call(axios.get, `${API_BASE_URL}/gw/appcat/nsd/v1/ns_descriptors?project=${organization}`)
+        const { data } = responseResult
+
+        if (data.length > 0) {
+          yield put(setNetworksServices(data))
+        } else {
+          yield put(setNetworksServices(null))
+          yield put(setNoData())
+        }
+      }
+      yield put(removeLoadingPage())
       } catch (error) {
         if (error.response) {
           // The request was made and the server responded with a status code

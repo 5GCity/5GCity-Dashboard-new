@@ -20,18 +20,18 @@ export const ACCESS_LEVEL = [
   {
     id: 0,
     name: 'Platinum',
-    value: 0
+    value: '0'
   },{
     id: 1,
     name: 'Gold',
-    value: 1
+    value: '1'
   },{
     id: 2,
     name: 'Silver',
-    value: 2
+    value: '2'
   },{
     id: 3,
     name: 'Bronze',
-    value: 3
+    value: '3'
   }
 ]

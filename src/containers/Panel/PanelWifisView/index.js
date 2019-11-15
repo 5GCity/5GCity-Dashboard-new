@@ -16,6 +16,7 @@ export default class PanelWifisView extends Component {
        {wifis && wifis.map((wifi, i) =>
         <Fragment key={wifi.id}>
           <Title>Wifi</Title>
+          <Name>RAN Controller: {wifi.ranName} </Name>
           <Name>Box name: {wifi.name}</Name>
           <TypeMarker
             key={i}

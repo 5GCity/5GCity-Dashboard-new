@@ -39,7 +39,7 @@ export default class ModalChunketeSlice extends Component {
           <Modal.Body>
             {chunketes.map((chunk, index) =>
             <React.Fragment key={index}>
-            <Title>{chunk.physName}</Title>
+            {/* <Title>{chunk.physName}</Title> */}
             <Form.Item
               label={'Assigned Quota'}
               required

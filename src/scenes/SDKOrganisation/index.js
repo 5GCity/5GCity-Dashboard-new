@@ -22,15 +22,16 @@ import { PlusIcon } from 'components/Icons'
 class SDKOrganisation extends Component {
   render () {
     const { modalOpen }= this.actions
+    const { user } = this.props
     return (
       <Wrapper>
         <ModalCreateOrganisation />
         <PageTitle
-          title={'My Repository - Organisation'}
-          buttonTitle={'Add new organisation'}
-          type={'primary'}
-          svg={<PlusIcon />}
-          buttonFunction={() => modalOpen()}
+          title={'My repositories'}
+          buttonTitle={ user && 'Add new repository'}
+          type={user && 'primary'}
+          svg={user && <PlusIcon />}
+          buttonFunction={() => user && modalOpen()}
         />
         <NavBar />
         <ListSDKOrganisation />

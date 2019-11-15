@@ -83,6 +83,7 @@ class ListSDKDescriptions extends Component {
       errorFecth,
       descriptionSelect,
       modalVisibled,
+      usersView
     } = this.props
     const { selectDescription, actionModal, actionDescription,
     }= this.actions
@@ -135,12 +136,14 @@ class ListSDKDescriptions extends Component {
                     text={'Unpublished'}
                   />
                   }
+                  {usersView &&
                   <Button
                     type={'secondary'}
                     svg={<DeleteIcon />}
                     onClick={() => selectDescription(description, 'delete')}
                     text={'Delete'}
                   />
+                }
                 </ContainerButtons>
               </ColumnBottons>
             </List.Row>

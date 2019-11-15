@@ -214,7 +214,7 @@ export default kea({
           for (const chunkete of sliceSelect.chunks.chunketeChunks) {
             yield call(
               axios.delete,
-              `${API_SLICE_MANAGEMENT}/ran_infrastructure/${chunkete.ranInfrastructureId}/chunkete_chunk/${chunkete.ranControllerId}`
+              `${API_SLICE_MANAGEMENT}/ran_infrastructure/${chunkete.ranInfrastructureId}/chunkete_chunk/${chunkete.id}`
             );
           }
         }

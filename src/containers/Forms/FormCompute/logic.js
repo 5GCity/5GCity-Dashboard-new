@@ -205,8 +205,6 @@ export default kea({
         newCompute.compute_data.quota.ram.units = params.ramUnit
         newCompute.compute_data.quota.storage.total = params.storage
         newCompute.compute_data.quota.storage.units = params.storageUnit
-
-        console.log(newCompute)
         try {
           yield call(axios.post, `${API_SLICE_MANAGEMENT}/compute`, newCompute)
           yield put(removeLoadingPage())
@@ -215,7 +213,6 @@ export default kea({
           yield put(reset())
         } catch (error) {
           yield put(removeLoadingPage())
-          console.log(error.request.status)
           if (error.request.status === 500) {
             yield put(changeModalErrorStatus({message: 'Internal Error'}))
             yield put(closePanel())

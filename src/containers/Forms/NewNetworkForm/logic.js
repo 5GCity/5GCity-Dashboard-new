@@ -172,7 +172,7 @@ export default kea({
         const dataRunInstance = {
           description: params.description,
           name: params.nameInstance,
-          network_service_id: networkSelect.id,
+          network_service_id: networkSelect.nsdId,
           ports: ports,
           slic3_id: params.slice_id,
           floating_ip_required: true

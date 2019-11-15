@@ -45,9 +45,9 @@ class FormBasicSettings extends Component {
               />
             <Form.Error>{service_name.message}</Form.Error>
             </Form.Item>
-            <Form.Item label={'Organization name'} required status={!service_organization.valid}>
+            <Form.Item label={'Repository name'} required status={!service_organization.valid}>
             <Select
-              placeholder={'Organization'}
+              placeholder={'Repository'}
               type={'default'}
               options={organizations}
               onChange={value => setValue({service_organization: value})}
@@ -58,7 +58,6 @@ class FormBasicSettings extends Component {
           <Form.Item label={'Access Level'} required status={!service_access_level.valid}>
             <Select
               type={'default'}
-              placeholder="Access Level"
               options={ACCESS_LEVEL}
               onChange={value => setValue({service_access_level: value})}
               selectOption={service_access_level.value}
