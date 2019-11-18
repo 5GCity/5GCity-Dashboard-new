@@ -1,4 +1,6 @@
 # 5GCity Platform
+![pipeline status](https://gitlab.ubiwhere.com/5GCity/web-platform/badges/master/pipeline.svg)](https://gitlab.ubiwhere.com/5GCity/web-platform/commits/master)
+
 ![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)(https://standardjs.com)
 
 ![pipeline status](https://gitlab.ubiwhere.com/frontend/Starters/ReactKea/badges/master/pipeline.svg)
@@ -36,7 +38,7 @@ Please install [Docker](https://docs.docker.com/install/) according to the desir
 
 Build Docker command:
 ```
-docker build --rm -t 5gcity:latest . --build-arg API_BASE_URL=https://5gcity-dashboard.i2cat.net/gw/slicemanagerapi --build-arg AUTH_SERVER_URL=https://5gcity-dashboard.i2cat.net/auth --build-arg API_BASE_SDK=http://10.10.7.51:8081
+docker build --rm -t 5gcity:latest . --build-arg API_BASE_URL=https://5g-dashboard.i2cat.net
 ```
 When on your console show `Successfully built xxxxxxxxxx` run command:
 
@@ -53,13 +55,11 @@ To change the *name* or *tag* of docker image modify:
 
 `docker build --rm -t NAME:TAG`
 
-To change **Gravitee** or **Keycloak** need to pass `--build-arg` to change **Gravitee** modify `API_BASE_URL="http://XXX.XXX.X.XXX:8000`  to modify **Keycloak** change `AUTH_SERVER_URL="http://XXX.XXX.X.XXX:7070/auth"` to modify **SDK** change `API_BASE_SDK="http://XX.XX.X.XX:8081`
-```
-docker build --rm -t 5gcity:latest . --build-arg API_BASE_URL=http://xxx.xxx.x.xxx:8000 --build-arg AUTH_SERVER_URL=http://xxx.xxx.x.xxx:7070/auth --build-arg API_BASE_SDK=http://xx.xx.x.xx:8081
-```
-**Note if you didn't pass `--build-arg` the default value to Gravitee is https://5gcity-dashboard.i2cat.net/gw and to Keycloack is https://5gcity-dashboard.i2cat.net/auth to SDK is http://10.10.7.51:8081**
+To change **API_BASE_URL** need to pass `--build-arg` modify `API_BASE_URL="http://XXX.XXX.X.XXX`
 
-For more information about Gravitee and Keycloak go to https://github.com/5GCity/5GCity-AAA
+```
+docker build --rm -t 5gcity:latest . --build-arg API_BASE_URL=http://xxx.xxx.x.xxx
+```
 
 # How to develop
 

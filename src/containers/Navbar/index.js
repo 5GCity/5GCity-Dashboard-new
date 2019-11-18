@@ -46,12 +46,14 @@ class Navbar extends Component {
             />
           </Modal.Footer>
         </Modal>
+        <ContainerBrand>
+            <Brand />
+          </ContainerBrand>
         <SideBar>
-          <Brand />
           {links && links.map(menu =>
             <SideBar.Container key={menu.id}>
               <SideBar.Menu
-                height={96}
+                height={90}
                 onClick={() => changeLink(menu)}
                 active={menu.active}
                 disabled={menu.disabled}
@@ -80,7 +82,8 @@ class Navbar extends Component {
               )}
             </SideBar.Container>
           )}
-          <SideBar.UserInfo>
+        </SideBar>
+        <SideBar.UserInfo>
             <SideBar.UserName>{userName}</SideBar.UserName>
             <SideBar.UserRole>{userRole}</SideBar.UserRole>
             <SideBar.IconUser
@@ -88,7 +91,6 @@ class Navbar extends Component {
               onClick={modalChangeStatus}
              />
           </SideBar.UserInfo>
-        </SideBar>
       </Wrapper>
     )
   }
@@ -103,9 +105,17 @@ top: 0;
 height: 100vh;
 width: 120px;
 z-index: 1000;
+box-shadow: -5px 0 20px 0 rgba(0,0,0,0.5);
 `
 const Caret = styled(Icon)`
   padding-top: 2px;
   color:white;
   font-size: 12px;
+`
+
+const ContainerBrand = styled.div`
+  width: 120px;
+  height: 88px;
+  position: fixed;
+  top: 0;
 `

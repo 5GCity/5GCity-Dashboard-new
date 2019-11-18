@@ -7,13 +7,15 @@
 import styled from 'styled-components'
 
 const SideBar = styled.nav`
-  position: absolute;
+  position: fixed;
   margin:0;
   width: 120px;
   display: block;
   background-color: ${({ theme }) => theme.bodyBackground};
-  box-shadow: -5px 0 20px 0 rgba(0,0,0,0.5);
-  height: 100%;
+  height: calc(100vh - 160px);
+  margin-bottom: 70px;
+  margin-top: 88px;
+  overflow: auto;
 `
 const Container = styled.ul`
   color: white;
@@ -94,9 +96,9 @@ const Icon = styled.i`
 `
 
 const UserInfo = styled.div`
-  position: absolute;
+  position: fixed;
   bottom: 0;
-  width: 100%;
+  width: 120px;
   padding: 18px 8px;
   background-color: rgba(255,255,255,0.02);
   box-shadow: inset 0 1px 0 0 rgba(137,151,159,0.15);
