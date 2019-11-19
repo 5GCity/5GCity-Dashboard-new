@@ -157,7 +157,7 @@ export const Routes = {
   SDKDescription: {
       key: 'SDKDescription',
       name: 'SDKDescription',
-      path: '/sdk/descriptions',
+      path: '/sdk/descriptors',
       component: SDKDescription,
       crumb: ['Slices']
   },

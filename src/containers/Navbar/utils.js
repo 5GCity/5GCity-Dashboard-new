@@ -39,8 +39,8 @@ export const LINKS = [
         active: false
       },
       {
-        path: '/sdk/descriptions',
-        name: 'descriptions',
+        path: '/sdk/descriptors',
+        name: 'descriptors',
         disabled: false,
         active: false
       }

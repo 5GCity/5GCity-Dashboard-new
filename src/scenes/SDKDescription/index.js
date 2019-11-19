@@ -18,7 +18,7 @@ class SDKDescription extends Component {
     return (
       <Wrapper>
          <PageTitleOrganization
-          title={'Create Descriptions'}
+          title={'Create Descriptors'}
         />
         <NavBar />
         <ListSDKDescriptions />

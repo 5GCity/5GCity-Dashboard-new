@@ -52,7 +52,7 @@ const ModalView = (props) => {
     <Modal.Body>
       {props.descriptionSelect.description &&
       <Title>
-        Are you sure you want to {type} description {props.descriptionSelect.description.id} ?
+        Are you sure you want to {type} descriptors {props.descriptionSelect.description.id} ?
       </Title>
       }
     </Modal.Body>
@@ -175,7 +175,7 @@ class ListSDKDescriptions extends Component {
         }
         {noData &&
           <NoData
-            title={'You don’t have any descriptions yet...'}
+            title={'You don’t have any descriptors yet...'}
             message={''}
           />
         }
