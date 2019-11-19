@@ -281,8 +281,7 @@ export default kea({
 
 
         responseComputes && responseComputes.data.map(el => listResources.computes.push(el))
-
-        responseRadioPhys && responseRadioPhys.data[0].map(el => listResources.radioPhys.push(el))
+        responseRadioPhys && responseRadioPhys.data[0] && responseRadioPhys.data[0].map(el => listResources.radioPhys.push(el))
         const network = GetNetwork(responseNetworks.data[0])
         yield (put(setNetwork(network)))
         yield (put(setListResources(listResources)))
