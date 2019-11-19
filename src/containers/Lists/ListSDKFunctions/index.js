@@ -115,7 +115,7 @@ class ListSDKFunctions extends Component {
             <List.Column marginLeft />
           </List.Header>
           {functions && functions.map((func, i) =>
-            <List.Row key={i}>
+            <List.Row key={i} row={1320}>
               {Titles && Titles.map(({ size, propItem, render }) => {
                 return [
                   render && func &&
@@ -184,7 +184,7 @@ class ListSDKFunctions extends Component {
 export default withRouter(Logic(ListSDKFunctions))
 
 const Wrapper = styled.div`
-
+overflow: auto;
 `
 
 const ContainerButtons = styled.div`

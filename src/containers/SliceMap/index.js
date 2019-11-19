@@ -23,10 +23,11 @@ class SliceMap extends Component {
       height: this.props.containerHeight,
       zoom: 3,
       minZoom: 3,
-    }
+    },
+    isMount: false
   }
 
-  componentDidMount () {
+   componentDidMount () {
     const { location } = this.props
     let viewport = {
       ...this.state.viewport,
@@ -65,12 +66,14 @@ class SliceMap extends Component {
           transitionInterpolator: new FlyToInterpolator()
         }
       }
+      this.setState({isMount: false})
     }
-        this.setState({viewport, isMount: true})
+        this.setState({viewport})
   }
 
   componentDidUpdate(prevProps) {
     const { location } = this.props
+    const { isMount } = this.state
     const locationLength = location && location.length
     const prevLocationLength = prevProps.location && prevProps.location.length
     const needUpdate = Math.abs(locationLength - prevLocationLength)
@@ -86,10 +89,35 @@ class SliceMap extends Component {
         viewport.zoom = 16
         viewport.transitionDuration = 4000
         viewport.transitionInterpolator = new FlyToInterpolator()
+      } else if (location.length > 1 && !isMount) {
+        const bounds = location.reduce(function(bounds, coord) {
+        return bounds.extend(coord)
+        }, new mapboxgl.LngLatBounds(location[0], location[0]))
+        const coordinates = []
+        coordinates.push([bounds._ne.lng, bounds._ne.lat])
+        coordinates.push([bounds._sw.lng, bounds._sw.lat])
+
+        const {longitude, latitude, zoom} = new WebMercatorViewport(this.state.viewport)
+          .fitBounds(coordinates, {
+            padding: 40,
+            offset: [0, -100]
+          })
+          viewport = {
+            ...this.state.viewport,
+            longitude,
+            latitude,
+            zoom,
+            transitionDuration: 3000,
+            transitionInterpolator: new FlyToInterpolator()
+          }
+        }
       }
-      }
-        this.setState({viewport})
+        this.setState({viewport, isMount : true})
     }
+  }
+
+  componentWillMount () {
+    this.setState({isMount: false})
   }
 
 

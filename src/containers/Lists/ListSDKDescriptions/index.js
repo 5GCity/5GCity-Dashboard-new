@@ -83,12 +83,35 @@ class ListSDKDescriptions extends Component {
       errorFecth,
       descriptionSelect,
       modalVisibled,
-      usersView
+      usersView,
+      modaErrorlVisibled,
+      messageError
     } = this.props
-    const { selectDescription, actionModal, actionDescription,
+    const { selectDescription, actionModal, actionDescription, actionModalError
     }= this.actions
     return (
       <Wrapper>
+         <Modal
+    size={'tiny'}
+    showClose
+    onCancel={() => actionModalError()}
+    title={'Error'}
+    visible={modaErrorlVisibled}
+    >
+    <Modal.Body>
+      <Title>
+        {messageError}
+      </Title>
+    </Modal.Body>
+    <Modal.Footer>
+      <Button
+        text={'ok'}
+        svg={<CheckIcon />}
+        type={'primary'}
+        onClick={() => actionModalError()}
+      />
+    </Modal.Footer>
+  </Modal>
         <ModalView
           descriptionSelect={descriptionSelect}
           modalVisibled={modalVisibled}

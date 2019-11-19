@@ -410,7 +410,7 @@ export const removeLink = (selectLink, d3Data) => {
  * @param {object} d3Data d3 Data
  * @param {object} catalogue Catalogue
  */
-export const removeNode = (selectNode, d3Data, catalogue) => {
+export const removeNode = (selectNode, d3Data) => {
   const { nodes, links } = d3Data
   nodes.splice(nodes.indexOf(selectNode), 1)
   // decrement connections on links
@@ -434,16 +434,12 @@ export const removeNode = (selectNode, d3Data, catalogue) => {
     removeConnectionPoint(connection_point_source, connection_point_target, node)
     removeConnectionPoint(connection_point_source, connection_point_target, selectNode)
   })
-  const findCatalogue = selectNode.extra_info && catalogue.find(catalogue => catalogue.id === selectNode.extra_info.id)
-  if(findCatalogue) {
-    findCatalogue.disabled = false
-  }
 
   const toSplice = links.filter(l => l.source === selectNode || l.target === selectNode)
   for (const link of toSplice) {
     links.splice(links.indexOf(link), 1)
   }
-  return {newd3Data: d3Data, newCatalogue : catalogue}
+  return { newd3Data: d3Data }
 }
 
 export const createNewLink = (source, target, d3Data) => {

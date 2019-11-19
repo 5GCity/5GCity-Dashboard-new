@@ -96,7 +96,7 @@ const Icon = styled.i`
 `
 
 const UserInfo = styled.div`
-  position: fixed;
+  position: absolute;
   bottom: 0;
   width: 120px;
   padding: 18px 8px;

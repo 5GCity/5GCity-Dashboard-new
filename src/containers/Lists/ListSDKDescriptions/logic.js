@@ -51,12 +51,13 @@ export default kea({
     deleteDescription: (id) => ({ id }),
     unPublishDescription: (id) => ({ id }),
     publishDescription: (id) => ({ id }),
-
+    setMessageError: (message) => ({ message }),
 
     setNoData: () => ({ }),
     setErroFecth: () => ({ }),
 
     actionModal: () => ({ }),
+    actionModalError: () => ({ }),
 
     reset: () => ({}),
   }),
@@ -86,7 +87,13 @@ export default kea({
       [actions.actionModal]: (state, payload) => !state,
       [actions.selectDescription]: (state, payload) => !state,
     }],
+    modaErrorlVisibled: [false, PropTypes.bool, {
+      [actions.actionModalError]: (state, payload) => !state,
+    }],
 
+    messageError : [null, PropTypes.string, {
+      [actions.setMessageError]: (state, payload) => payload.message
+    }],
     descriptionSelect: [null, PropTypes.object, {
       [actions.selectDescription]: (state, payload) => payload
     }],
@@ -172,6 +179,7 @@ export default kea({
         yield put(actionModal())
         yield put(fetchDescriptions())
       } catch (error) {
+        yield put(actionModal())
         switch (error.response.status) {
           case 400:
             yield put(setMessageError(error.response.data))
@@ -179,11 +187,13 @@ export default kea({
           case 403:
             yield put(setMessageError(error.response.data))
             break
+          case 409:
+            yield put(setMessageError(error.response.data))
+          break
           default:
             yield put(setMessageError('Error'))
             break
         }
-        yield put(actionModalDelete())
         yield put(actionModalError())
       }
     },
@@ -204,6 +214,7 @@ export default kea({
           yield put(fetchDescriptions())
         }
       } catch (error) {
+        yield put(actionModal())
         switch (error.response.status) {
           case 400:
             yield put(setMessageError(error.response.data))
@@ -211,11 +222,13 @@ export default kea({
           case 403:
             yield put(setMessageError(error.response.data))
             break
+            case 409:
+            yield put(setMessageError(error.response.data))
+            break
           default:
             yield put(setMessageError('Error'))
             break
         }
-        yield put(actionModalPublish())
         yield put(actionModalError())
       }
     },
@@ -236,6 +249,7 @@ export default kea({
           yield put(fetchDescriptions())
         }
       } catch (error) {
+        yield put(actionModal())
         switch (error.response.status) {
           case 400:
             yield put(setMessageError(error.response.data))
@@ -247,7 +261,6 @@ export default kea({
             yield put(setMessageError('Error'))
             break
         }
-        yield put(actionModalPublish())
         yield put(actionModalError())
       }
     },
@@ -257,14 +270,14 @@ export default kea({
       const id = action.payload.id
       const type = action.payload.type
 
-      switch (type) {
+      switch (type.replace(/\s/g, '')) {
         case 'delete':
           yield put(deleteDescription(id))
           break;
           case 'publish':
           yield put(publishDescription(id))
           break;
-          case 'unPublish':
+          case 'unpublish':
           yield put(unPublishDescription(id))
           break;
 

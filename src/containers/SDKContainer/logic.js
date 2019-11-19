@@ -20,7 +20,6 @@ const DEFAULT_D3 = {nodes: [], links: []}
 export default kea({
   path: () => ['scenes', 'containers', 'SDKContainer'],
 
-
   actions: () => ({
     startFunctions: () => ({ }),
     fetchServiceId: () => ({ }),
@@ -215,7 +214,11 @@ export default kea({
           yield put(setServiceInfo(NEW_SERVICE))
         }
       } catch (error) {
-        console.error(`Error ${error}`)
+        Message({
+          showClose: false,
+          message: 'Ivalid service',
+          type: 'error'
+        })
       }
     },
 
@@ -315,10 +318,8 @@ export default kea({
     * removeNode (action) {
       const selectNode = action.payload.node
       const d3Data = yield this.get('d3Data')
-      const catalogue = yield this.get('catalogueMenu')
       const { setData } = this.actions
-
-      const {newd3Data} = removeNode(selectNode, d3Data, catalogue)
+      const {newd3Data} = removeNode(selectNode, d3Data)
       const newData = Object.assign({}, newd3Data)
       yield put(setData(newData))
     },

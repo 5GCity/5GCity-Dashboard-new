@@ -19,7 +19,7 @@ import NoData from 'components/NoData'
 import ErroPage from 'components/ErroPage'
 
 const ListSDKService = props => (
-  <React.Fragment>
+  <ListContainer>
   { props.services &&
   <List>
     <List.Header>
@@ -28,7 +28,7 @@ const ListSDKService = props => (
       </List.Column>)}
       <List.Column marginLeft />
     </List.Header>
-    {props.services.map((service, i) => <List.Row key={i}>
+    {props.services.map((service, i) => <List.Row key={i} row={1280}>
       {Titles && Titles.map(({
         size,
         propItem,
@@ -70,7 +70,7 @@ const ListSDKService = props => (
     </List.Row>)}
   </List>
   }
-  </React.Fragment>
+  </ListContainer>
 )
 
 const ModalSDKServiceDelete = props => (
@@ -244,4 +244,8 @@ const Error = styled.h3`
   font-size: 16px;
   font-family: ${({ theme }) => theme.fontFamily};
 
+`
+
+const ListContainer = styled.div`
+overflow: auto;
 `

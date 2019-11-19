@@ -53,7 +53,7 @@ class Navbar extends Component {
           {links && links.map(menu =>
             <SideBar.Container key={menu.id}>
               <SideBar.Menu
-                height={90}
+                height={96}
                 onClick={() => changeLink(menu)}
                 active={menu.active}
                 disabled={menu.disabled}
@@ -99,7 +99,7 @@ class Navbar extends Component {
 export default withRouter(Logic(Navbar))
 
 const Wrapper = styled.div`
-position: fixed;
+position: absolute;
 left: 0;
 top: 0;
 height: 100vh;
@@ -116,6 +116,6 @@ const Caret = styled(Icon)`
 const ContainerBrand = styled.div`
   width: 120px;
   height: 88px;
-  position: fixed;
+  position: absolute;
   top: 0;
 `

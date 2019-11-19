@@ -32,7 +32,7 @@ const ListAllSlices = (props) => (
       <List.Column marginLeft />
     </List.Header>
     {props.slices && props.slices.map((slice, i) =>
-      <List.Row key={i} row={1450}>
+      <List.Row key={i} row={1250}>
         {props.title && props.title.map(({
         size,
         propItem,
@@ -136,6 +136,7 @@ class ListSlices extends Component {
 export default withRouter(Logic(ListSlices))
 
 const Wrapper = styled.div`
+  overflow: auto;
 `
 
 const ContainerButtons = styled.div`
