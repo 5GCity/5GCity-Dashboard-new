@@ -163,6 +163,8 @@ class ListNewNetworks extends Component {
 export default Logic(ListNewNetworks)
 
 const Wrapper = styled.div`
+overflow: auto;
+height: calc(100vh - 169px);
 `
 
 const Error = styled.h3`

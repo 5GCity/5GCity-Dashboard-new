@@ -137,6 +137,7 @@ export default withRouter(Logic(ListSlices))
 
 const Wrapper = styled.div`
   overflow: auto;
+  height: calc(100vh - 100px);
 `
 
 const ContainerButtons = styled.div`

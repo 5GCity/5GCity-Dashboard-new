@@ -30,7 +30,7 @@ export default ({ children, ...props }) => (
 )
 
 const Wrapper = styled.div`
-  min-width: 1200px;
+  width: 100%;
 `
 
 const Container = styled.div`

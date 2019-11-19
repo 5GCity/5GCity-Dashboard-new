@@ -17,8 +17,12 @@ export default ({ children, ...props }) => (
 )
 
 const Wrapper = styled.div`
-  display: block;
-  margin-top: 150px;
+top: 150px;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
 `
 const SVG = styled.div`
   text-align: center;

@@ -180,7 +180,8 @@ class ListSDKOrganisation extends Component {
 export default Logic(ListSDKOrganisation)
 
 const Wrapper = styled.div`
-
+  overflow: auto;
+  height: calc(100vh - 100px);
 `
 
 const ContainerButtons = styled.div`

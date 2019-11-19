@@ -185,6 +185,7 @@ export default withRouter(Logic(ListSDKFunctions))
 
 const Wrapper = styled.div`
 overflow: auto;
+height: calc(100vh - 169px);
 `
 
 const ContainerButtons = styled.div`

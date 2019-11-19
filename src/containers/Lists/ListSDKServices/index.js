@@ -248,4 +248,5 @@ const Error = styled.h3`
 
 const ListContainer = styled.div`
 overflow: auto;
+height: calc(100vh - 169px);
 `
