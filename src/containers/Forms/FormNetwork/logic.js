@@ -263,7 +263,6 @@ export default kea({
         )
         newPhysicalNetwork.physical_network_data.quota.tag_range.end = params.tagRangeEnd
         newPhysicalNetwork.physical_network_data.quota.tag_range.init = params.tagRangeInit
-        debugger
         try {
           yield call(axios.post, `${API_SLICE_MANAGEMENT}/physical_network`, newPhysicalNetwork)
           yield put(removeLoadingPage())

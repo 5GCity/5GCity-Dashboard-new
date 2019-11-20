@@ -50,30 +50,38 @@ export default kea({
     setErroFecth: () => ({ }),
     setNoData: () => ({ }),
     removeNoData: () => ({ }),
-    submit: () => ({ })
+    submit: () => ({ }),
+
+    reset: () =>({})
   }),
 
   reducers: ({ actions }) => ({
     loading: [false, PropTypes.bool, {
-      [actions.loading]: (state, payload) => !state
+      [actions.loading]: (state, payload) => !state,
+      [actions.reset]: () => false
     }],
     modalVisibled: [false, PropTypes.bool, {
       [actions.actionModal]: (state, payload) => !state,
-      [actions.setSelectNetwork]: (state, payload) => true
+      [actions.setSelectNetwork]: (state, payload) => true,
+      [actions.reset]: () => false
     }],
     modalError: [false, PropTypes.bool, {
-      [actions.actionModalError]: (state, payload) => !state
+      [actions.actionModalError]: (state, payload) => !state,
+      [actions.reset]: () => false
     }],
     selectNetwork: [null, PropTypes.any, {
-      [actions.setSelectNetwork]: (state, payload) => payload.network
+      [actions.setSelectNetwork]: (state, payload) => payload.network,
+      [actions.reset]: () => null
     }],
     networkServices: [null, PropTypes.array, {
       [actions.fetchNetworksServices]: (state, payload) => null,
-      [actions.setNetworksServices]: (state, payload) => payload.networkService
+      [actions.setNetworksServices]: (state, payload) => payload.networkService,
+      [actions.reset]: () => null
     }],
     noData: [false, PropTypes.bol, {
       [actions.setNoData]: () => true,
-      [actions.removeNoData]: () => false
+      [actions.removeNoData]: () => false,
+      [actions.reset]: () => false
     }],
     errorFecth: [false, PropTypes.bol, {
       [actions.setErroFecth]: () => true,
@@ -88,25 +96,25 @@ export default kea({
   },
 
   stop: function * () {
-    const { removeLoadingPage, removeNoData } = this.actions
+    const { reset } = this.actions
 
-    yield put(removeNoData())
-    yield put(removeLoadingPage())
+    yield put(reset())
   },
 
   takeLatest: ({ actions, workers }) => ({
-    [actions.setOrganizations]: workers.fetchNetworksWorker,
     [actions.changeOrganization]: workers.fetchNetworksWorker,
+    [actions.setOrganizations]: workers.fetchNetworksWorker,
   }),
 
   workers: {
     * fetchNetworksWorker () {
       const { setNetworksServices, addLoadingPage, removeLoadingPage, setErroFecth, setNoData, removeNoData } = this.actions
-      const organization = yield this.get('selectOrganization')
-      yield put(addLoadingPage())
+      const selectOrganization = yield this.get('selectOrganization')
       yield put(removeNoData())
+      yield put(addLoadingPage())
       try {
-        let responseResult = yield call(axios.get, `${API_BASE_URL}/gw/appcat/nsd/v1/ns_descriptors?project=${organization}&extraData=manoInfoIds`)
+        if(selectOrganization){
+        let responseResult = yield call(axios.get, `${API_BASE_URL}/gw/appcat/nsd/v1/ns_descriptors?project=${selectOrganization}&extraData=manoInfoIds`)
         const { data } = responseResult
         const catalogue = setCatalogue(data)
         if (catalogue.length > 0) {
@@ -115,6 +123,9 @@ export default kea({
           yield put(setNetworksServices(null))
           yield put(setNoData())
         }
+      } else {
+        yield put(setNoData())
+      }
       yield put(removeLoadingPage())
       } catch (error) {
         if (error.response) {

@@ -151,7 +151,6 @@ export default kea({
       yield put(loading())
         // Check validations
       const validation = Check.checkValidation(form, VALIDATIONS)
-
       if (dirty && validation.invalid) {
         yield put(error())
         yield put(loading())
@@ -172,7 +171,7 @@ export default kea({
         const dataRunInstance = {
           description: params.description,
           name: params.nameInstance,
-          network_service_id: networkSelect.nsdId,
+          network_service_id: networkSelect.instanceId,
           ports: ports,
           slic3_id: params.slice_id,
           floating_ip_required: true
