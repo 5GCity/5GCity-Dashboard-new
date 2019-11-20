@@ -189,11 +189,10 @@ export default kea({
       const validation = Check.checkValidation(form, VALIDATIONS)
 
       if (dirty && validation.invalid) {
-        yield put(error([]))
-        return false
+        yield put(removeLoadingPage())
       } else if (!dirty && validation.invalid) {
         yield put(setForm(validation.form))
-        yield put(error([]))
+        yield put(removeLoadingPage())
         return false
       } else if (!validation.invalid && !dirty) {
         yield put(changeEdition(null))

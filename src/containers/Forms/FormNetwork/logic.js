@@ -74,7 +74,7 @@ const VALIDATIONS = {
     Check.isNumber
   ], */
   provisionedTags: [
-    Check.isNumber
+
   ],
   tagRangeInit: [
     Check.isRequired,
@@ -242,10 +242,10 @@ export default kea({
       const validation = Check.checkValidation(form, VALIDATIONS)
 
       if (dirty && validation.invalid) {
-        return false
+        yield put(removeLoadingPage())
       } else if (!dirty && validation.invalid) {
         yield put(setForm(validation.form))
-        return false
+        yield put(removeLoadingPage())
       } else if (!validation.invalid && !dirty) {
         yield put(changeEdition(null))
         yield put(reset())
@@ -263,6 +263,7 @@ export default kea({
         )
         newPhysicalNetwork.physical_network_data.quota.tag_range.end = params.tagRangeEnd
         newPhysicalNetwork.physical_network_data.quota.tag_range.init = params.tagRangeInit
+        debugger
         try {
           yield call(axios.post, `${API_SLICE_MANAGEMENT}/physical_network`, newPhysicalNetwork)
           yield put(removeLoadingPage())
