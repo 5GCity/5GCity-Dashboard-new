@@ -167,7 +167,7 @@ export default kea({
     },
     * submit () {
       const {
-        error,
+        //error,
         setForm,
         changeEdition,
         closePanel,
