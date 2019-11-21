@@ -187,7 +187,7 @@ export default kea({
       const { setAllFunctions, fetchServiceId } = this.actions
       const organizationsList = yield this.get('organizationsList')
         const array = []
-        for (let index = 1; index < organizationsList.length; index++) {
+        for (let index = 0; index < organizationsList.length; index++) {
           const organization = organizationsList[index]
           let responseResult = yield call(axios.get, `${API_SDK}/sdk/functions/?sliceId=${organization.value}`)
           const { data } = responseResult
