@@ -21,8 +21,8 @@ class ModalServiceParameters extends Component {
     const { setValue, submitForm } = this.actions
     return (
       <Modal
-        size={'small'}
-        title={title}
+        size={service.parameters ? 'small': 'tiny'}
+        title={service.parameters ? title: 'Confirmation'}
         visible={status}
         onCancel={action}
     >
@@ -30,7 +30,7 @@ class ModalServiceParameters extends Component {
           labelPosition={'top'}
       >
           <Modal.Body>
-            {service && service.parameters.map((param, index) =>
+            {service.parameters && service.parameters.map((param, index) =>
               <Form.Item
                 key={index}
                 label={param}

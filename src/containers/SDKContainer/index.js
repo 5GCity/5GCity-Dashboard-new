@@ -98,7 +98,7 @@ class SDKContainer extends Component {
               <Button
                 key={2}
                 type={isPublish ? 'primary' : 'secondary'}
-                text={isPublish ? 'Publish' : 'Unpublish'}
+                text={isPublish ? 'Publish' : 'Unpublished'}
                 loading={isPublishLoading}
                 svg={<PublishIcon />}
                 onClick={() => publishComposer()}
@@ -137,7 +137,7 @@ class SDKContainer extends Component {
               label='Basic settings'
               closable={false}
             >
-              <ComposerForm serviceData={serviceInfo} />
+              <ComposerForm />
             </Tabs.Pane>
           </Tabs>
         </Wrapper>

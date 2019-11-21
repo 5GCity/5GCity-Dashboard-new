@@ -66,7 +66,6 @@ export default kea({
           yield put(setLoading(false))
         }
       } catch (error) {
-        console.log(error)
       }
     }
   }

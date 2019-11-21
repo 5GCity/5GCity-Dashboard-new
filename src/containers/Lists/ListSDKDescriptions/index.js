@@ -156,7 +156,7 @@ class ListSDKDescriptions extends Component {
                     type={'secondary'}
                     svg={<PublishIcon />}
                     onClick={() => selectDescription(description, 'unPublish')}
-                    text={'Unpublished'}
+                    text={'Unpublish'}
                   />
                   }
                   {usersView &&

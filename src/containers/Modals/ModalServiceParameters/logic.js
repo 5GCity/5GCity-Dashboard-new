@@ -107,7 +107,6 @@ export default kea({
           yield call(this.props.action)
         }
       } catch (error) {
-        console.log(error)
         switch (error.response.status) {
           case 400:
             const message = error.response.data.error || error.response.data
@@ -118,6 +117,13 @@ export default kea({
             })
             break
           case 403:
+            Message({
+              showClose: false,
+              message: error.response.data,
+              type: 'error'
+            })
+            break
+            case 409:
             Message({
               showClose: false,
               message: error.response.data,

@@ -207,7 +207,6 @@ export default kea({
           yield put(closePanel())
           yield put(reset())
         } catch (error) {
-          console.log(error)
           yield put(removeLoadingPage())
           if (error.request.status === 500) {
             yield put(changeModalErrorStatus({message: error.response.data.message}))

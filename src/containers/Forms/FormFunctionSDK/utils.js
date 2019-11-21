@@ -11,22 +11,15 @@ const newParameter = {
 
 export const PLACEHOLDER_CP = `[
   {
-    "componentIndex": 0,
+    "name": "eth0",
     "cpType": "EXTERNAL",
-    "id": 0,
-    "internalCpId": 0,
-    "internalCpName": "string",
-    "name": "string",
-    "requiredPort": [
-     0
-    ]
+    "requiredPort": []
   }
 ]`
 
 export const PLACEHOLDER_RP = `[
   {
     "connectionPointName": "string",
-    "id": 0,
     "ports": [
     0
     ]
@@ -50,7 +43,6 @@ export const PLACEHOLDER_MONITPARAMS = `[
       "metricType": "string",
       "parameterType": "string",
       "name": "string",
-      "id": "string"
   }
 ]`
 

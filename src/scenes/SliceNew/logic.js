@@ -287,7 +287,6 @@ export default kea({
         yield (put(setListResources(listResources)))
         yield put(removeLoadingPage())
       } catch (error) {
-        console.log(error)
         yield put(removeLoadingPage())
       }
     },

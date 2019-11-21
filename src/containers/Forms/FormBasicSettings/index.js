@@ -31,7 +31,6 @@ class FormBasicSettings extends Component {
       service_license_url,
       service_license_type,
       service_parameter } = dataForm
-
     return (
       <Wrapper>
         <FormTitle title={'general info'} />

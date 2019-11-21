@@ -10,7 +10,7 @@ import { put, call } from 'redux-saga/effects'
 import axios from 'axios'
 import { API_SDK } from 'config'
 import PropTypes from 'prop-types'
-import { NEW_SERVICE, NEW_SERVICE_FORM, addNode, transformToD3Object, removeLink, removeNode, createNewLink,
+import { NEW_SERVICE, addNode, transformToD3Object, removeLink, removeNode, createNewLink,
   transformToJSON, changeNode, Organizations } from './utils'
 import { Message } from 'element-react'
 
@@ -59,14 +59,16 @@ export default kea({
     fetchOrganizations: () => ({ }),
     setOrganizations: (organizations) => ({ organizations }),
 
+    resetService: () =>({ }),
     reset: () => ({ })
   }),
 
   reducers: ({ actions }) => ({
-    serviceInfo: [NEW_SERVICE, PropTypes.object, {
+    serviceInfo: [null, PropTypes.object, {
       [actions.setServiceInfo]: (state, payload) => payload.service,
+      [actions.resetService]: () => null,
 
-      [actions.reset]: () => NEW_SERVICE_FORM,
+      [actions.reset]: () => null,
     }],
     activeTab: ['composer', PropTypes.string, {
       [actions.setActiveTab]: (state, payload) => payload.tab.props.name,
@@ -198,16 +200,17 @@ export default kea({
     },
 
     * fetchServiceId () {
-      const { setServiceInfo, setData, changeSaveStatus } = this.actions
+      const { setServiceInfo, setData, changeSaveStatus,resetService } = this.actions
       const serviceId = yield this.get('idService')
       const catalogue = yield this.get('allFunctions')
+      yield put(resetService())
       try {
         if (serviceId > 0) {
           let responseResult = yield call(axios.get, `${API_SDK}/sdk/services/${serviceId}`)
           const { data } = responseResult
-          yield put(setServiceInfo(data))
           const d3Data = transformToD3Object(data, catalogue)
           yield put(setData(d3Data))
+          yield put(setServiceInfo(data))
           yield put(changeSaveStatus(true))
         } else {
           yield put(setData({nodes: [], links: []}))
@@ -270,7 +273,13 @@ export default kea({
                 type: 'error'
               })
               break
-
+              case 409:
+                Message({
+                  showClose: false,
+                  message: error.response.data,
+                  type: 'error'
+                })
+                break
             default:
               Message({
                 showClose: false,
@@ -300,7 +309,7 @@ export default kea({
         const newData = {nodes: d3Data.nodes, links: d3Data.links}
         yield put(setData(newData))
       } catch (error) {
-        console.log(error)
+
       }
     },
 

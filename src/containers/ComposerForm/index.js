@@ -14,12 +14,6 @@ import Step from 'components/Step'
 import FormBasicSettings from 'containers/Forms/FormBasicSettings'
 
 class ComposerForm extends Component {
-  componentDidUpdate (prevProps) {
-    const { getServiceInfo } = this.actions
-    if (this.props.serviceData !== prevProps.serviceData) {
-      getServiceInfo()
-    }
-  }
 
   render () {
     const { form, isSubmitting, steps, organizations } = this.props

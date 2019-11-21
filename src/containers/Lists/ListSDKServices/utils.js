@@ -56,6 +56,7 @@ export const getResult = services => {
     services &&
     services.forEach(service => {
       array.push({
+        accessLevel: service.accessLevel,
         name: service.name,
         id: service.id,
         design: service.designer,

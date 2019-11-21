@@ -11,6 +11,7 @@ import { put } from 'redux-saga/effects'
 import PropTypes from 'prop-types'
 import * as Check from 'validations'
 import { AddNewParameter, STEPS } from './utils'
+import cloneDeep from 'lodash/cloneDeep'
 
 /* Logic */
 import SDKContainerLogic from 'containers/SDKContainer/logic'
@@ -39,7 +40,7 @@ const DEFAULT_FORM = {
     value: null
   },
   service_parameter: {
-    array: [{value: null, valid: false}]
+    array: []
   }
 }
 
@@ -67,7 +68,6 @@ const VALIDATIONS = {
     Check.isRequired
   ],
   service_parameter: [
-    Check.isRequired
   ]
 }
 
@@ -78,19 +78,22 @@ export default kea({
     actions: [
       SDKContainerLogic, [
         'changeActiveTab',
-        'changeSaveStatus'
+        'changeSaveStatus',
+        'setServiceInfo',
+        'resetService'
       ],
     ],
     props: [
       PageTitleOrganizationLogic, [
         'organizations'
+      ],
+      SDKContainerLogic, [
+       'serviceInfo'
       ]
     ]
   },
 
   actions: () => ({
-    getServiceInfo: () => ({ }),
-
     submit: () => ({}),
     response: (response) => ({ response }),
     error: (error) => ({ error }),
@@ -137,49 +140,51 @@ export default kea({
       [actions.reset]: () => STEPS,
     }],
   }),
-  start: function * () {
-    const { getServiceInfo } = this.actions
-
-    yield put(getServiceInfo())
-  },
 
   stop: function * () {
     const { reset } = this.actions
     yield put(reset())
   },
 
-  takeEvery: ({ actions, workers }) => ({
-
-  }),
-
   takeLatest: ({ actions, workers }) => ({
-    [actions.getServiceInfo]: workers.getServiceInfo,
+    [actions.setServiceInfo]: workers.getServiceInfo,
     [actions.submit]: workers.submit
   }),
 
   workers: {
     * getServiceInfo () {
+      try{
       const { changeForm } = this.actions
-      const form = this.props.serviceData
-      const setDefaultValues = {...DEFAULT_FORM}
-      let parametersForm = []
-      // Verify if service has parameters key
-      if (form.parameters) {
-        parametersForm = form.parameters.length <= 0 ? setDefaultValues.service_parameter.array : form.parameters
-      } else {
-        return parametersForm
-      }
-      setDefaultValues.service_name.value = form.name
-      setDefaultValues.service_organization.value = form.sliceId
-      setDefaultValues.service_access_level.value = form.accessLevel
-      setDefaultValues.service_designer.value = form.designer
-      setDefaultValues.service_version.value = form.version
-      setDefaultValues.service_license_type.value = form.license.type
-      setDefaultValues.service_license_url.value = form.license.url
-      setDefaultValues.service_parameter.array = form.parameters.length <= 0 ? setDefaultValues.service_parameter.array : form.parameters
+      const form = yield this.get('serviceInfo')
+      if(form){
+        const setDefaultValues = cloneDeep(DEFAULT_FORM)
+        // Verify if service has parameters key
+        if (form.parameters) {
+          setDefaultValues.service_name.value = form.name
+          setDefaultValues.service_organization.value = form.sliceId
+          setDefaultValues.service_access_level.value =  form.accessLevel === null ? form.accessLevel : form.accessLevel.toString()
+          setDefaultValues.service_designer.value = form.designer
+          setDefaultValues.service_version.value = form.version
+          setDefaultValues.service_license_type.value = form.license.type
+          setDefaultValues.service_license_url.value = form.license.url
+          setDefaultValues.service_parameter.array = form.parameters
+        } else {
+          setDefaultValues.service_name.value = form.name
+          setDefaultValues.service_organization.value = form.sliceId
+          setDefaultValues.service_access_level.value =  form.accessLevel === null ? form.accessLevel : form.accessLevel.toString()
+          setDefaultValues.service_designer.value = form.designer
+          setDefaultValues.service_version.value = form.version
+          setDefaultValues.service_license_type.value = form.license.type
+          setDefaultValues.service_license_url.value = form.license.url
+          setDefaultValues.service_parameter.array = setDefaultValues.service_parameter.array
+        }
 
       const validForm = Check.checkValidation(setDefaultValues, VALIDATIONS).form
       yield put(changeForm(validForm))
+    }
+  }catch (e) {
+    console.log(e)
+  }
     },
     * submit (action) {
       const {
@@ -188,17 +193,18 @@ export default kea({
         changeActiveTab,
         changeSaveStatus
       } = this.actions
-      const service = this.props.serviceData
+      const service = yield this.get('serviceInfo')
       const form = yield this.get('form')
       const dirty = yield this.get('dirty')
       service.name = form.service_name.value
+      service.accessLevel = form.service_access_level.value
       service.sliceId = form.service_organization.value
       service.designer = form.service_designer.value
       service.version = form.service_version.value
       service.license.type = form.service_license_type.value
       service.license.url = form.service_license_url.value
       const newArrayParameters = []
-      form.service_parameter.array.forEach(element => {
+      form.service_parameter.array.length > 0 && form.service_parameter.array.forEach(element => {
         newArrayParameters.push(element.value)
       })
       service.parameters = newArrayParameters

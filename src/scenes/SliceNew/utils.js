@@ -181,7 +181,6 @@ export const CreateAllPins = resources => {
   compareComputes();
   compareRadiosPhys();
 } catch (error) {
-  console.log(error)
 }
   return markers;
 };
