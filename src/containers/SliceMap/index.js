@@ -37,7 +37,7 @@ class SliceMap extends Component {
       minPitch: 0,
       dragRotate: false,
     }
-    if (location) {
+    if (location && location.length > 0) {
     if(location.length === 1) {
       viewport.longitude = location[0][0]
       viewport.latitude = location[0][1]
@@ -66,7 +66,7 @@ class SliceMap extends Component {
           transitionInterpolator: new FlyToInterpolator()
         }
       }
-      this.setState({isMount: false})
+      this.setState({isMount: true})
     }
         this.setState({viewport})
   }
@@ -82,14 +82,14 @@ class SliceMap extends Component {
         ...this.state.viewport,
         dragRotate: false,
       }
-      if (location) {
+      if (location && !isMount) {
       if(location.length === 1) {
         viewport.longitude = location[0][0]
         viewport.latitude = location[0][1]
         viewport.zoom = 16
         viewport.transitionDuration = 4000
         viewport.transitionInterpolator = new FlyToInterpolator()
-      } else if (location.length > 1 && !isMount) {
+      } else if (location.length > 1) {
         const bounds = location.reduce(function(bounds, coord) {
         return bounds.extend(coord)
         }, new mapboxgl.LngLatBounds(location[0], location[0]))
@@ -112,7 +112,7 @@ class SliceMap extends Component {
           }
         }
       }
-        this.setState({viewport, isMount : true})
+      this.setState({viewport, isMount :true})
     }
   }
 

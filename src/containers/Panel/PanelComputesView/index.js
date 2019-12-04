@@ -22,6 +22,7 @@ export default class PanelComputesView extends Component {
             className={i === computes.length - 1 && 'noBorder'}
           >
             <Name>{compute.name}</Name>
+            <Id><b>{compute.type}</b></Id>
             <Id>{compute.id}</Id>
             <Id>Status: {compute.status}</Id>
             {compute.computeData &&

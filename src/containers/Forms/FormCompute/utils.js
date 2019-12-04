@@ -16,6 +16,16 @@
     name: 'GB'
   }]
 
+  export const COMPUTE_TYPES =[{
+    id: 1,
+    value: 'openstack',
+    name: 'Openstack'
+  },
+  {
+    id: 2,
+    value: 'fos',
+    name: 'Fos'
+  }]
 
   export const NewCompute = {
     name: null,
@@ -38,6 +48,7 @@
         }
       }
     },
+    compute_type: null,
     location: {
       latitude: null,
       longitude: null

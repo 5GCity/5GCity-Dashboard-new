@@ -21,4 +21,3 @@ export const API_DATE_FORMAT = `YYYY-MM-DD`
 export const MAPBOX_TOKEN = `pk.eyJ1IjoiaHVnb2ZvbnNlY2E0MyIsImEiOiJjam9nMHRhNDEwOWRnM2txenI0Mng5aHVvIn0.WIeLY3YLpDHAO9X76J5usA`
 export const MAPBOX_STYLE = `mapbox://styles/mapbox/dark-v9`
 export const REQUEST_CAMELIZE = ['create_descriptor', 'services', 'functions', 'chunkete_chunk', 'sliceManagement', 'wirelessConfig','LTEConfig', 'swam_service']
-// export const REQUEST_SCHEMA = ['/sdk/services']

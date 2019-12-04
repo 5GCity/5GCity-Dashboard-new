@@ -49,6 +49,7 @@
     "redux": "^3.0.0",
     "redux-saga": "^0.16.0",
     "reselect": "^3.0.1",
+    "source-map-explorer": "^2.1.1",
     "styled-components": "^2.2.1"
   },
   "scripts": {
@@ -76,7 +77,8 @@
     "generate:scene": "cross-env HYGEN_TMPLS=.templates/ hygen scene new",
     "commitmsg": "commitlint -E GIT_PARAMS",
     "precommit": "lint-staged",
-    "release": "semantic-release --no-verify"
+    "release": "semantic-release --no-verify",
+    "analyze": "source-map-explorer 'build/static/js/*.js'"
   },
   "jest": {
     "collectCoverageFrom": [

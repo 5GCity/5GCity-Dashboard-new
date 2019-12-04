@@ -7,7 +7,7 @@
 import React, { Component } from 'react'
 import Logic from './logic'
 import styled from 'styled-components'
-import { UNITS } from './utils'
+import { UNITS, COMPUTE_TYPES } from './utils'
 import { Layout } from 'element-react'
 
 /* Components */
@@ -21,7 +21,7 @@ class FormCompute extends Component {
   render () {
     const { form } = this.props
     const { change } = this.actions
-    const { name, cpu, ram, storage, availabilityZone, ramUnit, storageUnit } = form
+    const { name, cpu, ram, storage, availabilityZone, ramUnit, storageUnit, type } = form
     return (
       <Wrapper>
         <Title>Computing</Title>
@@ -48,6 +48,16 @@ class FormCompute extends Component {
           />
             <Form.Error>{availabilityZone.message}</Form.Error>
           </Form.Item>
+      <Form.Item label={'Compute Type'} required status={!type.valid}>
+      <Select
+        type={'default'}
+        placeholder="Compute Type"
+        options={COMPUTE_TYPES}
+        onChange={value => change({type: value})}
+        selectOption={type.value}
+      />
+      <Form.Error>{type.message}</Form.Error>
+    </Form.Item>
           <Form.Item
             label='Number of available CPUs'
             required

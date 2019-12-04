@@ -18,7 +18,7 @@ import ModalErrorSlice from 'containers/Modals/ModalErrorSlice'
 /* Components */
 import List from 'components/List'
 import Button from 'components/Button'
-import { DeleteIcon, EyeIcon, SettingIcon, CheckIcon } from 'components/Icons'
+import { DeleteIcon, EyeIcon, CheckIcon } from 'components/Icons'
 import NoData from 'components/NoData'
 import ErroPage from 'components/ErroPage'
 
@@ -71,13 +71,12 @@ const ListAllSlices = (props) => (
               onClick={() =>
               props.navigate(`/slice/${slice.id}`)} text={'View'}
             />
-            <Button
-              disabled
+            {/* <Button
               type={'primary'}
               svg={<SettingIcon />}
-              onClick={() => props.navigate(`/monitor/slice/${slice.id}`)}
+              onClick={() => props.navigate(`/monitor/${slice.name}`)}
               text={'Monitoring'}
-            />
+            /> */}
           </ContainerButtons>
         </ColumnBottons>
       </List.Row>)}

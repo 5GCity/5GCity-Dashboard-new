@@ -3,8 +3,10 @@ FROM node:10.15-alpine
 ENV NPM_CONFIG_LOGLEVEL warn
 
 ARG API_BASE_URL=https://5g-dashboard.i2cat.net
+ARG API_MONITORING=http://84.88.37.165:3000
 
 ENV API_BASE_URL ${API_BASE_URL}
+ENV API_MONITORING ${API_MONITORING}
 
 RUN apk add --update --no-cache yarn && \
     mkdir /code && \

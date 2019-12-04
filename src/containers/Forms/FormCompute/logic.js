@@ -32,6 +32,9 @@ const DEFAULT_FORM = {
   ram: {
     value: null
   },
+  type: {
+    value: null
+  },
   ramUnit: {
     value: 'MB'
   },
@@ -57,6 +60,9 @@ const VALIDATIONS = {
   ram: [
     Check.isRequired,
     Check.isNumber
+  ],
+  type: [
+    Check.isRequired
   ],
   ramUnit: [
   ],
@@ -196,7 +202,7 @@ export default kea({
       } else if (!validation.invalid && dirty) {
         // Transform object and remove uneeded state values
         let params = mapValues(form, ({ value }) => value)
-        const newCompute = NewCompute
+        const newCompute = {...NewCompute}
         newCompute.location = { ...resource.location }
         newCompute.name = params.name
         newCompute.compute_data.availability_zone = params.availabilityZone
@@ -205,6 +211,7 @@ export default kea({
         newCompute.compute_data.quota.ram.units = params.ramUnit
         newCompute.compute_data.quota.storage.total = params.storage
         newCompute.compute_data.quota.storage.units = params.storageUnit
+        newCompute.compute_type = params.type
         try {
           yield call(axios.post, `${API_SLICE_MANAGEMENT}/compute`, newCompute)
           yield put(removeLoadingPage())
@@ -218,6 +225,9 @@ export default kea({
             yield put(closePanel())
           } else if (error.request.status === 404) {
             yield put(changeModalErrorStatus({message: 'Url Not Found'}))
+            yield put(closePanel())
+          } else if (error.request.status === 418) {
+            yield put(changeModalErrorStatus({message: error.response.data.message}))
             yield put(closePanel())
           } else {
             yield put(closePanel())

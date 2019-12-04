@@ -99,7 +99,7 @@ export const Routes = {
   Monitoring: {
     key: 'Monitoring',
     name: 'Monitoring',
-    path: '/monitor/:type/:id',
+    path: '/monitor/:name',
     component: Monitoring,
     crumb: ['inicio']
   },

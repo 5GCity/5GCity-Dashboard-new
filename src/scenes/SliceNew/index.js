@@ -56,6 +56,7 @@ const InfoMarkerContainer = props => {
                   <Checkbox key={compute.id} label={compute.name}>
                     <Name>{compute.name}</Name>
                     <Id>{compute.id}</Id>
+                    <Id><b>{compute.type}</b></Id>
                   </Checkbox>
                 </Checkbox.Group>
                 {compute.ischecked && (

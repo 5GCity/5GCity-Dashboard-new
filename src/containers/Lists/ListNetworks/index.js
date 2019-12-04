@@ -140,9 +140,8 @@ const ListNetwork = (props) => (
             <Button
               type={'primary'}
               svg={<SettingIcon />}
-              onClick={() => props.navigate(`/monitor/ns_id/${network.id}`)}
+              onClick={() => props.navigate(`/monitor/${network.name}`)}
               text={'Monitoring'}
-              disabled
           />
           </ContainerButtons>
         </ColumnBottons>

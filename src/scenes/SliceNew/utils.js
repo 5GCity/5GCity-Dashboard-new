@@ -50,6 +50,7 @@ export const CreateAllPins = resources => {
           locationExistsOnMarkers.location.resources.computes.push({
             id: compute.id,
             name: compute.name,
+            type: compute.computeType,
             ischecked: false,
             computeData: {
               cpus: {
@@ -92,6 +93,7 @@ export const CreateAllPins = resources => {
                   {
                     id: compute.id,
                     name: compute.name,
+                    type: compute.computeType,
                     computeData: {
                       cpus: {
                         ...computeData.quota.cpus,

@@ -38,7 +38,7 @@ Please install [Docker](https://docs.docker.com/install/) according to the desir
 
 Build Docker command:
 ```
-docker build --rm -t 5gcity:latest . --build-arg API_BASE_URL=https://5g-dashboard.i2cat.net
+docker build --rm -t 5gcity:latest . --build-arg API_BASE_URL=https://5g-dashboard.i2cat.net --build-arg API_MONITORING=http://84.88.37.165:3000
 ```
 When on your console show `Successfully built xxxxxxxxxx` run command:
 
@@ -55,10 +55,10 @@ To change the *name* or *tag* of docker image modify:
 
 `docker build --rm -t NAME:TAG`
 
-To change **API_BASE_URL** need to pass `--build-arg` modify `API_BASE_URL="http://XXX.XXX.X.XXX`
+To change **API_BASE_URL** or **API_MONITORING** need to pass `--build-arg` modify `API_BASE_URL="http://XXX.XXX.X.XXX` or `API_MONITORING=http://XXX.XXX.X.XXX`
 
 ```
-docker build --rm -t 5gcity:latest . --build-arg API_BASE_URL=http://xxx.xxx.x.xxx
+docker build --rm -t 5gcity:latest . --build-arg API_BASE_URL=http://xxx.xxx.x.xxx --build-arg API_MONITORING=http://xxx.xxx.x.xxx
 ```
 
 # How to develop
