@@ -10,7 +10,7 @@ import { put, call, all } from 'redux-saga/effects'
 import axios from 'axios'
 import PropTypes from 'prop-types'
 import { API_SLICE_MANAGEMENT } from 'config'
-import { CreateAllPins, GetSelectComputes, GetSelectRadioPhys, GETAllChunkIds, GetNetwork } from './utils'
+import { CreateAllPins, GetSelectComputes, GetSelectRadioPhys, GETAllChunkIds, GetNetwork, FindComputeFOS } from './utils'
 import * as Check from 'validations'
 
 /* Logic */
@@ -423,16 +423,17 @@ export default kea({
               }
             }
             const { data } = yield call(axios.post, `${API_SLICE_MANAGEMENT}/openstack_project`, dataCompute)
-            openstackProjects.push({ idChunk: data.id, nameChunk: data.name })
+            openstackProjects.push({ idChunk: data.id, nameChunk: data.name, type: compute.type })
 
             createSlice = true
           }
         }
         if (selectNetworks) {
+          const openStack = FindComputeFOS(openstackProjects)
             // 2º vlans
             const dataNetwork = {
               name: network.nameNetwork,
-              openstack_project_id: openstackProjects[0].idChunk,
+              openstack_project_id: openStack,
               physical_network_id: network.id,
               requirements: {
                 bandwidth: {

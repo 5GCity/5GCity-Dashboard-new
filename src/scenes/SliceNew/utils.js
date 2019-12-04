@@ -387,3 +387,15 @@ export const GetNetwork = network  => {
 
   return object
 }
+
+
+
+export const FindComputeFOS = openStacks => {
+  if(!openStacks) return null
+  const findFos = openStacks.find(open => open.type === 'fos')
+  if(findFos){
+    return findFos.idChunk
+  } else {
+    return openStacks[0].idChunk
+  }
+}
