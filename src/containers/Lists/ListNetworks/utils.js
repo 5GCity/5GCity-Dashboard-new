@@ -7,7 +7,7 @@
 
  export const TITLE_LIST = [{
    id: 1,
-   size: 300,
+   size: 250,
    name: 'Id',
    propItem: 'id'
  }, {
@@ -17,7 +17,7 @@
    propItem: 'name'
  }, {
    id: 3,
-   size: 300,
+   size: 240,
    name: 'Slice Name',
    propItem: 'slic3Name',
    render: (vendor) =>

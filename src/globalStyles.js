@@ -77,4 +77,25 @@ injectGlobal`
 .mapboxgl-ctrl-logo {
   display: none !important;
 }
+
+.el-picker-panel__footer {
+  background-color: transparent !important;
+  color: white !important;
+  border-top: none !important;
+}
+
+.el-input__inner {
+  border: 1px solid rgba(255,255,255,0.2) !important;
+  background-color: transparent !important;
+  color: white !important;
+  font-size: inherit;
+  height: 36px !important;
+  line-height: 1 !important;
+  outline: 0 !important;
+  padding: 3px 10px !important;
+}
+
+.el-date-range-picker__time-header {
+  border-bottom: none !important
+}
 `

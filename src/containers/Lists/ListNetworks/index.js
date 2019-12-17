@@ -14,7 +14,14 @@ import List from 'components/List'
 import Modal from 'components/Modal'
 import Button from 'components/Button'
 import NoData from 'components/NoData'
-import { DeleteIcon, EyeIcon, SettingIcon, CheckIcon, CloseIcon } from 'components/Icons'
+import {
+  DeleteIcon,
+  EyeIcon,
+  SettingIcon,
+  CheckIcon,
+  CloseIcon,
+  AlertIcon
+} from 'components/Icons'
 import ErroPage from 'components/ErroPage'
 
 const ModalInfo = (props) => (
@@ -142,7 +149,13 @@ const ListNetwork = (props) => (
               svg={<SettingIcon />}
               onClick={() => props.navigate(`/monitor/${network.name}`)}
               text={'Monitoring'}
-          />
+            />
+            <Button
+              type={'primary'}
+              svg={<AlertIcon fill={'#fff'} />}
+              onClick={() => props.navigate(`/network/${network.id}/alerts`)}
+              text={'Alerts'}
+            />
           </ContainerButtons>
         </ColumnBottons>
       </List.Row>)}
@@ -200,7 +213,8 @@ class ListNetworks extends Component {
 export default withRouter(Logic(ListNetworks))
 
 const Wrapper = styled.div`
-
+overflow: auto;
+height: calc(100vh - 100px);
 `
 
 const Field = styled.p`

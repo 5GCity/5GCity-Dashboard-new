@@ -6,15 +6,16 @@
  */
 
 import React from 'react'
-import { MapIcon, NetworkServicesIcon, ServiceIcon } from 'components/Icons'
+import { MapIcon, NetworkServicesIcon, ServiceIcon, AlertIcon } from 'components/Icons'
 
 export const LINKS = [
   {id: 1, path: '/infManagementView', name: 'Inf. Management Overview', icon: <MapIcon fill={'white'} width={32} height={32} />, disabled: false, show: ['Inf. Owner'], active: false},
   {id: 2, path: '/infManagement', name: 'Inf. Management', icon: <MapIcon fill={'white'} width={32} height={32} />, disabled: false, show: ['Inf. Owner'], active: false},
   {id: 3, path: '/slices', name: 'Slices', icon: <MapIcon fill={'white'} width={32} height={32} />, disabled: false, show: ['Inf. Owner', 'Slice Requester'], active: true},
-  {id: 4, path: '/network', name: 'Network Services', icon: <NetworkServicesIcon fill={'white'} />, disabled: false, show: ['Inf. Owner', 'Slice Requester'], active: false},
-  {id: 5, path: '/catalogue', name: 'Catalogue', icon: <NetworkServicesIcon fill={'white'} />, disabled: false, show: ['Inf. Owner', 'Slice Requester'], active: false},
-  {id: 6,
+  {id: 4, path: '/alerts', name: 'Alerts', icon: <AlertIcon fill={'white'} />, disabled: false, show: ['Inf. Owner'], active: true},
+  {id: 5, path: '/network', name: 'Network Services', icon: <NetworkServicesIcon fill={'white'} />, disabled: false, show: ['Inf. Owner', 'Slice Requester'], active: false},
+  {id: 6, path: '/catalogue', name: 'Catalogue', icon: <NetworkServicesIcon fill={'white'} />, disabled: false, show: ['Inf. Owner', 'Slice Requester'], active: false},
+  {id: 7,
     name: 'SDK',
     icon: <ServiceIcon fill={'white'} />,
     disabled: false,

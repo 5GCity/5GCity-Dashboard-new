@@ -8,7 +8,7 @@ import React, { Component } from 'react'
 import Logic from './logic'
 import styled from 'styled-components'
 import { Theme } from 'globalStyles'
-import { isEmpty } from 'lodash'
+import isEmpty from 'lodash/isEmpty'
 
 /* Components */
 import { EditIcon } from 'components/Icons'

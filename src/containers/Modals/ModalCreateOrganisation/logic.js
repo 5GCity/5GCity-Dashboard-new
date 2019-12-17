@@ -12,7 +12,7 @@ import axios from 'axios'
 
 import PropTypes from 'prop-types'
 import * as Check from 'validations'
-import { mapValues } from 'lodash'
+import mapValues from 'lodash/mapValues'
 
 import ListSDKOrganisationLogic from 'containers/Lists/ListSDKOrganisation/logic'
 

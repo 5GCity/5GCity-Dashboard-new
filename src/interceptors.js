@@ -1,8 +1,6 @@
 import axios from 'axios'
 import { camelizeKeys, decamelizeKeys } from 'humps'
 import { AUTH_TOKEN_TYPE, REQUEST_CAMELIZE } from 'config'
-// import {service} from 'utils'
-// import objectMapper from 'object-mapper'
 
 const decamelizeKeysTransformer = function (data) {
   return data && JSON.stringify(decamelizeKeys(data))

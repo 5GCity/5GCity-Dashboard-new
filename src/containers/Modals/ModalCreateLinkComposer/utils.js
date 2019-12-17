@@ -4,7 +4,7 @@
  *
  * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
-import { filter } from 'lodash'
+import filter from 'lodash/filter'
 
 export const createFormFunction = (link, key) => {
   const object = {}

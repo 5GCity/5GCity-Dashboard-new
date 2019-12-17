@@ -113,6 +113,7 @@ export default kea({
         yield put(removeLoadingPage())
       } catch (er) {
         if (er.response) {
+          console.log({...er})
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
           if (er.response.status === 401) {
@@ -120,6 +121,8 @@ export default kea({
             keycloak.logout()
           } else if (er.response.status === 404) {
             console.log(404)
+            yield put(setErroFecth())
+          }else if (er.response.status === 502) {
             yield put(setErroFecth())
           }
         } else if (er.request) {

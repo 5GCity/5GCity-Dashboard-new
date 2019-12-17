@@ -34,7 +34,6 @@ class Monitoring extends Component {
 
   render () {
     const { iframe } = this.state
-    console.log(name, API_MONITORING, iframe)
     return (
       <Fragment>
       <Loading />

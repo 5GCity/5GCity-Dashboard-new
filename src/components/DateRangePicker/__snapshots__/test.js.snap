@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+.c0 .el-date-editor.el-input {
+  width: auto;
+}
+
+.c0 .el-input__inner {
+  border: 1px solid white;
+  background-color: transparent;
+  color: white;
+  font-size: inherit;
+  height: 36px;
+  line-height: 1;
+  outline: 0;
+  padding: 3px 10px;
+}
+
+.c0 .el-input__icon {
+  color: white;
+}
+
+<span
+  className="el-date-editor c0 is-have-trigger is-filled"
+>
+  <div
+    className="el-input el-date-editor el-date-editor--date"
+    style={Object {}}
+  >
+    <i
+      className="el-input__icon el-icon-date"
+      onClick={[Function]}
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+    />
+    <input
+      autoComplete="off"
+      className="el-input__inner"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      type="text"
+      value="2019-06-03"
+    />
+  </div>
+</span>
+`;

@@ -11,7 +11,7 @@ import axios from 'axios'
 import { API_SDK } from 'config'
 import { AddParameter, GetJsonFunction,
   DEFAULT_FORM, TransformInForm, DEFAULT_FORM_NEW } from './utils'
-import { mapValues } from 'lodash'
+import mapValues from 'lodash/mapValues'
 import { Message } from 'element-react'
 
 import PropTypes from 'prop-types'

@@ -8,7 +8,6 @@ import toArray from 'lodash/toArray'
 
 // Import page components bellow here
 // Keep them organized as the routes object
-// import SamplePage from 'scenes/SamplePage'
 import NotFound from 'scenes/NotFound'
 import Dashboard from 'scenes/Dashboard'
 import Slices from 'scenes/Slices'
@@ -20,6 +19,8 @@ import Catalogue from 'scenes/Catalogue'
 import InfManagementView from 'scenes/InfManagementView'
 import infraManagementResource from 'scenes/infraManagementResource'
 import Monitoring from 'scenes/Monitoring'
+import AlertsNetwork from 'scenes/AlertsNetwork'
+import Alerts from 'scenes/Alerts'
 /* SDK */
 import SDK from 'scenes/SDK'
 import SDKService from 'scenes/SDKService'
@@ -69,6 +70,22 @@ export const Routes = {
     name: 'Network',
     path: '/network',
     component: Network,
+    crumb: ['Slices']
+  },
+
+  Alerts: {
+    key: 'Alerts',
+    name: 'Alerts',
+    path: '/alerts',
+    component: Alerts,
+    crumb: ['Slices']
+  },
+
+  AlertsNetwork: {
+    key: 'AlertsNetwork',
+    name: 'AlertsNetwork',
+    path: '/network/:idNetworkInstance/alerts',
+    component: AlertsNetwork,
     crumb: ['Slices']
   },
 
