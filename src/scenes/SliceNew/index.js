@@ -32,7 +32,7 @@ const InfoMarkerContainer = props => {
   const {
     selectSlice,
     selectPin,
-    network,
+    networks,
     changeNetwork,
     changeComputes,
     changeWifi,
@@ -180,14 +180,16 @@ const InfoMarkerContainer = props => {
             ))}
         </Form.Item>
         <React.Fragment>
-          {computes && network && network.id === computes[0].availablePhyNet && (
+        {networks &&
             <React.Fragment>
               <TitlePanel>Network</TitlePanel>
-              <Form.Item>
+          {networks.map(network =>
+            <React.Fragment key={network.id}>
+              <Form.Item key={network.id}>
                 <Checkbox.Group
                   value={network.ischecked === false ? [] : [network.name]}
                   onChange={value =>
-                    changeNetwork("ischecked", value.length > 0)
+                    changeNetwork("ischecked", value.length > 0, network.id)
                   }
                 >
                   <Checkbox key={network.id} label={network.name}>
@@ -202,7 +204,7 @@ const InfoMarkerContainer = props => {
                     <Input
                       type="text"
                       value={network.nameNetwork}
-                      onChange={value => changeNetwork("nameNetwork", value)}
+                      onChange={value => changeNetwork("nameNetwork", value, network.id)}
                     />
                   </Form.Item>
                   <Layout.Row gutter="0">
@@ -211,7 +213,7 @@ const InfoMarkerContainer = props => {
                         <Input
                           type="text"
                           value={network.bandwidth}
-                          onChange={value => changeNetwork("bandwidth", value)}
+                          onChange={value => changeNetwork("bandwidth", value, network.id)}
                         />
                       </Form.Item>
                     </Layout.Col>
@@ -222,7 +224,7 @@ const InfoMarkerContainer = props => {
                           placeholder="unit"
                           options={UNITS_SECONDS}
                           onChange={value =>
-                            changeNetwork("bandwidthUnits", value)
+                            changeNetwork("bandwidthUnits", value, network.id)
                           }
                           selectOption={network.bandwidthUnits || "MB/s"}
                         />
@@ -238,8 +240,10 @@ const InfoMarkerContainer = props => {
                   </Id>
                 </FormContainer>
               )}
-            </React.Fragment>
+              </React.Fragment>
           )}
+            </React.Fragment>
+        }
           {selectSlice.wifi && <TitlePanel>Wifi</TitlePanel>}
           {selectSlice.wifi &&
             selectSlice.wifi.map((phy, physIndex) => (
@@ -326,7 +330,7 @@ class SliceNew extends Component {
       infoChunkete,
       selectSlice,
       selectPin,
-      network
+      networks
     } = this.props;
     const {
       updateMarker,
@@ -362,7 +366,7 @@ class SliceNew extends Component {
               <InfoMarkerContainer
                 selectSlice={selectSlice}
                 selectPin={selectPin}
-                network={network}
+                networks={networks}
                 changeNetwork={changeNetwork}
                 changeComputes={changeComputes}
                 changeWifi={changeWifi}

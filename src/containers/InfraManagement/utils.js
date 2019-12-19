@@ -34,10 +34,11 @@ export const CreateAllPins = resources => {
           marker =>
             marker.location.latitude === latitude &&
             marker.location.longitude === longitude
-        );
+        )
+
         const findNetwork = resources.networks.find(
           network => network.id === compute.availablePhyNet
-        );
+        )
 
         if (locationExistsOnMarkers && !findNetwork) {
           locationExistsOnMarkers.location.isCompute = true;

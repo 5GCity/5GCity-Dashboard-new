@@ -22,9 +22,12 @@ export const CreateAllPins = resources => {
           marker =>
             marker.location.latitude === latitude &&
             marker.location.longitude === longitude
-        );
+        )
 
-        if (locationExistsOnMarkers) {
+        const findNetwork = resources.networks.find(
+          network => network.id === compute.availablePhyNet
+        )
+        if (locationExistsOnMarkers && !findNetwork) {
           locationExistsOnMarkers.location.isCompute = true;
           const { computeData } = compute;
           const cpuColor = singlePercentage(
@@ -67,8 +70,8 @@ export const CreateAllPins = resources => {
               }
             },
             status: computeData.status
-          });
-        } else {
+          })
+        } else if (!findNetwork && !locationExistsOnMarkers) {
           const { computeData } = compute;
           const cpuColor = singlePercentage(
             computeData.quota.cpus.provisioned,
@@ -118,9 +121,110 @@ export const CreateAllPins = resources => {
               isCompute: true
             }
           });
+        } else if (findNetwork && !locationExistsOnMarkers) {
+          const { computeData } = compute;
+          const cpuColor = singlePercentage(
+            computeData.quota.cpus.provisioned,
+            computeData.quota.cpus.total
+          );
+          const ramColor = singlePercentage(
+            computeData.quota.ram.provisioned,
+            computeData.quota.ram.total
+          );
+          const storageColor = singlePercentage(
+            computeData.quota.storage.provisioned,
+            computeData.quota.storage.total
+          );
+          const bigResource = percentage(computeData.quota)
+          markers.push({
+            location: {
+              latitude: compute.location.latitude,
+              longitude: compute.location.longitude,
+              ...bigResource,
+              resources: {
+                computes: [
+                  {
+                    id: compute.id,
+                    name: compute.name,
+                    type: compute.computeType,
+                    computeData: {
+                      cpus: {
+                        ...computeData.quota.cpus,
+                        ...cpuColor
+                      },
+                      ram: {
+                        ...computeData.quota.ram,
+                        ...ramColor
+                      },
+                      storage: {
+                        ...computeData.quota.storage,
+                        ...storageColor
+                      }
+                    },
+                    status: computeData.status,
+                    availabilityZone: compute.computeData.availabilityZone,
+                    availablePhyNet: compute.availablePhyNet,
+                    ischecked: false
+                  }
+                ],
+                network: {
+                  id: findNetwork.id,
+                  name: findNetwork.name,
+                  networkData: { ...findNetwork.physicalNetworkData },
+                  ischecked: false
+                }
+              },
+              isCompute: true
+            }
+          });
+        } else if (findNetwork && locationExistsOnMarkers) {
+          locationExistsOnMarkers.location.isCompute = true;
+          const { computeData } = compute;
+          const cpuColor = singlePercentage(
+            computeData.quota.cpus.provisioned,
+            computeData.quota.cpus.total
+          );
+          const ramColor = singlePercentage(
+            computeData.quota.ram.provisioned,
+            computeData.quota.ram.total
+          );
+          const storageColor = singlePercentage(
+            computeData.quota.storage.provisioned,
+            computeData.quota.storage.total
+          );
+          const { percentage, color } = compareResources(
+            cpuColor,
+            ramColor,
+            storageColor,
+            locationExistsOnMarkers.location.percentage
+          );
+          locationExistsOnMarkers.location.color = color;
+          locationExistsOnMarkers.location.percentage = percentage;
+          locationExistsOnMarkers.location.resources.computes.push({
+            id: compute.id,
+            name: compute.name,
+            type: compute.computeType,
+            ischecked: false,
+            computeData: {
+              cpus: {
+                ...computeData.quota.cpus,
+                ...cpuColor
+              },
+              ram: {
+                ...computeData.quota.ram,
+                ...ramColor
+              },
+              storage: {
+                ...computeData.quota.storage,
+                ...storageColor
+              }
+            },
+            status: computeData.status
+          })
         }
-      });
-  };
+  })
+}
+
 
   const compareRadiosPhys = () => {
     resources.radioPhys.length > 0 &&
@@ -178,14 +282,14 @@ export const CreateAllPins = resources => {
           }
         }
       });
-  };
+  }
   try {
   compareComputes();
   compareRadiosPhys();
 } catch (error) {
 }
-  return markers;
-};
+  return markers
+}
 
 export const GetSelectComputes = locations => {
   const arrayOfComputes = [];
@@ -208,7 +312,7 @@ export const GetSelectComputes = locations => {
   } else {
     return null;
   }
-};
+}
 
 
 export const GetSelectRadioPhys = locations => {
@@ -242,7 +346,7 @@ export const GetSelectRadioPhys = locations => {
       });
   });
   return arrayOfRadioPhys;
-};
+}
 
 const ValidCoord = (latitude, longitude) => {
   if (
@@ -254,7 +358,7 @@ const ValidCoord = (latitude, longitude) => {
   } else {
     return false;
   }
-};
+}
 
 export const UNITS = [
   {
@@ -267,7 +371,7 @@ export const UNITS = [
     value: "GB",
     name: "GB"
   }
-];
+]
 
 export const UNITS_SECONDS = [
   {
@@ -280,7 +384,7 @@ export const UNITS_SECONDS = [
     value: "GB/s",
     name: "GB/s"
   }
-];
+]
 
 export const FindLocationCompute = (computeId, data) => {
   data.forEach(location => {
@@ -291,7 +395,7 @@ export const FindLocationCompute = (computeId, data) => {
       return findLocation;
     }
   });
-};
+}
 
 export const GETAllChunkIds = resources => {
   const array = [];
@@ -299,7 +403,7 @@ export const GETAllChunkIds = resources => {
         array.push(resource.idChunk);
   });
   return array;
-};
+}
 
 export const VerifyNetwork = (resources, networks) => {
   let result = false;
@@ -320,7 +424,7 @@ export const VerifyNetwork = (resources, networks) => {
       }
     });
   return result;
-};
+}
 
 const pickHex = percent => {
   var a = percent / 100,
@@ -329,7 +433,7 @@ const pickHex = percent => {
 
   // Return a CSS HSL string
   return `hsl(${Math.trunc(c)}, 48%, 53%)`;
-};
+}
 
 const percentage = quota => {
   let value = 0;
@@ -341,14 +445,14 @@ const percentage = quota => {
     }
   }
   return { percentage: value, color: pickHex(value) };
-};
+}
 
 const singlePercentage = (provisioned, total) => {
   let value = 0;
   const returnPercentage = (provisioned / total) * 100;
   value = returnPercentage;
   return { percentage: value, color: pickHex(value) };
-};
+}
 
 const compareResources = (cpus, ram, storage, compute) => {
   let value = compute;
@@ -363,10 +467,11 @@ const compareResources = (cpus, ram, storage, compute) => {
   }
 
   return { percentage: value, color: pickHex(value) };
-};
+}
 
 
-export const GetNetwork = network  => {
+export const GetNetworks = networks => {
+  const array  = []
   const object = {
     name: null,
     id: null,
@@ -378,14 +483,17 @@ export const GetNetwork = network  => {
     ischecked: false,
     nameNetwork: null
   }
-  object.name = network.name
-  object.id = network.id
-  object.bandwidth = network.bandwidth
-  object.bandwidthTotal = network.physicalNetworkData.quota.bandwidth.total
-  object.bandwidthProvisioned = network.physicalNetworkData.quota.bandwidth.provisioned
-  object.units = network.physicalNetworkData.quota.bandwidth.units
-
-  return object
+  networks && networks.forEach(item => {
+    array.push({
+      ...object,
+      name: item.name,
+      id: item.id,
+      bandwidthTotal: item.physicalNetworkData.quota.bandwidth.total,
+      bandwidthProvisioned: item.physicalNetworkData.quota.bandwidth.provisioned,
+      units: item.physicalNetworkData.quota.bandwidth.units
+    })
+})
+  return array
 }
 
 
