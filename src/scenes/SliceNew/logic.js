@@ -275,7 +275,7 @@ export default kea({
     },
 
     * getListResources () {
-      const { setListResources, addLoadingPage, removeLoadingPage, setNetwork } = this.actions
+      const { setListResources, addLoadingPage, removeLoadingPage, setNetwork, showError, modalStatus } = this.actions
 
       // add Loading
       yield put(addLoadingPage())
@@ -283,8 +283,7 @@ export default kea({
         const [responseComputes, responseNetworks, responseRadioPhys] = yield all([
           call(axios.get, `${API_SLICE_MANAGEMENT}/compute`),
           call(axios.get, `${API_SLICE_MANAGEMENT}/physical_network`),
-          {data: []}
-          //call(axios.get, `${API_SLICE_MANAGEMENT}/ran_infrastructure/configuredRadioPhys`)
+          call(axios.get, `${API_SLICE_MANAGEMENT}/ran_infrastructure/configuredRadioPhys`)
         ])
 
         const listResources = {computes: [], networks: [], radioPhys: [] }
@@ -297,7 +296,8 @@ export default kea({
         yield (put(setListResources(listResources)))
         yield put(removeLoadingPage())
       } catch (error) {
-        console.log(error)
+        yield put(modalStatus())
+        yield put(showError('Internal server error'))
         yield put(removeLoadingPage())
       }
     },
