@@ -118,7 +118,7 @@ export default kea({
         const clone = [...state]
         clone[selectPin].location.resources.LTE[physIndex][field] = value
         return clone
-      },
+      }
     }],
     sliceName: [null, PropTypes.string, {
       [actions.change]: (state, payload) => payload.value,
@@ -164,7 +164,7 @@ export default kea({
       [actions.reset]: (state, payload) => false
     }],
     boxes: [[], PropTypes.any, {
-      [actions.setRadioPhysInfo]: (state, payload) => payload.phys,
+      [actions.setRadioPhysInfo]: (state, payload) => payload.phys
     }],
     networks: [null, PropTypes.array, {
       [actions.setNetwork]: (state, payload) => payload.networks,
@@ -211,8 +211,8 @@ export default kea({
       const networks = yield this.get('networks')
       const { setNetwork } = this.actions
       const { field, value, id } = action.payload
-      const net = networks.find(item  => item.ischecked === true)
-      if(net && net.id !== id){
+      const net = networks.find(item => item.ischecked === true)
+      if (net && net.id !== id) {
         net.ischecked = false
       }
       const network = networks.find(item => item.id === action.payload.id)
@@ -346,34 +346,34 @@ export default kea({
       const ransIds = []
       phys.wifi && phys.wifi.forEach(wifi => {
         const findRan = ransIds.find(ranId => ranId === wifi.ranId)
-        if(!findRan) {
+        if (!findRan) {
           formChunk.assignedQuota.array.push({value: null, valid: false})
           formChunk.name.array.push({value: null, valid: false})
           ransIds.push(wifi.ranId)
-          infoChunk.push({physName: [wifi.name], ranId: wifi.ranId, type: 'wifi', typeConfig: wifi.type, config: [{...wifi.config}], physIds: [wifi.id]})
+          infoChunk.push({physName: [wifi.name], ranId: wifi.ranId, type: 'wifi', typeConfig: wifi.type, config: [{...wifi.config, type: wifi.type}], physIds: [wifi.id]})
         } else {
           const findChunk = infoChunk.find(chunk => chunk.ranId === findRan)
           findChunk.physName.push(wifi.name)
-          findChunk.config.push(wifi.config)
+          findChunk.config.push({...wifi.config, type: wifi.type})
           findChunk.physIds.push(wifi.id)
         }
       })
-      phys.lte && phys.lte.forEach( lte => {
+      phys.lte && phys.lte.forEach(lte => {
         const findRan = ransIds.find(ranId => ranId === lte.ranId)
-        if(!findRan) {
+        if (!findRan) {
           formChunk.assignedQuota.array.push({value: null, valid: false})
           formChunk.name.array.push({value: null, valid: false})
           ransIds.push(lte.ranId)
-          infoChunk.push({physName: [lte.name], ranId: lte.ranId, type: 'LTE', typeConfig: lte.type, config: [{...lte.config}], physIds: [lte.id]})
-        }else {
+          infoChunk.push({physName: [lte.name], ranId: lte.ranId, type: 'LTE', typeConfig: lte.type, config: [{...lte.config, type: lte.type}], physIds: [lte.id]})
+        } else {
           const findChunk = infoChunk.find(chunk => chunk.ranId === findRan)
           findChunk.physName.push(lte.name)
-          findChunk.config.push(lte.config)
+          findChunk.config.push({...lte.config, type: lte.type})
           findChunk.physIds.push(lte.id)
         }
       })
-        yield put(setChunketesInfo(infoChunk))
-        yield put(setChunketes(formChunk))
+      yield put(setChunketesInfo(infoChunk))
+      yield put(setChunketes(formChunk))
     },
 
     * createSlice () {
@@ -409,7 +409,7 @@ export default kea({
       try {
         yield put(loading())
         let createSlice = false
-         if (selectComputes) {
+        if (selectComputes) {
           for (let compute of selectComputes) {
                 // 1º Open stack
             let currentDate = new Date()
@@ -442,20 +442,20 @@ export default kea({
         if (selectNetworks) {
           const openStack = FindComputeFOS(openstackProjects)
             // 2º vlans
-            const dataNetwork = {
-              name: selectNetworks.nameNetwork,
-              openstack_project_id: openStack,
-              physical_network_id: selectNetworks.id,
-              requirements: {
-                bandwidth: {
-                  required: selectNetworks.bandwidth,
-                  units: selectNetworks.bandwidthUnits || selectNetworks.units
-                }
-              },
+          const dataNetwork = {
+            name: selectNetworks.nameNetwork,
+            openstack_project_id: openStack,
+            physical_network_id: selectNetworks.id,
+            requirements: {
+              bandwidth: {
+                required: selectNetworks.bandwidth,
+                units: selectNetworks.bandwidthUnits || selectNetworks.units
+              }
             }
-            const { data } = yield call(axios.post, `${API_SLICE_MANAGEMENT}/openstack_vlan`, dataNetwork)
-            openstackProjects.push({ idChunk: data.id, nameChunk: data.name })
-            createSlice = true
+          }
+          const { data } = yield call(axios.post, `${API_SLICE_MANAGEMENT}/openstack_vlan`, dataNetwork)
+          openstackProjects.push({ idChunk: data.id, nameChunk: data.name })
+          createSlice = true
         }
         if (selectRadioPhys) {
           for (let index = 0; index < selectRadioPhys.length; index++) {
@@ -468,11 +468,9 @@ export default kea({
                 physicalInterfaceList: []
               }
             }
-
             for (let index = 0; index < phy.config.length; index++) {
-              newChunkete.topology.physicalInterfaceList.push({config: phy.config[index], id: phy.physIds[index], name: phy.physName[index], type: phy.typeConfig})
+              newChunkete.topology.physicalInterfaceList.push({config: phy.config[index], id: phy.physIds[index], name: phy.physName[index], type: phy.config[index].type})
             }
-
             const { data } = yield call(axios.post, `${API_SLICE_MANAGEMENT}/ran_infrastructure/${phy.ranId}/chunkete_chunk`, newChunkete)
             openstackProjects.push({ idChunk: data.id, nameChunk: data.name })
             createSlice = true

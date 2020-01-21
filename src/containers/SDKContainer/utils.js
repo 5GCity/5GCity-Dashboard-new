@@ -19,8 +19,8 @@ export const NEW_SERVICE = {
   designer: null,
   parameters: [],
   license: {
-      type: null,
-      url: null,
+    type: null,
+    url: null
   },
   link: [],
   component: [],
@@ -32,8 +32,8 @@ export const NEW_SERVICE = {
   accessLevel: null,
   actions: [],
   actionRules: [],
-  visibility: "PUBLIC",
-  ownerId: "ubiwhere",
+  visibility: 'PUBLIC',
+  ownerId: 'ubiwhere'
 }
 
 export const NEW_SERVICE_FORM = {
@@ -42,8 +42,8 @@ export const NEW_SERVICE_FORM = {
   designer: null,
   parameters: [],
   license: {
-      type: null,
-      url: null,
+    type: null,
+    url: null
   },
   link: [],
   component: [],
@@ -55,8 +55,8 @@ export const NEW_SERVICE_FORM = {
   accessLevel: null,
   actions: [],
   actionRules: [],
-  visibility: "PUBLIC",
-  ownerId: "ubiwhere",
+  visibility: 'PUBLIC',
+  ownerId: 'ubiwhere'
 }
 
 let idLink = 0
@@ -79,20 +79,20 @@ export const findLinkById = (nodes, service) => {
     const link_name = link.name
     let linkIsCreate = false
     switch (linkLength) {
-    case 2:
-      link.connectionPointNames.forEach(name => {
-        let findNode = false
-        const findConnection = service.connectionPoints.find(connection_point_service => connection_point_service.name  === name)
-        if(findConnection && findConnection.cpType === 'INTERNAL') {
+      case 2:
+        link.connectionPointNames.forEach(name => {
+          let findNode = false
+          const findConnection = service.connectionPoints.find(connection_point_service => connection_point_service.name === name)
+          if (findConnection && findConnection.cpType === 'INTERNAL') {
           if (!findNode) {
             arrayNodes && arrayNodes.forEach(node => {
               if (node.type === 'vnf' && node.extra_info.componentIndex === findConnection.componentIndex) {
                 const arrayofConnectionPoints = node.connection_point
                 const findConnectionPointNode = arrayofConnectionPoints.find(point => point.id === findConnection.internalCpId)
-                if(findConnectionPointNode  && !linkIsCreate && node.connections < node.initial_connections) {
+                if (findConnectionPointNode && !linkIsCreate && node.connections < node.initial_connections) {
                   node.connections++
                   findConnectionPointNode.isUsed = true
-                  if(!source) {
+                  if (!source) {
                     const newIdLink = addNewLink()
                     links.push({
                       id: newIdLink,
@@ -102,7 +102,7 @@ export const findLinkById = (nodes, service) => {
                       confirm: true,
                       connection_point_source_selected: findConnectionPointNode.requiredPort,
                       link_name: link_name,
-                      connection_name_source: name,
+                      connection_name_source: name
                     })
                     findConnectionPointNode.link_id = newIdLink
                     lastId = newIdLink
@@ -135,7 +135,7 @@ export const findLinkById = (nodes, service) => {
           }
         } else if (findConnection && findConnection.cpType === 'EXTERNAL') {
           const externalNode = newExtrenalNode()
-          if(!source) {
+          if (!source) {
             const newIdLink = addNewLink()
             links.push({
               id: newIdLink,
@@ -147,12 +147,12 @@ export const findLinkById = (nodes, service) => {
               connection_point_source_selected: null,
               link_name: link_name,
               connection_name_source: name,
-              required_ports: findConnection.requiredPort,
+              required_ports: findConnection.requiredPort
             })
             lastId = newIdLink
             source = true
           } else {
-            const findlink = links.find( link => link.id === lastId)
+            const findlink = links.find(link => link.id === lastId)
             findlink.target = externalNode
             findlink.targetPosition = 'left'
             findlink.link_name = link_name
@@ -175,13 +175,13 @@ export const findLinkById = (nodes, service) => {
           console.error('Error')
           return {error: false, message: `Can not no find connection point to ${name}`}
         }
-      })
-    break;
-    case 1:
-      link.connectionPointNames.forEach(name => {
-      const findConnection =service.connectionPoints.find(connection_point_service => connection_point_service.name  === name)
-      if(findConnection) {
-        arrayNodes && arrayNodes.forEach(node => {
+        })
+        break
+      case 1:
+        link.connectionPointNames.forEach(name => {
+          const findConnection = service.connectionPoints.find(connection_point_service => connection_point_service.name === name)
+          if (findConnection) {
+          arrayNodes && arrayNodes.forEach(node => {
           if (node.type === 'vnf') {
             const findConnectionPointNode = node.connection_point.find(point => point.id === findConnection.internalCpId)
             if (findConnectionPointNode) {
@@ -195,9 +195,9 @@ export const findLinkById = (nodes, service) => {
                 sourcePosition: randomPosition(node),
                 targetPosition: 'right',
                 confirm: true,
-                connection_point_source_selected : findConnectionPointNode.requiredPort,
+                connection_point_source_selected: findConnectionPointNode.requiredPort,
                 link_name: link_name,
-                connection_name_source: name,
+                connection_name_source: name
               })
               const linkTarget = links.find(link => link.id === newIdLink)
               linkTarget.connection_point_target_selected = null
@@ -206,7 +206,7 @@ export const findLinkById = (nodes, service) => {
               linkTarget.source[linkTarget.sourcePosition].isLink = true
               linkTarget.target[linkTarget.targetPosition].isLink = true
 
-              const changeNode = nodes.find( node => node.id === linkTarget.source.id || node.id === linkTarget.target.id )
+              const changeNode = nodes.find(node => node.id === linkTarget.source.id || node.id === linkTarget.target.id)
 
               if (changeNode) {
                 changeNode[linkTarget.sourcePosition].isLink = true
@@ -214,24 +214,24 @@ export const findLinkById = (nodes, service) => {
               arrayNodes.push(bridgeNode)
               source = false
               findConnectionPointNode.link_id = linkTarget.id
+            }
           }
+        })
         }
-      })
-      }
-    })
-    break;
-    default:
-      const newVirtualSwitch = newVirtualSwitchNode(link_name)
-      link.connectionPointNames.forEach(name => {
-        const findConnection = service.connectionPoints.find(
-          connection_point_service => connection_point_service.name  === name
+        })
+        break
+      default:
+        const newVirtualSwitch = newVirtualSwitchNode(link_name)
+        link.connectionPointNames.forEach(name => {
+          const findConnection = service.connectionPoints.find(
+          connection_point_service => connection_point_service.name === name
         )
-        if ( findConnection && findConnection.cpType === 'INTERNAL') {
+          if (findConnection && findConnection.cpType === 'INTERNAL') {
           arrayNodes && arrayNodes.forEach(node => {
             if (node.type === 'vnf') {
-            const findConnectionPointNode = node.connection_point.find(point =>
+              const findConnectionPointNode = node.connection_point.find(point =>
               point.id === findConnection.internalCpId)
-              if(findConnectionPointNode) {
+              if (findConnectionPointNode) {
                 if (node.type === 'vnf') {
                   const newIdLink = addNewLink()
                   links.push({
@@ -244,7 +244,7 @@ export const findLinkById = (nodes, service) => {
                     targetPosition: 'right',
                     link_name: link_name,
                     virtual_switch: true,
-                    connection_name_source: name,
+                    connection_name_source: name
                   })
                   findConnectionPointNode.link_id = newIdLink
                   findConnectionPointNode.isUsed = true
@@ -253,31 +253,30 @@ export const findLinkById = (nodes, service) => {
                 }
               }
             }
-         })
+          })
         } else if (findConnection && findConnection.cpType === 'EXTERNAL') {
-            const newIdLink = addNewLink()
-            const externalNode = newExtrenalNode()
-            links.push({
-              id: newIdLink,
-              source: externalNode,
-              target: newVirtualSwitch,
-              sourcePosition: 'left',
-              targetPosition: 'right',
-              confirm: true,
-              link_name: link_name,
-              virtual_switch: true,
-            })
-            const findLink = links.find(link => link.id === newIdLink)
-            node[findLink.sourcePosition].isLink = true
+          const newIdLink = addNewLink()
+          const externalNode = newExtrenalNode()
+          links.push({
+            id: newIdLink,
+            source: externalNode,
+            target: newVirtualSwitch,
+            sourcePosition: 'left',
+            targetPosition: 'right',
+            confirm: true,
+            link_name: link_name,
+            virtual_switch: true
+          })
+          const findLink = links.find(link => link.id === newIdLink)
+          node[findLink.sourcePosition].isLink = true
         }
-      })
-      arrayNodes.push(newVirtualSwitch)
-    break;
+        })
+        arrayNodes.push(newVirtualSwitch)
+        break
     }
   })
   return {nodes: arrayNodes, links: links}
 }
-
 
 /**
  * Add New Node
@@ -286,7 +285,7 @@ export const findLinkById = (nodes, service) => {
  */
 export const addNode = node => {
   const infoNode = cloneDeep(node)
-  switch(infoNode.type) {
+  switch (infoNode.type) {
     case 'bridge':
       return newBridgeNode()
     case 'external':
@@ -306,18 +305,18 @@ export const addNode = node => {
 export const transformToD3Object = (service, catalogue) => {
   let createNodeD3 = []
   let existCatalogue = catalogue
-  service.component.forEach( dataService => {
-   const match = existCatalogue.find(catalogueItem => catalogueItem.id === dataService.componentId)
-   if (match) {
-    if (match.vnfdId) {
-      const mapping_expression = dataService.mappingExpressions
-      const componentIndex = dataService.componentIndex
-      const initialServiceConnections = service.connectionPoints.filter(point => point.componentIndex === componentIndex).length
-      createNodeD3.push(cloneDeep(newVNFNode(match, mapping_expression, componentIndex, initialServiceConnections)))
-    } else {
-      createNodeD3.push({...match, type:'vnf'})
+  service.component.forEach(dataService => {
+    const match = existCatalogue.find(catalogueItem => catalogueItem.id === dataService.componentId)
+    if (match) {
+      if (match.vnfdId) {
+       const mapping_expression = dataService.mappingExpressions
+       const componentIndex = dataService.componentIndex
+       const initialServiceConnections = service.connectionPoints.filter(point => point.componentIndex === componentIndex).length
+       createNodeD3.push(cloneDeep(newVNFNode(match, mapping_expression, componentIndex, initialServiceConnections)))
+     } else {
+       createNodeD3.push({...match, type: 'vnf'})
+     }
     }
-   }
   })
   return findLinkById(createNodeD3, service)
 }
@@ -327,14 +326,14 @@ export const transformToD3Object = (service, catalogue) => {
  * Returns a random position
  */
 export const randomPosition = node => {
-  if(!node.right.isLink) {
-      return 'right'
+  if (!node.right.isLink) {
+    return 'right'
   } else if (!node.left.isLink) {
-      return 'left'
-  } else if(!node.bottom.isLink) {
-      return 'bottom'
-  } else if(!node.top.isLink) {
-      return 'top'
+    return 'left'
+  } else if (!node.bottom.isLink) {
+    return 'bottom'
+  } else if (!node.top.isLink) {
+    return 'top'
   }
 }
 
@@ -345,18 +344,18 @@ const arrayOfPosition = []
 export const randomXY = () => {
   const x = window.innerWidth - 500
   const y = window.innerHeight - 300
-  const randomX = Math.floor(Math.random()*x)
-  const randomY = Math.floor(Math.random()*y)
+  const randomX = Math.floor(Math.random() * x)
+  const randomY = Math.floor(Math.random() * y)
   if (arrayOfPosition.length === 0) {
-    arrayOfPosition.push({x:randomX,y:randomY})
+    arrayOfPosition.push({x: randomX, y: randomY})
   }
   const findSamePosition = arrayOfPosition.find(position => position.x === randomX)
-  if(findSamePosition){
+  if (findSamePosition) {
     randomXY()
   } else {
-    arrayOfPosition.push({x:randomX,y:randomY})
+    arrayOfPosition.push({x: randomX, y: randomY})
   }
-  return { x:randomX, y:randomY }
+  return { x: randomX, y: randomY }
 }
 
 /**
@@ -376,7 +375,7 @@ export const addNewNode = () => (
 
 const nodeId = node => {
   const item = Object.assign({}, node)
-  const id = item.id.split("node")
+  const id = item.id.split('node')
   return id[1]
 }
 
@@ -445,9 +444,9 @@ export const removeNode = (selectNode, d3Data) => {
 export const createNewLink = (source, target, d3Data) => {
   const { links } = d3Data
   let newLink = {}
-  if(source.type === 'vs'){
-   const lastTarget = target
-   const lastSource = source
+  if (source.type === 'vs') {
+    const lastTarget = target
+    const lastSource = source
     source = Object.assign({}, lastTarget)
     target = Object.assign({}, lastSource)
   }
@@ -474,7 +473,7 @@ export const createNewLink = (source, target, d3Data) => {
     target.type !== 'vs'
   ) {
     const newId = addNewLink()
-      newLink = {
+    newLink = {
       id: newId,
       source: source,
       target: target,
@@ -485,14 +484,14 @@ export const createNewLink = (source, target, d3Data) => {
       connection_name_source: null,
       connection_name_target: null,
       connection_point_target_selected: null,
-      connection_point_source_selected: null,
+      connection_point_source_selected: null
     }
     links.push(newLink)
     source[source.optionSelect].isLink = true
     target[target.optionSelect].isLink = true
   } else if (target.type === 'vs') {
     const newId = addNewLink()
-      newLink = {
+    newLink = {
       id: newId,
       source: source,
       target: target,
@@ -502,7 +501,7 @@ export const createNewLink = (source, target, d3Data) => {
       link_name: null,
       connection_name_source: null,
       connection_point_source_selected: null,
-      virtual_switch: true,
+      virtual_switch: true
     }
     links.push(newLink)
     source[source.optionSelect].isLink = true
@@ -519,7 +518,7 @@ const removeConnectionPoint = (source, target, node) => {
 }
 
 export const transformToJSON = (service, d3Data) => {
-  const object = { invalid: false, errors: [], composer:[] }
+  const object = { invalid: false, errors: [], composer: [] }
   const link = [], component = [], connection_point = []
   const {nodes, links} = d3Data
   nodes.forEach(node => {
@@ -527,7 +526,7 @@ export const transformToJSON = (service, d3Data) => {
       const map_exp = node.mapping_expression[0] === undefined ? [] : node.mapping_expression
       component.push({
         componentId: node.extra_info.id,
-        componentType: "SDK_FUNCTION",
+        componentType: 'SDK_FUNCTION',
         mappingExpressions: map_exp,
         componentIndex: nodeId(node)
       })
@@ -537,20 +536,20 @@ export const transformToJSON = (service, d3Data) => {
 
   links.forEach(item => {
     if (item.target.type === 'vs') {
-      const findExsitLink =link.find(link => link.name === item.link_name)
-      if(findExsitLink) {
+      const findExsitLink = link.find(link => link.name === item.link_name)
+      if (findExsitLink) {
         findExsitLink.connectionPointNames.push(item.connection_name_source)
-      }else{
+      } else {
         link.push({
           name: item.link_name,
           connectionPointNames: [item.connection_name_source]
         })
-        verifyLink(item, object, 'target' ,'vs')
+        verifyLink(item, object, 'target', 'vs')
       }
-    }  else if(item.target.type === 'bridge' || item.source.type === 'bridge') {
+    } else if (item.target.type === 'bridge' || item.source.type === 'bridge') {
       const connection_points = []
       item.connection_name_source && connection_points.push(item.connection_name_source)
-        item.connection_name_target && connection_points.push(item.connection_name_target)
+      item.connection_name_target && connection_points.push(item.connection_name_target)
       link.push({
         name: item.link_name,
         connectionPointNames: connection_points
@@ -561,7 +560,7 @@ export const transformToJSON = (service, d3Data) => {
         connectionPointNames: [
           item.connection_name_source,
           item.connection_name_target && item.connection_name_target
-        ],
+        ]
       })
     }
 
@@ -569,15 +568,17 @@ export const transformToJSON = (service, d3Data) => {
       case 'vnf':
         const findCP = item.source.connection_point.find(connection => connection.link_id === item.id)
         if (findCP)
-          connection_point.push({
+          { 
+connection_point.push({
             internalCpId: findCP.id,
             name: item.connection_name_source,
             requiredPort: item.required_ports,
-            cpType: "INTERNAL",//findCP.cpType,
+            cpType: 'INTERNAL', // findCP.cpType,
             componentIndex: nodeId(item.source)
-          })
-        verifyLink(item, object, 'source' ,'vnf')
-      break;
+          }) 
+}
+        verifyLink(item, object, 'source', 'vnf')
+        break
       case 'external':
         connection_point.push({
           name: item.connection_name_source,
@@ -585,10 +586,10 @@ export const transformToJSON = (service, d3Data) => {
           cpType: item.source.type.toUpperCase(),
           componentIndex: nodeId(item.source)
         })
-        verifyLink(item, object, 'source' ,'external')
-      break;
+        verifyLink(item, object, 'source', 'external')
+        break
       default:
-        break;
+        break
     }
 
     switch (item.target.type) {
@@ -599,22 +600,24 @@ export const transformToJSON = (service, d3Data) => {
           cpType: item.target.type.toUpperCase(),
           componentIndex: nodeId(item.target)
         })
-      break;
+        break
       case 'vnf':
         const findCP = item.target.connection_point.find(connection => connection.link_id === item.id)
         if (findCP)
-        connection_point.push({
-          internalCpId: findCP.id,
-          name: item.connection_name_target,
-          requiredPort: item.required_ports,
-          cpType: "INTERNAL",
-          componentIndex: nodeId(item.target)
-        })
-        verifyLink(item, object, 'target' ,'vnf')
-      break;
+          { 
+connection_point.push({
+            internalCpId: findCP.id,
+            name: item.connection_name_target,
+            requiredPort: item.required_ports,
+            cpType: 'INTERNAL',
+            componentIndex: nodeId(item.target)
+          }) 
+}
+        verifyLink(item, object, 'target', 'vnf')
+        break
 
       default:
-        break;
+        break
     }
   })
 
@@ -643,165 +646,166 @@ export const changeNode = (nodeSelect, d3Data) => {
   return newD3Data
 }
 
-
 const verifyMappingExpression = (node, object) => {
-  if(node.extra_info.parameter)
-  if (node.extra_info.parameter.length > 0) {
-    node.mapping_expression.forEach(mapping => {
-      if(typeof(mapping) !== 'string'){
+  if (node.extra_info.parameter)
+    { 
+if (node.extra_info.parameter.length > 0) {
+      node.mapping_expression.forEach(mapping => {
+      if (typeof (mapping) !== 'string') {
         object.invalid = true
         object.errors.push({
           id: idError++,
           type: 'danger',
-          title:'Error',
+          title: 'Error',
           location: node.extra_info.name,
           description: 'Please input configure paramaters'
         })
       }
     })
-  }
+    } 
+}
 }
 
 const verifyLink = (link, object, source, type) => {
     // Verify Name
-    if (typeof(link.link_name) !== 'string') {
-      object.invalid = true
-      object.errors.push({
+  if (typeof (link.link_name) !== 'string') {
+    object.invalid = true
+    object.errors.push({
         id: idError++,
         type: 'danger',
-        title:'Error',
+        title: 'Error',
         location: 'Link',
         description: 'Please input name on link'
       })
-    }
+  }
 
-    if (type === 'vnf' && source === 'source') {
-      const node_name = link.source.extra_info.name
+  if (type === 'vnf' && source === 'source') {
+    const node_name = link.source.extra_info.name
       // Verify connection Name source
-      if(typeof(link.connection_name_source) !== 'string') {
+    if (typeof (link.connection_name_source) !== 'string') {
         object.invalid = true
         object.errors.push({
           id: idError++,
           type: 'danger',
-          title:'Error',
+          title: 'Error',
           location: node_name,
           description: 'Please input connection name'
         })
       }
       // Verify connection Point source
-      if(!Array.isArray(link.connection_point_source_selected)) {
+    if (!Array.isArray(link.connection_point_source_selected)) {
         object.invalid = true
         object.errors.push({
           id: idError++,
           type: 'danger',
-          title:'Error',
-          location: node_name ,
+          title: 'Error',
+          location: node_name,
           description: 'Please input connection point'
         })
       }
-    }
-    if (type === 'external' && source === 'source') {
-      const node_name = 'External'
+  }
+  if (type === 'external' && source === 'source') {
+    const node_name = 'External'
       // Verify connection Point source
-      if(typeof(link.connection_name_source) !== 'string') {
+    if (typeof (link.connection_name_source) !== 'string') {
         object.invalid = true
         object.errors.push({
           id: idError++,
           type: 'danger',
-          title:'Error',
+          title: 'Error',
           location: node_name,
           description: 'Please input name on link'
         })
       }
-    }
+  }
     // Verify connection Name target
-    if (type === 'vnf' && source === 'target') {
-      const node_name = link.target.extra_info.name
-      if(typeof(link.connection_name_target) !== 'string') {
+  if (type === 'vnf' && source === 'target') {
+    const node_name = link.target.extra_info.name
+    if (typeof (link.connection_name_target) !== 'string') {
         object.invalid = true
         object.errors.push({
           id: idError++,
           type: 'danger',
-          title:'Error',
-          location:node_name,
+          title: 'Error',
+          location: node_name,
           description: 'Please input connection name'
         })
       }
       // Verify connection Point target
-      if(!Array.isArray(link.connection_point_target_selected)) {
+    if (!Array.isArray(link.connection_point_target_selected)) {
         object.invalid = true
         object.errors.push({
           id: idError++,
           type: 'danger',
-          title:'Error',
+          title: 'Error',
           location: node_name,
           description: 'Please input connection point'
         })
       }
-    }
-    if (type === 'external' && source === 'target') {
-      const node_name = 'External'
+  }
+  if (type === 'external' && source === 'target') {
+    const node_name = 'External'
         // Verify connection Name target
-      if(typeof(link.connection_name_target) !== 'string') {
+    if (typeof (link.connection_name_target) !== 'string') {
         object.invalid = true
         object.errors.push({
           id: idError++,
           type: 'danger',
-          title:'Error',
+          title: 'Error',
           location: node_name,
           description: 'Please input name on link'
         })
       }
-    }
+  }
 }
 
 const verifyComposer = (composer, object) => {
-  if (typeof(composer.name) !== 'string') {
+  if (typeof (composer.name) !== 'string') {
     object.invalid = true
     object.errors.push({
       id: idError++,
       type: 'danger',
-      title:'Error Composer',
+      title: 'Error Composer',
       location: 'Composer',
       description: 'Please input name'
     })
   }
-  if (typeof(composer.version) !== 'string') {
+  if (typeof (composer.version) !== 'string') {
     object.invalid = true
     object.errors.push({
       id: idError++,
       type: 'danger',
-      title:'Error Composer',
+      title: 'Error Composer',
       location: 'Composer',
       description: 'Please input version'
     })
   }
-  if (typeof(composer.designer) !== 'string') {
+  if (typeof (composer.designer) !== 'string') {
     object.invalid = true
     object.errors.push({
       id: idError++,
       type: 'danger',
-      title:'Error Composer',
+      title: 'Error Composer',
       location: 'Composer',
       description: 'Please input designer'
     })
   }
-  if (typeof(composer.license.type) !== 'string') {
+  if (typeof (composer.license.type) !== 'string') {
     object.invalid = true
     object.errors.push({
       id: idError++,
       type: 'danger',
-      title:'Error Composer',
+      title: 'Error Composer',
       location: 'Composer',
       description: 'Please input type'
     })
   }
-  if (typeof(composer.license.url) !== 'string') {
+  if (typeof (composer.license.url) !== 'string') {
     object.invalid = true
     object.errors.push({
       id: idError++,
       type: 'danger',
-      title:'Error Composer',
+      title: 'Error Composer',
       location: 'Composer',
       description: 'Please input url'
     })
@@ -811,7 +815,7 @@ const verifyComposer = (composer, object) => {
 export const Organizations = value => {
   const array = []
   value && value.forEach(organization => {
-   array.push({ id:organization.id, value: organization.sliceId, name: organization.sliceId})
+    array.push({ id: organization.id, value: organization.sliceId, name: organization.sliceId})
   })
   return array
 }

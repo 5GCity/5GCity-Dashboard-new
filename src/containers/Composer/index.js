@@ -447,7 +447,7 @@ class Composer extends Component {
             return 'option_VNF_right hidden'
           }
         })
-        .attr('fill', CONFIG_NODE.color)
+        .attr('fill', d => d.right.isManagement ? CONFIG_NODE.colorIsManagement : CONFIG_NODE.color)
         .attr('stroke', CONFIG_NODE.stroke)
         .attr('stroke-width', CONFIG_NODE.stroke_width)
         .attr('r', CONFIG_NODE.r)
@@ -471,7 +471,7 @@ class Composer extends Component {
             return 'option_VNF_left hidden'
           }
         })
-        .attr('fill', CONFIG_NODE.color)
+        .attr('fill', d => d.left.isManagement ? CONFIG_NODE.colorIsManagement : CONFIG_NODE.color)
         .attr('stroke', CONFIG_NODE.stroke)
         .attr('stroke-width', CONFIG_NODE.stroke_width)
         .attr('r', CONFIG_NODE.r)
@@ -494,7 +494,7 @@ class Composer extends Component {
             return 'option_VNF_bottom hidden'
           }
         })
-        .attr('fill', CONFIG_NODE.color)
+        .attr('fill', d => d.bottom.isManagement ? CONFIG_NODE.colorIsManagement : CONFIG_NODE.color)
         .attr('stroke', CONFIG_NODE.stroke)
         .attr('stroke-width', CONFIG_NODE.stroke_width)
         .attr('r', CONFIG_NODE.r)
@@ -518,7 +518,7 @@ class Composer extends Component {
             return 'option_VNF_top hidden'
           }
         })
-        .attr('fill', CONFIG_NODE.color)
+        .attr('fill', d => d.top.isManagement ? CONFIG_NODE.colorIsManagement : CONFIG_NODE.color)
         .attr('stroke', CONFIG_NODE.stroke)
         .attr('stroke-width', CONFIG_NODE.stroke_width)
         .attr('r', CONFIG_NODE.r)

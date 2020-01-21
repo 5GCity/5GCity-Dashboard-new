@@ -153,6 +153,7 @@ export default kea({
   workers: {
     * getForm () {
       const linkSelect = yield this.get('modalData')
+      console.log(linkSelect)
       const { changeForm } = this.actions
       const setDefaultValues = { ...DEFAULT_FORM }
       setDefaultValues.link_name.value = linkSelect.target.type === 'vs' ? linkSelect.target.virtual_switch_name : linkSelect.link_name

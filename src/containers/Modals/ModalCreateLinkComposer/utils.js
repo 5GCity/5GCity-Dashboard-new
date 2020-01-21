@@ -15,7 +15,7 @@ export const createFormFunction = (link, key) => {
     object.name = link[key].extra_info.name.replace('-', ' ')
     object.connection_name = link[`connection_name_${key}`] || null
     link[key].connection_point.forEach(point => {
-    let select = false
+      let select = false
       if (link.connection_point_select === point.name || point.isUsed) {
         select = true
       } else {
@@ -24,7 +24,7 @@ export const createFormFunction = (link, key) => {
 
       options.push({
         id: point.id,
-        name: point.name,
+        name: `${point.name} ${point.isManagement ? '(Management)' : ''}`,
         value: point.requiredPort,
         disabled: select
       })

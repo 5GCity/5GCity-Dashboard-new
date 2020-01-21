@@ -23,12 +23,12 @@ export default kea({
     actions: [
       AppLogic, [
         'addLoadingPage',
-        'removeLoadingPage',
+        'removeLoadingPage'
       ],
       PageTitleOrganizationLogic, [
         'changeOrganization',
-        'setOrganizations',
-      ],
+        'setOrganizations'
+      ]
     ],
     props: [
       AppLogic, [
@@ -52,7 +52,7 @@ export default kea({
     removeNoData: () => ({ }),
     submit: () => ({ }),
 
-    reset: () =>({})
+    reset: () => ({})
   }),
 
   reducers: ({ actions }) => ({
@@ -103,7 +103,7 @@ export default kea({
 
   takeLatest: ({ actions, workers }) => ({
     [actions.changeOrganization]: workers.fetchNetworksWorker,
-    [actions.setOrganizations]: workers.fetchNetworksWorker,
+    [actions.setOrganizations]: workers.fetchNetworksWorker
   }),
 
   workers: {
@@ -113,20 +113,20 @@ export default kea({
       yield put(removeNoData())
       yield put(addLoadingPage())
       try {
-        if(selectOrganization){
-        let responseResult = yield call(axios.get, `${API_BASE_URL}/gw/appcat/nsd/v1/ns_descriptors?project=${selectOrganization}&extraData=manoInfoIds`)
-        const { data } = responseResult
-        const catalogue = setCatalogue(data)
-        if (catalogue.length > 0) {
+        if (selectOrganization) {
+          let responseResult = yield call(axios.get, `${API_BASE_URL}/gw/appcat/nsd/v1/ns_descriptors?project=${selectOrganization}&extraData=manoInfoIds`)
+          const { data } = responseResult
+          const catalogue = setCatalogue(data)
+          if (catalogue.length > 0) {
           yield put(setNetworksServices(catalogue))
         } else {
           yield put(setNetworksServices(null))
           yield put(setNoData())
         }
-      } else {
-        yield put(setNoData())
-      }
-      yield put(removeLoadingPage())
+        } else {
+          yield put(setNoData())
+        }
+        yield put(removeLoadingPage())
       } catch (error) {
         if (error.response) {
           // The request was made and the server responded with a status code
@@ -134,10 +134,9 @@ export default kea({
           if (error.response.status === 401) {
             const keycloak = yield this.get('keycloak')
             keycloak.logout()
-          } else if (error.response.status === 404) {
-            console.log(404)
-            yield put(setErroFecth())
           }
+          console.error(error.response.status)
+          yield put(setErroFecth())
         } else if (error.request) {
           // The request was made but no response was received
           // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
@@ -149,7 +148,7 @@ export default kea({
         }
         yield put(removeLoadingPage())
       }
-    },
+    }
   }
 
 })

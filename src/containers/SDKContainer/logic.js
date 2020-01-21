@@ -14,7 +14,6 @@ import { NEW_SERVICE, addNode, transformToD3Object, removeLink, removeNode, crea
   transformToJSON, changeNode, Organizations } from './utils'
 import { Message } from 'element-react'
 
-
 const DEFAULT_D3 = {nodes: [], links: []}
 
 export default kea({
@@ -52,14 +51,13 @@ export default kea({
     setErrors: (errors) => ({ errors }),
     setService: (id) => ({ id }),
 
-
     fetchAllFunctions: () => ({ }),
     setAllFunctions: (functions) => ({ functions }),
 
     fetchOrganizations: () => ({ }),
     setOrganizations: (organizations) => ({ organizations }),
 
-    resetService: () =>({ }),
+    resetService: () => ({ }),
     reset: () => ({ })
   }),
 
@@ -68,7 +66,7 @@ export default kea({
       [actions.setServiceInfo]: (state, payload) => payload.service,
       [actions.resetService]: () => null,
 
-      [actions.reset]: () => null,
+      [actions.reset]: () => null
     }],
     activeTab: ['composer', PropTypes.string, {
       [actions.setActiveTab]: (state, payload) => payload.tab.props.name,
@@ -142,9 +140,9 @@ export default kea({
       [actions.setAllFunctions]: (state, payload) => payload.functions
     }],
     organizationsList: [[], PropTypes.array, {
-      [actions.fetchOrganizations] : (state, payload) => null,
+      [actions.fetchOrganizations]: (state, payload) => null,
       [actions.setOrganizations]: (state, payload) => Organizations(payload.organizations)
-    }],
+    }]
   }),
 
   start: function * () {
@@ -168,7 +166,7 @@ export default kea({
     [actions.fetchServiceId]: workers.fetchServiceId,
     [actions.changeConfigParams]: workers.changeConfigParams,
     [actions.fetchOrganizations]: workers.fetchOrganizations,
-    [actions.fetchAllFunctions]: workers.fetchAllFunctions,
+    [actions.fetchAllFunctions]: workers.fetchAllFunctions
   }),
 
   workers: {
@@ -188,19 +186,19 @@ export default kea({
     * fetchAllFunctions () {
       const { setAllFunctions, fetchServiceId } = this.actions
       const organizationsList = yield this.get('organizationsList')
-        const array = []
-        for (let index = 0; index < organizationsList.length; index++) {
-          const organization = organizationsList[index]
-          let responseResult = yield call(axios.get, `${API_SDK}/sdk/functions/?sliceId=${organization.value}`)
-          const { data } = responseResult
-          array.push(...data)
-        }
-        yield put(setAllFunctions(array))
-        yield put(fetchServiceId())
+      const array = []
+      for (let index = 0; index < organizationsList.length; index++) {
+        const organization = organizationsList[index]
+        let responseResult = yield call(axios.get, `${API_SDK}/sdk/functions/?sliceId=${organization.value}`)
+        const { data } = responseResult
+        array.push(...data)
+      }
+      yield put(setAllFunctions(array))
+      yield put(fetchServiceId())
     },
 
     * fetchServiceId () {
-      const { setServiceInfo, setData, changeSaveStatus,resetService } = this.actions
+      const { setServiceInfo, setData, changeSaveStatus, resetService } = this.actions
       const serviceId = yield this.get('idService')
       const catalogue = yield this.get('allFunctions')
       yield put(resetService())
@@ -273,13 +271,13 @@ export default kea({
                 type: 'error'
               })
               break
-              case 409:
-                Message({
-                  showClose: false,
-                  message: error.response.data,
-                  type: 'error'
-                })
-                break
+            case 409:
+              Message({
+                showClose: false,
+                message: error.response.data,
+                type: 'error'
+              })
+              break
             default:
               Message({
                 showClose: false,

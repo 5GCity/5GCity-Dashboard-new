@@ -14,7 +14,6 @@ import Input from 'components/Input'
 import { CheckIcon } from 'components/Icons'
 import Form from 'components/Form'
 
-
 export default class ModalChunketeSlice extends Component {
   render () {
     const {
@@ -38,9 +37,9 @@ export default class ModalChunketeSlice extends Component {
         <Form>
           <Modal.Body>
             {chunketes.map((chunk, index) =>
-            <React.Fragment key={index}>
-            {/* <Title>{chunk.physName}</Title> */}
-            <Form.Item
+              <React.Fragment key={index}>
+              {/* <Title>{chunk.physName}</Title> */}
+              <Form.Item
               label={'Assigned Quota'}
               required
               status={!chunkForm.assignedQuota.array[index].valid}
@@ -51,7 +50,7 @@ export default class ModalChunketeSlice extends Component {
             />
               <Form.Error>{chunkForm.assignedQuota.array[index].message}</Form.Error>
             </Form.Item>
-            <Form.Item
+              <Form.Item
               label={'Name'}
               required
               status={!chunkForm.name.array[index].valid}
@@ -62,7 +61,7 @@ export default class ModalChunketeSlice extends Component {
             />
               <Form.Error>{chunkForm.name.array[index].message}</Form.Error>
             </Form.Item>
-            {chunketes.length -1 !== index &&
+              {chunketes.length - 1 !== index &&
             <Border />
             }
             </React.Fragment>
@@ -98,7 +97,6 @@ export const Title = styled.p`
   color: #EFF2F7;
   font-family: ${({ theme }) => theme.fontFamily};
 `
-
 
 const Border = styled.div`
   border-bottom: 1px solid rgba(239,242,247,0.1);

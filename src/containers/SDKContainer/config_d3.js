@@ -130,9 +130,9 @@ export const newVirtualSwitchNode = (linkName) => {
 
 export const newVNFNode = (nodeInfo, mappingExpression, componentIndex, initialServiceConnections) => {
   const arrayExpression = mappingExpression === undefined ? [undefined] : mappingExpression
-  const position = Position(nodeInfo.connectionPoints.length)
+  const position = Position(nodeInfo.connectionPoints)
   const idNode = addNewNode()
-  nodeInfo.connectionPoints.map(connection => connection.isUsed = false)
+  nodeInfo.connectionPoints.map(connection => (connection.isUsed = false))
   const XY = randomXY()
   return {
     ...NODE_TYPE.VNF,
@@ -147,7 +147,7 @@ export const newVNFNode = (nodeInfo, mappingExpression, componentIndex, initialS
       vnfd_version: nodeInfo.vnfdVersion,
       id: nodeInfo.id,
       parameter: nodeInfo.parameters,
-      componentIndex: componentIndex,
+      componentIndex: componentIndex
     },
     mapping_expression: arrayExpression,
     connection_point: [...nodeInfo.connectionPoints],
@@ -166,13 +166,15 @@ export const CONFIG_D3 = {
 }
 
 export const CONFIG_NODE = {
+  colorIsManagement: '#72a339',
   color: 'rgba(55,71,79,1)',
   stroke: 'rgba(239,242,247,1)',
   r: 5,
   stroke_width: 2
 }
 
-export const Position = length => {
+export const Position = connectionsPoints => {
+  const length = connectionsPoints.length
   switch (length) {
     case 1:
       return {
@@ -180,7 +182,8 @@ export const Position = length => {
           right: {
             x: NODE_TYPE.VNF.w,
             y: NODE_TYPE.VNF.h / 2,
-            isLink: false
+            isLink: false,
+            isManagement: connectionsPoints[0].isManagement || false
           }
         },
         array_link: ['right']
@@ -192,12 +195,14 @@ export const Position = length => {
           right: {
             x: NODE_TYPE.VNF.w,
             y: NODE_TYPE.VNF.h / 2,
-            isLink: false
+            isLink: false,
+            isManagement: connectionsPoints[0].isManagement || false
           },
           left: {
             x: 0,
             y: NODE_TYPE.VNF.h / 2,
-            isLink: false
+            isLink: false,
+            isManagement: connectionsPoints[1].isManagement || false
           }
         },
         array_link: ['right', 'left']
@@ -209,17 +214,20 @@ export const Position = length => {
           right: {
             x: NODE_TYPE.VNF.w,
             y: NODE_TYPE.VNF.h / 2,
-            isLink: false
+            isLink: false,
+            isManagement: connectionsPoints[0].isManagement || false
           },
           left: {
             x: 0,
             y: NODE_TYPE.VNF.h / 2,
-            isLink: false
+            isLink: false,
+            isManagement: connectionsPoints[1].isManagement || false
           },
           bottom: {
             x: NODE_TYPE.VNF.w / 2,
             y: NODE_TYPE.VNF.h,
-            isLink: false
+            isLink: false,
+            isManagement: connectionsPoints[2].isManagement || false
           }
         },
         array_link: ['right', 'left', 'bottom']
@@ -230,22 +238,26 @@ export const Position = length => {
           right: {
             x: NODE_TYPE.VNF.w,
             y: NODE_TYPE.VNF.h / 2,
-            isLink: false
+            isLink: false,
+            isManagement: connectionsPoints[0].isManagement || false
           },
           left: {
             x: 0,
             y: NODE_TYPE.VNF.h / 2,
-            isLink: false
+            isLink: false,
+            isManagement: connectionsPoints[1].isManagement || false
           },
           bottom: {
             x: NODE_TYPE.VNF.w / 2,
             y: NODE_TYPE.VNF.h,
-            isLink: false
+            isLink: false,
+            isManagement: connectionsPoints[2].isManagement || false
           },
           top: {
             x: NODE_TYPE.VNF.w / 2,
             y: 0,
-            isLink: false
+            isLink: false,
+            isManagement: connectionsPoints[3].isManagement || false
           }
         },
         array_link: ['right', 'left', 'bottom', 'top']

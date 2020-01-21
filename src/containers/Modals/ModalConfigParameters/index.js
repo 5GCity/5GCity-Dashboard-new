@@ -18,7 +18,6 @@ class ModalConfigParameters extends Component {
   render () {
     const { visibled, title, modalNodeConfigData, form } = this.props
     const { change, submit, configParams } = this.actions
-
     return (
       <Modal
         size={'small'}
@@ -31,19 +30,19 @@ class ModalConfigParameters extends Component {
           labelPosition={'top'}
         >
           <Modal.Body>
-          {form.mapping_expression && form.mapping_expression.array.map((map, index) =>
-            <Form.Item
-              key={index}
-              label={modalNodeConfigData.extra_info.parameter[index]}
-              required
-              status={!map.valid}
+            {form.mapping_expression && form.mapping_expression.array.map((map, index) =>
+              <Form.Item
+                key={index}
+                label={modalNodeConfigData.extra_info.parameter[index]}
+                required
+                status={!map.valid}
             >
-              <Input
+                <Input
                 value={map.value}
                 onChange={value => change('mapping_expression', value, index)}
               />
-              <Form.Error>{map.message}</Form.Error>
-            </Form.Item>
+                <Form.Error>{map.message}</Form.Error>
+              </Form.Item>
           )}
           </Modal.Body>
           <Modal.Footer>
