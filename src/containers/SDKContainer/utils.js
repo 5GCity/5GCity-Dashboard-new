@@ -84,17 +84,17 @@ export const findLinkById = (nodes, service) => {
           let findNode = false
           const findConnection = service.connectionPoints.find(connection_point_service => connection_point_service.name === name)
           if (findConnection && findConnection.cpType === 'INTERNAL') {
-          if (!findNode) {
-            arrayNodes && arrayNodes.forEach(node => {
-              if (node.type === 'vnf' && node.extra_info.componentIndex === findConnection.componentIndex) {
-                const arrayofConnectionPoints = node.connection_point
-                const findConnectionPointNode = arrayofConnectionPoints.find(point => point.id === findConnection.internalCpId)
-                if (findConnectionPointNode && !linkIsCreate && node.connections < node.initial_connections) {
-                  node.connections++
-                  findConnectionPointNode.isUsed = true
-                  if (!source) {
-                    const newIdLink = addNewLink()
-                    links.push({
+            if (!findNode) {
+              arrayNodes && arrayNodes.forEach(node => {
+                if (node.type === 'vnf' && node.extra_info.componentIndex === findConnection.componentIndex) {
+                  const arrayofConnectionPoints = node.connection_point
+                  const findConnectionPointNode = arrayofConnectionPoints.find(point => point.id === findConnection.internalCpId)
+                  if (findConnectionPointNode && !linkIsCreate && node.connections < node.initial_connections) {
+                    node.connections++
+                    findConnectionPointNode.isUsed = true
+                    if (!source) {
+                      const newIdLink = addNewLink()
+                      links.push({
                       id: newIdLink,
                       source: node,
                       target: null,
@@ -104,13 +104,13 @@ export const findLinkById = (nodes, service) => {
                       link_name: link_name,
                       connection_name_source: name
                     })
-                    findConnectionPointNode.link_id = newIdLink
-                    lastId = newIdLink
-                    source = true
-                    findNode = true
-                  } else {
-                    const linkTarget = links.find(link => link.id === lastId)
-                    if (linkTarget) {
+                      findConnectionPointNode.link_id = newIdLink
+                      lastId = newIdLink
+                      source = true
+                      findNode = true
+                    } else {
+                      const linkTarget = links.find(link => link.id === lastId)
+                      if (linkTarget) {
                       linkTarget.target = node
                       linkTarget.targetPosition = randomPosition(node)
                       linkTarget.connection_point_target_selected = findConnectionPointNode.requiredPort
@@ -128,96 +128,96 @@ export const findLinkById = (nodes, service) => {
                       linkIsCreate = true
                       findNode = true
                     }
+                    }
                   }
                 }
-              }
-            })
-          }
-        } else if (findConnection && findConnection.cpType === 'EXTERNAL') {
-          const externalNode = newExtrenalNode()
-          if (!source) {
-            const newIdLink = addNewLink()
-            links.push({
-              id: newIdLink,
-              source: externalNode,
-              target: null,
-              sourcePosition: 'left',
-              targetPosition: null,
-              confirm: true,
-              connection_point_source_selected: null,
-              link_name: link_name,
-              connection_name_source: name,
-              required_ports: findConnection.requiredPort
-            })
-            lastId = newIdLink
-            source = true
-          } else {
-            const findlink = links.find(link => link.id === lastId)
-            findlink.target = externalNode
-            findlink.targetPosition = 'left'
-            findlink.link_name = link_name
-            findlink.connection_name_target = name
-            findlink.required_ports = findConnection.requiredPort
-            findlink.connection_point_target_selected = null
-            findlink.source[findlink.sourcePosition].isLink = true
-            findlink.target[findlink.targetPosition].isLink = true
+              })
+            }
+          } else if (findConnection && findConnection.cpType === 'EXTERNAL') {
+            const externalNode = newExtrenalNode()
+            if (!source) {
+              const newIdLink = addNewLink()
+              links.push({
+                id: newIdLink,
+                source: externalNode,
+                target: null,
+                sourcePosition: 'left',
+                targetPosition: null,
+                confirm: true,
+                connection_point_source_selected: null,
+                link_name: link_name,
+                connection_name_source: name,
+                required_ports: findConnection.requiredPort
+              })
+              lastId = newIdLink
+              source = true
+            } else {
+              const findlink = links.find(link => link.id === lastId)
+              findlink.target = externalNode
+              findlink.targetPosition = 'left'
+              findlink.link_name = link_name
+              findlink.connection_name_target = name
+              findlink.required_ports = findConnection.requiredPort
+              findlink.connection_point_target_selected = null
+              findlink.source[findlink.sourcePosition].isLink = true
+              findlink.target[findlink.targetPosition].isLink = true
 
-            const changeNode = nodes.find(
+              const changeNode = nodes.find(
               node => node.id === findlink.source.id || node.id === findlink.target.id
             )
-            if (changeNode) {
-              changeNode[findlink.sourcePosition].isLink = true
+              if (changeNode) {
+                changeNode[findlink.sourcePosition].isLink = true
+              }
+              source = false
             }
-            source = false
+            arrayNodes.push(externalNode)
+          } else {
+            console.error('Error')
+            return {error: false, message: `Can not no find connection point to ${name}`}
           }
-          arrayNodes.push(externalNode)
-        } else {
-          console.error('Error')
-          return {error: false, message: `Can not no find connection point to ${name}`}
-        }
         })
         break
       case 1:
         link.connectionPointNames.forEach(name => {
           const findConnection = service.connectionPoints.find(connection_point_service => connection_point_service.name === name)
           if (findConnection) {
-          arrayNodes && arrayNodes.forEach(node => {
-          if (node.type === 'vnf') {
-            const findConnectionPointNode = node.connection_point.find(point => point.id === findConnection.internalCpId)
-            if (findConnectionPointNode) {
-              findConnectionPointNode.isUsed = true
-              const newIdLink = addNewLink()
-              const bridgeNode = newBridgeNode()
-              links.push({
-                id: newIdLink,
-                source: node,
-                target: bridgeNode,
-                sourcePosition: randomPosition(node),
-                targetPosition: 'right',
-                confirm: true,
-                connection_point_source_selected: findConnectionPointNode.requiredPort,
-                link_name: link_name,
-                connection_name_source: name
-              })
-              const linkTarget = links.find(link => link.id === newIdLink)
-              linkTarget.connection_point_target_selected = null
-              linkTarget.link_name = link_name
-              linkTarget.connection_name_target = name
-              linkTarget.source[linkTarget.sourcePosition].isLink = true
-              linkTarget.target[linkTarget.targetPosition].isLink = true
+            arrayNodes && arrayNodes.forEach(node => {
+              if (node.type === 'vnf') {
+                const findConnectionPointNode = node.connection_point.find(point => point.id === findConnection.internalCpId)
+                if (findConnectionPointNode) {
+                  findConnectionPointNode.isUsed = true
+                  const newIdLink = addNewLink()
+                  const bridgeNode = newBridgeNode()
+                  links.push({
+                    id: newIdLink,
+                    source: node,
+                    target: bridgeNode,
+                    sourcePosition: randomPosition(node),
+                    targetPosition: 'right',
+                    confirm: true,
+                    connection_point_source_selected: findConnectionPointNode.requiredPort,
+                    link_name: link_name,
+                    connection_name_source: name
+                  })
+                  const linkTarget = links.find(link => link.id === newIdLink)
+                  linkTarget.connection_point_target_selected = null
+                  linkTarget.link_name = link_name
+                  linkTarget.connection_name_target = name
+                  linkTarget.source[linkTarget.sourcePosition].isLink = true
+                  linkTarget.target[linkTarget.targetPosition].isLink = true
 
-              const changeNode = nodes.find(node => node.id === linkTarget.source.id || node.id === linkTarget.target.id)
+                  const changeNode = nodes.find(node => node.id === linkTarget.source.id || node.id === linkTarget.target.id)
 
-              if (changeNode) {
-                changeNode[linkTarget.sourcePosition].isLink = true
+                  if (changeNode) {
+                    changeNode[linkTarget.sourcePosition].isLink = true
+                  }
+                  arrayNodes.push(bridgeNode)
+                  source = false
+                  findConnectionPointNode.link_id = linkTarget.id
+                }
               }
-              arrayNodes.push(bridgeNode)
-              source = false
-              findConnectionPointNode.link_id = linkTarget.id
-            }
+            })
           }
-        })
-        }
         })
         break
       default:
@@ -227,49 +227,50 @@ export const findLinkById = (nodes, service) => {
           connection_point_service => connection_point_service.name === name
         )
           if (findConnection && findConnection.cpType === 'INTERNAL') {
-          arrayNodes && arrayNodes.forEach(node => {
-            if (node.type === 'vnf') {
-              const findConnectionPointNode = node.connection_point.find(point =>
+            arrayNodes && arrayNodes.forEach(node => {
+              if (node.type === 'vnf') {
+                const findConnectionPointNode = node.connection_point.find(point =>
               point.id === findConnection.internalCpId)
-              if (findConnectionPointNode) {
-                if (node.type === 'vnf') {
-                  const newIdLink = addNewLink()
-                  links.push({
-                    id: newIdLink,
-                    source: node,
-                    target: newVirtualSwitch,
-                    sourcePosition: randomPosition(node),
-                    connection_point_source_selected: findConnectionPointNode.requiredPort,
-                    confirm: true,
-                    targetPosition: 'right',
-                    link_name: link_name,
-                    virtual_switch: true,
-                    connection_name_source: name
-                  })
-                  findConnectionPointNode.link_id = newIdLink
-                  findConnectionPointNode.isUsed = true
-                  const findLink = links.find(link => link.id === newIdLink)
-                  node[findLink.sourcePosition].isLink = true
+                if (findConnectionPointNode) {
+                  if (node.type === 'vnf') {
+                    const newIdLink = addNewLink()
+                    links.push({
+                      id: newIdLink,
+                      source: node,
+                      target: newVirtualSwitch,
+                      sourcePosition: randomPosition(node),
+                      connection_point_source_selected: findConnectionPointNode.requiredPort,
+                      confirm: true,
+                      targetPosition: 'right',
+                      link_name: link_name,
+                      virtual_switch: true,
+                      connection_name_source: name
+                    })
+                    findConnectionPointNode.link_id = newIdLink
+                    findConnectionPointNode.isUsed = true
+                    const findLink = links.find(link => link.id === newIdLink)
+                    node[findLink.sourcePosition].isLink = true
+                  }
                 }
               }
-            }
-          })
-        } else if (findConnection && findConnection.cpType === 'EXTERNAL') {
-          const newIdLink = addNewLink()
-          const externalNode = newExtrenalNode()
-          links.push({
-            id: newIdLink,
-            source: externalNode,
-            target: newVirtualSwitch,
-            sourcePosition: 'left',
-            targetPosition: 'right',
-            confirm: true,
-            link_name: link_name,
-            virtual_switch: true
-          })
-          const findLink = links.find(link => link.id === newIdLink)
-          node[findLink.sourcePosition].isLink = true
-        }
+            })
+          } else if (findConnection && findConnection.cpType === 'EXTERNAL') {
+            const newIdLink = addNewLink()
+            const externalNode = newExtrenalNode()
+            links.push({
+              id: newIdLink,
+              source: externalNode,
+              target: newVirtualSwitch,
+              sourcePosition: 'left',
+              targetPosition: 'right',
+              confirm: true,
+              link_name: link_name,
+              virtual_switch: true
+            })
+            const findLink = links.find(link => link.id === newIdLink)
+            externalNode[findLink.sourcePosition].isLink = true
+            arrayNodes.push(externalNode)
+          }
         })
         arrayNodes.push(newVirtualSwitch)
         break
@@ -309,13 +310,13 @@ export const transformToD3Object = (service, catalogue) => {
     const match = existCatalogue.find(catalogueItem => catalogueItem.id === dataService.componentId)
     if (match) {
       if (match.vnfdId) {
-       const mapping_expression = dataService.mappingExpressions
-       const componentIndex = dataService.componentIndex
-       const initialServiceConnections = service.connectionPoints.filter(point => point.componentIndex === componentIndex).length
-       createNodeD3.push(cloneDeep(newVNFNode(match, mapping_expression, componentIndex, initialServiceConnections)))
-     } else {
-       createNodeD3.push({...match, type: 'vnf'})
-     }
+        const mapping_expression = dataService.mappingExpressions
+        const componentIndex = dataService.componentIndex
+        const initialServiceConnections = service.connectionPoints.filter(point => point.componentIndex === componentIndex).length
+        createNodeD3.push(cloneDeep(newVNFNode(match, mapping_expression, componentIndex, initialServiceConnections)))
+      } else {
+        createNodeD3.push({...match, type: 'vnf'})
+      }
     }
   })
   return findLinkById(createNodeD3, service)
@@ -567,16 +568,15 @@ export const transformToJSON = (service, d3Data) => {
     switch (item.source.type) {
       case 'vnf':
         const findCP = item.source.connection_point.find(connection => connection.link_id === item.id)
-        if (findCP)
-          { 
-connection_point.push({
+        if (findCP) {
+          connection_point.push({
             internalCpId: findCP.id,
             name: item.connection_name_source,
             requiredPort: item.required_ports,
             cpType: 'INTERNAL', // findCP.cpType,
             componentIndex: nodeId(item.source)
-          }) 
-}
+          })
+        }
         verifyLink(item, object, 'source', 'vnf')
         break
       case 'external':
@@ -603,16 +603,15 @@ connection_point.push({
         break
       case 'vnf':
         const findCP = item.target.connection_point.find(connection => connection.link_id === item.id)
-        if (findCP)
-          { 
-connection_point.push({
+        if (findCP) {
+          connection_point.push({
             internalCpId: findCP.id,
             name: item.connection_name_target,
             requiredPort: item.required_ports,
             cpType: 'INTERNAL',
             componentIndex: nodeId(item.target)
-          }) 
-}
+          })
+        }
         verifyLink(item, object, 'target', 'vnf')
         break
 
@@ -647,23 +646,22 @@ export const changeNode = (nodeSelect, d3Data) => {
 }
 
 const verifyMappingExpression = (node, object) => {
-  if (node.extra_info.parameter)
-    { 
-if (node.extra_info.parameter.length > 0) {
+  if (node.extra_info.parameter) {
+    if (node.extra_info.parameter.length > 0) {
       node.mapping_expression.forEach(mapping => {
-      if (typeof (mapping) !== 'string') {
-        object.invalid = true
-        object.errors.push({
-          id: idError++,
-          type: 'danger',
-          title: 'Error',
-          location: node.extra_info.name,
-          description: 'Please input configure paramaters'
-        })
-      }
-    })
-    } 
-}
+        if (typeof (mapping) !== 'string') {
+          object.invalid = true
+          object.errors.push({
+            id: idError++,
+            type: 'danger',
+            title: 'Error',
+            location: node.extra_info.name,
+            description: 'Please input configure paramaters'
+          })
+        }
+      })
+    }
+  }
 }
 
 const verifyLink = (link, object, source, type) => {
@@ -671,91 +669,91 @@ const verifyLink = (link, object, source, type) => {
   if (typeof (link.link_name) !== 'string') {
     object.invalid = true
     object.errors.push({
-        id: idError++,
-        type: 'danger',
-        title: 'Error',
-        location: 'Link',
-        description: 'Please input name on link'
-      })
+      id: idError++,
+      type: 'danger',
+      title: 'Error',
+      location: 'Link',
+      description: 'Please input name on link'
+    })
   }
 
   if (type === 'vnf' && source === 'source') {
     const node_name = link.source.extra_info.name
       // Verify connection Name source
     if (typeof (link.connection_name_source) !== 'string') {
-        object.invalid = true
-        object.errors.push({
-          id: idError++,
-          type: 'danger',
-          title: 'Error',
-          location: node_name,
-          description: 'Please input connection name'
-        })
-      }
+      object.invalid = true
+      object.errors.push({
+        id: idError++,
+        type: 'danger',
+        title: 'Error',
+        location: node_name,
+        description: 'Please input connection name'
+      })
+    }
       // Verify connection Point source
     if (!Array.isArray(link.connection_point_source_selected)) {
-        object.invalid = true
-        object.errors.push({
-          id: idError++,
-          type: 'danger',
-          title: 'Error',
-          location: node_name,
-          description: 'Please input connection point'
-        })
-      }
+      object.invalid = true
+      object.errors.push({
+        id: idError++,
+        type: 'danger',
+        title: 'Error',
+        location: node_name,
+        description: 'Please input connection point'
+      })
+    }
   }
   if (type === 'external' && source === 'source') {
     const node_name = 'External'
       // Verify connection Point source
     if (typeof (link.connection_name_source) !== 'string') {
-        object.invalid = true
-        object.errors.push({
-          id: idError++,
-          type: 'danger',
-          title: 'Error',
-          location: node_name,
-          description: 'Please input name on link'
-        })
-      }
+      object.invalid = true
+      object.errors.push({
+        id: idError++,
+        type: 'danger',
+        title: 'Error',
+        location: node_name,
+        description: 'Please input name on link'
+      })
+    }
   }
     // Verify connection Name target
   if (type === 'vnf' && source === 'target') {
     const node_name = link.target.extra_info.name
     if (typeof (link.connection_name_target) !== 'string') {
-        object.invalid = true
-        object.errors.push({
-          id: idError++,
-          type: 'danger',
-          title: 'Error',
-          location: node_name,
-          description: 'Please input connection name'
-        })
-      }
+      object.invalid = true
+      object.errors.push({
+        id: idError++,
+        type: 'danger',
+        title: 'Error',
+        location: node_name,
+        description: 'Please input connection name'
+      })
+    }
       // Verify connection Point target
     if (!Array.isArray(link.connection_point_target_selected)) {
-        object.invalid = true
-        object.errors.push({
-          id: idError++,
-          type: 'danger',
-          title: 'Error',
-          location: node_name,
-          description: 'Please input connection point'
-        })
-      }
+      object.invalid = true
+      object.errors.push({
+        id: idError++,
+        type: 'danger',
+        title: 'Error',
+        location: node_name,
+        description: 'Please input connection point'
+      })
+    }
   }
   if (type === 'external' && source === 'target') {
     const node_name = 'External'
         // Verify connection Name target
     if (typeof (link.connection_name_target) !== 'string') {
-        object.invalid = true
-        object.errors.push({
-          id: idError++,
-          type: 'danger',
-          title: 'Error',
-          location: node_name,
-          description: 'Please input name on link'
-        })
-      }
+      object.invalid = true
+      object.errors.push({
+        id: idError++,
+        type: 'danger',
+        title: 'Error',
+        location: node_name,
+        description: 'Please input name on link'
+      })
+    }
   }
 }
 

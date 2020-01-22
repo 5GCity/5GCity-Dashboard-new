@@ -1,4 +1,4 @@
-export const API_BASE_URL = `https://5g-dashboard.i2cat.net`
+export const API_BASE_URL = `${process.env.API_BASE_URL}`
 export const API_SDK = `${process.env.API_BASE_URL}/gw/sdkapi`
 export const API_SLICE_MANAGEMENT = `${process.env.API_BASE_URL}/gw/slicemanagerapi`
 export const API_ALERTS = `${process.env.API_BASE_URL}/gw/5gcityalertapi`
