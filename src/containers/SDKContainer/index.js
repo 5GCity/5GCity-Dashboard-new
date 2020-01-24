@@ -44,7 +44,6 @@ class SDKContainer extends Component {
       modalNodeConfigData,
       isPublishLoading,
       isSaved,
-      isPublish,
       isSaveLoading,
       modalPublishStatus,
       errorsMessages,
@@ -97,8 +96,8 @@ class SDKContainer extends Component {
             />
               <Button
                 key={2}
-                type={isPublish ? 'primary' : 'secondary'}
-                text={isPublish ? 'Publish' : 'Unpublished'}
+                type={'primary'}
+                text={'Publish'}
                 loading={isPublishLoading}
                 svg={<PublishIcon />}
                 onClick={() => publishComposer()}

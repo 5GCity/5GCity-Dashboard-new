@@ -15,13 +15,13 @@ import Input from 'components/Input'
 import Form from 'components/Form'
 import Select from 'components/Select'
 import Button from 'components/Button'
-import { DeleteIcon, PlusIcon, PlayIcon } from 'components/Icons'
+import { DeleteIcon, PlusIcon } from 'components/Icons'
 import { LICENSE_TYPE, ACCESS_LEVEL } from './utils'
 
 class FormBasicSettings extends Component {
   render () {
     const { dataForm, setValue, removeParameter, addParameter,
-      setValueParameters, isSubmitting, submit, organizations } = this.props
+      setValueParameters, organizations } = this.props
     const {
       service_name,
       service_organization,
@@ -43,8 +43,8 @@ class FormBasicSettings extends Component {
               onChange={value => setValue({service_name: value})}
               />
             <Form.Error>{service_name.message}</Form.Error>
-            </Form.Item>
-            <Form.Item label={'Repository name'} required status={!service_organization.valid}>
+          </Form.Item>
+          <Form.Item label={'Repository name'} required status={!service_organization.valid}>
             <Select
               placeholder={'Repository'}
               type={'default'}
@@ -126,15 +126,7 @@ class FormBasicSettings extends Component {
             svg={<PlusIcon />}
             type={'primary'}
             onClick={() => addParameter()}
-                />
-          <Button
-            type={'primary'}
-            svg={<PlayIcon />}
-            text={'Validate'}
-            float={'right'}
-            disabled={isSubmitting}
-            onClick={submit}
-        />
+          />
         </Form>
       </Wrapper>
     )
@@ -144,7 +136,8 @@ class FormBasicSettings extends Component {
 export default Logic(FormBasicSettings)
 
 const Wrapper = styled.div`
-  width: 640px;
+  min-width: 640px;
+  margin-bottom: 10px;
 `
 
 const SubTitle = styled.p`

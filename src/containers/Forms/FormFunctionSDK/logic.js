@@ -197,11 +197,11 @@ export default kea({
             case 400:
               Message({
                 showClose: false,
-                message: error.response.data,
+                message: error.response.data || error.response.error,
                 type: 'error'
               })
               break
-              case 409:
+            case 409:
               Message({
                 showClose: false,
                 message: error.response.data,

@@ -2,7 +2,6 @@
  * SDKFunctions Container Logic
  * Please write a description
  *
- * @author Your Name <youremail@ubiwhere.com>
  */
 
 import { kea } from 'kea'

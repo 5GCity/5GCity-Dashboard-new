@@ -10,12 +10,11 @@ import { put } from 'redux-saga/effects'
 
 import PropTypes from 'prop-types'
 import * as Check from 'validations'
-import { AddNewParameter, STEPS } from './utils'
+import { AddNewParameter, STEPS, VerifyArray } from './utils'
 import cloneDeep from 'lodash/cloneDeep'
 
 /* Logic */
 import SDKContainerLogic from 'containers/SDKContainer/logic'
-import PageTitleOrganizationLogic from 'containers/PageTitleOrganization/logic'
 
 const DEFAULT_FORM = {
   service_name: {
@@ -41,6 +40,18 @@ const DEFAULT_FORM = {
   },
   service_parameter: {
     array: []
+  },
+  service_ext_monitoring: {
+    value: null
+  },
+  service_int_monitoring: {
+    value: null
+  },
+  service_actions: {
+    value: null
+  },
+  service_action_rules: {
+    value: null
   }
 }
 
@@ -48,7 +59,7 @@ const VALIDATIONS = {
   service_name: [
     Check.isRequired
   ],
-  service_organization:[
+  service_organization: [
     Check.isRequired
   ],
   service_access_level: [
@@ -67,8 +78,11 @@ const VALIDATIONS = {
   service_license_url: [
     Check.isRequired
   ],
-  service_parameter: [
-  ]
+  service_parameter: [],
+  service_ext_monitoring: [],
+  service_int_monitoring: [],
+  service_actions: [],
+  service_action_rules: []
 }
 
 export default kea({
@@ -81,14 +95,11 @@ export default kea({
         'changeSaveStatus',
         'setServiceInfo',
         'resetService'
-      ],
+      ]
     ],
     props: [
-      PageTitleOrganizationLogic, [
-        'organizations'
-      ],
       SDKContainerLogic, [
-       'serviceInfo'
+        'serviceInfo'
       ]
     ]
   },
@@ -101,6 +112,16 @@ export default kea({
     addParameter: (index) => ({ index }),
     removeParameter: (index) => ({ index }),
 
+    nextStep: () => ({}),
+    prevStep: () => ({}),
+    changeStep: (number) => ({ number }),
+
+    activeStep: (steps) => ({ steps }),
+
+    ChangepreviousBtn: (status) => ({ status }),
+
+    setButtonLogin: (status) => ({ status }),
+
     change: (field) => ({ field }),
     setForm: (form) => ({ form }),
     changeForm: (form) => ({ form }),
@@ -108,6 +129,22 @@ export default kea({
   }),
 
   reducers: ({ actions }) => ({
+    currentStep: [1, PropTypes.number, {
+      [actions.changeStep]: (state, payload) => payload.number,
+      [actions.reset]: () => 1
+    }],
+    steps: [STEPS, PropTypes.array, {
+      [actions.activeStep]: (state, payload) => payload.steps,
+      [actions.reset]: () => STEPS
+    }],
+    previousButton: [true, PropTypes.bool, {
+      [actions.ChangepreviousBtn]: (state, payload) => payload.status,
+      [actions.reset]: () => true
+    }],
+    buttonSubmit: [false, PropTypes.bool, {
+      [actions.setButtonLogin]: (state, payload) => payload.status,
+      [actions.reset]: () => false
+    }],
     form: [DEFAULT_FORM, PropTypes.object, {
       [actions.change]: (state, payload) => Check.setAndCheckValidation(state, payload, VALIDATIONS),
       [actions.setForm]: (state, payload) => Check.checkValidation(payload.form, VALIDATIONS).form,
@@ -134,11 +171,7 @@ export default kea({
       [actions.error]: () => false,
       [actions.response]: () => false,
       [actions.reset]: () => false
-    }],
-    steps: [STEPS, PropTypes.array, {
-      // [actions.activeStep]: (state, payload) => payload.steps,
-      [actions.reset]: () => STEPS,
-    }],
+    }]
   }),
 
   stop: function * () {
@@ -148,44 +181,98 @@ export default kea({
 
   takeLatest: ({ actions, workers }) => ({
     [actions.setServiceInfo]: workers.getServiceInfo,
-    [actions.submit]: workers.submit
+    [actions.submit]: workers.submit,
+    [actions.nextStep]: workers.nextStep,
+    [actions.prevStep]: workers.prevStep
   }),
 
   workers: {
-    * getServiceInfo () {
-      try{
-      const { changeForm } = this.actions
-      const form = yield this.get('serviceInfo')
-      if(form){
-        const setDefaultValues = cloneDeep(DEFAULT_FORM)
-        // Verify if service has parameters key
-        if (form.parameters) {
-          setDefaultValues.service_name.value = form.name
-          setDefaultValues.service_organization.value = form.sliceId
-          setDefaultValues.service_access_level.value =  form.accessLevel === null ? form.accessLevel : form.accessLevel.toString()
-          setDefaultValues.service_designer.value = form.designer
-          setDefaultValues.service_version.value = form.version
-          setDefaultValues.service_license_type.value = form.license.type
-          setDefaultValues.service_license_url.value = form.license.url
-          setDefaultValues.service_parameter.array = form.parameters
-        } else {
-          setDefaultValues.service_name.value = form.name
-          setDefaultValues.service_organization.value = form.sliceId
-          setDefaultValues.service_access_level.value =  form.accessLevel === null ? form.accessLevel : form.accessLevel.toString()
-          setDefaultValues.service_designer.value = form.designer
-          setDefaultValues.service_version.value = form.version
-          setDefaultValues.service_license_type.value = form.license.type
-          setDefaultValues.service_license_url.value = form.license.url
-          setDefaultValues.service_parameter.array = setDefaultValues.service_parameter.array
-        }
+    * nextStep () {
+      const { changeStep, setButtonLogin, ChangepreviousBtn, activeStep } = this.actions
+      const currentStep = yield this.get('currentStep')
+      const stepLength = STEPS.length
+      let newStep = currentStep
+      if (currentStep < stepLength) {
+        yield (put(changeStep(newStep++)))
+        yield (put(ChangepreviousBtn(false)))
+        const newSteps = STEPS
+        newSteps.forEach(step => {
+          if (step.id === newStep) {
+            step.active = true
+          } else {
+            step.active = false
+          }
+        })
+        yield (put(activeStep(newSteps)))
+      }
+      if (currentStep === stepLength) {
+        // add Button submit
+        yield (put(setButtonLogin(true)))
+      }
 
-      const validForm = Check.checkValidation(setDefaultValues, VALIDATIONS).form
-      yield put(changeForm(validForm))
-    }
-  }catch (e) {
-    console.log(e)
-  }
+      yield (put(changeStep(newStep)))
     },
+
+    * prevStep () {
+      const { changeStep, setButtonLogin, ChangepreviousBtn, activeStep } = this.actions
+      const currentStep = yield this.get('currentStep')
+      const stepLength = STEPS.length
+      let newStep = currentStep
+      if (currentStep <= stepLength) {
+        yield (put(changeStep(newStep--)))
+        const newSteps = STEPS
+        newSteps.forEach(step => {
+          if (step.id === newStep) {
+            step.active = true
+          } else {
+            step.active = false
+          }
+        })
+        yield (put(activeStep(newSteps)))
+      }
+      if (newStep !== stepLength) {
+          // remove Button submit
+        yield (put(setButtonLogin(false)))
+      }
+      if (newStep === 1) {
+        yield (put(ChangepreviousBtn(true)))
+      }
+
+      yield (put(changeStep(newStep)))
+    },
+
+    * getServiceInfo () {
+      try {
+        const { changeForm } = this.actions
+        const form = yield this.get('serviceInfo')
+        if (form) {
+          const setDefaultValues = cloneDeep(DEFAULT_FORM)
+        // Verify if service has parameters key
+          if (form.parameters) {
+            setDefaultValues.service_parameter.array = form.parameters
+          } else {
+            setDefaultValues.service_parameter.array = setDefaultValues.service_parameter.array
+          }
+          setDefaultValues.service_name.value = form.name
+          setDefaultValues.service_organization.value = form.sliceId
+          setDefaultValues.service_access_level.value = form.accessLevel === null ? form.accessLevel : form.accessLevel.toString()
+          setDefaultValues.service_designer.value = form.designer
+          setDefaultValues.service_version.value = form.version
+          setDefaultValues.service_license_type.value = form.license.type
+          setDefaultValues.service_license_url.value = form.license.url
+          setDefaultValues.service_ext_monitoring.value = VerifyArray(form.intMonitoringParameters)
+          setDefaultValues.service_int_monitoring.value = VerifyArray(form.extMonitoringParameters)
+          setDefaultValues.service_actions.value = VerifyArray(form.actions)
+          setDefaultValues.service_action_rules.value = VerifyArray(form.actionRules)
+
+          const validForm = Check.checkValidation(setDefaultValues, VALIDATIONS).form
+          yield put(changeForm(validForm))
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    },
+
     * submit (action) {
       const {
         error,
@@ -203,6 +290,10 @@ export default kea({
       service.version = form.service_version.value
       service.license.type = form.service_license_type.value
       service.license.url = form.service_license_url.value
+      service.extMonitoringParameters = JSON.parse(form.service_ext_monitoring.value) || []
+      service.intMonitoringParameters = JSON.parse(form.service_int_monitoring.value) || []
+      service.actions = JSON.parse(form.service_actions.value) || []
+      service.actionRules = JSON.parse(form.service_action_rules.value) || []
       const newArrayParameters = []
       form.service_parameter.array.length > 0 && form.service_parameter.array.forEach(element => {
         newArrayParameters.push(element.value)

@@ -64,6 +64,18 @@ const ModalPublish = (props) => (
   </Modal>
 )
 
+const ModalUnPublish = (props) => (
+  <Modal size={'tiny'} showClose onCancel={() => props.actionModalUnPublish()} title={'Unpublish'} visible={props.modalVisibledUnPublish}>
+    <Modal.Body>
+      {props.functionSelect && <Title>Are you sure you want to unpublish function {props.functionSelect.name} ?</Title>}
+    </Modal.Body>
+    <Modal.Footer>
+      <Button text={'Yes'} svg={<CheckIcon />} type={'primary'} onClick={() => props.unPublishFunction(props.functionSelect.id)} />
+      <Button text={'No'} svg={<CloseIcon />} type={'secondary'} onClick={() => props.actionModalUnPublish()} />
+    </Modal.Footer>
+  </Modal>
+)
+
 class ListSDKFunctions extends Component {
   navigate = (path) => {
     const { history } = this.props
@@ -80,7 +92,8 @@ class ListSDKFunctions extends Component {
       modalVisibledPublish,
       modalErrorVisibled,
       modalErrorMessage,
-      usersView
+      usersView,
+      modalVisibledUnPublish
     } = this.props
     const {
       actionModalDelete,
@@ -88,7 +101,9 @@ class ListSDKFunctions extends Component {
       deleteFunction,
       selectFunc,
       actionModalError,
-      publishFunction
+      actionModalUnPublish,
+      publishFunction,
+      unPublishFunction
     } = this.actions
     return (
       <Wrapper>
@@ -103,6 +118,12 @@ class ListSDKFunctions extends Component {
           modalVisibledPublish={modalVisibledPublish}
           actionModalPublish={actionModalPublish}
           publishFunction={publishFunction}
+        />
+        <ModalUnPublish
+          functionSelect={functionSelect}
+          modalVisibledUnPublish={modalVisibledUnPublish}
+          actionModalUnPublish={actionModalUnPublish}
+          unPublishFunction={unPublishFunction}
         />
         {functions && !noData &&
         <List>
@@ -139,19 +160,27 @@ class ListSDKFunctions extends Component {
                     text={'Publish'}
                   />
                   : null}
+                  {func.status === 'COMMITTED'
+                  ? <Button
+                    type={'secondary'}
+                    svg={<PublishIcon />}
+                    onClick={() => selectFunc(func, 'unPublish')}
+                    text={'Unpublish'}
+                  />
+                  : null}
                   {usersView &&
                   <Fragment>
-                  <Button
-                    type={'secondary'}
-                    svg={<DeleteIcon />}
-                    onClick={() => selectFunc(func, 'delete')}
-                    text={'Delete'}
+                    <Button
+                      type={'secondary'}
+                      svg={<DeleteIcon />}
+                      onClick={() => selectFunc(func, 'delete')}
+                      text={'Delete'}
                   />
-                  <Button
-                    type={'primary'}
-                    svg={<EditIcon />}
-                    onClick={() => this.navigate(`/sdk/function/${func.id}`)}
-                    text={'Edit'}
+                    <Button
+                      type={'primary'}
+                      svg={<EditIcon />}
+                      onClick={() => this.navigate(`/sdk/function/${func.id}`)}
+                      text={'Edit'}
                   />
                   </Fragment>
                 }

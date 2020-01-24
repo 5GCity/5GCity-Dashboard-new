@@ -106,10 +106,6 @@ export default kea({
     isPublishLoading: [false, PropTypes.bool, {
       [actions.activeLoadingPublish]: (state, payload) => !state
     }],
-    isPublish: [true, PropTypes.bool, {
-      [actions.changePublishStatus]: (state, payload) => false,
-      [actions.changeConfigParams]: (state, payload) => false
-    }],
     isSaved: [true, PropTypes.bool, {
       [actions.changePublishStatus]: (state, payload) => false,
       [actions.changeConfigParams]: (state, payload) => false,

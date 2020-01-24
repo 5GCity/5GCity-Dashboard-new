@@ -35,12 +35,12 @@ class Function extends Component {
         <WrapperStep>
           <Step>
             {steps.map(step =>
-            <Step
-              key={step.id}
-              step={step.id}
-              description={step.description}
-              active={step.active}
-            />
+              <Step
+                key={step.id}
+                step={step.id}
+                description={step.description}
+                active={step.active}
+              />
             )}
           </Step>
         </WrapperStep>

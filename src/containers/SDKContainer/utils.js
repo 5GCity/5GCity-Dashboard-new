@@ -2,7 +2,6 @@
  * sdk Container Utils
  * Please write a description
  *
- * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
 
 import {
@@ -95,15 +94,15 @@ export const findLinkById = (nodes, service) => {
                     if (!source) {
                       const newIdLink = addNewLink()
                       links.push({
-                      id: newIdLink,
-                      source: node,
-                      target: null,
-                      sourcePosition: randomPosition(node),
-                      confirm: true,
-                      connection_point_source_selected: findConnectionPointNode.requiredPort,
-                      link_name: link_name,
-                      connection_name_source: name
-                    })
+                        id: newIdLink,
+                        source: node,
+                        target: null,
+                        sourcePosition: randomPosition(node),
+                        confirm: true,
+                        connection_point_source_selected: findConnectionPointNode.requiredPort,
+                        link_name: link_name,
+                        connection_name_source: name
+                      })
                       findConnectionPointNode.link_id = newIdLink
                       lastId = newIdLink
                       source = true
@@ -111,23 +110,23 @@ export const findLinkById = (nodes, service) => {
                     } else {
                       const linkTarget = links.find(link => link.id === lastId)
                       if (linkTarget) {
-                      linkTarget.target = node
-                      linkTarget.targetPosition = randomPosition(node)
-                      linkTarget.connection_point_target_selected = findConnectionPointNode.requiredPort
-                      linkTarget.source[linkTarget.sourcePosition].isLink = true
-                      linkTarget.target[linkTarget.targetPosition].isLink = true
-                      linkTarget.connection_name_target = name
-                      source = false
-                      const changeNode = nodes.find(
+                        linkTarget.target = node
+                        linkTarget.targetPosition = randomPosition(node)
+                        linkTarget.connection_point_target_selected = findConnectionPointNode.requiredPort
+                        linkTarget.source[linkTarget.sourcePosition].isLink = true
+                        linkTarget.target[linkTarget.targetPosition].isLink = true
+                        linkTarget.connection_name_target = name
+                        source = false
+                        const changeNode = nodes.find(
                         node => node.id === linkTarget.source.id || node.id === linkTarget.target.id
                       )
-                      if (changeNode) {
-                        changeNode[linkTarget.targetPosition].isLink = true
+                        if (changeNode) {
+                          changeNode[linkTarget.targetPosition].isLink = true
+                        }
+                        findConnectionPointNode.link_id = linkTarget.id
+                        linkIsCreate = true
+                        findNode = true
                       }
-                      findConnectionPointNode.link_id = linkTarget.id
-                      linkIsCreate = true
-                      findNode = true
-                    }
                     }
                   }
                 }
@@ -261,6 +260,10 @@ export const findLinkById = (nodes, service) => {
               id: newIdLink,
               source: externalNode,
               target: newVirtualSwitch,
+              connection_name_source: findConnection.name || null,
+              required_ports: findConnection.requiredPort || [],
+              connection_point_source_selected: 'left',
+              connection_point_target_selected: 'right',
               sourcePosition: 'left',
               targetPosition: 'right',
               confirm: true,

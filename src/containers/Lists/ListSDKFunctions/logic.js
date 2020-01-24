@@ -27,8 +27,8 @@ export default kea({
       ],
       PageTitleOrganizationLogic, [
         'changeOrganization',
-        'setOrganizations',
-      ],
+        'setOrganizations'
+      ]
     ],
     props: [
       AppLogic, [
@@ -60,8 +60,10 @@ export default kea({
     reset: () => ({}),
 
     publishFunction: (id) => ({ id }),
+    unPublishFunction: (id) => ({ id }),
 
-    actionModalPublish: () => ({})
+    actionModalPublish: () => ({}),
+    actionModalUnPublish: () => ({})
   }),
 
   reducers: ({ actions }) => ({
@@ -81,6 +83,10 @@ export default kea({
       [actions.actionModalPublish]: (state, payload) => !state,
       [actions.selectFunc]: (state, payload) => payload.type === 'publish' && !state
     }],
+    modalVisibledUnPublish: [false, PropTypes.bool, {
+      [actions.actionModalUnPublish]: (state, payload) => !state,
+      [actions.selectFunc]: (state, payload) => payload.type === 'unPublish' && !state
+    }],
     modalErrorMessage: [null, PropTypes.string, {
       [actions.setMessageError]: (state, payload) => payload.error,
       [actions.reset]: () => null
@@ -98,14 +104,14 @@ export default kea({
       [actions.removeNoData]: () => false,
       [actions.setFunctions]: () => false,
       [actions.reset]: () => false,
-      [actions.fetchFunctions]: () => false,
-    }],
+      [actions.fetchFunctions]: () => false
+    }]
   }),
 
   selectors: ({ selectors }) => ({
-    usersView : [
+    usersView: [
       () => [selectors.userName],
-      (userName) => userName.toLowerCase() === 'admin admin' ? true : false,
+      (userName) => userName.toLowerCase() === 'admin admin',
       PropTypes.bool
     ]
   }),
@@ -121,7 +127,8 @@ export default kea({
     [actions.setOrganizations]: workers.fetchFunctions,
     [actions.fetchFunctions]: workers.fetchFunctions,
     [actions.deleteFunction]: workers.deleteFunction,
-    [actions.publishFunction]: workers.publishFunction
+    [actions.publishFunction]: workers.publishFunction,
+    [actions.unPublishFunction]: workers.unPublishFunction
   }),
 
   workers: {
@@ -130,17 +137,17 @@ export default kea({
       const selectOrganization = yield this.get('selectOrganization')
       yield put(addLoadingPage())
       try {
-        if(selectOrganization){
-        let responseResult = yield call(axios.get, `${API_SDK}/sdk/functions/?sliceId=${selectOrganization}`)
-        const { data } = responseResult
-        if (data.length > 0) {
-          yield put(setFunctions(data))
+        if (selectOrganization) {
+          let responseResult = yield call(axios.get, `${API_SDK}/sdk/functions/?sliceId=${selectOrganization}`)
+          const { data } = responseResult
+          if (data.length > 0) {
+            yield put(setFunctions(data))
+          } else {
+            yield put(setNoData())
+          }
         } else {
           yield put(setNoData())
         }
-      } else {
-        yield put(setNoData())
-      }
         yield put(removeLoadingPage())
       } catch (error) {
         if (error.response) {
@@ -210,6 +217,30 @@ export default kea({
             break
         }
         yield put(actionModalPublish())
+        yield put(actionModalError())
+      }
+    },
+
+    * unPublishFunction (action) {
+      const { fetchFunctions, actionModalUnPublish, setMessageError, actionModalError } = this.actions
+      const id = action.payload.id
+      try {
+        yield call(axios.post, `${API_SDK}/sdk/functions/${id}/unpublish`)
+        yield put(actionModalUnPublish())
+        yield put(fetchFunctions())
+      } catch (error) {
+        switch (error.response.status) {
+          case 400:
+            yield put(setMessageError(error.response.data))
+            break
+          case 403:
+            yield put(setMessageError(error.response.data))
+            break
+          default:
+            yield put(setMessageError('Error'))
+            break
+        }
+        yield put(actionModalUnPublish())
         yield put(actionModalError())
       }
     }

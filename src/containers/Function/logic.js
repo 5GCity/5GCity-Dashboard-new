@@ -41,7 +41,7 @@ export default kea({
     }],
     steps: [STEPS, PropTypes.array, {
       [actions.activeStep]: (state, payload) => payload.steps,
-      [actions.reset]: () => STEPS,
+      [actions.reset]: () => STEPS
     }],
     previousButton: [true, PropTypes.bool, {
       [actions.ChangepreviousBtn]: (state, payload) => payload.status,

@@ -110,6 +110,9 @@ export default kea({
     }],
     dirty: [false, PropTypes.bool, {
       [actions.change]: () => true,
+      [actions.setValuePorts]: () => true,
+      [actions.addPort]: () => true,
+      [actions.removePort]: () => true,
       [actions.error]: () => true,
       [actions.reset]: () => false
     }],
@@ -182,7 +185,6 @@ export default kea({
       // Check validations
       const form = createForm(linkSelect, getForm)
       const validation = Check.checkValidation(form, VALIDATIONS)
-
       if (dirty && validation.invalid) {
         yield put(error([]))
         return false

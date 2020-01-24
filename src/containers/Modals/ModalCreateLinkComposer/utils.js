@@ -74,7 +74,13 @@ export const changeLinkProperties = (selectLink, d3Data, newData) => {
         node.virtual_switch_name = newData.link_name.value
       }
     }
-    findLink.required_ports = newData.required_ports && newData.required_ports.array
+    if (newData.required_ports) {
+      const requiredPorts = []
+      newData.required_ports.array.forEach(item =>
+      requiredPorts.push(item.value)
+    )
+      findLink.required_ports = requiredPorts
+    }
     addNewConnectionsPoints(newData.options_select_source && newData.options_select_source.value, newData.options_select_target && newData.options_select_target.value, nodes, findLink.id)
   }
 
@@ -104,36 +110,37 @@ const addNewConnectionsPoints = (source, target, nodes, linkId) => {
 export const createForm = (linkSelect, form) => {
   let resultForm = form
   if (linkSelect) {
-    switch (linkSelect.source.type) {
-      case 'vnf':
-        delete resultForm.required_ports
-        break
-      case 'bridge':
-        delete resultForm.required_ports
-        delete resultForm.name_connection_source
-        delete resultForm.options_select_source
-        break
-      default:
-        delete resultForm.options_select_source
-        break
-    }
-    switch (linkSelect.target.type) {
-      case 'vnf':
-        delete resultForm.required_ports
-        break
-      case 'bridge':
-        delete resultForm.required_ports
-        delete resultForm.name_connection_target
-        delete resultForm.options_select_target
-        break
-      case 'vs':
-        delete resultForm.required_ports
-        delete resultForm.name_connection_target
-        delete resultForm.options_select_target
-        break
-      default:
-        delete resultForm.options_select_target
-        break
+    const source = linkSelect.source.type
+    const target = linkSelect.target.type
+    if (source === 'vnf' && target === 'external') {
+      delete resultForm.options_select_target
+    } else if (source === 'external' && target === 'vnf') {
+      delete resultForm.options_select_source
+    } else if (source === 'bridge' && target === 'vnf') {
+      delete resultForm.required_ports
+      delete resultForm.name_connection_source
+      delete resultForm.options_select_source
+    } else if (source === 'vnf' && target === 'bridge') {
+      delete resultForm.required_ports
+      delete resultForm.name_connection_target
+      delete resultForm.options_select_target
+    } else if (source === 'vnf' && target === 'vnf') {
+      delete resultForm.required_ports
+    } else if (source === 'vnf' && target === 'vs') {
+      delete resultForm.required_ports
+      delete resultForm.name_connection_target
+      delete resultForm.options_select_target
+    } else if (source === 'external' && target === 'vs') {
+      delete resultForm.name_connection_target
+      delete resultForm.options_select_target
+    } else if (source === 'external' && target === 'bridge') {
+      delete resultForm.name_connection_target
+      delete resultForm.options_select_target
+      delete resultForm.options_select_source
+    } else if (source === 'bridge' && target === 'external') {
+      delete resultForm.name_connection_source
+      delete resultForm.options_select_source
+      delete resultForm.options_select_target
     }
   }
   return resultForm

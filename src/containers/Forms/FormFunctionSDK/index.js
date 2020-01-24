@@ -30,23 +30,23 @@ const GeneralInfoOne = props => (
     <Form.Item label={'Repository name'} required status={!props.functionSliceId.valid}>
       <Select
         type={'default'}
-        placeholder="Repository"
+        placeholder='Repository'
         options={props.organizations}
         onChange={value => props.change({functionSliceId: value})}
         selectOption={props.functionSliceId.value}
       />
       <Form.Error>{props.functionSliceId.message}</Form.Error>
-      </Form.Item>
-      <Form.Item label={'Access Level'} required status={!props.functionAccessLevel.valid}>
-      <Select
+    </Form.Item>
+    <Form.Item label={'Access Level'} required status={!props.functionAccessLevel.valid}>
+        <Select
         type={'default'}
-        placeholder="Access Level"
+        placeholder='Access Level'
         options={ACCESS_LEVEL}
         onChange={value => props.change({functionAccessLevel: value})}
         selectOption={props.functionAccessLevel.value}
       />
-      <Form.Error>{props.functionAccessLevel.message}</Form.Error>
-    </Form.Item>
+        <Form.Error>{props.functionAccessLevel.message}</Form.Error>
+      </Form.Item>
     <Form.Item label={'Owner'} required status={!props.functionOwner.valid}>
       <Input value={props.functionOwner.value} onChange={value => props.change({functionOwner: value})} />
       <Form.Error>{props.functionOwner.message}</Form.Error>
@@ -150,7 +150,7 @@ class FormFunctionSDK extends Component {
             <Form.Item label={'Connection Points'} required status={!functionConnectPoints.valid}>
               <Input
                 type='textarea'
-                autosize={{minRows: 10, maxRows: 30}}
+                autosize={{minRows: 5, maxRows: 10}}
                 placeholder={PLACEHOLDER_CP}
                 value={functionConnectPoints.value}
                 onChange={value => change({functionConnectPoints: value})}
@@ -165,7 +165,7 @@ class FormFunctionSDK extends Component {
             <Form.Item label={'Required Ports'} required status={!functionRequiredPorts.valid}>
               <Input
                 type='textarea'
-                autosize={{minRows: 10, maxRows: 30}}
+                autosize={{minRows: 5, maxRows: 10}}
                 placeholder={PLACEHOLDER_RP}
                 value={functionRequiredPorts.value}
                 onChange={value => change({functionRequiredPorts: value})}
@@ -180,7 +180,7 @@ class FormFunctionSDK extends Component {
             <Form.Item label={'Software Image Data'} required status={!functionSofImaDta.valid}>
               <Input
                 type='textarea'
-                autosize={{minRows: 10, maxRows: 30}}
+                autosize={{minRows: 5, maxRows: 10}}
                 placeholder={PLACEHOLDER_SWIMAGE}
                 value={functionSofImaDta.value}
                 onChange={value => change({functionSofImaDta: value})}
@@ -195,7 +195,7 @@ class FormFunctionSDK extends Component {
             <Form.Item label={'Monitoring Parameters'} required status={!functionMonitParams.valid}>
               <Input
                 type='textarea'
-                autosize={{minRows: 10, maxRows: 30}}
+                autosize={{minRows: 5, maxRows: 10}}
                 placeholder={PLACEHOLDER_MONITPARAMS}
                 value={functionMonitParams.value}
                 onChange={value => change({functionMonitParams: value})}
@@ -210,7 +210,7 @@ class FormFunctionSDK extends Component {
             <Form.Item label={'Metadata'} required status={!functionMetaData.valid}>
               <Input
                 type='textarea'
-                autosize={{minRows: 10, maxRows: 30}}
+                autosize={{minRows: 5, maxRows: 10}}
                 placeholder={PLACEHOLDER_METADATA}
                 value={functionMetaData.value}
                 onChange={value => change({functionMetaData: value})}

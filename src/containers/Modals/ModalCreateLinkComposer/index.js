@@ -99,7 +99,7 @@ class ModalCreateLinkComposer extends Component {
                   </Form.Item>
                 )}
                 {newService.source.type === 'external' &&
-                <Button
+                <ButtonPort
                   text={'Add Port'}
                   svg={<PlusIcon />}
                   type={'primary'}
@@ -215,4 +215,7 @@ export default Logic(ModalCreateLinkComposer)
 const Title = styled.h2`
   text-align: center;
   color: white;
+`
+const ButtonPort = styled(Button)`
+  margin-bottom: 10px;
 `

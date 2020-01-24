@@ -61,34 +61,36 @@ export const AddParameter = state => {
 
 export const GetJsonFunction = (params, form) => {
   try {
-  const JSONResult = { ...newFunctionJSON }
-  const newParameters = []
-  if (params.functionConnectPoints) { JSONResult.connectionPoints = JSON.parse(params.functionConnectPoints) }
-  JSONResult.sliceId = params.functionSliceId
-  JSONResult.description = params.functionDescription
-  JSONResult.flavourExpression = params.functionFlavourExp
-  JSONResult.instantiationLevelExpression = params.functionInstExp
-  if (params.functionMonitParams) { JSONResult.monitoringParameters = JSON.parse(params.functionMonitParams) }
-  JSONResult.name = params.functionName
-  JSONResult.ownerId = params.functionOwner
-  JSONResult.maxInstancesCount = params.functionMaxInst
-  JSONResult.minInstancesCount = params.functionMinInst
-  if (params.functionRequiredPorts) { JSONResult.requiredPorts = JSON.parse(params.functionRequiredPorts) }
-  if (params.functionSofImaDta) { JSONResult.swImageData = JSON.parse(params.functionSofImaDta) }
-  JSONResult.vnfdId = params.functionVNFId
-  JSONResult.vendor = params.functionVendor
-  JSONResult.version = params.functionVersion
-  JSONResult.accessLevel = params.functionAccessLevel
-  JSONResult.visibility = params.functionvisibility
-  if (params.functionMetaData) { JSONResult.metadata = JSON.parse(params.functionMetaData) }
-  form.functionParameters.array.forEach(parameter => {
-    newParameters.push(parameter.value)
-  })
-  JSONResult.parameters = newParameters
-  return JSONResult
-}catch (e) {
-  return 'error'
-}
+    const JSONResult = { ...newFunctionJSON }
+    const newParameters = []
+    if (params.functionConnectPoints) { JSONResult.connectionPoints = JSON.parse(params.functionConnectPoints) }
+    JSONResult.sliceId = params.functionSliceId
+    JSONResult.description = params.functionDescription
+    JSONResult.flavourExpression = params.functionFlavourExp
+    JSONResult.instantiationLevelExpression = params.functionInstExp
+    if (params.functionMonitParams) { JSONResult.monitoringParameters = JSON.parse(params.functionMonitParams) }
+    JSONResult.name = params.functionName
+    JSONResult.ownerId = params.functionOwner
+    JSONResult.maxInstancesCount = params.functionMaxInst
+    JSONResult.minInstancesCount = params.functionMinInst
+    if (params.functionRequiredPorts) { JSONResult.requiredPorts = JSON.parse(params.functionRequiredPorts) }
+    if (params.functionSofImaDta) { JSONResult.swImageData = JSON.parse(params.functionSofImaDta) }
+    JSONResult.vnfdId = params.functionVNFId
+    JSONResult.vendor = params.functionVendor
+    JSONResult.version = params.functionVersion
+    JSONResult.accessLevel = params.functionAccessLevel
+    JSONResult.visibility = params.functionvisibility
+    if (params.functionMetaData) {
+      JSONResult.metadata = JSON.parse(params.functionMetaData)
+    }
+    form.functionParameters.array.forEach(parameter => {
+      newParameters.push(parameter.value)
+    })
+    JSONResult.parameters = newParameters
+    return JSONResult
+  } catch (e) {
+    return 'error'
+  }
 }
 
 const newFunctionJSON = {
@@ -302,21 +304,20 @@ export const VISIBILITY = [{
   value: 'PRIVATE'
 }]
 
-
 export const ACCESS_LEVEL = [
   {
     id: 0,
     name: 'Platinum',
     value: '0'
-  },{
+  }, {
     id: 1,
     name: 'Gold',
     value: '1'
-  },{
+  }, {
     id: 2,
     name: 'Silver',
     value: '2'
-  },{
+  }, {
     id: 3,
     name: 'Bronze',
     value: '3'

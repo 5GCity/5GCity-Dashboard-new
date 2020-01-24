@@ -10,39 +10,28 @@ import styled from 'styled-components'
 
 /* Components */
 import Step from 'components/Step'
+
 /* Containers */
-import FormBasicSettings from 'containers/Forms/FormBasicSettings'
-
+import FormServiceSDK from 'containers/Forms/FormServiceSDK'
 class ComposerForm extends Component {
-
   render () {
-    const { form, isSubmitting, steps, organizations } = this.props
-    const { submit, setValueParameters,addParameter, removeParameter, change } = this.actions
+    const { steps } = this.props
     return (
       <Wrapper>
         <WrapperStep>
           <Step>
             {steps.map(step =>
-            <Step
-              key={step.id}
-              step={step.id}
-              description={step.description}
-              active={step.active}
+              <Step
+                key={step.id}
+                step={step.id}
+                description={step.description}
+                active={step.active}
             />
             )}
           </Step>
         </WrapperStep>
         <ContainerForm>
-          <FormBasicSettings
-            dataForm={form}
-            organizations={organizations}
-            setValue={change}
-            setValueParameters={setValueParameters}
-            addParameter={addParameter}
-            removeParameter={removeParameter}
-            isSubmitting={isSubmitting}
-            submit={submit}
-          />
+          <FormServiceSDK />
         </ContainerForm>
       </Wrapper>
     )

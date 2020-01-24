@@ -5,22 +5,22 @@
  * @author Your Name <gpatriarca@ubiwhere.com>
  */
 
-import { kea } from "kea";
-import axios from "axios";
-import { call, put } from "redux-saga/effects";
-import { API_SLICE_MANAGEMENT } from "config";
-import PropTypes from "prop-types";
+import { kea } from 'kea';
+import axios from 'axios';
+import { call, put } from 'redux-saga/effects';
+import { API_SLICE_MANAGEMENT } from 'config';
+import PropTypes from 'prop-types';
 
 /* Logic */
-import NavBarLogic from "containers/Navbar/logic";
-import AppLogic from "containers/App/logic";
+import NavBarLogic from 'containers/Navbar/logic';
+import AppLogic from 'containers/App/logic';
 
 export default kea({
-  path: () => ["scenes", "containers", "ListSlices"],
+  path: () => ['scenes', 'containers', 'ListSlices'],
 
   connect: {
-    props: [NavBarLogic, ["userRole"], AppLogic, ["keycloak"]],
-    actions: [AppLogic, ["addLoadingPage", "removeLoadingPage"]]
+    props: [NavBarLogic, ['userRole'], AppLogic, ['keycloak']],
+    actions: [AppLogic, ['addLoadingPage', 'removeLoadingPage']]
   },
 
   actions: () => ({
@@ -131,19 +131,19 @@ export default kea({
     ]
   }),
 
-  start: function*() {
-    const { fetchSlices } = this.actions;
+  start: function* () {
+    const { fetchSlices } = this.actions
 
-    yield put(fetchSlices());
+    yield put(fetchSlices())
   },
 
-  stop: function*() {
-    const { reset, removeLoadingPage, removeNoData } = this.actions;
+  stop: function* () {
+    const { reset, removeLoadingPage, removeNoData } = this.actions
 
     // remove loading page
-    yield put(removeLoadingPage());
-    yield put(removeNoData());
-    yield put(reset());
+    yield put(removeLoadingPage())
+    yield put(removeNoData())
+    yield put(reset())
   },
 
   takeLatest: ({ actions, workers }) => ({
@@ -152,70 +152,70 @@ export default kea({
   }),
 
   workers: {
-    *fetchSlices() {
+    * fetchSlices () {
       const {
         setSlices,
         addLoadingPage,
         removeLoadingPage,
         setErroFecth,
         setNoData
-      } = this.actions;
+      } = this.actions
       // Loading
-      yield put(addLoadingPage());
+      yield put(addLoadingPage())
       try {
         let responseResult = yield call(
           axios.get,
           `${API_SLICE_MANAGEMENT}/slic3`
-        );
-        const { data } = responseResult;
-        data.map(el => (el.status = "Approved"));
+        )
+        const { data } = responseResult
+        data.map(el => (el.status = 'Approved'))
         if (data.length > 0) {
-          yield put(setSlices(data));
+          yield put(setSlices(data))
         } else {
-          yield put(setNoData());
+          yield put(setNoData())
         }
-        yield put(removeLoadingPage());
+        yield put(removeLoadingPage())
       } catch (error) {
         if (error.response) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
           if (error.response.status === 401) {
-            const keycloak = yield this.get("keycloak");
-            keycloak.logout();
+            const keycloak = yield this.get('keycloak')
+            keycloak.logout()
           } else if (error.response.status === 404) {
-            console.log(404);
-            yield put(setErroFecth());
+            console.log(404)
+            yield put(setErroFecth())
           } else {
-            yield put(setErroFecth());
+            yield put(setErroFecth())
           }
         } else {
           // Something happened in setting up the request that triggered an Error
-          yield put(setErroFecth());
+          yield put(setErroFecth())
         }
-        yield put(removeLoadingPage());
+        yield put(removeLoadingPage())
       }
     },
 
-    *deleteSlice() {
+    * deleteSlice () {
       const {
         fetchSlices,
         isLoading,
         actionModal,
         setErrorMessage
-      } = this.actions;
-      const sliceSelect = yield this.get("sliceSelect");
+      } = this.actions
+      const sliceSelect = yield this.get('sliceSelect')
       try {
-        yield put(isLoading());
+        yield put(isLoading())
         yield call(
           axios.delete,
           `${API_SLICE_MANAGEMENT}/slic3/${sliceSelect.id}`
-        );
+        )
         if (sliceSelect.chunks.chunketeChunks.length > 0) {
           for (const chunkete of sliceSelect.chunks.chunketeChunks) {
             yield call(
               axios.delete,
               `${API_SLICE_MANAGEMENT}/ran_infrastructure/${chunkete.ranInfrastructureId}/chunkete_chunk/${chunkete.id}`
-            );
+            )
           }
         }
         if (sliceSelect.chunks.openstackVlans.length > 0) {
@@ -223,24 +223,24 @@ export default kea({
             yield call(
               axios.delete,
               `${API_SLICE_MANAGEMENT}/openstack_vlan/${vlan.id}`
-            );
+            )
           }
         }
         for (const openstack of sliceSelect.chunks.openstackProjects) {
           yield call(
             axios.delete,
             `${API_SLICE_MANAGEMENT}/openstack_project/${openstack.id}`
-          );
+          )
         }
 
-        yield put(fetchSlices());
+        yield put(fetchSlices())
       } catch (error) {
         yield put(
-          setErrorMessage(error.response.data.message || "Internal error")
-        );
+          setErrorMessage(error.response.data.message || 'Internal error')
+        )
       }
-      yield put(isLoading());
-      yield put(actionModal());
+      yield put(isLoading())
+      yield put(actionModal())
     }
   }
-});
+})
