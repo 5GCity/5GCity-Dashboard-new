@@ -3,7 +3,7 @@ FROM node:10.15-alpine
 ENV NPM_CONFIG_LOGLEVEL warn
 
 ARG API_BASE_URL=https://5g-dashboard.i2cat.net
-ARG API_MONITORING=https://5g-dashboard.i2cat.net/ext/monitoring
+ARG API_MONITORING=https://5gcity-monitoring.i2cat.net
 
 ENV API_BASE_URL ${API_BASE_URL}
 ENV API_MONITORING ${API_MONITORING}

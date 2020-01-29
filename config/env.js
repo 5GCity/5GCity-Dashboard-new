@@ -1,4 +1,4 @@
-'use strict';
+
 
 const fs = require('fs');
 const path = require('path');
@@ -78,6 +78,7 @@ function getClientEnvironment(publicUrl) {
         APP_ENV: process.env.APP_ENV || 'development',
 
         API_BASE_URL: process.env.API_BASE_URL,
+        API_MONITORING: process.env.API_MONITORING,
         AUTH_SERVER_URL: process.env.AUTH_SERVER_URL,
         API_BASE_SDK: process.env.API_BASE_SDK,
 

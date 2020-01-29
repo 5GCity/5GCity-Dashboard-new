@@ -15,12 +15,11 @@ import HeaderNav from 'components/HeaderNav'
 import { BackIcon } from 'components/Icons'
 import Loading from 'components/Loading'
 class Monitoring extends Component {
-
   state = {
     iframe: null
   }
 
-  componentDidMount() {
+  componentDidMount () {
     const { name } = this.props.match.params
     const iframe = `${API_MONITORING}/d/zXZe5NaWk/node-view?refresh=1h&orgId=1&var-service=${name}`
 
@@ -36,16 +35,16 @@ class Monitoring extends Component {
     const { iframe } = this.state
     return (
       <Fragment>
-      <Loading />
-      <HeaderNav
-        buttonBack={<BackIcon />}
-        navigateBack={() => this.navigateToBack()}
-        name={'Monitoring'}
+        <Loading />
+        <HeaderNav
+          buttonBack={<BackIcon />}
+          navigateBack={() => this.navigateToBack()}
+          name={'Monitoring'}
       />
-      {iframe &&
-        <Wrapper id="iframeMonitoring" src={iframe} />
+        {iframe &&
+        <Wrapper id='iframeMonitoring' src={iframe} />
       }
-    </Fragment>
+      </Fragment>
     )
   }
 }
