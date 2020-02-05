@@ -19,7 +19,7 @@ export const createSlice = resources => {
   resources.chunks.openstackVlans.forEach((network) => {
     if (network.physicalNetwork) {
       networkLocation.push({
-        ...network,
+        ...network
       })
     }
   })
@@ -40,14 +40,14 @@ export const createSlice = resources => {
           computeData: {...compute.requirements},
           ischecked: false
         })
-      }else if(!findNetwork && locationExistsOnMarkers) {
+      } else if (!findNetwork && locationExistsOnMarkers) {
         locationExistsOnMarkers.location.resources.computes.push({
           id: compute.id,
           name: compute.name,
           computeData: {...compute.requirements},
           ischecked: false
         })
-      }else if(findNetwork && !locationExistsOnMarkers) {
+      } else if (findNetwork && !locationExistsOnMarkers) {
         markers.push({
           location: {
             latitude: latitude,
@@ -67,7 +67,7 @@ export const createSlice = resources => {
             }
           }
         })
-      }else if(!findNetwork && !locationExistsOnMarkers) {
+      } else if (!findNetwork && !locationExistsOnMarkers) {
         markers.push({
           location: {
             latitude: latitude,
@@ -78,12 +78,11 @@ export const createSlice = resources => {
                 name: compute.name,
                 computeData: {...compute.requirements},
                 ischecked: false
-              }],
+              }]
             }
           }
         })
       }
-
     })
   }
 
@@ -140,7 +139,7 @@ export const CreateSliceChunk = list => {
     const typePhy = box.phys[0].type === 'SUB6_ACCESS' ? 'wifi' : 'LTE'
     if (locationExistsOnMarkers) {
       if (locationExistsOnMarkers.location.resources[typePhy]) {
-        locationExistsOnMarkers.location.resources[typePhy].physical.push(...box.phys)
+        locationExistsOnMarkers.location.resources[typePhy][0].physical.push(...box.phys)
       }
     } else {
       markerObject.markers.push({
@@ -159,6 +158,8 @@ export const CreateSliceChunk = list => {
       })
     }
   })
+
+  console.log('markerObject', markerObject)
 
   return markerObject
 }

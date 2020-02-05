@@ -6,48 +6,48 @@
  */
 
 export const CreateAllPins = resources => {
-  const markers = [];
+  const markers = []
 
   if (!resources) {
-    return markers;
+    return markers
   }
 
   const compareComputesNetworks = () => {
     resources.computes.length > 0 &&
       resources.computes.forEach(compute => {
-        const { latitude, longitude } = compute.location;
+        const { latitude, longitude } = compute.location
 
         const locationExistsOnMarkers = markers.find(
           marker =>
             marker.location.latitude === latitude &&
             marker.location.longitude === longitude
-        );
+        )
         const findNetwork = resources.networks.find(
           network => network.id === compute.availablePhyNet
         )
         if (locationExistsOnMarkers && !findNetwork) {
-          locationExistsOnMarkers.location.isCompute = true;
-          const { computeData } = compute;
+          locationExistsOnMarkers.location.isCompute = true
+          const { computeData } = compute
           const cpuColor = singlePercentage(
             computeData.quota.cpus.provisioned,
             computeData.quota.cpus.total
-          );
+          )
           const ramColor = singlePercentage(
             computeData.quota.ram.provisioned,
             computeData.quota.ram.total
-          );
+          )
           const storageColor = singlePercentage(
             computeData.quota.storage.provisioned,
             computeData.quota.storage.total
-          );
+          )
           const { percentage, color } = compareResources(
             cpuColor,
             ramColor,
             storageColor,
             locationExistsOnMarkers.location.percentage
-          );
-          locationExistsOnMarkers.location.color = color;
-          locationExistsOnMarkers.location.percentage = percentage;
+          )
+          locationExistsOnMarkers.location.color = color
+          locationExistsOnMarkers.location.percentage = percentage
           locationExistsOnMarkers.location.resources.computes.push({
             id: compute.id,
             name: compute.name,
@@ -67,30 +67,30 @@ export const CreateAllPins = resources => {
               }
             },
             status: computeData.status
-          });
+          })
         } else if (locationExistsOnMarkers && findNetwork) {
-          locationExistsOnMarkers.location.isCompute = true;
-          const { computeData } = compute;
+          locationExistsOnMarkers.location.isCompute = true
+          const { computeData } = compute
           const cpuColor = singlePercentage(
             computeData.quota.cpus.provisioned,
             computeData.quota.cpus.total
-          );
+          )
           const ramColor = singlePercentage(
             computeData.quota.ram.provisioned,
             computeData.quota.ram.total
-          );
+          )
           const storageColor = singlePercentage(
             computeData.quota.storage.provisioned,
             computeData.quota.storage.total
-          );
+          )
           const { percentage, color } = compareResources(
             cpuColor,
             ramColor,
             storageColor,
             locationExistsOnMarkers.location.percentage
-          );
-          locationExistsOnMarkers.location.color = color;
-          locationExistsOnMarkers.location.percentage = percentage;
+          )
+          locationExistsOnMarkers.location.color = color
+          locationExistsOnMarkers.location.percentage = percentage
           locationExistsOnMarkers.location.resources.computes.push({
             id: compute.id,
             name: compute.name,
@@ -110,22 +110,22 @@ export const CreateAllPins = resources => {
               }
             },
             status: computeData.status
-          });
+          })
         } else if (findNetwork && !locationExistsOnMarkers) {
-          const { computeData } = compute;
+          const { computeData } = compute
           const cpuColor = singlePercentage(
             computeData.quota.cpus.provisioned,
             computeData.quota.cpus.total
-          );
+          )
           const ramColor = singlePercentage(
             computeData.quota.ram.provisioned,
             computeData.quota.ram.total
-          );
+          )
           const storageColor = singlePercentage(
             computeData.quota.storage.provisioned,
             computeData.quota.storage.total
-          );
-          const bigResource = percentage(computeData.quota);
+          )
+          const bigResource = percentage(computeData.quota)
           markers.push({
             location: {
               latitude: compute.location.latitude,
@@ -163,22 +163,22 @@ export const CreateAllPins = resources => {
               isNetwork: true,
               isCompute: true
             }
-          });
+          })
         } else if (!findNetwork && !locationExistsOnMarkers) {
-          const { computeData } = compute;
+          const { computeData } = compute
           const cpuColor = singlePercentage(
             computeData.quota.cpus.provisioned,
             computeData.quota.cpus.total
-          );
+          )
           const ramColor = singlePercentage(
             computeData.quota.ram.provisioned,
             computeData.quota.ram.total
-          );
+          )
           const storageColor = singlePercentage(
             computeData.quota.storage.provisioned,
             computeData.quota.storage.total
-          );
-          const bigResource = percentage(computeData.quota);
+          )
+          const bigResource = percentage(computeData.quota)
           markers.push({
             location: {
               latitude: compute.location.latitude,
@@ -210,15 +210,15 @@ export const CreateAllPins = resources => {
               },
               isCompute: true
             }
-          });
+          })
         }
-      });
+      })
   };
 
   const compareRAN = () => {
     resources.rans.length > 0 &&
       resources.rans.forEach(ran => {
-        const { latitude, longitude } = ran.location;
+        const { latitude, longitude } = ran.location
 
         const locationExistsOnMarkers = markers.find(
           marker =>
@@ -226,7 +226,7 @@ export const CreateAllPins = resources => {
             marker.location.longitude === longitude
         )
         if (locationExistsOnMarkers) {
-          locationExistsOnMarkers.location.isRAN = true;
+          locationExistsOnMarkers.location.isRAN = true
           if (locationExistsOnMarkers.location.resources.rans) {
             locationExistsOnMarkers.location.resources.rans.push({
               id: ran.id,
@@ -244,7 +244,7 @@ export const CreateAllPins = resources => {
                 username: ran.ranInfrastructureData.username,
                 password: ran.ranInfrastructureData.password
               }
-            ];
+            ]
           }
         } else {
           markers.push({
@@ -275,13 +275,13 @@ export const CreateAllPins = resources => {
         ran.chunketeTopology &&
           ran.chunketeTopology.boxes.length > 0 &&
           ran.chunketeTopology.boxes.forEach(box => {
-            const { latitude, longitude } = box.location;
-            const typeBox = box.phys[0].type === "SUB6_ACCESS" ? "wifi" : "LTE";
+            const { latitude, longitude } = box.location
+            const typeBox = box.phys[0].type === 'SUB6_ACCESS' ? 'wifi' : 'LTE'
             const locationExistsOnMarkers = markers.find(
               marker =>
                 marker.location.latitude === latitude &&
                 marker.location.longitude === longitude
-            );
+            )
 
             if (locationExistsOnMarkers) {
               if (locationExistsOnMarkers.location.resources[typeBox]) {
@@ -292,7 +292,7 @@ export const CreateAllPins = resources => {
                   info: box.location.info,
                   ranId: ran.id,
                   ranName: ran.name
-                });
+                })
               } else {
                 locationExistsOnMarkers.location.resources[typeBox] = {
                   id: box.id,
@@ -301,7 +301,7 @@ export const CreateAllPins = resources => {
                   info: box.location.info,
                   ranId: ran.id,
                   ranName: ran.name
-                };
+                }
               }
             } else {
               markers.push({
@@ -320,31 +320,31 @@ export const CreateAllPins = resources => {
                       }
                     ]
                   },
-                  isWifi: box.phys[0].type === "SUB6_ACCESS" ? true : false,
-                  isLTE: box.phys[0].type === "LTE_PRIMARY_PLMN" ? true : false
+                  isWifi: box.phys[0].type === 'SUB6_ACCESS',
+                  isLTE: box.phys[0].type === 'LTE_PRIMARY_PLMN'
                 }
-              });
+              })
             }
-          });
-      });
+          })
+      })
   };
 
-  compareComputesNetworks();
-  compareRAN();
-  compareChunketeTopology();
-  return markers;
-};
+  compareComputesNetworks()
+  compareRAN()
+  compareChunketeTopology()
+  return markers
+}
 
 export const CreateAllLinks = rans => {
-  const links = [];
+  const links = []
 
   if (!rans) {
-    return links;
+    return links
   }
 
   rans.length > 0 &&
     rans.forEach(ran => {
-      const { latitude, longitude } = ran.location;
+      const { latitude, longitude } = ran.location
       ran.chunketeTopology &&
         ran.chunketeTopology.boxes.forEach(chunkete => {
           links.push({
@@ -353,51 +353,51 @@ export const CreateAllLinks = rans => {
               source: [chunkete.location.longitude, chunkete.location.latitude],
               target: [longitude, latitude]
             }
-          });
-        });
-    });
-  return links;
+          })
+        })
+    })
+  return links
 };
 
 const pickHex = percent => {
   var a = percent / 100,
     b = (0 - 100) * a,
-    c = b + 100;
+    c = b + 100
 
   // Return a CSS HSL string
-  return `hsl(${Math.trunc(c)}, 48%, 53%)`;
+  return `hsl(${Math.trunc(c)}, 48%, 53%)`
 };
 
 const percentage = quota => {
-  let value = 0;
+  let value = 0
   for (const key in quota) {
     if (quota.hasOwnProperty(key)) {
       const returnPercentage =
-        (quota[key].provisioned / quota[key].total) * 100;
-      if (value < returnPercentage) value = returnPercentage;
+        (quota[key].provisioned / quota[key].total) * 100
+      if (value < returnPercentage) value = returnPercentage
     }
   }
-  return { percentage: value, color: pickHex(value) };
+  return { percentage: value, color: pickHex(value) }
 };
 
 const singlePercentage = (provisioned, total) => {
-  let value = 0;
-  const returnPercentage = (provisioned / total) * 100;
-  value = returnPercentage;
-  return { percentage: value, color: pickHex(value) };
+  let value = 0
+  const returnPercentage = (provisioned / total) * 100
+  value = returnPercentage
+  return { percentage: value, color: pickHex(value) }
 };
 
 const compareResources = (cpus, ram, storage, compute) => {
-  let value = compute;
+  let value = compute
   if (value < cpus.percentage) {
-    value = cpus.percentage;
+    value = cpus.percentage
   }
   if (value < ram.percentage) {
-    value = ram.percentage;
+    value = ram.percentage
   }
   if (value < storage.percentage) {
-    value = storage.percentage;
+    value = storage.percentage
   }
 
-  return { percentage: value, color: pickHex(value) };
+  return { percentage: value, color: pickHex(value) }
 };
