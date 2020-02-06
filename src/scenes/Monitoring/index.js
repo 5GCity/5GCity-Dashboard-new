@@ -21,7 +21,7 @@ class Monitoring extends Component {
 
   componentDidMount () {
     const { name } = this.props.match.params
-    const iframe = `${API_MONITORING}/d/qymONwsWz/node-view?refresh=1h&orgId=1&var-service=${name}`
+    const iframe = `${API_MONITORING}/node-view?refresh=1h&orgId=1&var-service=${name}`
 
     this.setState({iframe})
   }

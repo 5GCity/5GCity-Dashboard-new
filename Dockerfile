@@ -8,9 +8,8 @@ ARG API_MONITORING=https://5gcity-monitoring.i2cat.net
 ENV API_BASE_URL ${API_BASE_URL}
 ENV API_MONITORING ${API_MONITORING}
 
-RUN apk add --update --no-cache yarn && \
-    mkdir /code && \
-    npm install replace serve -g
+RUN mkdir /code
+RUN npm install replace serve -g
 
 EXPOSE 5000
 
@@ -18,11 +17,11 @@ COPY . /code
 
 WORKDIR /code
 
-RUN yarn install --silent && \
-    yarn build:docker && \
-    mkdir /www && \
-    mv build/** /www && \
-    rm -rf /code
+RUN yarn install
+RUN yarn build:docker
+RUN mkdir /www
+RUN mv build/** /www
+RUN rm -rf /code
 
 WORKDIR /www
 

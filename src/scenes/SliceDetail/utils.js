@@ -159,7 +159,5 @@ export const CreateSliceChunk = list => {
     }
   })
 
-  console.log('markerObject', markerObject)
-
   return markerObject
 }

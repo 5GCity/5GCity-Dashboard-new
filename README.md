@@ -38,7 +38,7 @@ Please install [Docker](https://docs.docker.com/install/) according to the desir
 
 Build Docker command:
 ```
-docker build --rm -t 5gcity:latest . --build-arg API_BASE_URL=https://5g-dashboard.i2cat.net --build-arg API_MONITORING=https://5gcity-monitoring.i2cat.net
+docker build --rm -t 5gcity:latest . --build-arg API_BASE_URL=https://5g-dashboard.i2cat.net --build-arg API_MONITORING=https://5gcity-monitoring.i2cat.net/d/qymONwsWz
 ```
 When on your console show `Successfully built xxxxxxxxxx` run command:
 

@@ -2,26 +2,27 @@
  * Panelwifisview Container
  * Please write a description
  *
- * @author Your Name <youremail@ubiwhere.com>
  */
-import React, { Component, Fragment } from "react";
-import styled from "styled-components";
-import { Theme } from "globalStyles";
+import React, { Component, Fragment } from 'react'
+import styled from 'styled-components'
+import { Theme } from 'globalStyles'
 
 export default class PanelWifisView extends Component {
-  render() {
-    const { wifis } = this.props;
+  render () {
+    const { wifis } = this.props
     return (
       <Wrapper>
         {wifis &&
           wifis.map((wifi, i) => (
             <Fragment key={wifi.id}>
               <Title>Wifi</Title>
+              {wifi.ranName &&
               <Name>RAN Controller: {wifi.ranName} </Name>
+              }
               <Name>Box name: {wifi.name}</Name>
               <TypeMarker
                 key={i}
-                className={i === wifis.length - 1 && "noBorder"}
+                className={i === wifis.length - 1 && 'noBorder'}
               >
                 <Id>{wifi.id}</Id>
                 {wifi.physical.map(physical => (
@@ -42,22 +43,22 @@ export default class PanelWifisView extends Component {
             </Fragment>
           ))}
       </Wrapper>
-    );
+    )
   }
 }
 
-const Wrapper = styled.div``;
+const Wrapper = styled.div``
 
 const Title = styled.h5`
   color: ${Theme.primaryColor};
   font-family: ${Theme.fontFamily};
   font-size: 20px;
   line-height: 20px;
-`;
+`
 
 const TypeMarker = styled.div`
   border-bottom: 1px solid rgba(239, 242, 247, 0.1);
-`;
+`
 
 const Name = styled.p`
   margin: 12px 0;
@@ -65,7 +66,7 @@ const Name = styled.p`
   font-weight: bold;
   color: #eff2f7;
   font-family: ${Theme.fontFamily};
-`;
+`
 
 const Id = styled.p`
   margin: 12px 0;
@@ -73,4 +74,4 @@ const Id = styled.p`
   line-height: 14px;
   font-family: ${Theme.fontFamily};
   color: #89979f;
-`;
+`
