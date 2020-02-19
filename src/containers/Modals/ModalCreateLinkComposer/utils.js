@@ -65,7 +65,7 @@ export const changeLinkProperties = (selectLink, d3Data, newData) => {
     if (findLink.virtual_switch) {
       const allLinks = filter(links, link => link.link_name === findLink.link_name)
       const findNode = nodes.find(node => node.virtual_switch_name === findLink.link_name)
-      allLinks.forEach(link => link.link_name = newData.link_name.value)
+      allLinks.forEach(link => (link.link_name = newData.link_name.value))
       if (findNode) {
         findNode.virtual_switch_name = newData.link_name.value
       } else {
@@ -107,6 +107,11 @@ const addNewConnectionsPoints = (source, target, nodes, linkId) => {
   })
 }
 
+/**
+ * Delete inputs from Form
+ * @param {object} linkSelect
+ * @param {object} form
+ */
 export const createForm = (linkSelect, form) => {
   let resultForm = form
   if (linkSelect) {
@@ -133,6 +138,7 @@ export const createForm = (linkSelect, form) => {
     } else if (source === 'external' && target === 'vs') {
       delete resultForm.name_connection_target
       delete resultForm.options_select_target
+      delete resultForm.options_select_source
     } else if (source === 'external' && target === 'bridge') {
       delete resultForm.name_connection_target
       delete resultForm.options_select_target

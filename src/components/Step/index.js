@@ -8,7 +8,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 export default ({ children, ...props }) => (
-  <Wrapper>
+  <Wrapper {...props}>
     {children &&
       <StepContainer>
         {children && children.props &&
@@ -54,11 +54,11 @@ export default ({ children, ...props }) => (
 const Wrapper = styled.div`
   display: flex;
   background-color: #324148;
+  height:${({ marginTop }) => `calc( 100vh - ${marginTop || 0}px);`}
 `
 
 const StepContainer = styled.div`
   width: 320px;
-  height: 100vh;
   cursor: pointer;
 `
 const Item = styled.div`

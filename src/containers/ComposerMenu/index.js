@@ -17,7 +17,7 @@ class ComposerMenu extends Component {
   render () {
     const { functions, createNode, selectOrganization, organizationsList
      } = this.props
-    const { changeOrganization }= this.actions
+    const { changeOrganization } = this.actions
     return (
       <Wrapper>
         <WrapperInput>
@@ -30,7 +30,11 @@ class ComposerMenu extends Component {
         </WrapperInput>
         <WrapperContent>
           <Collapse value={['catalogue', 'default']}>
-            <WrapperCatalogue title={'General'} name={'default'} key={1}>
+            <WrapperCatalogue
+              title={'General'}
+              name={'default'}
+              key={1}
+            >
               <Catalogue
                 name={'Bridge'}
                 key={'9997'}
@@ -50,19 +54,23 @@ class ComposerMenu extends Component {
                 onClick={(node) => createNode(node)}
               />
             </WrapperCatalogue>
-            <WrapperCatalogue title={selectOrganization} name={'catalogue'} key={2}>
-            {functions && functions.map((item, i) =>
-              <Catalogue
-                key={i}
-                version={item.version}
-                type={'vnf'}
-                colortext='#00A294'
-                circlefill='#A8D0CE'
-                name={item.name}
-                onClick={() => createNode(item)}
+            <WrapperCatalogueFuction
+              title={selectOrganization}
+              name={'catalogue'}
+              key={2}
+            >
+              {functions && functions.map((item, i) =>
+                <Catalogue
+                  key={i}
+                  version={item.version}
+                  type={'vnf'}
+                  colortext='#00A294'
+                  circlefill='#A8D0CE'
+                  name={item.name}
+                  onClick={() => createNode(item)}
               />
             )}
-            </WrapperCatalogue>
+            </WrapperCatalogueFuction>
           </Collapse>
         </WrapperContent>
       </Wrapper>
@@ -76,8 +84,7 @@ const Wrapper = styled.div`
   background-color: ${({theme}) => theme.bodyBackground};
   position: absolute;
   left: 0;
-  min-height: 768px;
-  max-width: 240px;
+  min-width: 240px;
 `
 const WrapperInput = styled.div`
   max-height: 72px;
@@ -86,12 +93,17 @@ const WrapperInput = styled.div`
   box-shadow: 0 0 15px 0 rgba(0,0,0,0.2);
 `
 const WrapperContent = styled.div`
-  height: 100vh;
-  overflow-y:scroll;
   max-width: 240px;
   box-shadow: 0 0 15px 0 rgba(0,0,0,0.2);
+  height: 100vh;
 `
 
 const WrapperCatalogue = styled.div`
   text-align:center;
+`
+
+const WrapperCatalogueFuction = styled.div`
+  text-align:center;
+  height: 413px;
+  overflow: scroll;
 `

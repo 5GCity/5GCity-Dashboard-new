@@ -17,7 +17,7 @@ class SDKDescription extends Component {
   render () {
     return (
       <Wrapper>
-         <PageTitleOrganization
+        <PageTitleOrganization
           title={'Create Descriptors'}
         />
         <NavBar />
@@ -26,7 +26,6 @@ class SDKDescription extends Component {
     )
   }
 }
-
 
 export default Logic(SDKDescription)
 

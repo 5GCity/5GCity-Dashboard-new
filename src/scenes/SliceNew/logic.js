@@ -286,7 +286,7 @@ export default kea({
           call(axios.get, `${API_SLICE_MANAGEMENT}/ran_infrastructure/configuredRadioPhys`)
         ])
 
-        const listResources = {computes: [], networks: [], radioPhys: [] }
+        const listResources = { computes: [], networks: [], radioPhys: [] }
 
         responseComputes && responseComputes.data.map(el => listResources.computes.push(el))
         responseRadioPhys && responseRadioPhys.data[0] && responseRadioPhys.data[0].map(el => listResources.radioPhys.push(el))

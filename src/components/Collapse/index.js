@@ -2,7 +2,6 @@
  * Collapse Component
  * Please write a description
  *
- * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
 import React from 'react'
 import styled from 'styled-components'

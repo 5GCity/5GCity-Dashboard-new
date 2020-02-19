@@ -33,7 +33,7 @@ class Function extends Component {
           navigateBack={() => this.navigateToBack()}
         />
         <WrapperStep>
-          <Step>
+          <Step marginTop={80}>
             {steps.map(step =>
               <Step
                 key={step.id}

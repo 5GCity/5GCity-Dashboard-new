@@ -38,15 +38,15 @@ const GeneralInfoOne = props => (
       <Form.Error>{props.functionSliceId.message}</Form.Error>
     </Form.Item>
     <Form.Item label={'Access Level'} required status={!props.functionAccessLevel.valid}>
-        <Select
+      <Select
         type={'default'}
         placeholder='Access Level'
         options={ACCESS_LEVEL}
         onChange={value => props.change({functionAccessLevel: value})}
         selectOption={props.functionAccessLevel.value}
       />
-        <Form.Error>{props.functionAccessLevel.message}</Form.Error>
-      </Form.Item>
+      <Form.Error>{props.functionAccessLevel.message}</Form.Error>
+    </Form.Item>
     <Form.Item label={'Owner'} required status={!props.functionOwner.valid}>
       <Input value={props.functionOwner.value} onChange={value => props.change({functionOwner: value})} />
       <Form.Error>{props.functionOwner.message}</Form.Error>

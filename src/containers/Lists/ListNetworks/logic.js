@@ -2,7 +2,6 @@
  * ListNetworks Container Logic
  * Please write a description
  *
- * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
 
 import { kea } from 'kea'
@@ -122,7 +121,7 @@ export default kea({
           } else if (er.response.status === 404) {
             console.log(404)
             yield put(setErroFecth())
-          }else if (er.response.status === 502) {
+          } else if (er.response.status === 502) {
             yield put(setErroFecth())
           }
         } else if (er.request) {
