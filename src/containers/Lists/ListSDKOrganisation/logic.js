@@ -29,7 +29,8 @@ export default kea({
     props: [
       AppLogic, [
         'keycloak',
-        'userName'
+        'userName',
+        'userLabel'
       ]
     ]
   },
@@ -39,22 +40,28 @@ export default kea({
     setSlices: (slices) => ({ slices }),
     setNoData: () => ({}),
     setErroFecth: () => ({}),
+
     modalDeleteOpen: (slice) => ({ slice }),
     modalDeleteClose: () => ({ }),
+
     modalInfoOpen: (slice) => ({ slice }),
     modalInfoClose: () => ({ }),
+
+    modalErrorOpen: (message) => ({ message }),
+    modalErrorClose: () => ({ }),
+
     deleteSlice: (sliceId) => ({ sliceId }),
 
     fetchUsers: () => ({ }),
     setUsers: (users) => ({ users }),
     setDefaultUsers: (users) => ({users}),
 
-    setNewUsers: (newUsers) => ({ newUsers }) ,
-    actionUsers:( organizationId ) => ({ organizationId }),
-    addNewUsers:( organizationId, users ) => ({ organizationId, users }),
-    removeUsers:( organizationId, users ) => ({ organizationId, users }),
+    setNewUsers: (newUsers) => ({ newUsers }),
+    actionUsers: (organizationId) => ({ organizationId }),
+    addNewUsers: (organizationId, users) => ({ organizationId, users }),
+    removeUsers: (organizationId, users) => ({ organizationId, users }),
 
-    reset: () => ({ }),
+    reset: () => ({ })
   }),
 
   reducers: ({ actions }) => ({
@@ -63,16 +70,16 @@ export default kea({
       [actions.setSlices]: (state, payload) => payload.slices,
       [actions.reset]: () => []
     }],
-    usersList:[null, PropTypes.array, {
+    usersList: [null, PropTypes.array, {
       [actions.fetchFunctions]: (state, payload) => null,
       [actions.setUsers]: (state, payload) => payload.users,
       [actions.reset]: () => null
     }],
-    usersSelect:[null, PropTypes.array, {
+    usersSelect: [null, PropTypes.array, {
       [actions.setNewUsers]: (state, payload) => payload.newUsers,
       [actions.reset]: () => null
     }],
-    usersDefaultAPI:[null, PropTypes.array, {
+    usersDefaultAPI: [null, PropTypes.array, {
       [actions.modalInfoOpen]: (state, payload) => payload.slice.users,
       [actions.reset]: () => null
     }],
@@ -83,13 +90,22 @@ export default kea({
     noData: [false, PropTypes.bol, {
       [actions.fetchSlices]: () => false,
       [actions.setNoData]: () => true,
-      [actions.reset]: () => false,
+      [actions.reset]: () => false
     }],
     modalDeleteStatus: [false, PropTypes.bool, {
       [actions.modalDeleteClose]: () => false,
       [actions.modalDeleteOpen]: () => true,
       [actions.reset]: () => false
     }],
+    modalErrorStatus: [false, PropTypes.bool, {
+      [actions.modalErrorClose]: () => false,
+      [actions.modalErrorOpen]: () => true,
+      [actions.reset]: () => false
+    }],
+    errorMessage: [null, PropTypes.string, {
+      [actions.modalErrorOpen]: (state, payload) => payload.message
+    }
+    ],
     modalInfoStatus: [false, PropTypes.bool, {
       [actions.modalInfoClose]: () => false,
       [actions.modalInfoOpen]: () => true,
@@ -101,7 +117,7 @@ export default kea({
       [actions.modalInfoClose]: () => null,
       [actions.modalDeleteClose]: () => null,
       [actions.reset]: () => null
-    }],
+    }]
   }),
 
   selectors: ({ selectors }) => ({
@@ -112,20 +128,15 @@ export default kea({
         const array = []
         usersList &&
         usersList.forEach(user => {
-          if(userLogin === user.username){
-            array.push({value: user.username, label:`${user.attributes.tenantLabel[0]}-${user.username}`, isFixed: true})
+          if (userLogin === user.username) {
+            array.push({value: user.username, label: `${user.attributes.tenantLabel[0]}-${user.username}`, isFixed: true})
           } else {
-            array.push({value: user.username, label:`${user.attributes.tenantLabel[0]}-${user.username}`, isFixed: false})
+            array.push({value: user.username, label: `${user.attributes.tenantLabel[0]}-${user.username}`, isFixed: false})
           }
         })
         return array
       },
-      PropTypes.array
-    ],
-    usersView : [
-      () => [selectors.userName],
-      (userName) => userName.toLowerCase() === 'admin admin' ? true : false,
-      PropTypes.bool
+      PropTypes.any
     ]
   }),
 
@@ -138,7 +149,6 @@ export default kea({
     yield put(fetchSlices())
     yield put(fetchUsers())
     yield put(setNewUsers([userLogin]))
-
   },
 
   takeLatest: ({ actions, workers }) => ({
@@ -147,7 +157,7 @@ export default kea({
     [actions.deleteSlice]: workers.deleteSlice,
     [actions.actionUsers]: workers.actionUsers,
     [actions.addNewUsers]: workers.addNewUsers,
-    [actions.removeUsers]: workers.removeUsers,
+    [actions.removeUsers]: workers.removeUsers
   }),
 
   workers: {
@@ -168,7 +178,7 @@ export default kea({
 
     * fetchSlices () {
       const { setSlices, addLoadingPage, removeLoadingPage, setNoData, setErroFecth } = this.actions
-      //add loading
+      // add loading
       yield put(addLoadingPage())
       try {
         let responseResult = yield call(axios.get, `${API_SDK}/sdk/sliceManagement/slices`)
@@ -203,8 +213,8 @@ export default kea({
       }
     },
 
-    *deleteSlice (action) {
-      const { fetchSlices, modalDeleteClose, setMessageError, actionModalError } = this.actions
+    * deleteSlice (action) {
+      const { fetchSlices, modalDeleteClose, modalErrorOpen } = this.actions
       const id = action.payload.sliceId
       try {
         yield call(axios.delete, `${API_SDK}/sdk/sliceManagement/slices/${id}`)
@@ -212,29 +222,28 @@ export default kea({
         yield put(modalDeleteClose())
         yield put(fetchSlices())
       } catch (error) {
+        yield put(modalDeleteClose())
         switch (error.response.status) {
           case 400:
-            yield put(setMessageError(error.response.data))
+            yield put(modalErrorOpen(error.response.data))
             break
           case 403:
-            yield put(setMessageError(error.response.data))
+            yield put(modalErrorOpen(error.response.data))
             break
           default:
-            yield put(setMessageError('Error'))
+            yield put(modalErrorOpen('Error'))
             break
         }
-        yield put(modalDeleteClose())
-        yield put(actionModalError())
       }
     },
 
     * actionUsers (action) {
-      const { removeUsers, addNewUsers }= this.actions
+      const { removeUsers, addNewUsers } = this.actions
       const id = action.payload.organizationId
       const usersSelect = yield this.get('usersSelect')
       const usersDefaultAPI = yield this.get('usersDefaultAPI')
       const data = FindUsers(usersDefaultAPI, usersSelect)
-      if(data.add.length > 0){
+      if (data.add.length > 0) {
         yield put(addNewUsers(id, data.add))
       }
       if (data.remove.length > 0) {
@@ -272,7 +281,6 @@ export default kea({
       } catch (error) {
         yield put(modalInfoClose())
       }
-    },
+    }
   }
 })
-

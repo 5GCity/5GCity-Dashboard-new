@@ -38,13 +38,13 @@ export const Titles = [{
   render: (vendor) => {
     switch (vendor) {
       case 1:
-      return 'Gold'
+        return 'Gold'
       case 2:
-      return 'Silver'
+        return 'Silver'
       case 3:
-      return 'Bronze'
+        return 'Bronze'
       default:
-      return 'Platinum'
+        return 'Platinum'
     }
   }
 }
@@ -61,6 +61,7 @@ export const getResult = services => {
         id: service.id,
         design: service.designer,
         version: service.version,
+        ownerId: service.ownerId,
         repository: service.repository || null,
         lastUpdate: service.lastUpdate || null
       })

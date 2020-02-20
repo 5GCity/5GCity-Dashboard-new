@@ -50,6 +50,11 @@ export default kea({
       () => [selectors.keycloak],
       (keycloak) => keycloak && giveUserRole(keycloak.tokenParsed.realm_access),
       PropTypes.any
+    ],
+    userLabel: [
+      () => [selectors.keycloak],
+      (keycloak) => keycloak && keycloak.tokenParsed.preferred_username,
+      PropTypes.string
     ]
   }),
 

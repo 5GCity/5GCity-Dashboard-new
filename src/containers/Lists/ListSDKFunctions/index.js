@@ -92,7 +92,7 @@ class ListSDKFunctions extends Component {
       modalVisibledPublish,
       modalErrorVisibled,
       modalErrorMessage,
-      usersView,
+      userLabel,
       modalVisibledUnPublish
     } = this.props
     const {
@@ -168,7 +168,23 @@ class ListSDKFunctions extends Component {
                     text={'Unpublish'}
                   />
                   : null}
-                  {usersView &&
+                  {userLabel === 'admin' &&
+                  <Fragment>
+                    <Button
+                      type={'secondary'}
+                      svg={<DeleteIcon />}
+                      onClick={() => selectFunc(func, 'delete')}
+                      text={'Delete'}
+                  />
+                    <Button
+                      type={'primary'}
+                      svg={<EditIcon />}
+                      onClick={() => this.navigate(`/sdk/function/${func.id}`)}
+                      text={'Edit'}
+                  />
+                  </Fragment>
+                }
+                  {userLabel === func.ownerId &&
                   <Fragment>
                     <Button
                       type={'secondary'}

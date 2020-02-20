@@ -27,8 +27,8 @@ const ModalDeleteSlice = props => (
     visible={props.modalDeleteStatus}
   >
     <Modal.Body>
-    {props.slice &&
-    <Message>Are you sure you want to delete repository {props.slice.sliceId} ?</Message>
+      {props.slice &&
+      <Message>Are you sure you want to delete repository {props.slice.sliceId} ?</Message>
     }
     </Modal.Body>
     <Modal.Footer>
@@ -48,10 +48,30 @@ const ModalDeleteSlice = props => (
   </Modal>
 )
 
+const ModalError = props => (
+  <Modal
+    size={'tiny'}
+    showClose
+    onCancel={() => props.modalErrorClose()}
+    title={'Error'}
+    visible={props.modalErrorStatus}
+  >
+    <Modal.Body>
+      <Message>{props.message}</Message>
+    </Modal.Body>
+    <Modal.Footer>
+      <Button
+        text={'Ok'}
+        svg={<CheckIcon />}
+        type={'primary'}
+        onClick={() => props.modalErrorClose()}
+      />
+    </Modal.Footer>
+  </Modal>
+)
 
 const ModalInfoSlice = props => {
-
-  return(
+  return (
     <Modal
       size={'tiny'}
       showClose
@@ -60,19 +80,19 @@ const ModalInfoSlice = props => {
       visible={props.modalInfoStatus}
     >
       <Modal.Body>
-      {props.slice &&
-      <React.Fragment>
-        <Title>Repository name</Title>
+        {props.slice &&
+        <React.Fragment>
+          <Title>Repository name</Title>
           <Item>{props.slice.sliceId}</Item>
-        <Title>Repository description</Title>
+          <Title>Repository description</Title>
           <Item>{props.slice.sliceDescription}</Item>
-        <Title>Users</Title>
-        <SelectAutoComplete
-          options={props.users}
-          valueSelect={props.slice.users}
-          onChange={value => props.setNewUsers(value)}
+          <Title>Users</Title>
+          <SelectAutoComplete
+            options={props.users}
+            valueSelect={props.slice.users}
+            onChange={value => props.setNewUsers(value)}
         />
-      </React.Fragment>
+        </React.Fragment>
       }
       </Modal.Body>
       <Modal.Footer>
@@ -96,12 +116,35 @@ const ModalInfoSlice = props => {
 class ListSDKOrganisation extends Component {
   render () {
     const {
-      noData, errorFecth, selectSlice, modalDeleteStatus, modalInfoStatus,
-      slices, users, usersSelect, usersView } = this.props
-    const { modalDeleteOpen, modalDeleteClose, modalInfoClose,
-      modalInfoOpen, actionUsers, setNewUsers, deleteSlice }= this.actions
+      noData,
+      errorFecth,
+      selectSlice,
+      modalDeleteStatus,
+      modalInfoStatus,
+      modalErrorStatus,
+      slices,
+      users,
+      usersSelect,
+      userLabel,
+      errorMessage
+    } = this.props
+    const {
+      modalDeleteOpen,
+      modalDeleteClose,
+      modalInfoClose,
+      modalErrorClose,
+      modalInfoOpen,
+      actionUsers,
+      setNewUsers,
+      deleteSlice
+    } = this.actions
     return (
       <Wrapper>
+        <ModalError
+          modalErrorStatus={modalErrorStatus}
+          modalErrorClose={modalErrorClose}
+          message={errorMessage}
+        />
         <ModalDeleteSlice
           modalDeleteStatus={modalDeleteStatus}
           modalDeleteClose={modalDeleteClose}
@@ -141,19 +184,19 @@ class ListSDKOrganisation extends Component {
                   </List.Column>
                 ]
               })}
-              {usersView &&
+              {userLabel === 'admin' &&
               <ColumnBottons>
                 <ContainerButtons>
                   <Button
                     type={'secondary'}
                     svg={<DeleteIcon />}
-                    onClick={() => modalDeleteOpen(slice) }
+                    onClick={() => modalDeleteOpen(slice)}
                     text={'delete'}
                   />
                   <Button
                     type={'primary'}
                     svg={<EditIcon />}
-                    onClick={() => modalInfoOpen(slice) }
+                    onClick={() => modalInfoOpen(slice)}
                     text={'Edit'}
                   />
                 </ContainerButtons>
@@ -163,13 +206,13 @@ class ListSDKOrganisation extends Component {
           )}
         </List>
         }
-      {noData &&
+        {noData &&
         <NoData
           title={'You don’t have any repository yet...'}
           message={'Please contact Administration to be added to one or mode repositories'}
         />
       }
-      {errorFecth &&
+        {errorFecth &&
         <ErroPage />
       }
       </Wrapper>

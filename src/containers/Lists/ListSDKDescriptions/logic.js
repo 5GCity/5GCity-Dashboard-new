@@ -17,7 +17,6 @@ import PropTypes from 'prop-types'
 import AppLogic from 'containers/App/logic'
 import PageTitleOrganizationLogic from 'containers/PageTitleOrganization/logic'
 
-
 export default kea({
   path: () => ['scenes', 'containers', 'ListSDKDescriptions'],
 
@@ -29,13 +28,13 @@ export default kea({
       ],
       PageTitleOrganizationLogic, [
         'changeOrganization',
-        'setOrganizations',
-      ],
+        'setOrganizations'
+      ]
     ],
     props: [
       AppLogic, [
         'keycloak',
-        'userName'
+        'userLabel'
       ],
       PageTitleOrganizationLogic, [
         'selectOrganization'
@@ -59,7 +58,7 @@ export default kea({
     actionModal: () => ({ }),
     actionModalError: () => ({ }),
 
-    reset: () => ({}),
+    reset: () => ({})
   }),
 
   reducers: ({ actions }) => ({
@@ -85,26 +84,17 @@ export default kea({
 
     modalVisibled: [false, PropTypes.bool, {
       [actions.actionModal]: (state, payload) => !state,
-      [actions.selectDescription]: (state, payload) => !state,
+      [actions.selectDescription]: (state, payload) => !state
     }],
     modaErrorlVisibled: [false, PropTypes.bool, {
-      [actions.actionModalError]: (state, payload) => !state,
+      [actions.actionModalError]: (state, payload) => !state
     }],
-
-    messageError : [null, PropTypes.string, {
+    messageError: [null, PropTypes.string, {
       [actions.setMessageError]: (state, payload) => payload.message
     }],
     descriptionSelect: [null, PropTypes.object, {
       [actions.selectDescription]: (state, payload) => payload
-    }],
-  }),
-
-  selectors: ({ selectors }) => ({
-    usersView : [
-      () => [selectors.userName],
-      (userName) => userName.toLowerCase() === 'admin admin' ? true : false,
-      PropTypes.bool
-    ]
+    }]
   }),
 
   start: function * () {
@@ -126,7 +116,7 @@ export default kea({
     [actions.actionDescription]: workers.actionDescription,
     [actions.publishDescription]: workers.publishDescription,
     [actions.unPublishDescription]: workers.unPublishDescription,
-    [actions.deleteDescription]: workers.deleteDescription,
+    [actions.deleteDescription]: workers.deleteDescription
   }),
 
   workers: {
@@ -135,17 +125,17 @@ export default kea({
       const selectOrganization = yield this.get('selectOrganization')
       yield put(addLoadingPage())
       try {
-        if(selectOrganization){
-        let responseResult = yield call(axios.get, `${API_SDK}/sdk/service_descriptor/?sliceId=${selectOrganization}`)
-        const { data } = responseResult
-        if (data.length > 0) {
-          yield put(setDescriptions(data))
+        if (selectOrganization) {
+          let responseResult = yield call(axios.get, `${API_SDK}/sdk/service_descriptor/?sliceId=${selectOrganization}`)
+          const { data } = responseResult
+          if (data.length > 0) {
+            yield put(setDescriptions(data))
+          } else {
+            yield put(setNoData())
+          }
         } else {
           yield put(setNoData())
         }
-      } else {
-        yield put(setNoData())
-      }
         yield put(removeLoadingPage())
       } catch (error) {
         if (error.response) {
@@ -189,7 +179,7 @@ export default kea({
             break
           case 409:
             yield put(setMessageError(error.response.data))
-          break
+            break
           default:
             yield put(setMessageError('Error'))
             break
@@ -222,7 +212,7 @@ export default kea({
           case 403:
             yield put(setMessageError(error.response.data))
             break
-            case 409:
+          case 409:
             yield put(setMessageError(error.response.data))
             break
           default:
@@ -266,26 +256,24 @@ export default kea({
     },
 
     * actionDescription (action) {
-      const { deleteDescription, publishDescription, unPublishDescription }= this.actions
+      const { deleteDescription, publishDescription, unPublishDescription } = this.actions
       const id = action.payload.id
       const type = action.payload.type
 
       switch (type.replace(/\s/g, '')) {
         case 'delete':
           yield put(deleteDescription(id))
-          break;
-          case 'publish':
+          break
+        case 'publish':
           yield put(publishDescription(id))
-          break;
-          case 'unpublish':
+          break
+        case 'unpublish':
           yield put(unPublishDescription(id))
-          break;
+          break
 
         default:
-          break;
+          break
       }
-
     }
   }
 })
-

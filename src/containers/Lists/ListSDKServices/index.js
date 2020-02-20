@@ -20,55 +20,71 @@ import ErroPage from 'components/ErroPage'
 
 const ListSDKService = props => (
   <ListContainer>
-  { props.services &&
-  <List>
-    <List.Header>
-      {Titles && Titles.map(title => <List.Column size={title.size} key={title.id}>
-        {title.name}
-      </List.Column>)}
-      <List.Column marginLeft />
-    </List.Header>
-    {props.services.map((service, i) => <List.Row key={i} row={1280}>
-      {Titles && Titles.map(({
+    { props.services &&
+    <List>
+      <List.Header>
+        {Titles && Titles.map(title => <List.Column size={title.size} key={title.id}>
+          {title.name}
+        </List.Column>)}
+        <List.Column marginLeft />
+      </List.Header>
+      {props.services.map((service, i) => <List.Row key={i} row={1280}>
+        {Titles && Titles.map(({
         size,
         propItem,
         render
       }) => {
-        return [render && service && <List.Column key={i} size={size}>
-          {render(service[propItem])}
-        </List.Column>, !render && service && <List.Column key={i} size={size}>
-          {service[propItem]}
-        </List.Column>]
-      })}
+          return [render && service && <List.Column key={i} size={size}>
+            {render(service[propItem])}
+          </List.Column>, !render && service && <List.Column key={i} size={size}>
+            {service[propItem]}
+          </List.Column>]
+        })}
 
-      <ColumnBottons>
-        <ContainerButtons>
-          <Button
-            type={'secondary'}
-            svg={<CloneIcon />}
-            onClick={() => props.selectService(service, 'clone')}
-            text={'Clone'}
+        <ColumnBottons>
+          <ContainerButtons>
+            <Button
+              type={'secondary'}
+              svg={<CloneIcon />}
+              onClick={() => props.selectService(service, 'clone')}
+              text={'Clone'}
           />
-          {props.usersView &&
-          <Fragment>
-          <Button
-            type={'secondary'}
-            svg={<DeleteIcon />}
-            onClick={() => props.selectService(service, 'delete')}
-            text={'Delete'}
+            {props.userLabel === 'admin' &&
+            <Fragment>
+              <Button
+                type={'secondary'}
+                svg={<DeleteIcon />}
+                onClick={() => props.selectService(service, 'delete')}
+                text={'Delete'}
           />
-          <Button
-            type={'primary'}
-            svg={<EditIcon />}
-            onClick={() => props.navigate(`/sdk/composer/${service.id}`)}
-            text={'Edit'}
+              <Button
+                type={'primary'}
+                svg={<EditIcon />}
+                onClick={() => props.navigate(`/sdk/composer/${service.id}`)}
+                text={'Edit'}
           />
-          </Fragment>
+            </Fragment>
         }
-        </ContainerButtons>
-      </ColumnBottons>
-    </List.Row>)}
-  </List>
+            {props.userLabel === service.ownerId &&
+            <Fragment>
+              <Button
+                type={'secondary'}
+                svg={<DeleteIcon />}
+                onClick={() => props.selectService(service, 'delete')}
+                text={'Delete'}
+              />
+              <Button
+                type={'primary'}
+                svg={<EditIcon />}
+                onClick={() => props.navigate(`/sdk/composer/${service.id}`)}
+                text={'Edit'}
+              />
+            </Fragment>
+        }
+          </ContainerButtons>
+        </ColumnBottons>
+      </List.Row>)}
+    </List>
   }
   </ListContainer>
 )
@@ -167,7 +183,7 @@ class ListSDKServices extends Component {
       errorFecth,
       modalErrorVisibled,
       modalErrorMessage,
-      usersView
+      userLabel
     } = this.props
 
     const {
@@ -200,7 +216,7 @@ class ListSDKServices extends Component {
             services={serviceList}
             selectService={selectService}
             cloneService={cloneService}
-            usersView={usersView}
+            userLabel={userLabel}
           />
         }
         {noData &&

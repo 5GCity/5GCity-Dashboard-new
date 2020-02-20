@@ -2,7 +2,6 @@
  * ListSDKServices Container Logic
  * Please write a description
  *
- * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
 
 import { kea } from 'kea'
@@ -13,8 +12,6 @@ import { getResult, changeName } from './utils'
 
 import PropTypes from 'prop-types'
 // import * as Check from 'validations'
-
-
 
 /* Logic */
 import AppLogic from 'containers/App/logic'
@@ -31,13 +28,13 @@ export default kea({
       ],
       PageTitleOrganizationLogic, [
         'changeOrganization',
-        'setOrganizations',
-      ],
+        'setOrganizations'
+      ]
     ],
     props: [
       AppLogic, [
         'keycloak',
-        'userName'
+        'userLabel'
       ],
       PageTitleOrganizationLogic, [
         'selectOrganization'
@@ -110,7 +107,7 @@ export default kea({
     [actions.setOrganizations]: workers.fetchServices,
     [actions.deleteService]: workers.deleteService,
     [actions.cloneService]: workers.cloneService,
-    [actions.fetchServices]: workers.fetchServices,
+    [actions.fetchServices]: workers.fetchServices
 
   }),
 
@@ -121,12 +118,7 @@ export default kea({
         getResult(services)
       ),
       PropTypes.array
-    ],
-      usersView : [
-        () => [selectors.userName],
-        (userName) => userName.toLowerCase() === 'admin admin' ? true : false,
-        PropTypes.bool
-      ]
+    ]
   }),
 
   workers: {
@@ -135,7 +127,7 @@ export default kea({
       const selectOrganization = yield this.get('selectOrganization')
       yield put(addLoadingPage())
       try {
-        if(selectOrganization){
+        if (selectOrganization) {
           let responseResult = yield call(axios.get, `${API_SDK}/sdk/services/?sliceId=${selectOrganization}`)
           const { data } = responseResult
           if (data.length > 0) {
@@ -143,7 +135,7 @@ export default kea({
           } else {
             yield put(setNoData())
           }
-        }else {
+        } else {
           yield put(setNoData())
         }
         yield put(removeLoadingPage())

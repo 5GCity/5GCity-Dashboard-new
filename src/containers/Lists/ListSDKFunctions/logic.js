@@ -33,7 +33,7 @@ export default kea({
     props: [
       AppLogic, [
         'keycloak',
-        'userName'
+        'userLabel'
       ],
       PageTitleOrganizationLogic, [
         'selectOrganization'
@@ -106,14 +106,6 @@ export default kea({
       [actions.reset]: () => false,
       [actions.fetchFunctions]: () => false
     }]
-  }),
-
-  selectors: ({ selectors }) => ({
-    usersView: [
-      () => [selectors.userName],
-      (userName) => userName.toLowerCase() === 'admin admin',
-      PropTypes.bool
-    ]
   }),
 
   start: function * () {

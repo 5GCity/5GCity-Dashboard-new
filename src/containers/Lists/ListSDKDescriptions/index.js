@@ -2,7 +2,6 @@
  * Listsdkdescriptions Container
  * Please write a description
  *
- * @author Your Name <youremail@ubiwhere.com>
  */
 import React, { Component } from 'react'
 import Logic from './logic'
@@ -17,9 +16,8 @@ import Modal from 'components/Modal'
 import NoData from 'components/NoData'
 import ErroPage from 'components/ErroPage'
 
-
 const ModalView = (props) => {
-  if(!props.descriptionSelect){
+  if (!props.descriptionSelect) {
     return null
   }
   let title = null
@@ -28,52 +26,51 @@ const ModalView = (props) => {
     case 'publish':
       title = 'Publish'
       type = 'publish'
-      break;
+      break
     case 'unPublish':
       title = 'Unpublish'
       type = ' unpublish'
-      break;
+      break
     case 'delete':
       title = 'Delete'
       type = 'delete'
-      break;
+      break
     default:
-      break;
+      break
   }
 
   return (
-  <Modal
-    size={'tiny'}
-    showClose
-    onCancel={() => props.actionModal()}
-    title={title}
-    visible={props.modalVisibled}
+    <Modal
+      size={'tiny'}
+      showClose
+      onCancel={() => props.actionModal()}
+      title={title}
+      visible={props.modalVisibled}
     >
-    <Modal.Body>
-      {props.descriptionSelect.description &&
-      <Title>
+      <Modal.Body>
+        {props.descriptionSelect.description &&
+        <Title>
         Are you sure you want to {type} descriptors {props.descriptionSelect.description.id} ?
       </Title>
       }
-    </Modal.Body>
-    <Modal.Footer>
-      <Button
-        text={'Yes'}
-        svg={<CheckIcon />}
-        type={'primary'}
-        onClick={() => props.actionDescription(type, props.descriptionSelect.description.id)}
+      </Modal.Body>
+      <Modal.Footer>
+        <Button
+          text={'Yes'}
+          svg={<CheckIcon />}
+          type={'primary'}
+          onClick={() => props.actionDescription(type, props.descriptionSelect.description.id)}
       />
-      <Button
-        text={'No'}
-        svg={<CloseIcon />}
-        type={'secondary'}
-        onClick={() =>  props.actionModal()}
+        <Button
+          text={'No'}
+          svg={<CloseIcon />}
+          type={'secondary'}
+          onClick={() => props.actionModal()}
       />
-    </Modal.Footer>
-  </Modal>
+      </Modal.Footer>
+    </Modal>
   )
 }
-
 
 class ListSDKDescriptions extends Component {
   render () {
@@ -83,35 +80,39 @@ class ListSDKDescriptions extends Component {
       errorFecth,
       descriptionSelect,
       modalVisibled,
-      usersView,
+      userLabel,
       modaErrorlVisibled,
       messageError
     } = this.props
-    const { selectDescription, actionModal, actionDescription, actionModalError
-    }= this.actions
+    const {
+      selectDescription,
+      actionModal,
+      actionDescription,
+      actionModalError
+    } = this.actions
     return (
       <Wrapper>
-         <Modal
-    size={'tiny'}
-    showClose
-    onCancel={() => actionModalError()}
-    title={'Error'}
-    visible={modaErrorlVisibled}
-    >
-    <Modal.Body>
-      <Title>
-        {messageError}
-      </Title>
-    </Modal.Body>
-    <Modal.Footer>
-      <Button
-        text={'ok'}
-        svg={<CheckIcon />}
-        type={'primary'}
-        onClick={() => actionModalError()}
+        <Modal
+          size={'tiny'}
+          showClose
+          onCancel={() => actionModalError()}
+          title={'Error'}
+          visible={modaErrorlVisibled}
+        >
+          <Modal.Body>
+            <Title>
+              {messageError}
+            </Title>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              text={'ok'}
+              svg={<CheckIcon />}
+              type={'primary'}
+              onClick={() => actionModalError()}
       />
-    </Modal.Footer>
-  </Modal>
+          </Modal.Footer>
+        </Modal>
         <ModalView
           descriptionSelect={descriptionSelect}
           modalVisibled={modalVisibled}
@@ -151,15 +152,14 @@ class ListSDKDescriptions extends Component {
                     onClick={() => selectDescription(description, 'publish')}
                     text={'Publish'}
                   />
-                  :
-                  <Button
+                  : <Button
                     type={'secondary'}
                     svg={<PublishIcon />}
                     onClick={() => selectDescription(description, 'unPublish')}
                     text={'Unpublish'}
                   />
                   }
-                  {usersView &&
+                  {userLabel === 'admin' &&
                   <Button
                     type={'secondary'}
                     svg={<DeleteIcon />}
