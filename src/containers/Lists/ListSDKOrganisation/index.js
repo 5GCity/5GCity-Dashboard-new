@@ -2,7 +2,6 @@
  * ListsdkOrganisation Container
  * Please write a description
  *
- * @author Your Name <youremail@ubiwhere.com>
  */
 import React, { Component } from 'react'
 import Logic from './logic'

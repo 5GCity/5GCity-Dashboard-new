@@ -17,18 +17,16 @@ import ModalCreateOrganisation from 'containers/Modals/ModalCreateOrganisation'
 import PageTitle from 'components/PageTitle'
 import { PlusIcon } from 'components/Icons'
 
-
-
 class SDKOrganisation extends Component {
   render () {
-    const { modalOpen }= this.actions
+    const { modalOpen } = this.actions
     const { user } = this.props
     return (
       <Wrapper>
         <ModalCreateOrganisation />
         <PageTitle
           title={'My repositories'}
-          buttonTitle={ user && 'Add new repository'}
+          buttonTitle={user && 'Add new repository'}
           type={user && 'primary'}
           svg={user && <PlusIcon />}
           buttonFunction={() => user && modalOpen()}
@@ -46,4 +44,3 @@ const Wrapper = styled.div`
   margin-left: 120px;
   padding: 0 24px;
 `
-

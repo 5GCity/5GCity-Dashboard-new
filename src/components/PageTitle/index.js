@@ -2,7 +2,6 @@
  * PageTitle Component
  * Please write a description
  *
- * @author Your Name <youremail@ubiwhere.com>
  */
 import React from 'react'
 import styled from 'styled-components'
@@ -11,19 +10,23 @@ import { BackIcon } from 'components/Icons'
 
 export default ({ children, ...props }) => (
   <Wrapper>
-  <Container {...props}>
-    { props.buttonBack &&
-    <RightContainer>
-      <BackButton onClick={() => props.buttonBack()} />
+    <Container {...props}>
+      {props.buttonBack &&
+      <RightContainer>
+        <BackButton onClick={() => props.buttonBack()} />
+        <Title>{props.title}</Title>
+      </RightContainer>
+      }
+      {!props.buttonBack &&
       <Title>{props.title}</Title>
-    </RightContainer>
-    }
-    { !props.buttonBack &&
-    <Title>{props.title}</Title>
-    }
-    { props.buttonTitle &&
-      <ButtonPage {...props} onClick={props.buttonFunction} text={props.buttonTitle} />
-    }
+      }
+      {props.buttonTitle &&
+      <ButtonPage
+        {...props}
+        onClick={props.buttonFunction}
+        text={props.buttonTitle}
+      />
+      }
     </Container>
     {children}
   </Wrapper>

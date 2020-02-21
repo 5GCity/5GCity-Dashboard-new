@@ -159,7 +159,7 @@ class ListSDKDescriptions extends Component {
                     text={'Unpublish'}
                   />
                   }
-                  {userLabel === 'admin' &&
+                  {(userLabel === 'admin' || userLabel === description.ownerId) &&
                   <Button
                     type={'secondary'}
                     svg={<DeleteIcon />}

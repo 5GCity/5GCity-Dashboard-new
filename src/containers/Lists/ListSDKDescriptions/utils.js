@@ -11,7 +11,7 @@ export const Titles = [
     size: 200,
     name: 'Id',
     propItem: 'id'
-  },{
+  }, {
     id: 2,
     size: 120,
     name: 'Service Id',
@@ -27,3 +27,13 @@ export const Titles = [
       !vendor ? 'N.A' : vendor
   }
 ]
+
+export const DescriptorInfo = descriptors => {
+  const array = []
+  descriptors.forEach(descriptor => {
+    const owner = descriptor.subDescriptor[0].template.ownerId || null
+    const ownerId = owner || null
+    array.push({ ...descriptor, ownerId })
+  })
+  return array
+}

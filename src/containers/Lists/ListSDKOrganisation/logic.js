@@ -126,8 +126,7 @@ export default kea({
       (usersList, userName) => {
         const userLogin = userName.toLowerCase() === 'admin admin' ? 'admin' : userName.toLowerCase()
         const array = []
-        usersList &&
-        usersList.forEach(user => {
+        usersList && usersList.forEach(user => {
           if (userLogin === user.username) {
             array.push({value: user.username, label: `${user.attributes.tenantLabel[0]}-${user.username}`, isFixed: true})
           } else {

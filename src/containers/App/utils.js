@@ -1,6 +1,6 @@
 export const giveUserRole = (userArray) => {
-  const findAdmin = userArray.roles.find(role => role === 'Administrator')
-  return findAdmin !== undefined ? 'Inf. Owner' : 'Slice Requester'
+  const findAdmin = userArray.roles.includes('Administrator')
+  return findAdmin ? 'Inf. Owner' : 'Slice Requester'
 }
 
 export const AdminVerification = user => {

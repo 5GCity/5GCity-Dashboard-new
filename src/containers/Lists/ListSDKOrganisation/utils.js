@@ -25,17 +25,17 @@ export const Titles = [{
 }
 ]
 
-export const FindUsers = (usersAPI, newUsers ) => {
-  const obj = {add:[], remove: []}
+export const FindUsers = (usersAPI, newUsers) => {
+  const obj = {add: [], remove: []}
   usersAPI.forEach(user => {
     const findUser = newUsers.find(newUser => newUser.value === user)
-    if(!findUser) {
+    if (!findUser) {
       obj.remove.push(user)
     }
   })
   newUsers.forEach(newUser => {
     const findUser = usersAPI.find(userAPI => userAPI === newUser.value)
-    if(!findUser) {
+    if (!findUser) {
       obj.add.push(newUser)
     }
   })

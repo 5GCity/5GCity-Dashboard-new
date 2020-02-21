@@ -10,6 +10,7 @@ import { put, call } from 'redux-saga/effects'
 import axios from 'axios'
 import { API_SDK } from 'config'
 import { Message } from 'element-react'
+import { DescriptorInfo } from './utils'
 
 import PropTypes from 'prop-types'
 
@@ -129,7 +130,7 @@ export default kea({
           let responseResult = yield call(axios.get, `${API_SDK}/sdk/service_descriptor/?sliceId=${selectOrganization}`)
           const { data } = responseResult
           if (data.length > 0) {
-            yield put(setDescriptions(data))
+            yield put(setDescriptions(DescriptorInfo(data)))
           } else {
             yield put(setNoData())
           }

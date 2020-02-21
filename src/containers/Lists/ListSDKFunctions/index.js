@@ -152,22 +152,22 @@ class ListSDKFunctions extends Component {
 
               <ColumnBottons>
                 <ContainerButtons>
-                  {func.status !== 'COMMITTED'
-                  ? <Button
+                  {func.status !== 'COMMITTED' &&
+                  <Button
                     type={'primary'}
                     svg={<PublishIcon />}
                     onClick={() => selectFunc(func, 'publish')}
                     text={'Publish'}
                   />
-                  : null}
-                  {func.status === 'COMMITTED'
-                  ? <Button
+                  }
+                  {func.status === 'COMMITTED' &&
+                  <Button
                     type={'secondary'}
                     svg={<PublishIcon />}
                     onClick={() => selectFunc(func, 'unPublish')}
                     text={'Unpublish'}
                   />
-                  : null}
+                  }
                   {(userLabel === 'admin' || userLabel === func.ownerId) &&
                   <Fragment>
                     <Button
