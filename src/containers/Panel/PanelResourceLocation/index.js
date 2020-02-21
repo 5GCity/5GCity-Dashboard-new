@@ -17,15 +17,15 @@ import { BackIcon } from 'components/Icons'
 
 class PanelResourceLocation extends Component {
   render () {
-    const { show, close, update, resources }= this.props
+    const { show, close, update, resources } = this.props
     return (
-        <PanelRight
+      <PanelRight
           show={show}
           close={close}
         >
           {resources &&
           <React.Fragment>
-          <Container>
+            <Container>
             <Form
               labelWidth='120'
               labelPosition={'top'}
@@ -34,8 +34,8 @@ class PanelResourceLocation extends Component {
                 {resources.computes &&
                 <TitleResource>Computing</TitleResource>
                 }
-                 {resources.computes && resources.computes.map((compute, i) =>
-                  <React.Fragment key={i}>
+                {resources.computes && resources.computes.map((compute, i) =>
+                   <React.Fragment key={i}>
                     <Checkbox.Group
                       value={compute.ischecked === false ? [] : [compute.name]}
                       onChange={(value) => changeComputes(selectPin, i, 'ischecked', value.length > 0)}>
@@ -47,7 +47,7 @@ class PanelResourceLocation extends Component {
                         <Label>{compute.id}</Label>
                       </Checkbox>
                     </Checkbox.Group>
-             {/*        {compute.ischecked &&
+                    {/*        {compute.ischecked &&
                       <FormContainer key={i}>
                         <Form.Item label='Name'>
                           <Input
@@ -116,7 +116,7 @@ class PanelResourceLocation extends Component {
               </Form.Item>
             </Form>
           </Container>
-          <Bottom>
+            <Bottom>
             <BottomContainer>
               <Button
                 size={'xxxlarge'}
@@ -138,7 +138,7 @@ export default Logic(PanelResourceLocation)
 
 const Container = styled.div`
   overflow-y: auto;
-  margin: 0 0 0 20px;
+  margin: 0 5px 0 10px;
   max-height: calc(100vh - 200px);
 `
 

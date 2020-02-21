@@ -18,7 +18,6 @@ import PanelRANsView from 'containers/Panel/PanelRANsView'
 import PanelWifisView from 'containers/Panel/PanelWifisView'
 import PanelLTEsView from 'containers/Panel/PanelLTEsView'
 
-
 class PanelSliceDetails extends Component {
   render () {
     const { show, data, close } = this.props
@@ -57,7 +56,6 @@ const PanelInfo = styled.div`
 
 const Container = styled.div`
   overflow-y: auto;
-  margin: 0 0 0 20px;
+  margin: 0 5px 0 10px;
   height: calc(100% - 90px) !important;
   `
-

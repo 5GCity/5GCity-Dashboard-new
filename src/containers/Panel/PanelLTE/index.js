@@ -21,35 +21,34 @@ class PanelLTE extends Component {
       <Panel>
         <Title>LTE</Title>
         {data.map(box =>
-        <React.Fragment key={box.id}>
-        <BoxName key={box.id}>Box name: {box.name}</BoxName>
-          {box.physical.map(phy =>
-          <React.Fragment key={phy.id}>
-          <PhysName key={phy.id}>Name: {phy.name}</PhysName>
-          {isEmpty(phy.config) ?
-          <Btn
+          <React.Fragment key={box.id}>
+            <BoxName key={box.id}>Box name: {box.name}</BoxName>
+            {box.physical.map(phy =>
+              <React.Fragment key={phy.id}>
+                <PhysName key={phy.id}>Name: {phy.name}</PhysName>
+                {isEmpty(phy.config)
+          ? <Btn
             outline
             type={'primary'}
             text={'Add configure'}
             width={236}
             height={48}
-            onClick={() => editItem({ type:'LTE', ranId: box.ranId, phy: phy })}
+            onClick={() => editItem({ type: 'LTE', ranId: box.ranId, phy: phy })}
             svg={<EditIcon fill={'#8CC14E'} />}
           />
-          :
-          <Btn
+          : <Btn
             outline
             type={'primary'}
             text={'Configure'}
             width={236}
             height={48}
-            onClick={() => editItem({ type:'LTE', ranId: box.ranId, phy: phy })}
+            onClick={() => editItem({ type: 'LTE', ranId: box.ranId, phy: phy })}
             svg={<EditIcon fill={'#8CC14E'} />}
           />
           }
-          </React.Fragment>
+              </React.Fragment>
           )}
-        </React.Fragment>
+          </React.Fragment>
         )}
       </Panel>
     )

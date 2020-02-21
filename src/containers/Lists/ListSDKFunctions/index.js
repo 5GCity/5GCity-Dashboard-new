@@ -168,7 +168,7 @@ class ListSDKFunctions extends Component {
                     text={'Unpublish'}
                   />
                   : null}
-                  {userLabel === 'admin' &&
+                  {(userLabel === 'admin' || userLabel === func.ownerId) &&
                   <Fragment>
                     <Button
                       type={'secondary'}
@@ -183,23 +183,7 @@ class ListSDKFunctions extends Component {
                       text={'Edit'}
                   />
                   </Fragment>
-                }
-                  {userLabel === func.ownerId &&
-                  <Fragment>
-                    <Button
-                      type={'secondary'}
-                      svg={<DeleteIcon />}
-                      onClick={() => selectFunc(func, 'delete')}
-                      text={'Delete'}
-                  />
-                    <Button
-                      type={'primary'}
-                      svg={<EditIcon />}
-                      onClick={() => this.navigate(`/sdk/function/${func.id}`)}
-                      text={'Edit'}
-                  />
-                  </Fragment>
-                }
+                  }
                 </ContainerButtons>
               </ColumnBottons>
 

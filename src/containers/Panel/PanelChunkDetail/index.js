@@ -43,12 +43,12 @@ export default class PanelChunkDetail extends Component {
             {data.network &&
             <React.Fragment>
               <Title>Network</Title>
-                <TypeMarker
-                  className={'noBorder'}
+              <TypeMarker
+                className={'noBorder'}
                 >
-                  <Name>{data.network.name}</Name>
-                  <Id>Id: {data.network.id}</Id>
-                </TypeMarker>
+                <Name>{data.network.name}</Name>
+                <Id>Id: {data.network.id}</Id>
+              </TypeMarker>
               </React.Fragment>
             }
             {data.wifi &&
@@ -99,6 +99,6 @@ const Id = styled.p`
 `
 const Container = styled.div`
   overflow-y: auto;
-  margin: 0 0 0 20px;
+  margin: 0 5px 0 10px;
   height: calc(100% - 90px) !important;
   `

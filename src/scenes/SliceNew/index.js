@@ -4,29 +4,29 @@
  *
  * @author Your Name <youremail@ubiwhere.com>
  */
-import React, { Component, Fragment } from "react";
-import Logic from "./logic";
-import styled from "styled-components";
-import { withRouter } from "react-router-dom";
-import { Checkbox, Layout } from "element-react";
-import { UNITS, UNITS_SECONDS } from "./utils";
+import React, { Component, Fragment } from 'react'
+import Logic from './logic'
+import styled from 'styled-components'
+import { withRouter } from 'react-router-dom'
+import { Checkbox, Layout } from 'element-react'
+import { UNITS, UNITS_SECONDS } from './utils'
 
 /* Containers */
-import SliceMap from "containers/SliceMap";
+import SliceMap from 'containers/SliceMap'
 
 /* Components */
-import HeaderNav from "components/HeaderNav";
-import Button from "components/Button";
-import Input from "components/Input";
-import PanelRight from "components/PanelRight";
-import { BackIcon, CheckIcon } from "components/Icons";
-import Form from "components/Form";
-import Select from "components/Select";
+import HeaderNav from 'components/HeaderNav'
+import Button from 'components/Button'
+import Input from 'components/Input'
+import PanelRight from 'components/PanelRight'
+import { BackIcon, CheckIcon } from 'components/Icons'
+import Form from 'components/Form'
+import Select from 'components/Select'
 
 /* Containers */
-import ModalCreateSlice from "containers/Modals/ModalCreateSlice";
-import ModalErrorSlice from "containers/Modals/ModalErrorSlice";
-import ModalChunketeSlice from "containers/Modals/ModalChunketeSlice";
+import ModalCreateSlice from 'containers/Modals/ModalCreateSlice'
+import ModalErrorSlice from 'containers/Modals/ModalErrorSlice'
+import ModalChunketeSlice from 'containers/Modals/ModalChunketeSlice'
 
 const InfoMarkerContainer = props => {
   const {
@@ -37,11 +37,11 @@ const InfoMarkerContainer = props => {
     changeComputes,
     changeWifi,
     changeLTE
-  } = props;
+  } = props
   if (selectSlice) {
-    const { computes } = selectSlice;
+    const { computes } = selectSlice
     return (
-      <Form labelWidth="120" labelPosition={"top"}>
+      <Form labelWidth='120' labelPosition={'top'}>
         <Form.Item>
           {computes && <TitlePanel>Computing</TitlePanel>}
           {computes &&
@@ -50,7 +50,7 @@ const InfoMarkerContainer = props => {
                 <Checkbox.Group
                   value={compute.ischecked === false ? [] : [compute.name]}
                   onChange={value =>
-                    changeComputes(selectPin, i, "ischecked", value.length > 0)
+                    changeComputes(selectPin, i, 'ischecked', value.length > 0)
                   }
                 >
                   <Checkbox key={compute.id} label={compute.name}>
@@ -61,118 +61,118 @@ const InfoMarkerContainer = props => {
                 </Checkbox.Group>
                 {compute.ischecked && (
                   <FormContainer key={i}>
-                    <Form.Item label="Name">
+                    <Form.Item label='Name'>
                       <Input
-                        type="text"
+                        type='text'
                         value={compute.computeName}
                         onChange={value =>
-                          changeComputes(selectPin, i, "computeName", value)
+                          changeComputes(selectPin, i, 'computeName', value)
                         }
                       />
                     </Form.Item>
-                    <Form.Item label="Description">
+                    <Form.Item label='Description'>
                       <Input
-                        type="text"
+                        type='text'
                         value={compute.computeDescription}
                         onChange={value =>
                           changeComputes(
                             selectPin,
                             i,
-                            "computeDescription",
+                            'computeDescription',
                             value
                           )
                         }
                       />
                     </Form.Item>
-                    <Form.Item label="CPUs">
+                    <Form.Item label='CPUs'>
                       <Input
-                        type="text"
+                        type='text'
                         value={compute.cpus}
                         onChange={value =>
-                          changeComputes(selectPin, i, "cpus", value)
+                          changeComputes(selectPin, i, 'cpus', value)
                         }
                       />
                     </Form.Item>
                     <Id>CPU Total: {compute.computeData.cpus.total} cores </Id>
                     <Id>
-                      CPU Provisioned: {compute.computeData.cpus.provisioned}{" "}
-                      cores{" "}
+                      CPU Provisioned: {compute.computeData.cpus.provisioned}{' '}
+                      cores{' '}
                     </Id>
-                    <Layout.Row gutter="0">
-                      <Layout.Col span="16">
-                        <Form.Item label="RAM">
+                    <Layout.Row gutter='0'>
+                      <Layout.Col span='16'>
+                        <Form.Item label='RAM'>
                           <Input
-                            type="text"
+                            type='text'
                             value={compute.ram}
                             onChange={value =>
-                              changeComputes(selectPin, i, "ram", value)
+                              changeComputes(selectPin, i, 'ram', value)
                             }
                           />
                         </Form.Item>
                       </Layout.Col>
-                      <Layout.Col span="8">
-                        <Form.Item label={"Unit"}>
+                      <Layout.Col span='8'>
+                        <Form.Item label={'Unit'}>
                           <Select
-                            type={"default"}
-                            placeholder="unit"
+                            type={'default'}
+                            placeholder='unit'
                             options={UNITS}
                             onChange={value =>
-                              changeComputes(selectPin, i, "ramUnits", value)
+                              changeComputes(selectPin, i, 'ramUnits', value)
                             }
-                            selectOption={compute.computeData.ram.units || "MB"}
+                            selectOption={compute.computeData.ram.units || 'MB'}
                           />
                         </Form.Item>
                       </Layout.Col>
                     </Layout.Row>
                     <Id>
-                      RAM Total: {compute.computeData.ram.total}{" "}
-                      {compute.computeData.ram.units}{" "}
+                      RAM Total: {compute.computeData.ram.total}{' '}
+                      {compute.computeData.ram.units}{' '}
                     </Id>
                     <Id>
-                      RAM Provisioned: {compute.computeData.ram.provisioned}{" "}
-                      {compute.computeData.ram.units}{" "}
+                      RAM Provisioned: {compute.computeData.ram.provisioned}{' '}
+                      {compute.computeData.ram.units}{' '}
                     </Id>
-                    <Layout.Row gutter="0">
-                      <Layout.Col span="16">
-                        <Form.Item label="Storage">
+                    <Layout.Row gutter='0'>
+                      <Layout.Col span='16'>
+                        <Form.Item label='Storage'>
                           <Input
-                            type="text"
+                            type='text'
                             value={compute.storage}
                             onChange={value =>
-                              changeComputes(selectPin, i, "storage", value)
+                              changeComputes(selectPin, i, 'storage', value)
                             }
                           />
                         </Form.Item>
                       </Layout.Col>
-                      <Layout.Col span="8">
-                        <Form.Item label={"Unit"}>
+                      <Layout.Col span='8'>
+                        <Form.Item label={'Unit'}>
                           <Select
-                            type={"default"}
-                            placeholder="unit"
+                            type={'default'}
+                            placeholder='unit'
                             options={UNITS}
                             onChange={value =>
                               changeComputes(
                                 selectPin,
                                 i,
-                                "sotargeUnits",
+                                'sotargeUnits',
                                 value
                               )
                             }
                             selectOption={
-                              compute.computeData.storage.units || "GB"
+                              compute.computeData.storage.units || 'GB'
                             }
                           />
                         </Form.Item>
                       </Layout.Col>
                     </Layout.Row>
                     <Id>
-                      Storage Total: {compute.computeData.storage.total}{" "}
-                      {compute.computeData.storage.units}{" "}
+                      Storage Total: {compute.computeData.storage.total}{' '}
+                      {compute.computeData.storage.units}{' '}
                     </Id>
                     <Id>
-                      Storage Provisioned:{" "}
-                      {compute.computeData.storage.provisioned}{" "}
-                      {compute.computeData.storage.units}{" "}
+                      Storage Provisioned:{' '}
+                      {compute.computeData.storage.provisioned}{' '}
+                      {compute.computeData.storage.units}{' '}
                     </Id>
                   </FormContainer>
                 )}
@@ -180,69 +180,69 @@ const InfoMarkerContainer = props => {
             ))}
         </Form.Item>
         <React.Fragment>
-        {networks &&
-            <React.Fragment>
-              <TitlePanel>Network</TitlePanel>
-          {networks.map(network =>
-            <React.Fragment key={network.id}>
-              <Form.Item key={network.id}>
-                <Checkbox.Group
-                  value={network.ischecked === false ? [] : [network.name]}
-                  onChange={value =>
-                    changeNetwork("ischecked", value.length > 0, network.id)
+          {networks &&
+          <React.Fragment>
+            <TitlePanel>Network</TitlePanel>
+            {networks.map(network =>
+              <React.Fragment key={network.id}>
+                <Form.Item key={network.id}>
+                  <Checkbox.Group
+                    value={network.ischecked === false ? [] : [network.name]}
+                    onChange={value =>
+                    changeNetwork('ischecked', value.length > 0, network.id)
                   }
                 >
-                  <Checkbox key={network.id} label={network.name}>
-                    <Name>{network.name}</Name>
-                    <Id>{network.id}</Id>
-                  </Checkbox>
-                </Checkbox.Group>
-              </Form.Item>
-              {network.ischecked && (
+                    <Checkbox key={network.id} label={network.name}>
+                      <Name>{network.name}</Name>
+                      <Id>{network.id}</Id>
+                    </Checkbox>
+                  </Checkbox.Group>
+                </Form.Item>
+                {network.ischecked && (
                 <FormContainer>
-                  <Form.Item label="Name">
+                  <Form.Item label='Name'>
                     <Input
-                      type="text"
-                      value={network.nameNetwork}
-                      onChange={value => changeNetwork("nameNetwork", value, network.id)}
+                    type='text'
+                    value={network.nameNetwork}
+                    onChange={value => changeNetwork('nameNetwork', value, network.id)}
                     />
                   </Form.Item>
-                  <Layout.Row gutter="0">
-                    <Layout.Col span="14">
-                      <Form.Item label="Bandwidth">
-                        <Input
-                          type="text"
+                  <Layout.Row gutter='0'>
+                    <Layout.Col span='14'>
+                    <Form.Item label='Bandwidth'>
+                          <Input
+                          type='text'
                           value={network.bandwidth}
-                          onChange={value => changeNetwork("bandwidth", value, network.id)}
+                          onChange={value => changeNetwork('bandwidth', value, network.id)}
                         />
-                      </Form.Item>
-                    </Layout.Col>
-                    <Layout.Col span="10">
-                      <Form.Item label={"Unit"}>
-                        <Select
-                          type={"default"}
-                          placeholder="unit"
+                        </Form.Item>
+                  </Layout.Col>
+                    <Layout.Col span='10'>
+                    <Form.Item label={'Unit'}>
+                          <Select
+                          type={'default'}
+                          placeholder='unit'
                           options={UNITS_SECONDS}
                           onChange={value =>
-                            changeNetwork("bandwidthUnits", value, network.id)
+                            changeNetwork('bandwidthUnits', value, network.id)
                           }
-                          selectOption={network.bandwidthUnits || "MB/s"}
+                          selectOption={network.bandwidthUnits || 'MB/s'}
                         />
-                      </Form.Item>
-                    </Layout.Col>
+                        </Form.Item>
+                  </Layout.Col>
                   </Layout.Row>
                   <Id>
                     Bandwidth Total: {network.bandwidthTotal} {network.units}
                   </Id>
                   <Id>
-                    Bandwidth Provisioned: {network.bandwidthProvisioned}{" "}
+                    Bandwidth Provisioned: {network.bandwidthProvisioned}{' '}
                     {network.units}
                   </Id>
                 </FormContainer>
               )}
               </React.Fragment>
           )}
-            </React.Fragment>
+          </React.Fragment>
         }
           {selectSlice.wifi && <TitlePanel>Wifi</TitlePanel>}
           {selectSlice.wifi &&
@@ -255,7 +255,7 @@ const InfoMarkerContainer = props => {
                       changeWifi(
                         selectPin,
                         physIndex,
-                        "ischecked",
+                        'ischecked',
                         value.length > 0
                       )
                     }
@@ -280,6 +280,7 @@ const InfoMarkerContainer = props => {
           {selectSlice.LTE &&
             selectSlice.LTE.map((phy, physIndex) => (
               <React.Fragment key={phy.id}>
+                {console.log('phy', phy)}
                 <Form.Item key={phy.id}>
                   <Checkbox.Group
                     value={phy.ischecked === false ? [] : [phy.name]}
@@ -287,7 +288,7 @@ const InfoMarkerContainer = props => {
                       changeLTE(
                         selectPin,
                         physIndex,
-                        "ischecked",
+                        'ischecked',
                         value.length > 0
                       )
                     }
@@ -295,6 +296,20 @@ const InfoMarkerContainer = props => {
                     <Checkbox key={phy.id} label={phy.name}>
                       <Name>{phy.name}</Name>
                       <Id>{phy.id}</Id>
+                      {phy.config &&
+                      <React.Fragment>
+                        <Id>Cell Identity: {phy.config.cellIdentity}</Id>
+                        <Id>Earfcndl: {phy.config.earfcndl}</Id>
+                        <Id>Phy Cell Id: {phy.config.phyCellId}</Id>
+                        <Id>Prach root seq index: {phy.config.prachrootseqindex}</Id>
+                        <Id>Primary MME Address: {phy.config.primaryMMEAddress}</Id>
+                        <Id>Primary MME Port: {phy.config.primaryMMEPort}</Id>
+                        <Id>Primary Plmn Id: {phy.config.primaryPlmnId}</Id>
+                        <Id>Ref Signal Power: {phy.config.refSignalPower}</Id>
+                        <Id>Reserved For Operator Use: {phy.config.reservedForOperatorUse}</Id>
+                        <Id>Tracking Area Code: {phy.config.trackingAreaCode}</Id>
+                      </React.Fragment>
+                      }
                     </Checkbox>
                   </Checkbox.Group>
                   <BoxType>{phy.type}</BoxType>
@@ -303,19 +318,19 @@ const InfoMarkerContainer = props => {
             ))}
         </React.Fragment>
       </Form>
-    );
+    )
   } else {
-    return null;
+    return null
   }
-};
+}
 
 class SliceNew extends Component {
   navigateToBack = () => {
-    const { history } = this.props;
-    history.goBack();
+    const { history } = this.props
+    history.goBack()
   };
 
-  render() {
+  render () {
     const {
       pinsResources,
       modalNewSlice,
@@ -331,7 +346,7 @@ class SliceNew extends Component {
       selectSlice,
       selectPin,
       networks
-    } = this.props;
+    } = this.props
     const {
       updateMarker,
       modalNewSliceStatus,
@@ -348,13 +363,13 @@ class SliceNew extends Component {
       changeComputes,
       changeWifi,
       changeLTE
-    } = this.actions;
+    } = this.actions
     return (
       <Wrapper>
         <HeaderNav
           buttonBack={<BackIcon />}
           navigateBack={() => this.navigateToBack()}
-          name={"Add new slice"}
+          name={'Add new slice'}
         >
           <HeaderNav.Left>
             <ButtonShop onClick={() => verifySlice()} svg={<CheckIcon />} />
@@ -377,10 +392,10 @@ class SliceNew extends Component {
           <Bottom>
             <BottomContainer>
               <Button
-                size={"xxxlarge"}
+                size={'xxxlarge'}
                 svg={<BackIcon />}
-                text={"Update Card"}
-                type={"primary"}
+                text={'Update Card'}
+                type={'primary'}
                 onClick={updateMarker}
               />
             </BottomContainer>
@@ -417,18 +432,18 @@ class SliceNew extends Component {
           modalStatus={modalStatus}
         />
       </Wrapper>
-    );
+    )
   }
 }
 
-export default withRouter(Logic(SliceNew));
+export default withRouter(Logic(SliceNew))
 
 const Wrapper = styled.div`
   height: calc(100% - 80px) !important;
   .el-checkbox__label {
     font-size: 16px;
   }
-`;
+`
 
 const TitlePanel = styled.h5`
   color: ${({ theme }) => theme.primaryColor};
@@ -436,7 +451,7 @@ const TitlePanel = styled.h5`
   margin: 32px 0 24px 0;
   font-size: 20px;
   line-height: 20px;
-`;
+`
 
 const Name = styled.p`
   margin: 12px 0;
@@ -445,36 +460,36 @@ const Name = styled.p`
   font-weight: bold;
   color: #eff2f7;
   font-family: ${({ theme }) => theme.fontFamily};
-`;
+`
 
 const BoxType = styled.span`
   margin-left: 20px;
   color: #89979f;
   font-size: 14px;
   font-family: ${({ theme }) => theme.fontFamily};
-`;
+`
 
 const Id = styled.p`
   margin: 12px 0;
   font-size: 14px;
-  line-height: 14px;
+  line-height: 18px;
   font-family: ${({ theme }) => theme.fontFamily};
   color: #89979f;
   width: 248px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-`;
+`
 
 const FormContainer = styled.div`
   margin-left: 5px;
-`;
+`
 
 const Container = styled.div`
   overflow-y: auto;
-  margin: 0 0 0 20px;
+  margin: 0 5px 0 10px;
   max-height: calc(100vh - 200px);
-`;
+`
 
 const Bottom = styled.div`
   background-color: rgba(255, 255, 255, 0.05);
@@ -482,16 +497,16 @@ const Bottom = styled.div`
   width: 100%;
   position: absolute;
   bottom: 80px;
-`;
+`
 const BottomContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100%;
-`;
+`
 
 const ButtonShop = styled(Button)`
   border: 0px;
   background: transparent;
   color: white;
-`;
+`

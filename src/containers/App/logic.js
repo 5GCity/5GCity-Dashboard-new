@@ -10,7 +10,7 @@ import { kea } from 'kea'
 import { put, call } from 'redux-saga/effects'
 import { setAuthorizationInterceptor } from 'interceptors'
 import Keycloak from 'keycloak-js'
-import { giveUserRole } from './utils'
+import { giveUserRole, AdminVerification } from './utils'
 
 const { localStorage } = window
 
@@ -53,7 +53,7 @@ export default kea({
     ],
     userLabel: [
       () => [selectors.keycloak],
-      (keycloak) => keycloak && keycloak.tokenParsed.preferred_username,
+      (keycloak) => keycloak && AdminVerification(keycloak.tokenParsed),
       PropTypes.string
     ]
   }),

@@ -10,36 +10,36 @@ import { Theme } from 'globalStyles'
 
 export default class PanelLTEsView extends Component {
   render () {
-    const { ltes }= this.props
+    const { ltes } = this.props
     return (
       <Wrapper>
         {ltes && ltes.map((lte, i) =>
-        <Fragment key={lte.id}>
-          <Title>LTE</Title>
-          <Name>Box name: {lte.name}</Name>
-          {lte.physical && lte.physical.map((physical, i)  =>
-          <TypeMarker
-            className={i === lte.physical.length - 1 && 'noBorder'}
-            key={physical.id}>
-            <Name>Name: {physical.name}</Name>
-            <Id>{physical.id}</Id>
-            {physical.config &&
-              <Fragment key={i}>
-                <Id>cellIdentity: {physical.config.cellIdentity}</Id>
-                <Id>earfcndl: {physical.config.earfcndl}</Id>
-                <Id>phyCellId: {physical.config.phyCellId}</Id>
-                <Id>prachrootseqindex: {physical.config.prachrootseqindex}</Id>
-                <Id>primaryMMEAddress: {physical.config.primaryMMEAddress}</Id>
-                <Id>primaryMMEPort: {physical.config.primaryMMEPort}</Id>
-                <Id>primaryPlmnId: {physical.config.primaryPlmnId}</Id>
-                <Id>refSignalPower: {physical.config.refSignalPower}</Id>
-                <Id>reservedForOperatorUse: {physical.config.reservedForOperatorUse}</Id>
-                <Id>trackingAreaCode: {physical.config.trackingAreaCode}</Id>
-              </Fragment>
+          <Fragment key={lte.id}>
+            <Title>LTE</Title>
+            <Name>Box name: {lte.name}</Name>
+            {lte.physical && lte.physical.map((physical, i) =>
+              <TypeMarker
+                className={i === lte.physical.length - 1 && 'noBorder'}
+                key={physical.id}>
+                <Name>Name: {physical.name}</Name>
+                <Id>{physical.id}</Id>
+                {physical.config &&
+                <Fragment key={i}>
+                  <Id>cellIdentity: {physical.config.cellIdentity}</Id>
+                  <Id>earfcndl: {physical.config.earfcndl}</Id>
+                  <Id>phyCellId: {physical.config.phyCellId}</Id>
+                  <Id>prachrootseqindex: {physical.config.prachrootseqindex}</Id>
+                  <Id>primaryMMEAddress: {physical.config.primaryMMEAddress}</Id>
+                  <Id>primaryMMEPort: {physical.config.primaryMMEPort}</Id>
+                  <Id>primaryPlmnId: {physical.config.primaryPlmnId}</Id>
+                  <Id>refSignalPower: {physical.config.refSignalPower}</Id>
+                  <Id>reservedForOperatorUse: {physical.config.reservedForOperatorUse}</Id>
+                  <Id>trackingAreaCode: {physical.config.trackingAreaCode}</Id>
+                </Fragment>
             }
-          </TypeMarker>
+              </TypeMarker>
           )}
-        </Fragment>
+          </Fragment>
         )}
       </Wrapper>
     )

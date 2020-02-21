@@ -49,38 +49,22 @@ const ListSDKService = props => (
               onClick={() => props.selectService(service, 'clone')}
               text={'Clone'}
           />
-            {props.userLabel === 'admin' &&
-            <Fragment>
-              <Button
-                type={'secondary'}
-                svg={<DeleteIcon />}
-                onClick={() => props.selectService(service, 'delete')}
-                text={'Delete'}
-          />
-              <Button
-                type={'primary'}
-                svg={<EditIcon />}
-                onClick={() => props.navigate(`/sdk/composer/${service.id}`)}
-                text={'Edit'}
-          />
-            </Fragment>
-        }
-            {props.userLabel === service.ownerId &&
-            <Fragment>
-              <Button
-                type={'secondary'}
-                svg={<DeleteIcon />}
-                onClick={() => props.selectService(service, 'delete')}
-                text={'Delete'}
-              />
-              <Button
-                type={'primary'}
-                svg={<EditIcon />}
-                onClick={() => props.navigate(`/sdk/composer/${service.id}`)}
-                text={'Edit'}
-              />
-            </Fragment>
-        }
+            {(props.userLabel === 'admin' || props.userLabel === service.ownerId) &&
+              <Fragment>
+                <Button
+                  type={'secondary'}
+                  svg={<DeleteIcon />}
+                  onClick={() => props.selectService(service, 'delete')}
+                  text={'Delete'}
+                />
+                <Button
+                  type={'primary'}
+                  svg={<EditIcon />}
+                  onClick={() => props.navigate(`/sdk/composer/${service.id}`)}
+                  text={'Edit'}
+                />
+              </Fragment>
+            }
           </ContainerButtons>
         </ColumnBottons>
       </List.Row>)}
