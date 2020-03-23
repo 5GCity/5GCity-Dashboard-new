@@ -2,7 +2,6 @@
  * Formbasicsettings Container
  * Please write a description
  *
- * @author Your Name <youremail@ubiwhere.com>
  */
 import React, { Component } from 'react'
 import Logic from './logic'
@@ -20,8 +19,16 @@ import { LICENSE_TYPE, ACCESS_LEVEL } from './utils'
 
 class FormBasicSettings extends Component {
   render () {
-    const { dataForm, setValue, removeParameter, addParameter,
-      setValueParameters, organizations } = this.props
+    const {
+      organizations,
+      formBasic
+    } = this.props
+    const {
+      change,
+      removeParameter,
+      addParameter,
+      setValueParameters
+    } = this.actions
     const {
       service_name,
       service_organization,
@@ -30,7 +37,8 @@ class FormBasicSettings extends Component {
       service_version,
       service_license_url,
       service_license_type,
-      service_parameter } = dataForm
+      service_parameter
+    } = formBasic
     return (
       <Wrapper>
         <FormTitle title={'general info'} />
@@ -40,58 +48,78 @@ class FormBasicSettings extends Component {
           <Form.Item label={'Name'} required status={!service_name.valid}>
             <Input
               value={service_name.value}
-              onChange={value => setValue({service_name: value})}
+              onChange={value => change({service_name: value})}
               />
             <Form.Error>{service_name.message}</Form.Error>
           </Form.Item>
-          <Form.Item label={'Repository name'} required status={!service_organization.valid}>
+          <Form.Item
+            label={'Repository name'}
+            required
+            status={!service_organization.valid}
+          >
             <Select
               placeholder={'Repository'}
               type={'default'}
               options={organizations}
-              onChange={value => setValue({service_organization: value})}
-              selectOption={service_organization.value}
+              onChange={value => change({service_organization: value})}
+              value={service_organization.value}
             />
             <Form.Error>{service_organization.message}</Form.Error>
           </Form.Item>
-          <Form.Item label={'Access Level'} required status={!service_access_level.valid}>
+          <Form.Item
+            label={'Access Level'}
+            required
+            status={!service_access_level.valid}
+          >
             <Select
               type={'default'}
               options={ACCESS_LEVEL}
-              onChange={value => setValue({service_access_level: value})}
-              selectOption={service_access_level.value}
+              onChange={value => change({service_access_level: value})}
+              value={service_access_level.value}
             />
             <Form.Error>{service_access_level.message}</Form.Error>
           </Form.Item>
-          <Form.Item label={'Designer'} required status={!service_designer.valid}>
+          <Form.Item
+            label={'Designer'}
+            required
+            status={!service_designer.valid}
+          >
             <Input
               value={service_designer.value}
-              onChange={value => setValue({service_designer: value})}
+              onChange={value => change({service_designer: value})}
               />
             <Form.Error>{service_designer.message}</Form.Error>
           </Form.Item>
           <Form.Item label={'Version'} required status={!service_version.valid}>
             <Input
               value={service_version.value}
-              onChange={value => setValue({service_version: value})}
+              onChange={value => change({service_version: value})}
               />
             <Form.Error>{service_version.message}</Form.Error>
           </Form.Item>
           <SubTitle>License</SubTitle>
-          <Form.Item label={'Type'} required status={!service_license_type.valid}>
+          <Form.Item
+            label={'Type'}
+            required
+            status={!service_license_type.valid}
+          >
             <Select
               placeholder={'License Type'}
               type={'default'}
               options={LICENSE_TYPE}
-              onChange={value => setValue({service_license_type: value})}
-              selectOption={service_license_type.value}
+              onChange={value => change({service_license_type: value})}
+              value={service_license_type.value}
             />
             <Form.Error>{service_license_type.message}</Form.Error>
           </Form.Item>
-          <Form.Item label={'URL'} required status={!service_license_url.valid}>
+          <Form.Item
+            label={'URL'}
+            required
+            status={!service_license_url.valid}
+          >
             <Input
               value={service_license_url.value}
-              onChange={value => setValue({service_license_url: value})}
+              onChange={value => change({service_license_url: value})}
               />
             <Form.Error>{service_license_url.message}</Form.Error>
           </Form.Item>

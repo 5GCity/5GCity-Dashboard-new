@@ -2,7 +2,6 @@
  * ModalConfigParameters Container Utils
  * Please write a description
  *
- * @author Your Name <youremail@ubiwhere.com>
  */
 
 /**
@@ -14,7 +13,7 @@ export const setForm = node => {
   node.extra_info.parameter.forEach(element =>
     array.push({
       value: null,
-      valid: true,
+      valid: true
     })
   )
   for (let index = 0; index < array.length; index++) {

@@ -8,7 +8,10 @@ import { kea } from 'kea'
 import axios from 'axios'
 import { put, call } from 'redux-saga/effects'
 import { API_SLICE_MANAGEMENT } from 'config'
-import { createSlice, CreateSliceChunk } from './utils'
+import {
+  createSlice,
+  CreateSliceChunk
+} from './utils'
 
 import PropTypes from 'prop-types'
 
@@ -81,7 +84,12 @@ export default kea({
   workers: {
 
     * fetchSlice () {
-      const { setSlice, addLoadingPage, removeLoadingPage, setSliceChunk } = this.actions
+      const {
+        setSlice,
+        addLoadingPage,
+        removeLoadingPage,
+        setSliceChunk
+      } = this.actions
 
       // add Loading page
       yield put(addLoadingPage())

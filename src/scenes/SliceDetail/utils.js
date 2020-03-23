@@ -58,6 +58,7 @@ export const createSlice = resources => {
                 name: compute.name,
                 computeData: {...compute.requirements},
                 ischecked: false
+
               }],
               network: {
                 id: findNetwork.id,
@@ -89,8 +90,8 @@ export const createSlice = resources => {
   compareComputes()
 
   return ({
-    'name': resources.name,
-    'markers': markers
+    name: resources.name,
+    markers: markers
   })
 }
 
@@ -158,6 +159,43 @@ export const CreateSliceChunk = list => {
       })
     }
   })
-
+  markerObject.links = CreateAllLinks(markerObject.markers)
   return markerObject
+}
+
+const CreateAllLinks = markers => {
+  const links = []
+  let indexLink = 0
+  let lastLocation = null
+  const markersLength = markers.length
+  if (markersLength > 1) {
+    for (let indexMarkers = 0; indexMarkers < markersLength; indexMarkers++) {
+      const marker = markers[indexMarkers]
+      if (links[indexLink] && links[indexLink].coordinates && !links[indexLink].coordinates.target[0]) {
+        links[indexLink].coordinates.target.push(marker.location.longitude, marker.location.latitude)
+        lastLocation = { ...marker.location }
+        indexLink++
+      } else if (lastLocation) {
+        links.push({
+          id: indexMarkers,
+          coordinates: {
+            source: [lastLocation.longitude, lastLocation.latitude],
+            target: [marker.location.longitude, marker.location.latitude]
+          }
+        })
+        lastLocation = null
+        indexLink++
+      } else {
+        links.push({
+          id: indexMarkers,
+          coordinates: {
+            source: [marker.location.longitude, marker.location.latitude],
+            target: []
+          }
+        })
+      }
+    }
+  }
+
+  return links
 }

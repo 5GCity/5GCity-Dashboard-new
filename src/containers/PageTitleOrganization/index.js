@@ -34,7 +34,7 @@ class PageTitleOrganization extends Component {
             type={'default'}
             loading={loading}
             options={organizations}
-            selectOption={selectOrganization}
+            value={selectOrganization}
             onChange={value => changeOrganization(value)}
           />
         </ContainerFilters>

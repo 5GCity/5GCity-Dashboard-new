@@ -67,8 +67,14 @@ const BtnOutline = () => (
       text={'Add new'}
       width={236}
       height={48}
-      disabled={true}
+      disabled
       svg={<CirclePlusIcon fill={'white'} />}
+    />
+    <Button
+      type={'secondary'}
+      icon={'close'}
+      width={32}
+      height={32}
     />
   </div>
 )

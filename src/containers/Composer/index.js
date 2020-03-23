@@ -16,6 +16,7 @@ import { wordsUtils } from 'utils'
 /* Containers */
 import ModalCreateLinkComposer from 'containers/Modals/ModalCreateLinkComposer'
 import ModalConfigParameters from 'containers/Modals/ModalConfigParameters'
+import ModalConfigMonitoring from 'containers/Modals/ModalConfigMonitoring'
 
 class Composer extends Component {
   state = {
@@ -40,6 +41,11 @@ class Composer extends Component {
   configParams (node) {
     const { configParams } = this.props
     configParams(node)
+  }
+
+  configMonitoring (node) {
+    const { configMonitoring } = this.props
+    configMonitoring(node)
   }
 
   /**
@@ -219,18 +225,18 @@ class Composer extends Component {
     function tick () {
       // draw directed edges
       path
-        .attr('x1', d => {
-          return d.source.x + d.source[d.sourcePosition].x
-        })
-        .attr('y1', d => {
-          return d.source.y + d.source[d.sourcePosition].y
-        })
-        .attr('x2', d => {
-          return d.target.x + d.target[d.targetPosition].x
-        })
-        .attr('y2', d => {
-          return d.target.y + d.target[d.targetPosition].y
-        })
+      .attr('x1', d => {
+        return d.source.x + d.source[d.sourcePosition].x
+      })
+      .attr('y1', d => {
+        return d.source.y + d.source[d.sourcePosition].y
+      })
+      .attr('x2', d => {
+        return d.target.x + d.target[d.targetPosition].x
+      })
+      .attr('y2', d => {
+        return d.target.y + d.target[d.targetPosition].y
+      })
 
       groupBridge.attr('transform', d => `translate(${d.x},${d.y})`)
 
@@ -549,7 +555,7 @@ class Composer extends Component {
         .attr('class', 'menu_otpions visibility')
         .attr('fill', '#404F57')
         .attr('width', 200)
-        .attr('height', 70)
+        .attr('height', 115)
         .attr('rx', 5)
         .attr('x', 122)
         .attr('y', 0)
@@ -594,31 +600,7 @@ class Composer extends Component {
         .on('click', d => {
           if (d.extra_info.parameter) { confParams(d) }
         })
-        /*
       // Open in new tab
-      groupVNFMenu
-        .append('svg:rect')
-        .attr('class', 'menu_otpions visibility')
-        .attr('fill', 'transparent')
-        .attr('width', 200)
-        .attr('height', 40)
-        .attr('rx', 5)
-        .attr('x', 120)
-        .attr('y', 40)
-        .on('click', () => {
-          console.log('Open Tab')
-        })
-      groupVNFMenu
-        .append('svg:text')
-        .attr('class', 'menu_otpions visibility')
-        .attr('x', 150)
-        .attr('y', 60)
-        .text('Open in new tab')
-        .attr('font-family', 'sans-serif')
-        .attr('font-size', '12px')
-        .attr('font-weight', 'bold')
-        .attr('fill', '#fff') */
-      // Remover
       groupVNFMenu
         .append('svg:rect')
         .attr('class', 'menu_otpions visibility')
@@ -627,7 +609,45 @@ class Composer extends Component {
         .attr('height', 35)
         .attr('rx', 5)
         .attr('x', 122)
-        .attr('y', 35) // 80
+        .attr('y', 40)
+        .on('click', d => {
+          if (d.extra_info.monitoringVNF) { confMonitoring(d) }
+        })
+      groupVNFMenu
+        .append('svg:text')
+        .attr('class', 'menu_otpions visibility')
+        .attr('x', 150)
+        .attr('y', 60)
+        .text(d => {
+          if (d.extra_info.monitoringVNF) {
+            return 'Monitoring Parameters'
+          } else {
+            return 'No monitoring'
+          }
+        })
+        .attr('font-family', 'sans-serif')
+        .attr('font-size', '12px')
+        .attr('font-weight', 'bold')
+        .attr('fill', d => {
+          if (d.extra_info.monitoringVNF) {
+            return '#fff'
+          } else {
+            return '#89979F'
+          }
+        })
+        .on('click', d => {
+          if (d.extra_info.monitoringVNF) { confMonitoring(d) }
+        })
+      // Remover
+      groupVNFMenu
+        .append('svg:rect')
+        .attr('class', 'menu_otpions visibility')
+        .attr('fill', 'transparent')
+        .attr('width', 150)
+        .attr('height', 35)
+        .attr('rx', 5)
+        .attr('x', 122)
+        .attr('y', 70)
         .on('click', () => {
           deleteNodes()
         })
@@ -635,7 +655,7 @@ class Composer extends Component {
         .append('svg:text')
         .attr('class', 'menu_otpions visibility')
         .attr('x', 150)
-        .attr('y', 56) // 100
+        .attr('y', 94)
         .text('Remove')
         .attr('font-family', 'sans-serif')
         .attr('font-size', '12px')
@@ -1553,6 +1573,11 @@ class Composer extends Component {
       closeTooltip(node)
     }
 
+    const confMonitoring = node => {
+      this.configMonitoring(node)
+      closeTooltip(node)
+    }
+
     function mousedown () {
       if (mousedownNode || mousedownLink) return
       restart()
@@ -1574,7 +1599,14 @@ class Composer extends Component {
   }
 
   render () {
-    const { modalStatus, modalData, modalAction, modalConfigStatus, modalNodeConfigData } = this.props
+    const {
+      modalStatus,
+      modalData,
+      modalAction,
+      modalParameters,
+      modalNodeConfigData,
+      modalMonitoring
+    } = this.props
     return (
       <React.Fragment>
         <D3>
@@ -1592,12 +1624,18 @@ class Composer extends Component {
           data={modalData}
         />
         }
-        {modalConfigStatus &&
-        <ModalConfigParameters
-          visibled={modalConfigStatus}
-          title={'Configure Parameters'}
-          data={modalNodeConfigData}
-        />
+        {modalParameters &&
+          <ModalConfigParameters
+            visibled={modalParameters}
+            title={'Configure Parameters'}
+            data={modalNodeConfigData}
+          />
+        }
+        {modalMonitoring &&
+          <ModalConfigMonitoring
+            visibled={modalMonitoring}
+            title={'Configure Monitoring'}
+          />
         }
       </React.Fragment>
     )

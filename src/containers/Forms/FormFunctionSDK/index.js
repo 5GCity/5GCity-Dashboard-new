@@ -33,7 +33,7 @@ const GeneralInfoOne = props => (
         placeholder='Repository'
         options={props.organizations}
         onChange={value => props.change({functionSliceId: value})}
-        selectOption={props.functionSliceId.value}
+        value={props.functionSliceId.value}
       />
       <Form.Error>{props.functionSliceId.message}</Form.Error>
     </Form.Item>
@@ -43,7 +43,7 @@ const GeneralInfoOne = props => (
         placeholder='Access Level'
         options={ACCESS_LEVEL}
         onChange={value => props.change({functionAccessLevel: value})}
-        selectOption={props.functionAccessLevel.value}
+        value={props.functionAccessLevel.value}
       />
       <Form.Error>{props.functionAccessLevel.message}</Form.Error>
     </Form.Item>
@@ -93,7 +93,7 @@ const GeneralInfoTwo = props => (
         type={'default'}
         options={VISIBILITY}
         onChange={value => props.change({functionvisibility: value})}
-        selectOption={props.functionvisibility.value}
+        value={props.functionvisibility.value}
   />
       <Form.Error>{props.functionvisibility.message}</Form.Error>
     </Form.Item>

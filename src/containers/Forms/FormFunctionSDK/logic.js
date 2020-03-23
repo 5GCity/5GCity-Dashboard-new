@@ -112,11 +112,16 @@ export default kea({
       [actions.addParameter]: (state, payload) => AddParameter(state),
       [actions.removeParameter]: (state, payload) =>
         Object.assign({}, state, state.functionParameters.array.splice(payload.index, 1)),
+
       [actions.reset]: () => DEFAULT_FORM
     }],
 
     dirty: [false, PropTypes.bool, {
       [actions.change]: () => true,
+      [actions.changeParameters]: () => true,
+      [actions.addParameter]: () => true,
+      [actions.removeParameter]: () => true,
+
       [actions.reset]: () => false
     }]
   }),
@@ -197,7 +202,7 @@ export default kea({
             case 400:
               Message({
                 showClose: false,
-                message: error.response.data || error.response.error,
+                message: 'Cannot create or modify function',
                 type: 'error'
               })
               break

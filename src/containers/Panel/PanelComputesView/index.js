@@ -10,7 +10,7 @@ import { Theme } from 'globalStyles'
 
 export default class PanelComputesView extends Component {
   render () {
-    const { computes }= this.props
+    const { computes } = this.props
     return (
       <Wrapper>
         {computes &&
@@ -18,13 +18,14 @@ export default class PanelComputesView extends Component {
         }
         {computes && computes.map((compute, i) =>
           <TypeMarker
-          key={compute.id}
+            key={compute.id}
             className={i === computes.length - 1 && 'noBorder'}
           >
             <Name>{compute.name}</Name>
             <Id><b>{compute.type}</b></Id>
             <Id>{compute.id}</Id>
             <Id>Status: {compute.status}</Id>
+            <Id>Trusted: {compute.trusted}</Id>
             {compute.computeData &&
               <Fragment>
                 <Container>
@@ -39,14 +40,14 @@ export default class PanelComputesView extends Component {
                     <Id>RAM Total: {compute.computeData.ram.total} {compute.computeData.ram.units} </Id>
                     <Id>RAM Provisioned: {compute.computeData.ram.provisioned} {compute.computeData.ram.units} </Id>
                   </div>
-                    <StatusColor color={compute.computeData.ram.color} />
+                  <StatusColor color={compute.computeData.ram.color} />
                 </Container>
                 <Container>
                   <div>
                     <Id>DISK Total: {compute.computeData.storage.total} {compute.computeData.storage.units} </Id>
                     <Id>DISK Provisioned: {compute.computeData.storage.provisioned} {compute.computeData.storage.units} </Id>
                   </div>
-                    <StatusColor color={compute.computeData.storage.color} />
+                  <StatusColor color={compute.computeData.storage.color} />
                 </Container>
               </Fragment>
             }
@@ -56,7 +57,6 @@ export default class PanelComputesView extends Component {
     )
   }
 }
-
 
 const Wrapper = styled.div`
 
@@ -102,4 +102,3 @@ const Container = styled.div`
   justify-content: space-between;
   align-items: center;
 `
-

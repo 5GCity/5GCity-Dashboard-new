@@ -2,7 +2,6 @@
  * SliceNew Container Logic
  * Please write a description
  *
- * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
 
 import { kea } from 'kea'
@@ -325,6 +324,7 @@ export default kea({
       } else if (selectRadioPhys.wifi.length > 0 || selectRadioPhys.lte.length > 0) {
         yield put(setRadioPhysInfo(selectRadioPhys))
         yield put(setFormChunk(selectRadioPhys))
+        yield put(modalNewSliceStatus())
       } else {
         yield put(modalNewSliceStatus())
       }
@@ -383,7 +383,6 @@ export default kea({
           modalNewSliceStatus, showError,
           getListResources } = this.actions
       const formSlice = yield this.get('formSlice')
-      const formChunk = yield this.get('formChunkete')
       const infoChunkete = yield this.get('infoChunkete')
       const openstackProjects = []
 
@@ -462,8 +461,8 @@ export default kea({
             const phy = selectRadioPhys[index]
             // 3º Create Chunkete Chunk
             const newChunkete = {
-              assignedQuota: formChunk.assignedQuota.array[index].value,
-              name: formChunk.name.array[index].value,
+              assignedQuota: 0,
+              name: `${formSlice.nameSlice.value}_chunkete`,
               topology: {
                 physicalInterfaceList: []
               }

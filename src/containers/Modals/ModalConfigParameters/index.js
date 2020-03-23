@@ -2,7 +2,6 @@
  * Modalconfigparameters Container
  * Please write a description
  *
- * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
 import React, { Component } from 'react'
 import Logic from './logic'
@@ -38,8 +37,8 @@ class ModalConfigParameters extends Component {
                 status={!map.valid}
             >
                 <Input
-                value={map.value}
-                onChange={value => change('mapping_expression', value, index)}
+                  value={map.value}
+                  onChange={value => change('mapping_expression', value, index)}
               />
                 <Form.Error>{map.message}</Form.Error>
               </Form.Item>

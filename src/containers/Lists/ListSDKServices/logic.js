@@ -178,6 +178,9 @@ export default kea({
           case 403:
             yield put(setMessageError(error.response.data))
             break
+          case 409:
+            yield put(setMessageError(error.response.data))
+            break
           default:
             yield put(setMessageError('Error'))
             break

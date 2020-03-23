@@ -15,13 +15,21 @@ import Select from 'components/Select'
 import Button from 'components/Button'
 import Input from 'components/Input'
 import Form from 'components/Form'
+import Checkbox from 'components/Checkbox'
 import { DeleteIcon, PlusIcon } from 'components/Icons'
 
 class NewNetworkForm extends Component {
   render () {
-    const { form, listSlices } = this.props
+    const { form, listSlices, computeOptions } = this.props
     const { change, addPort, setValuePorts, removePort } = this.actions
-    const { nameInstance, description, ports, slice_id } = form
+    const {
+      nameInstance,
+      description,
+      ports,
+      sliceId,
+      trusted,
+      computeSelect
+    } = form
     return (
       <Layout.Row>
         {listSlices &&
@@ -33,7 +41,7 @@ class NewNetworkForm extends Component {
               label={'Name of Instance'}
               required
               status={!nameInstance.valid}
-          >
+            >
               <Input
                 value={nameInstance.value}
                 onChange={value => change({nameInstance: value})}
@@ -46,23 +54,54 @@ class NewNetworkForm extends Component {
               label={'Description'}
               required
               status={!description.valid}
-          >
+            >
               <Input
                 value={description.value}
                 onChange={value => change({description: value})}
-            />
+              />
               <Form.Error>{description.message}</Form.Error>
             </Form.Item>
           </Layout.Col>
+          <Form.Item
+            label='Trusted'
+          >
+            <Checkbox
+              checked={trusted.value}
+              onChange={value => change({trusted: value})}
+            />
+          </Form.Item>
+          <Form.Item label={'Select Slice'}>
+            <Select
+              placeholder={'Select Slice'}
+              options={listSlices}
+              value={sliceId.value}
+              onChange={value => change({sliceId: value})}
+              required
+              status={!sliceId.valid}
+            />
+            <Form.Error>{sliceId.message}</Form.Error>
+          </Form.Item>
+          <Form.Item label={'Select Compute'}>
+            <Select
+              disabled={computeOptions.disabled}
+              placeholder={'Select Compute'}
+              options={computeOptions.options}
+              value={computeSelect.value}
+              onChange={value => change({computeSelect: value})}
+              required
+              status={!computeSelect.valid}
+            />
+            <Form.Error>{computeSelect.message}</Form.Error>
+          </Form.Item>
           <Layout.Col>
             { ports.array.map((port, index) =>
               <Form.Item
                 key={index}
-                label={`Ports ${index + 1}`}
+                label={`Port ${index + 1}`}
                 prop={ports[index]}
                 required
                 status={!port.valid}
-            >
+              >
                 <Layout.Row gutter='12'>
                   <Layout.Col span='18'>
                     <Input
@@ -90,17 +129,6 @@ class NewNetworkForm extends Component {
               onClick={() => addPort()}
             />
           </Layout.Col>
-          <Form.Item label={'Select Slice'}>
-            <Select
-              placeholder={'Select Slice'}
-              options={listSlices}
-              value={slice_id.value}
-              onChange={value => change({slice_id: value})}
-              required
-              status={!slice_id.valid}
-            />
-            <Form.Error>{slice_id.message}</Form.Error>
-          </Form.Item>
         </Form>
       }
       </Layout.Row>

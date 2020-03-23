@@ -10,9 +10,9 @@ import {
   newVNFNode,
   newVirtualSwitchNode
 } from '../SDKContainer/config_d3'
-import { reject, filter, cloneDeep } from 'lodash'
+import { reject, filter, cloneDeep, toNumber } from 'lodash'
 
-export const NEW_SERVICE = {
+export const NEW_SERVICE = () => ({
   name: null,
   version: null,
   designer: null,
@@ -33,30 +33,7 @@ export const NEW_SERVICE = {
   actionRules: [],
   visibility: 'PUBLIC',
   ownerId: 'ubiwhere'
-}
-
-export const NEW_SERVICE_FORM = {
-  name: null,
-  version: null,
-  designer: null,
-  parameters: [],
-  license: {
-    type: null,
-    url: null
-  },
-  link: [],
-  component: [],
-  connectionPoints: [],
-  l3Connectivity: [ ],
-  metadata: { },
-  intMonitoringParameters: [],
-  extMonitoringParameters: [],
-  accessLevel: null,
-  actions: [],
-  actionRules: [],
-  visibility: 'PUBLIC',
-  ownerId: 'ubiwhere'
-}
+})
 
 let idLink = 0
 let idNode = 0
@@ -307,22 +284,36 @@ export const addNode = node => {
  * @return {object} New d3 Node
  */
 export const transformToD3Object = (service, catalogue) => {
-  let createNodeD3 = []
-  let existCatalogue = catalogue
-  service.component.forEach(dataService => {
-    const match = existCatalogue.find(catalogueItem => catalogueItem.id === dataService.componentId)
-    if (match) {
-      if (match.vnfdId) {
-        const mapping_expression = dataService.mappingExpressions
-        const componentIndex = dataService.componentIndex
-        const initialServiceConnections = service.connectionPoints.filter(point => point.componentIndex === componentIndex).length
-        createNodeD3.push(cloneDeep(newVNFNode(match, mapping_expression, componentIndex, initialServiceConnections)))
-      } else {
-        createNodeD3.push({...match, type: 'vnf'})
+  try {
+    let createNodeD3 = []
+    let existCatalogue = catalogue
+    service.component.forEach(dataService => {
+      const match = existCatalogue.find(catalogueItem => catalogueItem.id === dataService.componentId)
+      if (match) {
+        if (match.vnfdId) {
+          const mapping_expression = dataService.mappingExpressions
+          const componentIndex = dataService.componentIndex
+          findMonitoring(dataService, match, catalogue, service)
+          const initialServiceConnections = service.connectionPoints.filter(point => point.componentIndex === componentIndex).length
+          createNodeD3.push(
+          cloneDeep(
+            newVNFNode(
+              match,
+              mapping_expression,
+              componentIndex,
+              initialServiceConnections
+              )
+            )
+          )
+        } else {
+          createNodeD3.push({...match, type: 'vnf'})
+        }
       }
-    }
-  })
-  return findLinkById(createNodeD3, service)
+    })
+    return findLinkById(createNodeD3, service)
+  } catch (e) {
+    console.log('error', e)
+  }
 }
 
 /**
@@ -377,7 +368,7 @@ export const addNewNode = () => (
   `node${idNode++}`
 )
 
-const nodeId = node => {
+export const nodeId = node => {
   const item = Object.assign({}, node)
   const id = item.id.split('node')
   return id[1]
@@ -532,7 +523,7 @@ export const transformToJSON = (service, d3Data) => {
         componentId: node.extra_info.id,
         componentType: 'SDK_FUNCTION',
         mappingExpressions: map_exp,
-        componentIndex: nodeId(node)
+        componentIndex: node.extra_info.componentIndex.toString()
       })
       verifyMappingExpression(node, object)
     }
@@ -577,7 +568,7 @@ export const transformToJSON = (service, d3Data) => {
             name: item.connection_name_source,
             requiredPort: item.required_ports,
             cpType: 'INTERNAL', // findCP.cpType,
-            componentIndex: nodeId(item.source)
+            componentIndex: item.source.extra_info.componentIndex
           })
         }
         verifyLink(item, object, 'source', 'vnf')
@@ -612,7 +603,7 @@ export const transformToJSON = (service, d3Data) => {
             name: item.connection_name_target,
             requiredPort: item.required_ports,
             cpType: 'INTERNAL',
-            componentIndex: nodeId(item.target)
+            componentIndex: item.target.extra_info.componentIndex
           })
         }
         verifyLink(item, object, 'target', 'vnf')
@@ -622,7 +613,6 @@ export const transformToJSON = (service, d3Data) => {
         break
     }
   })
-
   object.composer = { ...service }
   object.composer.component = component
   object.composer.link = link
@@ -631,20 +621,34 @@ export const transformToJSON = (service, d3Data) => {
   return object
 }
 
-export const changeNode = (nodeSelect, d3Data) => {
+/**
+ * Change node object and d3 data
+ * @param {õbject} nodeSelect node select
+ * @param {object} d3Data d3 data
+ * @param {string} label label
+ */
+export const changeNode = (nodeSelect, d3Data, label) => {
   let newD3Data = {...d3Data}
-  newD3Data.nodes.forEach(node => {
-    if (node.id === nodeSelect.id) {
-      node.mapping_expression = nodeSelect.mapping_expression
-    }
-  })
-  newD3Data.links.forEach(link => {
-    if (link.source.id === nodeSelect.id) {
-      link.source.mapping_expression = nodeSelect.mapping_expression
-    } else if (link.target.id === nodeSelect.id) {
-      link.target.mapping_expression = nodeSelect.mapping_expression
-    }
-  })
+  if (label === 'monitoring') {
+    newD3Data.nodes.forEach(node => {
+      if (node.id === nodeSelect.id) {
+        node.monitoring_service = nodeSelect.monitoring_service
+      }
+    })
+  } else {
+    newD3Data.nodes.forEach(node => {
+      if (node.id === nodeSelect.id) {
+        node.mapping_expression = nodeSelect.mapping_expression
+      }
+    })
+    newD3Data.links.forEach(link => {
+      if (link.source.id === nodeSelect.id) {
+        link.source.mapping_expression = nodeSelect.mapping_expression
+      } else if (link.target.id === nodeSelect.id) {
+        link.target.mapping_expression = nodeSelect.mapping_expression
+      }
+    })
+  }
   return newD3Data
 }
 
@@ -816,7 +820,117 @@ const verifyComposer = (composer, object) => {
 export const Organizations = value => {
   const array = []
   value && value.forEach(organization => {
-    array.push({ id: organization.id, value: organization.sliceId, name: organization.sliceId})
+    array.push({
+      id: organization.id,
+      value: organization.sliceId,
+      name: organization.sliceId
+    })
   })
   return array
+}
+
+export const GetMonitoringConfig = d3Data => {
+  const result = []
+  d3Data.nodes.forEach(node => {
+    if (node.monitoring_service) {
+      result.push({
+        name: node.extra_info.name,
+        value: node.extra_info.componentIndex.toString(),
+        id: node.extra_info.vnfd_id
+      })
+    }
+  })
+  return result
+}
+
+const findMonitoring = (dataService, match, catalogue, service) => {
+  if (service.extMonitoringParameters) {
+    match.monitoring_service = { extMonitoringParameters: [] }
+    service.extMonitoringParameters.forEach(extMonitoring => {
+      if (toNumber(extMonitoring.componentIndex) === toNumber(dataService.componentIndex)) {
+        match.monitoring_service.extMonitoringParameters.push({
+          componentIndex: extMonitoring.componentIndex,
+          importedParameterId: extMonitoring.importedParameterId,
+          parameterType: extMonitoring.parameterType,
+          name: extMonitoring.name
+        })
+      }
+    })
+  } else if (service.intMonitoringParameters) {
+    match.monitoring_service = { intMonitoringParameters: [] }
+    service.intMonitoringParameters.forEach(intMonitoring => {
+      if (toNumber(intMonitoring.componentIndex) === toNumber(dataService.componentIndex)) {
+        match.monitoring_service.intMonitoringParameters.push({
+          componentIndex: intMonitoring.componentIndex,
+          importedParameterId: intMonitoring.importedParameterId,
+          parameterType: intMonitoring.parameterType,
+          name: intMonitoring.name
+        })
+      }
+    })
+  }
+}
+
+export const GenerateMonitoringService = (d3Data, service) => {
+  const newService = { ...service }
+  newService.extMonitoringParameters = []
+  newService.intMonitoringParameters = []
+  d3Data.nodes.forEach(node => {
+    if (node.monitoring_service) {
+      if (node.monitoring_service.extMonitoringParameters.length > 0) {
+        newService.extMonitoringParameters.push(...node.monitoring_service.extMonitoringParameters)
+      } else if (node.monitoring_service.intMonitoringParameters.length > 0) {
+        newService.intMonitoringParameters.push(...node.monitoring_service.intMonitoringParameters)
+      }
+    }
+  })
+  return newService
+}
+
+export const DeleteMonitoringService = (selectNode, service) => {
+  if (selectNode.extra_info) {
+    const componentIndex = selectNode.extra_info.componentIndex.toString()
+    if (service.extMonitoringParameters) {
+      for (let i = 0; i < service.extMonitoringParameters.length; i++) {
+        const element = service.extMonitoringParameters[i]
+        if (element.componentIndex.toString() === componentIndex) {
+          DeleteActions(componentIndex, service)
+          service.extMonitoringParameters.splice(i, 1)
+        }
+      }
+    }
+    if (service.intMonitoringParameters) {
+      for (let i = 0; i < service.intMonitoringParameters.length; i++) {
+        const element = service.intMonitoringParameters[i]
+        if (element.componentIndex.toString() === componentIndex) {
+          DeleteActions(componentIndex, service)
+          service.intMonitoringParameters.splice(i, 1)
+        }
+      }
+    }
+    return service
+  }
+}
+
+const DeleteActions = (componentIndex, service) => {
+  for (let i = 0; i < service.actions.length; i++) {
+    const element = service.actions[i]
+    if (element.componentIndex.toString() === componentIndex) {
+      DeleteActionRules(element.name, service)
+      service.actions.splice(i, 1)
+    }
+  }
+  return service
+}
+
+const DeleteActionRules = (name, service) => {
+  for (let i = 0; i < service.actionRules.length; i++) {
+    const element = service.actionRules[i]
+    const findIndex = element.actionsName.findIndex(actionName => actionName === name)
+    element.actionsName.splice(findIndex, 1)
+    if (element.actionsName < 1) {
+      service.actionRules.splice(i, 1)
+    }
+  }
+  return service
 }

@@ -1,4 +1,5 @@
 import { addNewNode, randomXY } from '../SDKContainer/utils'
+import { isNumber, toNumber } from 'lodash'
 
 export const GLOBAL_VALUES = {
   VNF: {w: 125, h: 122, type: 'vnf'},
@@ -128,35 +129,53 @@ export const newVirtualSwitchNode = (linkName) => {
   }
 }
 
-export const newVNFNode = (nodeInfo, mappingExpression, componentIndex, initialServiceConnections) => {
-  const arrayExpression = mappingExpression === undefined ? [undefined] : mappingExpression
-  const position = Position(nodeInfo.connectionPoints)
-  const idNode = addNewNode()
-  nodeInfo.connectionPoints.map(connection => (connection.isUsed = false))
-  const XY = randomXY()
-  return {
-    ...NODE_TYPE.VNF,
-    id: idNode,
-    ...XY,
-    extra_info: {
-      version: nodeInfo.version,
-      name: nodeInfo.name,
-      vendor: nodeInfo.vendor,
-      description: nodeInfo.description,
-      vnfd_id: nodeInfo.vnfdId,
-      vnfd_version: nodeInfo.vnfdVersion,
-      id: nodeInfo.id,
-      parameter: nodeInfo.parameters,
-      componentIndex: componentIndex
-    },
-    mapping_expression: arrayExpression,
-    connection_point: [...nodeInfo.connectionPoints],
-    max_connections: nodeInfo.connectionPoints.length,
-    initial_connections: initialServiceConnections || 0,
-    connections: 0,
-    circle_text: nodeInfo.vnfdId && 'VNF',
-    array_link: position.array_link,
-    ...position.links
+/**
+ *  Create a VNF Node
+ * @param {object} nodeInfo object
+ * @param {object} mappingExpression
+ * @param {number} componentIndex
+ * @param {number} initialServiceConnections
+ */
+export const newVNFNode = (
+  nodeInfo,
+  mappingExpression,
+  componentIndex,
+  initialServiceConnections
+  ) => {
+  try {
+    const arrayExpression = mappingExpression === undefined ? [undefined] : mappingExpression
+    const position = Position(nodeInfo.connectionPoints)
+    const idNode = addNewNode()
+    nodeInfo.connectionPoints.map(connection => (connection.isUsed = false))
+    const XY = randomXY()
+    return {
+      ...NODE_TYPE.VNF,
+      id: idNode,
+      ...XY,
+      extra_info: {
+        version: nodeInfo.version,
+        name: nodeInfo.name,
+        vendor: nodeInfo.vendor,
+        description: nodeInfo.description,
+        vnfd_id: nodeInfo.vnfdId,
+        vnfd_version: nodeInfo.vnfdVersion,
+        id: nodeInfo.id,
+        parameter: nodeInfo.parameters,
+        componentIndex: generateComponentIndex(componentIndex, idNode),
+        monitoringVNF: nodeInfo.monitoringParameters || null
+      },
+      mapping_expression: arrayExpression,
+      connection_point: [...nodeInfo.connectionPoints],
+      max_connections: nodeInfo.connectionPoints.length,
+      initial_connections: initialServiceConnections || 0,
+      monitoring_service: nodeInfo.monitoring_service || null,
+      connections: 0,
+      circle_text: nodeInfo.vnfdId && 'VNF',
+      array_link: position.array_link,
+      ...position.links
+    }
+  } catch (error) {
+    console.log(error)
   }
 }
 
@@ -288,4 +307,14 @@ export const verifyCanLink = (source, target) => {
   } else {
     return true
   }
+}
+
+const generateComponentIndex = (componentIndex, idNode) => {
+  let number = null
+  if (!isNumber(componentIndex)) {
+    number = idNode.replace('node', '')
+  } else {
+    number = componentIndex
+  }
+  return toNumber(number)
 }

@@ -2,8 +2,8 @@
  * Select Component
  * Please write a description
  *
- * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
+
 import React from 'react'
 import styled from 'styled-components'
 import { Select } from 'element-react'
@@ -14,9 +14,17 @@ export default ({ children, ...props }) => (
     {props.label &&
     <Label>{props.label}</Label>
     }
-    <StyledSelect value={props.selectOption} onChange={value => props.onChange(value)}>
+    <StyledSelect
+      value={props.value}
+      onChange={value => props.onChange(value)}
+      disabled={props.disabled}
+    >
       {props.options && props.options.map((el, i) =>
-        <Select.Option value={el.value} key={i} label={el.name} disabled={el.disabled} />
+        <Select.Option
+          value={el.value} key={i}
+          label={el.name}
+          disabled={el.disabled}
+        />
       )}
     </StyledSelect>
   </Wrapper>

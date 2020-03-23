@@ -2,12 +2,12 @@
  * Steps Component Stories
  * Please write a description or remove this line
  *
- * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
 import React from 'react'
 import { storiesOf } from '@storybook/react'
 
 import Step from './index'
+import { action } from '@storybook/addon-actions'
 
 const State1 = () => (
   <Step>
@@ -15,7 +15,8 @@ const State1 = () => (
     <Step step={2} description={'Configuration Success'} active={false} validation={'success'} />
     <Step step={3} description={'Configuration Danger'} active={false} validation={'danger'} />
     <Step step={4} description={'Configuration Warning'} active={false} validation={'warning'} />
-    <Step step={5} description={'Configuration Active'} active={true} validation={null} />
+    <Step step={5} description={'Configuration Active'} active validation={null} />
+    <Step step={6} description={'Configuration Active'} disabled validation={null} />
   </Step>
 )
 

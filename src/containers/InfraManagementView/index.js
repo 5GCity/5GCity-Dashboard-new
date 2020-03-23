@@ -27,7 +27,15 @@ class InfraManagementView extends Component {
 
   render () {
     const { panelAction, infoMarker, changeModalErrorStatus } = this.actions
-    const { pinsResources, panel, rightPanelInfo, locations, linksResources,  modalErrorStatus, modalErrorData } = this.props
+    const {
+      pinsResources,
+      panel,
+      rightPanelInfo,
+      locations,
+      linksResources,
+      modalErrorStatus,
+      modalErrorData
+    } = this.props
     return (
       <Wrapper>
         <HeaderNav
@@ -65,7 +73,7 @@ class InfraManagementView extends Component {
           <SliceMap
             location={locations}
             markers={pinsResources}
-            markerClick={(marker) => infoMarker(marker.location.resources) }
+            markerClick={(marker) => infoMarker(marker.location.resources)}
             links={linksResources}
           />
         }

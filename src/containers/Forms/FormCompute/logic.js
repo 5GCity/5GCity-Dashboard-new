@@ -12,7 +12,7 @@ import * as Check from 'validations'
 import axios from 'axios'
 import { API_SLICE_MANAGEMENT } from 'config'
 import mapValues from 'lodash/mapValues'
-import { NewCompute } from './utils'
+import { NewCompute, CapitalizeFirstLetter } from './utils'
 
 /* Logic */
 import PanelResourceLogic from 'containers/Panel/PanelResource/logic'
@@ -25,6 +25,9 @@ const DEFAULT_FORM = {
   },
   availabilityZone: {
     value: null
+  },
+  trusted: {
+    value: false
   },
   cpu: {
     value: null
@@ -71,7 +74,7 @@ const VALIDATIONS = {
     Check.isNumber
   ],
   storageUnit: [
-  ],
+  ]
 }
 
 export default kea({
@@ -205,13 +208,14 @@ export default kea({
         const newCompute = {...NewCompute}
         newCompute.location = { ...resource.location }
         newCompute.name = params.name
-        newCompute.compute_data.availability_zone = params.availabilityZone
-        newCompute.compute_data.quota.cpus.total = params.cpu
-        newCompute.compute_data.quota.ram.total = params.ram
-        newCompute.compute_data.quota.ram.units = params.ramUnit
-        newCompute.compute_data.quota.storage.total = params.storage
-        newCompute.compute_data.quota.storage.units = params.storageUnit
-        newCompute.compute_type = params.type
+        newCompute.computeData.availabilityZone = params.availabilityZone
+        newCompute.computeData.quota.cpus.total = params.cpu
+        newCompute.computeData.quota.ram.total = params.ram
+        newCompute.computeData.quota.ram.units = params.ramUnit
+        newCompute.computeData.quota.storage.total = params.storage
+        newCompute.computeData.quota.storage.units = params.storageUnit
+        newCompute.computeType = params.type
+        newCompute.trusted = CapitalizeFirstLetter(params.trusted.toString())
         try {
           yield call(axios.post, `${API_SLICE_MANAGEMENT}/compute`, newCompute)
           yield put(removeLoadingPage())

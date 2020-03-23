@@ -127,7 +127,7 @@ class FormSlice extends Component {
                   <Input type='text' value={wifi.dhcpd} onChange={value => changeSDN('dhcpd', value, i)} />
                 </Form.Item>
                 <Form.Item label='Channel'>
-                  <Select placeholder={'Select Channel'} type={'default'} options={wifi.channelOptions} onChange={value => changeSDN('channel', value, i)} selectOption={wifi.channel} />
+                  <Select placeholder={'Select Channel'} type={'default'} options={wifi.channelOptions} onChange={value => changeSDN('channel', value, i)} value={wifi.channel} />
                 </Form.Item>
               </FormContainer>
         }

@@ -2,7 +2,6 @@
  * SliceNew Scene
  * Please write a description
  *
- * @author Your Name <youremail@ubiwhere.com>
  */
 import React, { Component, Fragment } from 'react'
 import Logic from './logic'
@@ -26,7 +25,6 @@ import Select from 'components/Select'
 /* Containers */
 import ModalCreateSlice from 'containers/Modals/ModalCreateSlice'
 import ModalErrorSlice from 'containers/Modals/ModalErrorSlice'
-import ModalChunketeSlice from 'containers/Modals/ModalChunketeSlice'
 
 const InfoMarkerContainer = props => {
   const {
@@ -56,6 +54,7 @@ const InfoMarkerContainer = props => {
                   <Checkbox key={compute.id} label={compute.name}>
                     <Name>{compute.name}</Name>
                     <Id>{compute.id}</Id>
+                    <Id>Trusted: {compute.trusted}</Id>
                     <Id><b>{compute.type}</b></Id>
                   </Checkbox>
                 </Checkbox.Group>
@@ -119,7 +118,7 @@ const InfoMarkerContainer = props => {
                             onChange={value =>
                               changeComputes(selectPin, i, 'ramUnits', value)
                             }
-                            selectOption={compute.computeData.ram.units || 'MB'}
+                            value={compute.computeData.ram.units || 'MB'}
                           />
                         </Form.Item>
                       </Layout.Col>
@@ -158,7 +157,7 @@ const InfoMarkerContainer = props => {
                                 value
                               )
                             }
-                            selectOption={
+                            value={
                               compute.computeData.storage.units || 'GB'
                             }
                           />
@@ -202,34 +201,34 @@ const InfoMarkerContainer = props => {
                 <FormContainer>
                   <Form.Item label='Name'>
                     <Input
-                    type='text'
-                    value={network.nameNetwork}
-                    onChange={value => changeNetwork('nameNetwork', value, network.id)}
+                      type='text'
+                      value={network.nameNetwork}
+                      onChange={value => changeNetwork('nameNetwork', value, network.id)}
                     />
                   </Form.Item>
                   <Layout.Row gutter='0'>
                     <Layout.Col span='14'>
-                    <Form.Item label='Bandwidth'>
-                          <Input
+                      <Form.Item label='Bandwidth'>
+                        <Input
                           type='text'
                           value={network.bandwidth}
                           onChange={value => changeNetwork('bandwidth', value, network.id)}
                         />
-                        </Form.Item>
-                  </Layout.Col>
+                      </Form.Item>
+                    </Layout.Col>
                     <Layout.Col span='10'>
-                    <Form.Item label={'Unit'}>
-                          <Select
+                      <Form.Item label={'Unit'}>
+                        <Select
                           type={'default'}
                           placeholder='unit'
                           options={UNITS_SECONDS}
                           onChange={value =>
                             changeNetwork('bandwidthUnits', value, network.id)
                           }
-                          selectOption={network.bandwidthUnits || 'MB/s'}
+                          value={network.bandwidthUnits || 'MB/s'}
                         />
-                        </Form.Item>
-                  </Layout.Col>
+                      </Form.Item>
+                    </Layout.Col>
                   </Layout.Row>
                   <Id>
                     Bandwidth Total: {network.bandwidthTotal} {network.units}
@@ -280,7 +279,6 @@ const InfoMarkerContainer = props => {
           {selectSlice.LTE &&
             selectSlice.LTE.map((phy, physIndex) => (
               <React.Fragment key={phy.id}>
-                {console.log('phy', phy)}
                 <Form.Item key={phy.id}>
                   <Checkbox.Group
                     value={phy.ischecked === false ? [] : [phy.name]}
@@ -340,9 +338,6 @@ class SliceNew extends Component {
       loading,
       formSlice,
       locations,
-      modalChunkete,
-      formChunkete,
-      infoChunkete,
       selectSlice,
       selectPin,
       networks
@@ -350,14 +345,11 @@ class SliceNew extends Component {
     const {
       updateMarker,
       modalNewSliceStatus,
-      modalChunketeStatus,
       modalStatus,
       actionPanel,
       createSlice,
-      setChunkete,
       setValue,
       selectLocation,
-      changeChunkete,
       verifySlice,
       changeNetwork,
       changeComputes,
@@ -414,16 +406,6 @@ class SliceNew extends Component {
           modalNewSliceStatus={modalNewSliceStatus}
           createSlice={createSlice}
           setValue={setValue}
-        />
-        {/* Modal Chunkete */}
-        <ModalChunketeSlice
-          modalStatus={modalChunketeStatus}
-          status={modalChunkete}
-          loading={loading}
-          setChunkete={setChunkete}
-          chunketes={infoChunkete}
-          chunkForm={formChunkete}
-          change={changeChunkete}
         />
         {/* Modal Error */}
         <ModalErrorSlice

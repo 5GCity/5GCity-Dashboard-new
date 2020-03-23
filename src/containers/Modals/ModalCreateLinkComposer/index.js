@@ -64,7 +64,7 @@ class ModalCreateLinkComposer extends Component {
                   status={!options_select_source.valid}
                 >
                   <Select
-                    selectOption={options_select_source.value}
+                    value={options_select_source.value}
                     placeholder={'Select Point'}
                     options={newService.source.options}
                     onChange={value => change({options_select_source: value})}
@@ -129,7 +129,7 @@ class ModalCreateLinkComposer extends Component {
                   status={!options_select_target.valid}
                 >
                   <Select
-                    selectOption={options_select_target.value}
+                    value={options_select_target.value}
                     placeholder={'Select Point'}
                     options={newService.target.options}
                     onChange={value => change({options_select_target: value})}

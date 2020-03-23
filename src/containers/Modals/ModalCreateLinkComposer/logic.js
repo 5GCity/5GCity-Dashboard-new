@@ -185,7 +185,6 @@ export default kea({
       // Check validations
       const form = createForm(linkSelect, getForm)
       const validation = Check.checkValidation(form, VALIDATIONS)
-      console.log(form, validation)
       if (dirty && validation.invalid) {
         yield put(error([]))
         return false

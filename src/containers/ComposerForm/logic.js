@@ -2,88 +2,24 @@
  * ComposerForm Container Logic
  * Please write a description
  *
- * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
 
 import { kea } from 'kea'
 import { put } from 'redux-saga/effects'
 
 import PropTypes from 'prop-types'
-import * as Check from 'validations'
-import { AddNewParameter, STEPS, VerifyArray } from './utils'
-import cloneDeep from 'lodash/cloneDeep'
+import {
+  STEPS,
+  NextStep,
+  PrevStep,
+  ShowActions,
+  ActiveStep,
+  InvalidStep,
+  SuccessStep
+} from './utils'
 
 /* Logic */
 import SDKContainerLogic from 'containers/SDKContainer/logic'
-
-const DEFAULT_FORM = {
-  service_name: {
-    value: null
-  },
-  service_access_level: {
-    value: null
-  },
-  service_organization: {
-    value: null
-  },
-  service_designer: {
-    value: null
-  },
-  service_version: {
-    value: null
-  },
-  service_license_type: {
-    value: null
-  },
-  service_license_url: {
-    value: null
-  },
-  service_parameter: {
-    array: []
-  },
-  service_ext_monitoring: {
-    value: null
-  },
-  service_int_monitoring: {
-    value: null
-  },
-  service_actions: {
-    value: null
-  },
-  service_action_rules: {
-    value: null
-  }
-}
-
-const VALIDATIONS = {
-  service_name: [
-    Check.isRequired
-  ],
-  service_organization: [
-    Check.isRequired
-  ],
-  service_access_level: [
-    Check.isRequired
-  ],
-  service_designer: [
-    Check.isRequired
-  ],
-  service_version: [
-    Check.isRequired,
-    Check.isVersion
-  ],
-  service_license_type: [
-    Check.isRequired
-  ],
-  service_license_url: [
-    Check.isRequired
-  ],
-  service_parameter: [],
-  service_ext_monitoring: [],
-  service_int_monitoring: [],
-  service_actions: [],
-  service_action_rules: []
-}
 
 export default kea({
   path: () => ['scenes', 'containers', 'ComposerForm'],
@@ -93,228 +29,71 @@ export default kea({
       SDKContainerLogic, [
         'changeActiveTab',
         'changeSaveStatus',
-        'setServiceInfo',
-        'resetService'
+        'setMonitoring',
+        'setActiveTab'
       ]
     ],
     props: [
       SDKContainerLogic, [
-        'serviceInfo'
+        'VNFServices'
       ]
     ]
   },
 
   actions: () => ({
-    submit: () => ({}),
+    submit: () => ({ }),
     response: (response) => ({ response }),
     error: (error) => ({ error }),
-    setValueParameters: (key, value, index) => ({ key, value, index }),
-    addParameter: (index) => ({ index }),
-    removeParameter: (index) => ({ index }),
 
-    nextStep: () => ({}),
-    prevStep: () => ({}),
-    changeStep: (number) => ({ number }),
+    nextButton: () => ({ }),
+    doneButton: () => ({ }),
 
-    activeStep: (steps) => ({ steps }),
+    nextStep: () => ({ }),
+    prevStep: () => ({ }),
 
-    ChangepreviousBtn: (status) => ({ status }),
+    setSteps: (steps) => ({ steps }),
+    activeStep: (id) => ({ id }),
+    invalidStep: (id) => ({ id }),
+    successStep: (id) => ({ id }),
 
-    setButtonLogin: (status) => ({ status }),
-
-    change: (field) => ({ field }),
-    setForm: (form) => ({ form }),
-    changeForm: (form) => ({ form }),
     reset: () => ({})
   }),
 
   reducers: ({ actions }) => ({
-    currentStep: [1, PropTypes.number, {
-      [actions.changeStep]: (state, payload) => payload.number,
-      [actions.reset]: () => 1
-    }],
-    steps: [STEPS, PropTypes.array, {
-      [actions.activeStep]: (state, payload) => payload.steps,
+    steps: [STEPS(), PropTypes.object, {
+      [actions.nextStep]: (state, payload) => NextStep(state),
+      [actions.prevStep]: (state, payload) => PrevStep(state),
+      [actions.setSteps]: (state, payload) => payload.steps,
+      [actions.activeStep]: (state, payload) => ActiveStep(state, payload.id),
+      [actions.invalidStep]: (state, payload) => InvalidStep(state, payload.id),
+      [actions.successStep]: (state, payload) => SuccessStep(state, payload.id),
       [actions.reset]: () => STEPS
-    }],
-    previousButton: [true, PropTypes.bool, {
-      [actions.ChangepreviousBtn]: (state, payload) => payload.status,
-      [actions.reset]: () => true
-    }],
-    buttonSubmit: [false, PropTypes.bool, {
-      [actions.setButtonLogin]: (state, payload) => payload.status,
-      [actions.reset]: () => false
-    }],
-    form: [DEFAULT_FORM, PropTypes.object, {
-      [actions.change]: (state, payload) => Check.setAndCheckValidation(state, payload, VALIDATIONS),
-      [actions.setForm]: (state, payload) => Check.checkValidation(payload.form, VALIDATIONS).form,
-
-      [actions.setValueParameters]: (state, payload) => Check.setAndCheckValidationArray(state, payload, VALIDATIONS),
-      [actions.addParameter]: (state, payload) => Check.checkValidation(AddNewParameter(state), VALIDATIONS).form,
-      [actions.removeParameter]: (state, payload) => {
-        return Object.assign({}, state, state.service_parameter.array.splice(payload.index, 1))
-      },
-      [actions.changeForm]: (state, payload) => payload.form,
-      [actions.reset]: () => DEFAULT_FORM
-    }],
-
-    dirty: [false, PropTypes.bool, {
-      [actions.change]: () => true,
-      [actions.setValueParameters]: () => true,
-      [actions.response]: () => false,
-      [actions.error]: () => true,
-      [actions.reset]: () => false
-    }],
-
-    submiting: [false, PropTypes.bool, {
-      [actions.submit]: () => true,
-      [actions.error]: () => false,
-      [actions.response]: () => false,
-      [actions.reset]: () => false
     }]
   }),
 
-  stop: function * () {
-    const { reset } = this.actions
-    yield put(reset())
-  },
-
   takeLatest: ({ actions, workers }) => ({
-    [actions.setServiceInfo]: workers.getServiceInfo,
     [actions.submit]: workers.submit,
-    [actions.nextStep]: workers.nextStep,
-    [actions.prevStep]: workers.prevStep
+    [actions.setActiveTab]: workers.verifyData
   }),
 
   workers: {
-    * nextStep () {
-      const { changeStep, setButtonLogin, ChangepreviousBtn, activeStep } = this.actions
-      const currentStep = yield this.get('currentStep')
-      const stepLength = STEPS.length
-      let newStep = currentStep
-      if (currentStep < stepLength) {
-        yield (put(changeStep(newStep++)))
-        yield (put(ChangepreviousBtn(false)))
-        const newSteps = STEPS
-        newSteps.forEach(step => {
-          if (step.id === newStep) {
-            step.active = true
-          } else {
-            step.active = false
-          }
-        })
-        yield (put(activeStep(newSteps)))
-      }
-      if (currentStep === stepLength) {
-        // add Button submit
-        yield (put(setButtonLogin(true)))
-      }
-
-      yield (put(changeStep(newStep)))
-    },
-
-    * prevStep () {
-      const { changeStep, setButtonLogin, ChangepreviousBtn, activeStep } = this.actions
-      const currentStep = yield this.get('currentStep')
-      const stepLength = STEPS.length
-      let newStep = currentStep
-      if (currentStep <= stepLength) {
-        yield (put(changeStep(newStep--)))
-        const newSteps = STEPS
-        newSteps.forEach(step => {
-          if (step.id === newStep) {
-            step.active = true
-          } else {
-            step.active = false
-          }
-        })
-        yield (put(activeStep(newSteps)))
-      }
-      if (newStep !== stepLength) {
-          // remove Button submit
-        yield (put(setButtonLogin(false)))
-      }
-      if (newStep === 1) {
-        yield (put(ChangepreviousBtn(true)))
-      }
-
-      yield (put(changeStep(newStep)))
-    },
-
-    * getServiceInfo () {
-      try {
-        const { changeForm } = this.actions
-        const form = yield this.get('serviceInfo')
-        if (form) {
-          const setDefaultValues = cloneDeep(DEFAULT_FORM)
-        // Verify if service has parameters key
-          if (form.parameters) {
-            setDefaultValues.service_parameter.array = form.parameters
-          } else {
-            setDefaultValues.service_parameter.array = setDefaultValues.service_parameter.array
-          }
-          setDefaultValues.service_name.value = form.name
-          setDefaultValues.service_organization.value = form.sliceId
-          setDefaultValues.service_access_level.value = form.accessLevel === null ? form.accessLevel : form.accessLevel.toString()
-          setDefaultValues.service_designer.value = form.designer
-          setDefaultValues.service_version.value = form.version
-          setDefaultValues.service_license_type.value = form.license.type
-          setDefaultValues.service_license_url.value = form.license.url
-          setDefaultValues.service_ext_monitoring.value = VerifyArray(form.intMonitoringParameters)
-          setDefaultValues.service_int_monitoring.value = VerifyArray(form.extMonitoringParameters)
-          setDefaultValues.service_actions.value = VerifyArray(form.actions)
-          setDefaultValues.service_action_rules.value = VerifyArray(form.actionRules)
-
-          const validForm = Check.checkValidation(setDefaultValues, VALIDATIONS).form
-          yield put(changeForm(validForm))
-        }
-      } catch (e) {
-        console.log(e)
+    * verifyData (action) {
+      const { setSteps } = this.actions
+      const tab = action.payload.tab.props.name
+      const vnfs = yield this.get('VNFServices')
+      const steps = yield this.get('steps')
+      if (tab === 'basicSettings' && vnfs) {
+        yield put(setSteps(ShowActions(vnfs, steps)))
       }
     },
 
-    * submit (action) {
+    * submit () {
       const {
-        error,
-        setForm,
         changeActiveTab,
         changeSaveStatus
       } = this.actions
-      const service = yield this.get('serviceInfo')
-      const form = yield this.get('form')
-      const dirty = yield this.get('dirty')
-      service.name = form.service_name.value
-      service.accessLevel = form.service_access_level.value
-      service.sliceId = form.service_organization.value
-      service.designer = form.service_designer.value
-      service.version = form.service_version.value
-      service.license.type = form.service_license_type.value
-      service.license.url = form.service_license_url.value
-      service.extMonitoringParameters = JSON.parse(form.service_ext_monitoring.value) || []
-      service.intMonitoringParameters = JSON.parse(form.service_int_monitoring.value) || []
-      service.actions = JSON.parse(form.service_actions.value) || []
-      service.actionRules = JSON.parse(form.service_action_rules.value) || []
-      const newArrayParameters = []
-      form.service_parameter.array.length > 0 && form.service_parameter.array.forEach(element => {
-        newArrayParameters.push(element.value)
-      })
-      service.parameters = newArrayParameters
-      // Check validations
-      const validation = Check.checkValidation(form, VALIDATIONS)
-
-      if (dirty && validation.invalid) {
-        yield put(error([]))
-        return false
-      } else if (!dirty && validation.invalid) {
-        yield put(setForm(validation.form))
-        yield put(error([]))
-        return false
-      } else if (!validation.invalid && !dirty) {
-        yield put(changeActiveTab('composer'))
-      } else if (!validation.invalid && dirty) {
-        yield put(changeActiveTab('composer'))
-        yield put(changeSaveStatus(false))
-      }
+      yield put(changeActiveTab('composer'))
+      yield put(changeSaveStatus(false))
     }
   }
 

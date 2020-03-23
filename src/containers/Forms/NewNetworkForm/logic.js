@@ -2,7 +2,6 @@
  * ModalNewNetwork Container Logic
  * Please write a description
  *
- * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
 
 import { kea } from 'kea'
@@ -12,40 +11,21 @@ import { API_SLICE_MANAGEMENT } from 'config'
 import PropTypes from 'prop-types'
 import * as Check from 'validations'
 import mapValues from 'lodash/mapValues'
+import {
+  DEFAULT_FORM,
+  VALIDATIONS,
+  SetField,
+  SetForm,
+  SetPorts,
+  SetComputes,
+  CapitalizeFirstLetter,
+  AddPort,
+  RemovePort
+} from './utils'
 
 /* Logic */
 import ListNewNetworksLogic from 'containers/Lists/ListNewNetworks/logic'
 import ListSlicesLogic from 'containers/Lists/ListSlices/logic'
-
-const DEFAULT_FORM = {
-  nameInstance: {
-    value: null
-  },
-  description: {
-    value: null
-  },
-  ports: {
-    array: [{value: null, valid: false}]
-  },
-  slice_id: {
-    value: null
-  }
-}
-
-const VALIDATIONS = {
-  nameInstance: [
-    Check.isRequired
-  ],
-  description: [
-    Check.isRequired
-  ],
-  slice_id: [
-    Check.isRequired
-  ],
-  ports: [
-    Check.isNumber
-  ]
-}
 
 export default kea({
   path: () => ['scenes', 'containers', 'NewNetworkForm'],
@@ -53,7 +33,8 @@ export default kea({
   connect: {
     props: [
       ListNewNetworksLogic, [
-        'selectNetwork'
+        'selectNetwork',
+        'modalVisibled'
       ],
       ListSlicesLogic, [
         'slices'
@@ -70,8 +51,6 @@ export default kea({
   },
 
   actions: () => ({
-    getForm: () => ({}),
-    response: (response) => ({ response }),
     error: (error) => ({ error }),
     change: (field) => ({ field }),
     setForm: (form) => ({ form }),
@@ -80,37 +59,27 @@ export default kea({
     addPort: (index) => ({ index }),
     removePort: (index) => ({ index }),
     runInstance: () => ({ }),
+    setOptions: (options) => ({ options }),
+
     reset: () => ({})
 
   }),
 
   reducers: ({ actions }) => ({
-    form: [DEFAULT_FORM, PropTypes.object, {
-      [actions.change]: (state, payload) => Check.setAndCheckValidation(state, payload, VALIDATIONS),
-      [actions.setForm]: (state, payload) => Check.checkValidation(payload.form, VALIDATIONS).form,
-      [actions.setValuePorts]: (state, payload) => Check.setAndCheckValidationArray(state, payload, VALIDATIONS),
-      [actions.addPort]: (state, payload) => {
-        const copyState = {...state}
-        const newValue = {value: null, valid: false}
-        copyState.ports.array.push({newValue})
-        return copyState
-      },
-      [actions.removePort]: (state, payload) => {
-        const copyState = {...state}
-        state.ports.array.splice(payload.index, 1)
-        return copyState
-      },
-      [actions.changeForm]: (state, payload) => payload.form,
-      [actions.reset]: () => {
-        const form = { ...DEFAULT_FORM }
-        form.ports.array = [{value: null, valid: false}]
-        return form
-      }
+    form: [DEFAULT_FORM(), PropTypes.object, {
+      [actions.change]: (state, payload) => SetField(state, payload),
+      [actions.setForm]: (state, payload) => SetForm(payload.form),
+      [actions.setValuePorts]: (state, payload) => SetPorts(state, payload),
+      [actions.addPort]: (state, payload) => AddPort(state),
+      [actions.removePort]: (state, payload) => RemovePort(state, payload.index),
+      [actions.changeForm]: (state, payload) => payload.form
     }],
-
+    computeOptions: [{disabled: true, options: []}, PropTypes.object, {
+      [actions.setOptions]: (state, payload) => payload.options,
+      [actions.reset]: () => ({disabled: true, options: []})
+    }],
     dirty: [false, PropTypes.bool, {
       [actions.change]: () => true,
-      [actions.response]: () => false,
       [actions.setValueProvisioned]: () => false,
       [actions.error]: () => true,
       [actions.reset]: () => false
@@ -132,10 +101,21 @@ export default kea({
   }),
 
   takeLatest: ({ actions, workers }) => ({
-    [actions.submit]: workers.submitForm
+    [actions.submit]: workers.submitForm,
+    [actions.change]: workers.chooseSlice,
+    [actions.actionModal]: workers.statusModal
   }),
 
   workers: {
+    * chooseSlice (action) {
+      const { setOptions } = this.actions
+      const slices = yield this.get('slices')
+      if (Object.keys(action.payload.field)[0] === 'sliceId') {
+        const computesOptions = SetComputes(action, slices)
+        yield put(setOptions(computesOptions))
+      }
+    },
+
     * submitForm () {
       const { actionModal,
         error,
@@ -171,10 +151,12 @@ export default kea({
         const dataRunInstance = {
           description: params.description,
           name: params.nameInstance,
-          network_service_id: networkSelect.instanceId,
+          networkServiceId: networkSelect.instanceId,
           ports: ports,
-          slic3_id: params.slice_id,
-          floating_ip_required: true
+          slic3Id: params.sliceId,
+          floatingIpRequired: true,
+          inputNodeId: params.computeSelect,
+          trusted: CapitalizeFirstLetter(params.trusted.toString())
         }
         try {
           yield call(axios.post, `${API_SLICE_MANAGEMENT}/network_service_instance`, dataRunInstance)
@@ -192,6 +174,15 @@ export default kea({
           yield put(loading())
           yield put(actionModalError())
         }
+      }
+    },
+
+    * statusModal () {
+      const { reset, setForm } = this.actions
+      const modalStatus = yield this.get('modalVisibled')
+      if (!modalStatus) {
+        yield put(setForm(SetForm(DEFAULT_FORM())))
+        yield put(reset())
       }
     }
   }

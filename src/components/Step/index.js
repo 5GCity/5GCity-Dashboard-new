@@ -2,7 +2,6 @@
  * Steps Component
  * Please write a description
  *
- * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
 import React from 'react'
 import styled from 'styled-components'
@@ -25,12 +24,15 @@ export default ({ children, ...props }) => (
         {children && children.length > 0 && children.map((child, i) =>
           <Item
             key={i}
-        >
+            onClick={() => !child.props.disabled && child.props.onClick(child.props.step)}
+            disabled={child.props.disabled || false}
+          >
             <Icon>
               <Circle
                 cx='12'
                 cy='12'
                 r='12'
+                disabled={child.props.disabled || false}
                 active={child.props.active || false}
                 validation={child.props.validation || null}
           />
@@ -38,13 +40,18 @@ export default ({ children, ...props }) => (
                 x='50%'
                 y='50%'
                 dy='0.1em'
+                disabled={child.props.disabled || false}
                 active={child.props.active || false}
                 validation={child.props.validation || null}
           >
                 {child.props.step}
               </Step>
             </Icon>
-            <Title>{child.props.description}</Title>
+            <Title
+              disabled={child.props.disabled || false}
+            >
+              {child.props.description}
+            </Title>
           </Item>
         )}
       </StepContainer>
@@ -68,6 +75,9 @@ const Item = styled.div`
   }
   margin-top: 28px;
   margin-left: 30px;
+  ${({disabled}) => disabled && `
+    cursor: not-allowed;
+  `}
 `
 const Title = styled.h2`
   margin-left: 12px;
@@ -78,6 +88,9 @@ const Title = styled.h2`
   font-family: ${({ theme }) => theme.fontDinExp};
   font-weight: bold;
   text-transform: uppercase;
+  ${({disabled}) => disabled && `
+  color: rgba(255,255,255, 0.1);
+`}
 `
 
 const Icon = styled.svg`
@@ -102,6 +115,9 @@ const Circle = styled.circle`
   `}
   ${({validation, active}) => !validation && !active && `
   fill: #5A666D;
+`}
+${({disabled}) => disabled && `
+  fill: rgba(255,255,255, 0.1);
 `}
 `
 const Step = styled.text`
@@ -131,5 +147,9 @@ const Step = styled.text`
   ${({validation, active}) => !validation && !active && `
     stroke: white;
   `}
+  ${({disabled}) => disabled && `
+    stroke: #324148;
+  `}
+
 
 `

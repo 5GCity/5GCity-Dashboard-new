@@ -2,7 +2,6 @@
  * Composer Container Logic
  * Please write a description
  *
- * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
 
 import { kea } from 'kea'

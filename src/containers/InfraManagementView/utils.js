@@ -52,6 +52,7 @@ export const CreateAllPins = resources => {
             id: compute.id,
             name: compute.name,
             type: compute.computeType,
+            trusted: GetTrusted(compute.trusted),
             computeData: {
               cpus: {
                 ...computeData.quota.cpus,
@@ -95,6 +96,7 @@ export const CreateAllPins = resources => {
             id: compute.id,
             name: compute.name,
             type: compute.computeType,
+            trusted: GetTrusted(compute.trusted),
             computeData: {
               cpus: {
                 ...computeData.quota.cpus,
@@ -137,6 +139,7 @@ export const CreateAllPins = resources => {
                     id: compute.id,
                     name: compute.name,
                     type: compute.computeType,
+                    trusted: GetTrusted(compute.trusted),
                     computeData: {
                       cpus: {
                         ...computeData.quota.cpus,
@@ -190,6 +193,7 @@ export const CreateAllPins = resources => {
                     id: compute.id,
                     name: compute.name,
                     type: compute.computeType,
+                    trusted: GetTrusted(compute.trusted),
                     computeData: {
                       cpus: {
                         ...computeData.quota.cpus,
@@ -213,7 +217,7 @@ export const CreateAllPins = resources => {
           })
         }
       })
-  };
+  }
 
   const compareRAN = () => {
     resources.rans.length > 0 &&
@@ -327,7 +331,7 @@ export const CreateAllPins = resources => {
             }
           })
       })
-  };
+  }
 
   compareComputesNetworks()
   compareRAN()
@@ -357,16 +361,16 @@ export const CreateAllLinks = rans => {
         })
     })
   return links
-};
+}
 
 const pickHex = percent => {
-  var a = percent / 100,
-    b = (0 - 100) * a,
-    c = b + 100
+  const a = percent / 100
+  const b = (0 - 100) * a
+  const c = b + 100
 
   // Return a CSS HSL string
   return `hsl(${Math.trunc(c)}, 48%, 53%)`
-};
+}
 
 const percentage = quota => {
   let value = 0
@@ -378,14 +382,14 @@ const percentage = quota => {
     }
   }
   return { percentage: value, color: pickHex(value) }
-};
+}
 
 const singlePercentage = (provisioned, total) => {
   let value = 0
   const returnPercentage = (provisioned / total) * 100
   value = returnPercentage
   return { percentage: value, color: pickHex(value) }
-};
+}
 
 const compareResources = (cpus, ram, storage, compute) => {
   let value = compute
@@ -400,4 +404,12 @@ const compareResources = (cpus, ram, storage, compute) => {
   }
 
   return { percentage: value, color: pickHex(value) }
-};
+}
+
+const GetTrusted = trusted => {
+  if (trusted === 'True') {
+    return 'Yes'
+  } else {
+    return 'No'
+  }
+}

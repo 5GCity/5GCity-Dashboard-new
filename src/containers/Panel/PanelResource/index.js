@@ -37,25 +37,25 @@ class PanelResource extends Component {
           { !markerSelect.location.isLTE &&
             !markerSelect.location.isWifi &&
             !edition &&
-          <PanelResourceInfo
-            data={markerSelect}
-            deleteItem={(item) => changeModalStatus(item)}
-            editItem={(item) => changeEdition(item)}
-            addNewItem={(item) => changeEdition(item)}
+            <PanelResourceInfo
+              data={markerSelect}
+              deleteItem={(item) => changeModalStatus(item)}
+              editItem={(item) => changeEdition(item)}
+              addNewItem={(item) => changeEdition(item)}
           />
           }
           {markerSelect.location.isWifi &&
             !edition &&
-          <PanelWifi
-            data={markerSelect.location.resources.wifi}
-            editItem={(item) => changeEdition(item)}
+            <PanelWifi
+              data={markerSelect.location.resources.wifi}
+              editItem={(item) => changeEdition(item)}
           />
           }
           { markerSelect.location.isLTE &&
             !edition &&
-          <PanelLTE
-            data={markerSelect.location.resources.LTE}
-            editItem={(item) => changeEdition(item)}
+            <PanelLTE
+              data={markerSelect.location.resources.LTE}
+              editItem={(item) => changeEdition(item)}
           />
           }
         </Container>

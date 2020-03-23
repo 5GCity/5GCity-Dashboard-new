@@ -6,17 +6,16 @@
  */
 
 export const CreateAllPins = resources => {
-
-  const markers = [];
+  const markers = []
 
   if (!resources) {
-    return markers;
+    return markers
   }
 
   const compareComputes = () => {
     resources.computes.length > 0 &&
       resources.computes.forEach(compute => {
-        const { latitude, longitude } = compute.location;
+        const { latitude, longitude } = compute.location
 
         const locationExistsOnMarkers = markers.find(
           marker =>
@@ -28,28 +27,28 @@ export const CreateAllPins = resources => {
           network => network.id === compute.availablePhyNet
         )
         if (locationExistsOnMarkers && !findNetwork) {
-          locationExistsOnMarkers.location.isCompute = true;
-          const { computeData } = compute;
+          locationExistsOnMarkers.location.isCompute = true
+          const { computeData } = compute
           const cpuColor = singlePercentage(
             computeData.quota.cpus.provisioned,
             computeData.quota.cpus.total
-          );
+          )
           const ramColor = singlePercentage(
             computeData.quota.ram.provisioned,
             computeData.quota.ram.total
-          );
+          )
           const storageColor = singlePercentage(
             computeData.quota.storage.provisioned,
             computeData.quota.storage.total
-          );
+          )
           const { percentage, color } = compareResources(
             cpuColor,
             ramColor,
             storageColor,
             locationExistsOnMarkers.location.percentage
-          );
-          locationExistsOnMarkers.location.color = color;
-          locationExistsOnMarkers.location.percentage = percentage;
+          )
+          locationExistsOnMarkers.location.color = color
+          locationExistsOnMarkers.location.percentage = percentage
           locationExistsOnMarkers.location.resources.computes.push({
             id: compute.id,
             name: compute.name,
@@ -69,22 +68,23 @@ export const CreateAllPins = resources => {
                 ...storageColor
               }
             },
-            status: computeData.status
+            status: computeData.status,
+            trusted: GenerateTrusted(compute.trusted)
           })
         } else if (!findNetwork && !locationExistsOnMarkers) {
-          const { computeData } = compute;
+          const { computeData } = compute
           const cpuColor = singlePercentage(
             computeData.quota.cpus.provisioned,
             computeData.quota.cpus.total
-          );
+          )
           const ramColor = singlePercentage(
             computeData.quota.ram.provisioned,
             computeData.quota.ram.total
-          );
+          )
           const storageColor = singlePercentage(
             computeData.quota.storage.provisioned,
             computeData.quota.storage.total
-          );
+          )
           const bigResource = percentage(computeData.quota)
           markers.push({
             location: {
@@ -114,27 +114,28 @@ export const CreateAllPins = resources => {
                     status: computeData.status,
                     availabilityZone: compute.computeData.availabilityZone,
                     availablePhyNet: compute.availablePhyNet,
-                    ischecked: false
+                    ischecked: false,
+                    trusted: GenerateTrusted(compute.trusted)
                   }
                 ]
               },
               isCompute: true
             }
-          });
+          })
         } else if (findNetwork && !locationExistsOnMarkers) {
-          const { computeData } = compute;
+          const { computeData } = compute
           const cpuColor = singlePercentage(
             computeData.quota.cpus.provisioned,
             computeData.quota.cpus.total
-          );
+          )
           const ramColor = singlePercentage(
             computeData.quota.ram.provisioned,
             computeData.quota.ram.total
-          );
+          )
           const storageColor = singlePercentage(
             computeData.quota.storage.provisioned,
             computeData.quota.storage.total
-          );
+          )
           const bigResource = percentage(computeData.quota)
           markers.push({
             location: {
@@ -164,7 +165,8 @@ export const CreateAllPins = resources => {
                     status: computeData.status,
                     availabilityZone: compute.computeData.availabilityZone,
                     availablePhyNet: compute.availablePhyNet,
-                    ischecked: false
+                    ischecked: false,
+                    trusted: GenerateTrusted(compute.trusted)
                   }
                 ],
                 network: {
@@ -176,35 +178,36 @@ export const CreateAllPins = resources => {
               },
               isCompute: true
             }
-          });
+          })
         } else if (findNetwork && locationExistsOnMarkers) {
-          locationExistsOnMarkers.location.isCompute = true;
-          const { computeData } = compute;
+          locationExistsOnMarkers.location.isCompute = true
+          const { computeData } = compute
           const cpuColor = singlePercentage(
             computeData.quota.cpus.provisioned,
             computeData.quota.cpus.total
-          );
+          )
           const ramColor = singlePercentage(
             computeData.quota.ram.provisioned,
             computeData.quota.ram.total
-          );
+          )
           const storageColor = singlePercentage(
             computeData.quota.storage.provisioned,
             computeData.quota.storage.total
-          );
+          )
           const { percentage, color } = compareResources(
             cpuColor,
             ramColor,
             storageColor,
             locationExistsOnMarkers.location.percentage
-          );
-          locationExistsOnMarkers.location.color = color;
-          locationExistsOnMarkers.location.percentage = percentage;
+          )
+          locationExistsOnMarkers.location.color = color
+          locationExistsOnMarkers.location.percentage = percentage
           locationExistsOnMarkers.location.resources.computes.push({
             id: compute.id,
             name: compute.name,
             type: compute.computeType,
             ischecked: false,
+            trusted: GenerateTrusted(compute.trusted),
             computeData: {
               cpus: {
                 ...computeData.quota.cpus,
@@ -222,21 +225,20 @@ export const CreateAllPins = resources => {
             status: computeData.status
           })
         }
-  })
-}
-
+      })
+  }
 
   const compareRadiosPhys = () => {
     resources.radioPhys.length > 0 &&
       resources.radioPhys.forEach(phy => {
-        const phyType = phy.type === "SUB6_ACCESS" ? "wifi" : "LTE";
-        const { latitude, longitude } = phy.location;
+        const phyType = phy.type === 'SUB6_ACCESS' ? 'wifi' : 'LTE'
+        const { latitude, longitude } = phy.location
         if (ValidCoord(latitude, longitude)) {
           const locationExistsOnMarkers = markers.find(
             marker =>
               marker.location.latitude === latitude &&
               marker.location.longitude === longitude
-          );
+          )
 
           if (locationExistsOnMarkers) {
             if (locationExistsOnMarkers.location.resources[phyType]) {
@@ -247,7 +249,7 @@ export const CreateAllPins = resources => {
                 config: phy.config,
                 ranId: phy.ranId,
                 ischecked: false
-              });
+              })
             } else {
               locationExistsOnMarkers.location.resources[phyType] = [
                 {
@@ -258,7 +260,7 @@ export const CreateAllPins = resources => {
                   ranId: phy.ranId,
                   ischecked: false
                 }
-              ];
+              ]
             }
           } else {
             markers.push({
@@ -278,21 +280,21 @@ export const CreateAllPins = resources => {
                   ]
                 }
               }
-            });
+            })
           }
         }
-      });
+      })
   }
   try {
-  compareComputes();
-  compareRadiosPhys();
-} catch (error) {
-}
+    compareComputes()
+    compareRadiosPhys()
+  } catch (error) {
+  }
   return markers
 }
 
 export const GetSelectComputes = locations => {
-  const arrayOfComputes = [];
+  const arrayOfComputes = []
   locations.forEach(item => {
     item.location.resources.computes &&
       item.location.resources.computes.forEach(compute => {
@@ -303,20 +305,19 @@ export const GetSelectComputes = locations => {
               latitude: item.location.latitude,
               longitude: item.location.longitude
             }
-          });
+          })
         }
-      });
-  });
+      })
+  })
   if (arrayOfComputes.length > 0) {
-    return arrayOfComputes;
+    return arrayOfComputes
   } else {
-    return null;
+    return null
   }
 }
 
-
 export const GetSelectRadioPhys = locations => {
-  const arrayOfRadioPhys = { wifi: [], lte: [] };
+  const arrayOfRadioPhys = { wifi: [], lte: [] }
   locations.forEach(item => {
     item.location.resources.wifi &&
       item.location.resources.wifi.forEach(wifi => {
@@ -327,10 +328,10 @@ export const GetSelectRadioPhys = locations => {
               latitude: item.location.latitude,
               longitude: item.location.longitude
             },
-            type: "SUB6_ACCESS"
-          });
+            type: 'SUB6_ACCESS'
+          })
         }
-      });
+      })
     item.location.resources.LTE &&
       item.location.resources.LTE.forEach(lte => {
         if (lte.ischecked) {
@@ -340,12 +341,12 @@ export const GetSelectRadioPhys = locations => {
               latitude: item.location.latitude,
               longitude: item.location.longitude
             },
-            type: "LTE_PRIMARY_PLMN"
-          });
+            type: 'LTE_PRIMARY_PLMN'
+          })
         }
-      });
-  });
-  return arrayOfRadioPhys;
+      })
+  })
+  return arrayOfRadioPhys
 }
 
 const ValidCoord = (latitude, longitude) => {
@@ -354,35 +355,35 @@ const ValidCoord = (latitude, longitude) => {
     latitude <= 90 &&
     (longitude >= -180 && longitude <= 180)
   ) {
-    return true;
+    return true
   } else {
-    return false;
+    return false
   }
 }
 
 export const UNITS = [
   {
     id: 1,
-    value: "MB",
-    name: "MB"
+    value: 'MB',
+    name: 'MB'
   },
   {
     id: 2,
-    value: "GB",
-    name: "GB"
+    value: 'GB',
+    name: 'GB'
   }
 ]
 
 export const UNITS_SECONDS = [
   {
     id: 1,
-    value: "MB/s",
-    name: "MB/s"
+    value: 'MB/s',
+    name: 'MB/s'
   },
   {
     id: 2,
-    value: "GB/s",
-    name: "GB/s"
+    value: 'GB/s',
+    name: 'GB/s'
   }
 ]
 
@@ -390,88 +391,87 @@ export const FindLocationCompute = (computeId, data) => {
   data.forEach(location => {
     let findLocation =
       location.resources.computes &&
-      location.resources.computes.find(compute => compute.id === computeId);
+      location.resources.computes.find(compute => compute.id === computeId)
     if (findLocation) {
-      return findLocation;
+      return findLocation
     }
-  });
+  })
 }
 
 export const GETAllChunkIds = resources => {
-  const array = [];
+  const array = []
   resources.forEach(resource => {
-        array.push(resource.idChunk);
-  });
-  return array;
+    array.push(resource.idChunk)
+  })
+  return array
 }
 
 export const VerifyNetwork = (resources, networks) => {
-  let result = false;
+  let result = false
   networks &&
     networks.forEach(network => {
       const getLocation = resources.find(
         resource =>
           resource.location.latitude === network.location.latitude &&
           resource.location.longitude === network.location.longitude
-      );
+      )
       if (getLocation) {
         getLocation.location.resources.computes &&
           getLocation.location.resources.computes.forEach(compute => {
-            if (compute.ischecked) result = true;
-          });
+            if (compute.ischecked) result = true
+          })
       } else {
-        result = false;
+        result = false
       }
-    });
-  return result;
+    })
+  return result
 }
 
 const pickHex = percent => {
-  var a = percent / 100,
-    b = (0 - 100) * a,
-    c = b + 100;
+  const a = percent / 100
+  const b = (0 - 100) * a
+  const c = b + 100
 
   // Return a CSS HSL string
-  return `hsl(${Math.trunc(c)}, 48%, 53%)`;
+  return `hsl(${Math.trunc(c)}, 48%, 53%)`
 }
 
 const percentage = quota => {
-  let value = 0;
+  let value = 0
   for (const key in quota) {
     if (quota.hasOwnProperty(key)) {
       const returnPercentage =
-        (quota[key].provisioned / quota[key].total) * 100;
-      if (value < returnPercentage) value = returnPercentage;
+        (quota[key].provisioned / quota[key].total) * 100
+      if (value < returnPercentage) value = returnPercentage
     }
   }
-  return { percentage: value, color: pickHex(value) };
+  return { percentage: value, color: pickHex(value) }
 }
 
 const singlePercentage = (provisioned, total) => {
-  let value = 0;
-  const returnPercentage = (provisioned / total) * 100;
-  value = returnPercentage;
-  return { percentage: value, color: pickHex(value) };
+  let value = 0
+  const returnPercentage = (provisioned / total) * 100
+  value = returnPercentage
+  return { percentage: value, color: pickHex(value) }
 }
 
 const compareResources = (cpus, ram, storage, compute) => {
-  let value = compute;
+  let value = compute
   if (value < cpus.percentage) {
-    value = cpus.percentage;
+    value = cpus.percentage
   }
   if (value < ram.percentage) {
-    value = ram.percentage;
+    value = ram.percentage
   }
   if (value < storage.percentage) {
-    value = storage.percentage;
+    value = storage.percentage
   }
 
-  return { percentage: value, color: pickHex(value) };
+  return { percentage: value, color: pickHex(value) }
 }
 
-
 export const GetNetworks = networks => {
-  const array  = []
+  const array = []
   const object = {
     name: null,
     id: null,
@@ -492,18 +492,26 @@ export const GetNetworks = networks => {
       bandwidthProvisioned: item.physicalNetworkData.quota.bandwidth.provisioned,
       units: item.physicalNetworkData.quota.bandwidth.units
     })
-})
+  })
   return array
 }
 
-
-
 export const FindComputeFOS = openStacks => {
-  if(!openStacks) return null
+  if (!openStacks) return null
   const findFos = openStacks.find(open => open.type === 'fos')
-  if(findFos){
+  if (findFos) {
     return findFos.idChunk
   } else {
     return openStacks[0].idChunk
+  }
+}
+
+const GenerateTrusted = trusted => {
+  if (trusted === 'None') {
+    return 'untrusted'
+  } else if (trusted === 'True') {
+    return 'trusted'
+  } else {
+    return 'untrusted'
   }
 }

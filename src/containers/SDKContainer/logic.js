@@ -2,7 +2,6 @@
  * sdk Container Logic
  * Please write a description
  *
- * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
 
 import { kea } from 'kea'
@@ -10,8 +9,20 @@ import { put, call } from 'redux-saga/effects'
 import axios from 'axios'
 import { API_SDK } from 'config'
 import PropTypes from 'prop-types'
-import { NEW_SERVICE, addNode, transformToD3Object, removeLink, removeNode, createNewLink,
-  transformToJSON, changeNode, Organizations } from './utils'
+import {
+  NEW_SERVICE,
+  addNode,
+  transformToD3Object,
+  removeLink,
+  removeNode,
+  createNewLink,
+  transformToJSON,
+  changeNode,
+  Organizations,
+  GetMonitoringConfig,
+  GenerateMonitoringService,
+  DeleteMonitoringService
+} from './utils'
 import { Message } from 'element-react'
 
 const DEFAULT_D3 = {nodes: [], links: []}
@@ -40,13 +51,17 @@ export default kea({
     getServiceId: (id) => ({ id }),
     removeLink: (selectlink) => ({ selectlink }),
     createLink: (source, target) => ({ source, target }),
+
     configParams: (node) => ({ node }),
-    changeConfigParams: (node) => ({ node }),
+    configMonitoring: (node) => ({ node }),
+    changeNodeConfig: (node, label) => ({ node, label }),
+    closeModalConfig: (label) => label,
+
     changePublishStatus: (status) => ({ status }),
     activeLoadingPublish: () => ({ }),
     activeLoadingSave: () => ({ }),
-    changeSaveStatus: (status) => ({ status }),
     actionModalPublish: () => ({ }),
+    changeSaveStatus: (status) => ({ status }),
     changeStatusPanel: () => ({ }),
     setErrors: (errors) => ({ errors }),
     setService: (id) => ({ id }),
@@ -57,16 +72,17 @@ export default kea({
     fetchOrganizations: () => ({ }),
     setOrganizations: (organizations) => ({ organizations }),
 
-    resetService: () => ({ }),
+    setMonitoring: (monitoringOptions) => ({ monitoringOptions }),
+
     reset: () => ({ })
   }),
 
   reducers: ({ actions }) => ({
-    serviceInfo: [null, PropTypes.object, {
-      [actions.setServiceInfo]: (state, payload) => payload.service,
-      [actions.resetService]: () => null,
-
-      [actions.reset]: () => null
+    serviceInfo: [NEW_SERVICE(), PropTypes.object, {
+      [actions.setServiceInfo]: (state, payload) => payload.service
+    }],
+    VNFServices: [null, PropTypes.array, {
+      [actions.setMonitoring]: (state, payload) => payload.monitoringOptions
     }],
     activeTab: ['composer', PropTypes.string, {
       [actions.setActiveTab]: (state, payload) => payload.tab.props.name,
@@ -93,12 +109,17 @@ export default kea({
     modalData: [null, PropTypes.any, {
       [actions.modalAction]: (state, payload) => payload.link
     }],
-    modalConfigStatus: [false, PropTypes.bool, {
+    modalConfigParameterStatus: [false, PropTypes.bool, {
       [actions.configParams]: (state, payload) => !state,
-      [actions.changeConfigParams]: (state, payload) => !state
+      [actions.closeModalConfig]: (state, payload) => payload.label === 'mapping' && !state
     }],
-    modalNodeConfigData: [ null, PropTypes.object, {
-      [actions.configParams]: (state, payload) => payload.node
+    modalConfigMonitoringStatus: [false, PropTypes.bool, {
+      [actions.configMonitoring]: (state, payload) => !state,
+      [actions.closeModalConfig]: (state, payload) => payload.label === 'monitoring' && !state
+    }],
+    modalNodeConfigData: [null, PropTypes.object, {
+      [actions.configParams]: (state, payload) => payload.node,
+      [actions.configMonitoring]: (state, payload) => payload.node
     }],
     idService: [0, PropTypes.any, {
       [actions.setService]: (state, payload) => payload.id
@@ -108,7 +129,7 @@ export default kea({
     }],
     isSaved: [true, PropTypes.bool, {
       [actions.changePublishStatus]: (state, payload) => false,
-      [actions.changeConfigParams]: (state, payload) => false,
+      [actions.changeNodeConfig]: (state, payload) => false,
       [actions.createNode]: () => false,
       [actions.removeLink]: () => false,
       [actions.removeNode]: () => false,
@@ -140,8 +161,8 @@ export default kea({
       [actions.setOrganizations]: (state, payload) => Organizations(payload.organizations)
     }]
   }),
-
-  start: function * () {
+  // remove this because when change to another step the page renders again
+   /* start: function * () {
     const { fetchOrganizations, changePublishStatus } = this.actions
     yield put(changePublishStatus('secondary'))
     yield put(fetchOrganizations())
@@ -149,9 +170,9 @@ export default kea({
 
   stop: function * () {
     const { reset } = this.actions
-
+    console.log('stop sdkContainer')
     yield put(reset())
-  },
+  }, */
 
   takeLatest: ({ actions, workers }) => ({
     [actions.createNode]: workers.createNode,
@@ -160,9 +181,9 @@ export default kea({
     [actions.createLink]: workers.createLink,
     [actions.saveComposer]: workers.saveComposer,
     [actions.fetchServiceId]: workers.fetchServiceId,
-    [actions.changeConfigParams]: workers.changeConfigParams,
     [actions.fetchOrganizations]: workers.fetchOrganizations,
-    [actions.fetchAllFunctions]: workers.fetchAllFunctions
+    [actions.fetchAllFunctions]: workers.fetchAllFunctions,
+    [actions.changeNodeConfig]: workers.changeNodeConfig
   }),
 
   workers: {
@@ -194,21 +215,21 @@ export default kea({
     },
 
     * fetchServiceId () {
-      const { setServiceInfo, setData, changeSaveStatus, resetService } = this.actions
+      const { setServiceInfo, setData, changeSaveStatus, setMonitoring } = this.actions
       const serviceId = yield this.get('idService')
       const catalogue = yield this.get('allFunctions')
-      yield put(resetService())
       try {
         if (serviceId > 0) {
           let responseResult = yield call(axios.get, `${API_SDK}/sdk/services/${serviceId}`)
           const { data } = responseResult
           const d3Data = transformToD3Object(data, catalogue)
           yield put(setData(d3Data))
+          yield put(setMonitoring(GetMonitoringConfig(d3Data)))
           yield put(setServiceInfo(data))
           yield put(changeSaveStatus(true))
         } else {
           yield put(setData({nodes: [], links: []}))
-          yield put(setServiceInfo(NEW_SERVICE))
+          yield put(setServiceInfo(NEW_SERVICE()))
         }
       } catch (error) {
         Message({
@@ -319,12 +340,16 @@ export default kea({
     },
 
     * removeNode (action) {
+      const { setServiceInfo } = this.actions
       const selectNode = action.payload.node
       const d3Data = yield this.get('d3Data')
-      const { setData } = this.actions
+      const service = yield this.get('serviceInfo')
+      const { setData, setMonitoring } = this.actions
       const {newd3Data} = removeNode(selectNode, d3Data)
       const newData = Object.assign({}, newd3Data)
+      yield put(setServiceInfo(DeleteMonitoringService(selectNode, service)))
       yield put(setData(newData))
+      yield put(setMonitoring(GetMonitoringConfig(newData)))
     },
 
     * createLink (action) {
@@ -339,12 +364,35 @@ export default kea({
       yield put(modalAction(newLink))
     },
 
-    * changeConfigParams (action) {
-      const { setData } = this.actions
+    * changeNodeConfig (action) {
+      const {
+        setData,
+        configMonitoring,
+        configParams,
+        changeSaveStatus,
+        closeModalConfig,
+        setMonitoring,
+        setServiceInfo
+      } = this.actions
       const d3Data = yield this.get('d3Data')
-      const node = action.payload.node
-      const newData = changeNode(node, d3Data)
-      yield put(setData(newData))
+      const service = yield this.get('serviceInfo')
+      const { node, label } = action.payload
+      try {
+        const newData = changeNode(node, d3Data, label)
+        yield put(setData(newData))
+        yield put(changeSaveStatus(false))
+        if (label === 'monitoring') {
+          // add to array to choose in actions
+          yield put(setMonitoring(GetMonitoringConfig(d3Data)))
+          yield put(setServiceInfo(GenerateMonitoringService(d3Data, service)))
+          yield put(configMonitoring(null))
+        } else {
+          yield put(configParams(null))
+        }
+        yield put(closeModalConfig(label))
+      } catch (e) {
+        console.log('Error change node config', e)
+      }
     }
   }
 })

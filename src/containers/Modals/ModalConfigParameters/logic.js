@@ -2,7 +2,6 @@
  * ModalConfigParameters Container Logic
  * Please write a description
  *
- * @author Your Name <youremail@ubiwhere.com>
  */
 
 import { kea } from 'kea'
@@ -32,8 +31,7 @@ export default kea({
   connect: {
     actions: [
       ComposerMainLogic, [
-        'changeConfigParams',
-        'changeSaveStatus',
+        'changeNodeConfig',
         'configParams'
       ]
     ],
@@ -69,7 +67,6 @@ export default kea({
       [actions.error]: () => true,
       [actions.reset]: () => false
     }],
-
     submiting: [false, PropTypes.bool, {
       [actions.submit]: () => true,
       [actions.error]: () => false,
@@ -107,10 +104,7 @@ export default kea({
 
     * submit () {
       const {
-        error,
-        setForm,
-        changeSaveStatus,
-        changeConfigParams
+        changeNodeConfig
       } = this.actions
       const form = yield this.get('form')
       const dirty = yield this.get('dirty')
@@ -119,28 +113,18 @@ export default kea({
       const validation = Check.checkValidation(form, VALIDATIONS)
 
       if (dirty && validation.invalid) {
-        yield put(error([]))
         return false
       } else if (!dirty && validation.invalid) {
-        yield put(setForm(validation.form))
-        yield put(error([]))
         return false
       } else if (!validation.invalid && !dirty) {
-        const array = []
-        validation.form.mapping_expression.array.forEach(element => {
-          array.push(element.value)
-        })
-        node.mapping_expression = array
-        yield put(changeConfigParams(node))
-        yield put(changeSaveStatus(false))
+        return false
       } else if (!validation.invalid && dirty) {
         const array = []
         validation.form.mapping_expression.array.forEach(element => {
           array.push(element.value)
         })
         node.mapping_expression = array
-        yield put(changeConfigParams(node))
-        yield put(changeSaveStatus(false))
+        yield put(changeNodeConfig(node, 'mapping'))
       }
     }
   }

@@ -86,7 +86,7 @@ class AlertsNetwork extends Component {
             label={'Reacted'}
             type={'default'}
             options={OPTIONS_REACT}
-            selectOption={SelectStauts}
+            value={SelectStauts}
             onChange={value => changeStatus(value)}
           />
         </ContainerFilters>

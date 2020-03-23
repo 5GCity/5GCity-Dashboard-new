@@ -29,8 +29,15 @@ class SDKContainer extends Component {
   }
 
   componentDidMount () {
-    const { setService } = this.actions
+    const { setService, fetchOrganizations, changePublishStatus } = this.actions
     setService(Number(this.props.match.params.id))
+    changePublishStatus('secondary')
+    fetchOrganizations()
+  }
+
+  componentWillUnmount () {
+    const { reset } = this.actions
+    reset()
   }
 
   render () {
@@ -40,8 +47,9 @@ class SDKContainer extends Component {
       modalStatus,
       d3Data,
       serviceInfo,
-      modalConfigStatus,
+      modalConfigParameterStatus,
       modalNodeConfigData,
+      modalConfigMonitoringStatus,
       isPublishLoading,
       isSaved,
       isSaveLoading,
@@ -58,6 +66,7 @@ class SDKContainer extends Component {
       setActiveTab,
       saveComposer,
       configParams,
+      configMonitoring,
       publishComposer,
       actionModalPublish,
       changeStatusPanel
@@ -72,13 +81,13 @@ class SDKContainer extends Component {
       />
         <Wrapper>
           {modalPublishStatus &&
-          <ModalServiceParameters
-            title={'Configure Parameters'}
-            action={actionModalPublish}
-            status={modalPublishStatus}
-            service={serviceInfo}
-        />
-        }
+            <ModalServiceParameters
+              title={'Configure Parameters'}
+              action={actionModalPublish}
+              status={modalPublishStatus}
+              service={serviceInfo}
+            />
+          }
           <HeaderNav
             name={'New Service'}
             buttonBack={<BackIcon />}
@@ -104,7 +113,10 @@ class SDKContainer extends Component {
             />
             </HeaderNav.Left>
           </HeaderNav>
-          <Tabs activeName={activeTab} onTabClick={value => setActiveTab(value)}>
+          <Tabs
+            activeName={activeTab}
+            onTabClick={value => setActiveTab(value)}
+          >
             <Tabs.Pane
               key={1}
               name='composer'
@@ -125,7 +137,9 @@ class SDKContainer extends Component {
                   removeNode={removeNode}
                   createLink={createLink}
                   configParams={configParams}
-                  modalConfigStatus={modalConfigStatus}
+                  configMonitoring={configMonitoring}
+                  modalParameters={modalConfigParameterStatus}
+                  modalMonitoring={modalConfigMonitoringStatus}
                   modalNodeConfigData={modalNodeConfigData}
                 />
               </Wrapper>

@@ -93,7 +93,7 @@ class PanelResourceLocation extends Component {
                               placeholder="unit"
                               options={UNITS}
                               onChange={value => change({ramUnit: value})}
-                              selectOption={ramUnit.value}
+                              value={ramUnit.value}
                             />
                             </Form.Item>
                           </Layout.Col>

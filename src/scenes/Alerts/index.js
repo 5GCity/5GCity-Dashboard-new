@@ -67,7 +67,7 @@ class Alerts extends Component {
             label={'Alerts'}
             type={'default'}
             options={OPTIONS_ALERTS}
-            selectOption={selectAlert}
+            value={selectAlert}
             onChange={value => changeAlert(value)}
           />
         <ContainerDatePicker>
@@ -86,7 +86,7 @@ class Alerts extends Component {
             label={'Reacted'}
             type={'default'}
             options={OPTIONS_REACT}
-            selectOption={SelectStauts}
+            value={SelectStauts}
             onChange={value => changeStatus(value)}
           />
         </ContainerFilters>

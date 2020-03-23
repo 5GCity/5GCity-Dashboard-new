@@ -79,7 +79,7 @@ class FormNetwork extends Component {
                   placeholder="unit"
                   options={UNITS}
                   onChange={value => change({ bandwidthUnit: value })}
-                  selectOption={bandwidthUnit.value}
+                  value={bandwidthUnit.value}
                 />
               </Form.Item>
             </Layout.Col>

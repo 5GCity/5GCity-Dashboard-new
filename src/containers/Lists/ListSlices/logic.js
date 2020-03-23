@@ -2,18 +2,17 @@
  * ListSlices Container Logic
  * Please write a description
  *
- * @author Your Name <gpatriarca@ubiwhere.com>
  */
 
-import { kea } from 'kea';
-import axios from 'axios';
-import { call, put } from 'redux-saga/effects';
-import { API_SLICE_MANAGEMENT } from 'config';
-import PropTypes from 'prop-types';
+import { kea } from 'kea'
+import axios from 'axios'
+import { call, put } from 'redux-saga/effects'
+import { API_SLICE_MANAGEMENT } from 'config'
+import PropTypes from 'prop-types'
 
 /* Logic */
-import NavBarLogic from 'containers/Navbar/logic';
-import AppLogic from 'containers/App/logic';
+import NavBarLogic from 'containers/Navbar/logic'
+import AppLogic from 'containers/App/logic'
 
 export default kea({
   path: () => ['scenes', 'containers', 'ListSlices'],
@@ -131,13 +130,13 @@ export default kea({
     ]
   }),
 
-  start: function* () {
+  start: function * () {
     const { fetchSlices } = this.actions
 
     yield put(fetchSlices())
   },
 
-  stop: function* () {
+  stop: function * () {
     const { reset, removeLoadingPage, removeNoData } = this.actions
 
     // remove loading page

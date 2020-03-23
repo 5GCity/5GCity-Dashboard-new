@@ -24,7 +24,7 @@ class ComposerMenu extends Component {
           <Select
             type={'default'}
             options={organizationsList}
-            selectOption={selectOrganization}
+            value={selectOrganization}
             onChange={value => changeOrganization(value)}
           />
         </WrapperInput>

@@ -34,7 +34,7 @@ const ModalError = props => (
   >
     <Modal.Body>
       <Error>
-        {props.message || 'Error to create new instance' }
+        {props.message || 'Error creating new instance' }
       </Error>
     </Modal.Body>
     <Modal.Footer>

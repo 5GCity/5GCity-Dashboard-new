@@ -68,7 +68,9 @@ export const GetJsonFunction = (params, form) => {
     JSONResult.description = params.functionDescription
     JSONResult.flavourExpression = params.functionFlavourExp
     JSONResult.instantiationLevelExpression = params.functionInstExp
-    if (params.functionMonitParams) { JSONResult.monitoringParameters = JSON.parse(params.functionMonitParams) }
+    if (params.functionMonitParams) {
+      JSONResult.monitoringParameters = JSON.parse(params.functionMonitParams)
+    }
     JSONResult.name = params.functionName
     JSONResult.ownerId = params.functionOwner
     JSONResult.maxInstancesCount = params.functionMaxInst
@@ -111,12 +113,7 @@ const newFunctionJSON = {
   maxInstancesCount: 5,
   metadata: {},
   minInstancesCount: 3,
-  monitoringParameters: [
-    {
-      name: null,
-      parameterType: 'string'
-    }
-  ],
+  monitoringParameters: [],
   name: null,
   sliceId: null,
   ownerId: null,

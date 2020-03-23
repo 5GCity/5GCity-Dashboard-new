@@ -2,7 +2,6 @@
  * PanelChunkDetail Container
  * Please write a description
  *
- * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
 import React, { Component } from 'react'
 import styled from 'styled-components'

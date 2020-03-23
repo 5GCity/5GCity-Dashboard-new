@@ -27,7 +27,9 @@ const ModalDeleteSlice = props => (
   >
     <Modal.Body>
       {props.slice &&
-      <Message>Are you sure you want to delete repository {props.slice.sliceId} ?</Message>
+      <Message>
+        Are you sure you want to delete repository {props.slice.sliceId} ?
+      </Message>
     }
     </Modal.Body>
     <Modal.Footer>

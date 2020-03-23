@@ -26,7 +26,12 @@ class SliceDetail extends Component {
   }
 
   render () {
-    const { slice, rightPanelInfo, panel, location } = this.props
+    const {
+      slice,
+      rightPanelInfo,
+      panel,
+      location
+    } = this.props
     const { panelAction, infoMarker } = this.actions
     return (
       <Wrapper>
@@ -36,18 +41,19 @@ class SliceDetail extends Component {
             buttonBack={<BackIcon />}
             navigateBack={() => this.navigateToBack()}
             name={slice.name}
-        />
+          />
           <PanelChunkDetail
             show={panel}
             data={rightPanelInfo && rightPanelInfo}
             close={panelAction}
-        />
+          />
           <SliceMap
             location={location}
             markers={slice.markers}
             markerColor={Theme.primaryColor}
             markerClick={(marker) => infoMarker(marker)}
-        />
+            links={slice.links}
+          />
         </React.Fragment>
       }
       </Wrapper>
