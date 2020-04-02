@@ -407,7 +407,7 @@ const compareResources = (cpus, ram, storage, compute) => {
 }
 
 const GetTrusted = trusted => {
-  if (trusted === 'True') {
+  if (trusted) {
     return 'Yes'
   } else {
     return 'No'

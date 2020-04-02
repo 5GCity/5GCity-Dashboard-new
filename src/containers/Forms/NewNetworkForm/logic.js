@@ -18,7 +18,6 @@ import {
   SetForm,
   SetPorts,
   SetComputes,
-  CapitalizeFirstLetter,
   AddPort,
   RemovePort
 } from './utils'
@@ -156,7 +155,7 @@ export default kea({
           slic3Id: params.sliceId,
           floatingIpRequired: true,
           inputNodeId: params.computeSelect,
-          trusted: CapitalizeFirstLetter(params.trusted.toString())
+          trusted: params.trusted
         }
         try {
           yield call(axios.post, `${API_SLICE_MANAGEMENT}/network_service_instance`, dataRunInstance)
@@ -165,14 +164,9 @@ export default kea({
           yield put(loading())
           yield call(this.props.history.push, `/network`)
         } catch (er) {
-          if (er.response.data) {
-              // map WS return errors to form format
-              // put the errors on each field and changed them to invalid
-
-          }
           yield put(actionModal())
           yield put(loading())
-          yield put(actionModalError())
+          yield put(actionModalError(er.response.data.message))
         }
       }
     },

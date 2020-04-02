@@ -43,13 +43,15 @@ export const VALIDATIONS = {
     Check.isNumber
   ],
   computeSelect: [
-    Check.isRequired
   ]
 }
 
-export const SetField = (state, payload) => (
-  Check.setAndCheckValidation(state, payload, VALIDATIONS)
-)
+export const SetField = (state, payload) => {
+  if(payload.field.sliceId){
+    state.computeSelect.value = null
+  }
+ return Check.setAndCheckValidation(state, payload, VALIDATIONS)
+}
 
 export const SetForm = (form) => (
   Check.checkValidation(form, VALIDATIONS).form

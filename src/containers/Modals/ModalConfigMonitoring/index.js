@@ -59,7 +59,7 @@ class ModalConfigMonitoring extends Component {
                   <Form.Error>{monitoring.name.message}</Form.Error>
                 </Form.Item>
                 <Form.Item
-                  label={'Action type'}
+                  label={'Monitoring Type'}
                   required
                   status={!monitoring.actionType.valid}
             >
@@ -85,7 +85,7 @@ class ModalConfigMonitoring extends Component {
                   <Form.Error>{monitoring.functionAssociated.message}</Form.Error>
                 </Form.Item>
                 <Form.Item
-                  label={'Monitoring Type'}
+                  label={'Monitoring parameters visibility'}
                   required
                   status={!monitoring.monitoringType.valid}
                 >

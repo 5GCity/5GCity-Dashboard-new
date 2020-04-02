@@ -138,7 +138,7 @@ export default Logic(PanelResourceLocation)
 
 const Container = styled.div`
   overflow-y: auto;
-  margin: 0 5px 0 10px;
+  margin: 0 0 0 10px;
   max-height: calc(100vh - 200px);
 `
 

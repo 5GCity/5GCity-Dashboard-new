@@ -42,7 +42,8 @@ export default kea({
     ],
     props: [
       SDKContainerLogic, [
-        'serviceInfo'
+        'serviceInfo',
+        'monitoringNames'
       ]
     ]
   },

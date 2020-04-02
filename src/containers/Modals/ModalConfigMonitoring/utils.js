@@ -77,11 +77,6 @@ export const MONITORING_TYPE = [
     id: 1,
     name: 'External',
     value: 'external'
-  },
-  {
-    id: 2,
-    name: 'Internal',
-    value: 'internal'
   }
 ]
 
@@ -94,7 +89,7 @@ export const SetMonitoringFunc = nodeInfo => {
   if (nodeInfo.monitoringVNF) {
     array = nodeInfo.monitoringVNF.map(monitoring => ({
       name: monitoring.name,
-      value: monitoring.id,
+      value: monitoring.id.toString(),
       id: monitoring.id
     }))
   }
@@ -156,14 +151,14 @@ export const GenerateNode = (monitoring, node) => {
     if (monitoringType === 'external') {
       result.extMonitoringParameters.push({
         componentIndex: nodeId(node),
-        importedParameterId: functionAssociated,
+        importedParameterId: functionAssociated.toString(),
         parameterType: actionType,
         name: name
       })
     } else {
       result.intMonitoringParameters.push({
         componentIndex: nodeId(node),
-        importedParameterId: functionAssociated,
+        importedParameterId: functionAssociated.toString(),
         parameterType: actionType,
         name: name
       })
@@ -198,7 +193,7 @@ export const SetForm = node => {
         name: {value: int.name},
         actionType: {value: int.parameterType},
         monitoringType: {value: 'internal'},
-        functionAssociated: {value: int.importedParameterId}
+        functionAssociated: {value: ext.importedParameterId}
       })
     })
   } else {

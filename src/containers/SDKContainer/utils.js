@@ -830,17 +830,26 @@ export const Organizations = value => {
 }
 
 export const GetMonitoringConfig = d3Data => {
-  const result = []
+  const result = {options: [], names: []}
   d3Data.nodes.forEach(node => {
     if (node.monitoring_service) {
-      result.push({
+      result.options.push({
         name: node.extra_info.name,
         value: node.extra_info.componentIndex.toString(),
         id: node.extra_info.vnfd_id
       })
+      // Add names of monitorings
+      node.monitoring_service.extMonitoringParameters &&
+      node.monitoring_service.extMonitoringParameters.forEach(ext =>(
+        result.names.push({
+          name: ext.name,
+          value: ext.name,
+          id: ext.importedParameterId
+        })
+      ))
     }
   })
-  return result
+  return {monitoringOptions: result.options, monitoringNames: result.names}
 }
 
 const findMonitoring = (dataService, match, catalogue, service) => {

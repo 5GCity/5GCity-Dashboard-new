@@ -45,7 +45,7 @@ export default kea({
     setSelectNetwork: (network) => ({ network }),
     runInstance: () => ({ }),
     actionModal: () => ({ }),
-    actionModalError: () => ({ }),
+    actionModalError: (message) => ({ message }),
     loading: () => ({ }),
     setErroFecth: () => ({ }),
     setNoData: () => ({ }),
@@ -68,6 +68,9 @@ export default kea({
     modalError: [false, PropTypes.bool, {
       [actions.actionModalError]: (state, payload) => !state,
       [actions.reset]: () => false
+    }],
+    modalErrorMessage : [null, PropTypes.string, {
+      [actions.actionModalError]: (state, payload) => payload.message || null,
     }],
     selectNetwork: [null, PropTypes.any, {
       [actions.setSelectNetwork]: (state, payload) => payload.network,

@@ -151,13 +151,11 @@ class SliceMap extends Component {
               draggable={marker.draggable}
               latitude={marker.location.latitude}
               longitude={marker.location.longitude}
-              offsetLeft={-24}
-              offsetTop={-48}
           >
               {!marker.location.resources.rans &&
              !marker.location.resources.wifi &&
              !marker.location.resources.LTE &&
-             <NodeMarkerIcon
+             <IconNode
                key={marker.id}
                color={marker.location.color || markerColor}
                onClick={() => markerClick(marker)}
@@ -171,14 +169,14 @@ class SliceMap extends Component {
               />
             }
               {marker.location.resources.wifi &&
-              <NodeWifiIcon
+              <IconWifi
                 key={marker.id}
                 fill={marker.location.color || markerColor}
                 onClick={() => markerClick(marker)}
               />
             }
               {marker.location.resources.LTE &&
-              <NodeBoxLTE
+              <IconLTE
                 key={marker.id}
                 fill={marker.location.color || markerColor}
                 onClick={() => markerClick(marker)}
@@ -202,4 +200,16 @@ const Wrapper = styled.div`
 `
 const NodeRAN = styled(NodeRanIcon)`
   background-size: 36px 44px;
+  transform: translate(-50%,-100%);
+`
+const IconLTE = styled(NodeBoxLTE)`
+  transform: translate(-50%,-100%);
+`
+
+const IconWifi = styled(NodeWifiIcon)`
+  transform: translate(-50%,-100%);
+`
+
+const IconNode = styled(NodeMarkerIcon)`
+  transform: translate(-50%,-100%);
 `

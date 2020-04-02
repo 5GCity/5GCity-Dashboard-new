@@ -23,7 +23,8 @@ class FormSDKActionsRules extends Component {
   render () {
     const {
       actionsOptions,
-      formActionsRules
+      formActionsRules,
+      monitoringNames
     } = this.props
     const {
       change,
@@ -115,9 +116,11 @@ class FormSDKActionsRules extends Component {
                     label={'Parameter name'}
                     required
                     status={!condition.conditionName.valid}
-                    >
-                    <Input
+                  >
+                    <Select
                       value={condition.conditionName.value}
+                      placeholder={'Select operator'}
+                      options={monitoringNames}
                       onChange={value => changeCondition({conditionName: value}, i, index)}
                     />
                     <Form.Error>{condition.conditionName.message}</Form.Error>

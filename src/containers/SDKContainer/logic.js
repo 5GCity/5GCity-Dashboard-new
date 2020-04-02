@@ -72,7 +72,7 @@ export default kea({
     fetchOrganizations: () => ({ }),
     setOrganizations: (organizations) => ({ organizations }),
 
-    setMonitoring: (monitoringOptions) => ({ monitoringOptions }),
+    setMonitoring: (data) => ({ data }),
 
     reset: () => ({ })
   }),
@@ -82,7 +82,10 @@ export default kea({
       [actions.setServiceInfo]: (state, payload) => payload.service
     }],
     VNFServices: [null, PropTypes.array, {
-      [actions.setMonitoring]: (state, payload) => payload.monitoringOptions
+      [actions.setMonitoring]: (state, payload) => payload.data.monitoringOptions
+    }],
+    monitoringNames: [null, PropTypes.array, {
+      [actions.setMonitoring]: (state, payload) => payload.data.monitoringNames
     }],
     activeTab: ['composer', PropTypes.string, {
       [actions.setActiveTab]: (state, payload) => payload.tab.props.name,
@@ -224,7 +227,8 @@ export default kea({
           const { data } = responseResult
           const d3Data = transformToD3Object(data, catalogue)
           yield put(setData(d3Data))
-          yield put(setMonitoring(GetMonitoringConfig(d3Data)))
+          const { monitoringOptions, monitoringNames } = GetMonitoringConfig(d3Data)
+          yield put(setMonitoring(monitoringOptions, monitoringNames))
           yield put(setServiceInfo(data))
           yield put(changeSaveStatus(true))
         } else {

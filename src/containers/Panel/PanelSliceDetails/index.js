@@ -56,6 +56,6 @@ const PanelInfo = styled.div`
 
 const Container = styled.div`
   overflow-y: auto;
-  margin: 0 5px 0 10px;
+  margin: 0 0 0 10px;
   height: calc(100% - 90px) !important;
   `

@@ -507,9 +507,7 @@ export const FindComputeFOS = openStacks => {
 }
 
 const GenerateTrusted = trusted => {
-  if (trusted === 'None') {
-    return 'untrusted'
-  } else if (trusted === 'True') {
+  if (trusted) {
     return 'trusted'
   } else {
     return 'untrusted'

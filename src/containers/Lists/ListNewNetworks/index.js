@@ -28,7 +28,7 @@ const ModalError = props => (
   <Modal
     size={'tiny'}
     showClose
-    onCancel={props.actionModalError}
+    onCancel={() => props.actionModalError(null)}
     visible={props.modalError}
     title='Error'
   >
@@ -42,7 +42,7 @@ const ModalError = props => (
         text={'ok'}
         svg={<CheckIcon />}
         type={'primary'}
-        onClick={props.actionModalError}
+        onClick={() => props.actionModalError(null)}
       />
     </Modal.Footer>
   </Modal>
@@ -122,10 +122,22 @@ const ListNetworkServices = (props) => (
 
 class ListNewNetworks extends Component {
   render () {
-    const {networkServices, modalError, modalVisibled,
-      isSubmitting, loading, noData, errorFecth } = this.props
-    const { actionModalError, actionModal, setSelectNetwork,
-       submit } = this.actions
+    const {
+      networkServices,
+      modalError,
+      modalVisibled,
+      isSubmitting,
+      loading,
+      noData,
+      errorFecth,
+      modalErrorMessage
+    } = this.props
+    const {
+      actionModalError,
+      actionModal,
+      setSelectNetwork,
+       submit
+    } = this.actions
 
     return (
       <Wrapper>
@@ -138,6 +150,7 @@ class ListNewNetworks extends Component {
         />
         <ModalError
           modalError={modalError}
+          message={modalErrorMessage}
           actionModalError={actionModalError}
         />
         {networkServices &&

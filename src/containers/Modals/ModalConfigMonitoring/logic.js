@@ -70,6 +70,7 @@ export default kea({
     }],
     dirty: [false, PropTypes.bool, {
       [actions.change]: () => true,
+      [actions.changeFunc]: () => true,
       [actions.reset]: () => false
     }],
     submiting: [false, PropTypes.bool, {
@@ -80,7 +81,6 @@ export default kea({
 
   start: function * () {
     const { getForm } = this.actions
-
     yield put(getForm())
   },
 
@@ -97,11 +97,11 @@ export default kea({
 
   workers: {
     * getForm () {
-      const { setMonitoringOptions, changeForm } = this.actions
+      const { changeForm, setMonitoringOptions } = this.actions
       const node = yield this.get('modalNodeConfigData')
-      const form = SetForm(node)
       const monitoringFunc = SetMonitoringFunc(node.extra_info)
       yield put(setMonitoringOptions(monitoringFunc))
+      const form = SetForm(node)
       yield put(changeForm(form))
     },
 

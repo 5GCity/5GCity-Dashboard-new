@@ -88,10 +88,7 @@ class NewNetworkForm extends Component {
               options={computeOptions.options}
               value={computeSelect.value}
               onChange={value => change({computeSelect: value})}
-              required
-              status={!computeSelect.valid}
             />
-            <Form.Error>{computeSelect.message}</Form.Error>
           </Form.Item>
           <Layout.Col>
             { ports.array.map((port, index) =>

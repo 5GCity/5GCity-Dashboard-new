@@ -12,7 +12,7 @@ import * as Check from 'validations'
 import axios from 'axios'
 import { API_SLICE_MANAGEMENT } from 'config'
 import mapValues from 'lodash/mapValues'
-import { NewCompute, CapitalizeFirstLetter } from './utils'
+import { NewCompute } from './utils'
 
 /* Logic */
 import PanelResourceLogic from 'containers/Panel/PanelResource/logic'
@@ -215,7 +215,7 @@ export default kea({
         newCompute.computeData.quota.storage.total = params.storage
         newCompute.computeData.quota.storage.units = params.storageUnit
         newCompute.computeType = params.type
-        newCompute.trusted = CapitalizeFirstLetter(params.trusted.toString())
+        newCompute.trusted = params.trusted
         try {
           yield call(axios.post, `${API_SLICE_MANAGEMENT}/compute`, newCompute)
           yield put(removeLoadingPage())
