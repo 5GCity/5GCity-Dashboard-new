@@ -2,7 +2,6 @@
  * SliceDetail Container Utils
  * Please write a description
  *
- * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
 export const createSlice = resources => {
   const markers = []
@@ -183,7 +182,7 @@ const CreateAllLinks = markers => {
             target: [marker.location.longitude, marker.location.latitude]
           }
         })
-        lastLocation = null
+        lastLocation = { ...marker.location }
         indexLink++
       } else {
         links.push({
@@ -196,6 +195,5 @@ const CreateAllLinks = markers => {
       }
     }
   }
-
   return links
 }

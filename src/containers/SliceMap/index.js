@@ -157,14 +157,14 @@ class SliceMap extends Component {
              !marker.location.resources.LTE &&
              <IconNode
                key={marker.id}
-               color={marker.location.color || markerColor}
+               fill={marker.location.color || markerColor}
                onClick={() => markerClick(marker)}
             />
             }
               {marker.location.resources.rans &&
               <NodeRAN
                 key={marker.id}
-                color={marker.location.color || markerColor}
+                fill={marker.location.color || markerColor}
                 onClick={() => markerClick(marker)}
               />
             }

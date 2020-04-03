@@ -2,7 +2,6 @@
  * infraManagement Container Utils
  * Please write a description
  *
- * @author Guilherme Patriarca <gpatriarca@ubiwhere.com>
  */
 
 export const AddResource = (location, resources) => {
@@ -16,7 +15,7 @@ export const AddResource = (location, resources) => {
   })
 
   return array
-};
+}
 
 export const CreateAllPins = resources => {
   const markers = []
@@ -224,7 +223,7 @@ export const CreateAllPins = resources => {
           })
         }
       })
-  };
+  }
 
   const compareRAN = () => {
     resources.rans.length > 0 &&
@@ -340,13 +339,13 @@ export const CreateAllPins = resources => {
             }
           })
       })
-  };
+  }
 
   compareComputesNetworks()
   compareRAN()
   compareChunketeTopology()
   return markers
-};
+}
 
 export const CreateAllLinks = rans => {
   const links = []
@@ -370,7 +369,7 @@ export const CreateAllLinks = rans => {
         })
     })
   return links
-};
+}
 
 const pickHex = percent => {
   var a = percent / 100,
@@ -379,7 +378,7 @@ const pickHex = percent => {
 
   // Return a CSS HSL string
   return `hsl(${Math.trunc(c)}, 48%, 53%)`
-};
+}
 
 const percentage = quota => {
   let value = 0
@@ -391,14 +390,14 @@ const percentage = quota => {
     }
   }
   return { percentage: value, color: pickHex(value) }
-};
+}
 
 const singlePercentage = (provisioned, total) => {
   let value = 0
   const returnPercentage = (provisioned / total) * 100
   value = returnPercentage
   return { percentage: value, color: pickHex(value) }
-};
+}
 
 const compareResources = (cpus, ram, storage, compute) => {
   let value = compute
@@ -413,4 +412,4 @@ const compareResources = (cpus, ram, storage, compute) => {
   }
 
   return { percentage: value, color: pickHex(value) }
-};
+}
