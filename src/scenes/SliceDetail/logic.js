@@ -10,7 +10,8 @@ import { put, call } from 'redux-saga/effects'
 import { API_SLICE_MANAGEMENT } from 'config'
 import {
   createSlice,
-  CreateSliceChunk
+  CreateSliceChunk,
+  CreateAllLinks
 } from './utils'
 
 import PropTypes from 'prop-types'
@@ -42,8 +43,8 @@ export default kea({
   reducers: ({ actions }) => ({
     slice: [null, PropTypes.any, {
       [actions.fetchSlice]: (state, payload) => null,
-      [actions.setSlice]: (state, payload) => createSlice(payload.resources),
-      [actions.setSliceChunk]: (state, payload) => payload.resources
+      [actions.setSlice]: (state, payload) => CreateAllLinks(payload.resources),
+      [actions.setSliceChunk]: (state, payload) => CreateAllLinks(payload.resources)
     }],
     rightPanelInfo: [ null, PropTypes.object, {
       [actions.infoMarker]: (state, payload) => payload.marker.location.resources
@@ -113,7 +114,7 @@ export default kea({
           listResources.boxes = arrayOfBoxes
           yield put(setSliceChunk(CreateSliceChunk(listResources)))
         } else {
-          yield put(setSlice(chunkResponse))
+          yield put(setSlice(createSlice(chunkResponse)))
         }
 
         yield put(removeLoadingPage())

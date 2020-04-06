@@ -1582,12 +1582,23 @@ class Composer extends Component {
       if (mousedownNode || mousedownLink) return
       restart()
     }
+    function equalToEventTarget() {
+      return event.target;
+  }
+
+   function closeAllTooltip() {
+      const tooltipWithContent = selectAll('option_link')
+      const outside = tooltipWithContent.filter(equalToEventTarget).empty()
+      if (outside) {
+        selectAll('#option_link .menu_otpions').classed('visibility', true)
+      }
+  }
 
     svg
     .on('mousedown', mousedown)
     .on('mousemove', mousemove)
     .on('mouseup', mouseup)
-
+    .on('click', closeAllTooltip)
     restart()
   }
 

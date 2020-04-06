@@ -83,7 +83,7 @@ const ModalDelete = props => {
       <Modal.Body>
         {props.networkSelect &&
           <Title>
-            Are you sure you want to delete slice {props.networkSelect.name} ?
+            Are you sure you want to delete the network service {props.networkSelect.name} ?
         </Title>
         }
       </Modal.Body>

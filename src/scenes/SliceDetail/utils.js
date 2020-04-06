@@ -158,18 +158,18 @@ export const CreateSliceChunk = list => {
       })
     }
   })
-  markerObject.links = CreateAllLinks(markerObject.markers)
+  // markerObject.links = CreateAllLinks(markerObject.markers)
   return markerObject
 }
 
-const CreateAllLinks = markers => {
+export const CreateAllLinks = slice => {
   const links = []
   let indexLink = 0
   let lastLocation = null
-  const markersLength = markers.length
+  const markersLength = slice.markers.length
   if (markersLength > 1) {
     for (let indexMarkers = 0; indexMarkers < markersLength; indexMarkers++) {
-      const marker = markers[indexMarkers]
+      const marker = slice.markers[indexMarkers]
       if (links[indexLink] && links[indexLink].coordinates && !links[indexLink].coordinates.target[0]) {
         links[indexLink].coordinates.target.push(marker.location.longitude, marker.location.latitude)
         lastLocation = { ...marker.location }
@@ -195,5 +195,6 @@ const CreateAllLinks = markers => {
       }
     }
   }
-  return links
+  slice.links = links
+  return slice
 }
